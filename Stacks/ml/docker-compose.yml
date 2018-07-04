@@ -1,0 +1,37 @@
+version: '3.6'
+services:
+  iris:
+    environment:
+    - ISC_DATA_DIRECTORY=/shared/iris
+
+    build: ./iris
+    image: ml-irisdb
+    #image: amirsamary/irisdemo:iris.2018.2.0-stable
+    #image:  docker.iscinternal.com/intersystems/iris:2018.1.1-stable
+    command: --key /shared/license.key
+    hostname: iris
+    user: root
+    ports:
+    # 51773 is the superserver default port
+    - "9093:51773"
+    # 52773 is the webserver/management portal port
+    - "9094:52773"
+
+    volumes:
+    - ${PWD}/iris/shared/:/shared
+
+  zeppelin:
+    build: ./zeppelin
+    image: ml-zeppelin
+    ports:
+    - "9090:9090"   # Zeppelin
+    - "8081:8080"   # Spark Master Portal
+    - "9092:8081"   # Spark Worker Portal
+    volumes:
+    - $PWD/zeppelin/shared/:/shared
+    environment:
+    - IRIS_MASTER_HOST=iris # DNS based on the name of the service!
+    - IRIS_MASTER_PORT=51773 
+    - IRIS_MASTER_USERNAME=SuperUser 
+    - IRIS_MASTER_PASSWORD=sys 
+    - IRIS_MASTER_NAMESPACE=USER 
