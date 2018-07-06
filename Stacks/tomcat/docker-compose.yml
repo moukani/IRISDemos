@@ -8,20 +8,18 @@ services:
     image: tomcat-irisdb
     command: --key /shared/license.key
     hostname: iris
-    user: root
     ports:
     # 51773 is the superserver default port
-    - "9093:51773"
+    - "9091:51773"
     # 52773 is the webserver/management portal port
-    - "9094:52773"
-
+    - "9090:52773"
     volumes:
     - ${PWD}/iris/shared/:/shared
 
   tomcat:
-    image: tomcat:8.0
+    image: tomcat:9.0
     ports:
-    - "9090:8080"   # Tomcat
+    - "9095:8080"   # Tomcat
     volumes:
     - $PWD/tomcat/shared/:/shared
     environment:

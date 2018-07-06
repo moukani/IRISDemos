@@ -2,4 +2,4 @@
 
 printfY "\nRunning docker compose..."
 
-docker-compose up --build
+docker-compose up

@@ -13,9 +13,9 @@ services:
     user: root
     ports:
     # 51773 is the superserver default port
-    - "9093:51773"
+    - "9091:51773"
     # 52773 is the webserver/management portal port
-    - "9094:52773"
+    - "9090:52773"
 
     volumes:
     - ${PWD}/iris/shared/:/shared
@@ -24,9 +24,9 @@ services:
     build: ./zeppelin
     image: ml-zeppelin
     ports:
-    - "9090:9090"   # Zeppelin
-    - "8081:8080"   # Spark Master Portal
-    - "9092:8081"   # Spark Worker Portal
+    - "9092:9090"   # Zeppelin
+    - "9093:8080"   # Spark Master Portal
+    - "9094:8081"   # Spark Worker Portal
     volumes:
     - $PWD/zeppelin/shared/:/shared
     environment:

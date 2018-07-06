@@ -61,18 +61,19 @@ then
     mkdir ./shared
 fi
 
-if [ "$isEphemeral" == "yes" ]
+if [ "$isEphemeral" == "no" ]
 then
-    EPHEMERALFLAG="--rm"
-else
     EPHEMERALFLAG=""
+else
+    EPHEMERALFLAG="--rm"
 fi
 
 printfY "\n\nRunning container...\n"
 docker run $EPHEMERALFLAG -it  \
-    -p 51772:51772 -p 52772:52772 \
+    -p 51773:51773 -p 52773:52773 \
     -v $PWD/shared:/shared \
     --name $CONTAINER_NAME \
-    $IMAGE_NAME
+    $IMAGE_NAME \
+    --key /shared/license.key
 
 printfY "\nExited container\n"

@@ -8,7 +8,7 @@
 source ../../ShellScriptUtils/util.sh
 
 # Constants:
-CONTAINER_NAME=tomcat
+CONTAINER_NAME=${PWD##*/}
 # The name of the image is based on the name of the folder
 IMAGE_NAME=amirsamary/irisdemo:${PWD##*/}
 
