@@ -16,8 +16,9 @@ services:
     volumes:
     - ${PWD}/iris/shared/:/shared
 
-  tomcat:
-    image: tomcat:9.0
+  app:
+    image: tomcat-app
+    build: ./tomcat
     ports:
     - "9095:8080"   # Tomcat
     volumes:

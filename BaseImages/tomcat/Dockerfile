@@ -6,4 +6,3 @@
 FROM tomcat:9.0
 LABEL maintainer="Amir Samary <amir.samary@intersystems.com>"
 
-ADD ./app/tomcat-users.xml /usr/local/tomcat/conf/

@@ -1,4 +1,4 @@
-FROM tomcat:8.0
+FROM amirsamary/irisdemo:tomcat
 LABEL maintainer="Amir Samary <amir.samary@intersystems.com>"
 
 # Example from:
