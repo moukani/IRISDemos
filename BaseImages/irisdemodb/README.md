@@ -18,18 +18,18 @@ If you are building a stack with this image, create a folder under the Stacks fo
 
     git  
     ├── IRISDemoImages  
-    │   ├── *BaseImages*  
-    │   ├── *Stacks*  
-    │   │   ├── _*MyNewStack*_  
-    │   │   │   ├── _docker-compose.yml_  
+    │   ├── BaseImages  
+    │   ├── Stacks  
+    │   │   ├── MyNewStack  
+    │   │   │   ├── docker-compose.yml  
     │   │   │   ├── irisdb  
-    │   │   │   │   ├── _Dockerfile_  
+    │   │   │   │   ├── Dockerfile  
     │   │   │   ├── other_image  
-    │   │   │   │   ├── _Dockerfile_  
-    │   │   │   ├── an_other_image  
-    │   │   │   │   ├── _Dockerfile_  
-    │   │   │   ├── _README.md_  
-    │   └── *Demos*  
+    │   │   │   │   ├── Dockerfile  
+    │   │   │   ├── another_image  
+    │   │   │   │   ├── Dockerfile  
+    │   │   │   ├── README.md  
+    │   └── Demos  
 
 On the subfolder for the irisdb image, create a Dockerfile that has on its FROM clause a reference for the irisdemodb image:
 
