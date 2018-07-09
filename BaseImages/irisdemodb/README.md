@@ -17,19 +17,25 @@ The script will tell you what you need to know.
 If you are building a stack with this image, create a folder under the Stacks folder to hold your stack. Your stack will have two or more images. So create two or more folders under your new folder, one for each image:
 
     git  
-    ├── IRISDemoImages  
-    │   ├── BaseImages  
-    │   ├── Stacks  
-    │   │   ├── MyNewStack  
-    │   │   │   ├── docker-compose.yml  
-    │   │   │   ├── irisdb  
-    │   │   │   │   ├── Dockerfile  
-    │   │   │   ├── other_image  
-    │   │   │   │   ├── Dockerfile  
-    │   │   │   ├── another_image  
-    │   │   │   │   ├── Dockerfile  
-    │   │   │   ├── README.md  
-    │   └── Demos  
+    └── IRISDemoImages  
+        ├── BaseImages  
+        │
+        ├── Stacks  
+        │   └─── MyNewStack  
+        │       ├── docker-compose.yml  
+        │       │
+        │       ├── irisdb  
+        │       │   └─── Dockerfile  
+        │       │
+        │       ├── other_image  
+        │       │   └─── Dockerfile  
+        │       │
+        │       ├── another_image  
+        │       │   └─── Dockerfile  
+        │       │
+        │       └─── README.md  
+        │
+        └── Demos  
 
 On the subfolder for the irisdb image, create a Dockerfile that has on its FROM clause a reference for the irisdemodb image:
 
