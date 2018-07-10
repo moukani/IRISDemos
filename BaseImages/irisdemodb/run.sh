@@ -1,14 +1,14 @@
 #!/bin/bash
 #
-# This script is just to test the container and work locally on the notebooks
-# that will be cooked into the container when we re-build the image
+# This script is just to test the container. You should NOT start it with
+# Durable %SYS!
 #
 # Amir Samary - 2018
 
 source ../../ShellScriptUtils/util.sh
 
 # Constants:
-CONTAINER_NAME=irisdemo
+CONTAINER_NAME=${PWD##*/}
 # The name of the image is based on the name of the folder
 IMAGE_NAME=amirsamary/irisdemo:${PWD##*/}
 
@@ -18,13 +18,15 @@ IMAGE_NAME=amirsamary/irisdemo:${PWD##*/}
 function showHelp() {
     printfY "\n\nStart IRIS container locally. A folder called ./shared will be "
     printfY "\ncreated to hold shared files with the container and the durable %SYS."
+    printfY "\nIf you have a license.key file, put it on this shared folder before"
+    printfY "\ncalling this script."
     printf "\n\nParameters: "
     printfY "\n"
     printfY "\n\t-h | --help"
     printf "\n\tShows this help."
     printfY "\n"
     printfY "\n\t-e | --ephemeral"
-    printf "\n\tCan be 'yes' or 'no' (default: no). Warning: An ephemeral container will"
+    printf "\n\tCan be 'yes' or 'no' (default: yes). Warning: An ephemeral container will"
     printf "\n\thave a different hostname each time it is started. Unless you are using"
     printf "\n\tDocker compose to build it."
     printfY "\n"
@@ -68,7 +70,7 @@ else
     EPHEMERALFLAG="--rm"
 fi
 
-printfY "\n\nRunning container...\n"
+printfY "\n\nRunning container. Management portal is on http://localhost:52773/csp/sys/UtilHome.csp\n\n"
 docker run $EPHEMERALFLAG -it  \
     -p 51773:51773 -p 52773:52773 \
     -v $PWD/shared:/shared \
