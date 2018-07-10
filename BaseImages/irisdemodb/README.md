@@ -21,6 +21,11 @@ is. If you need help, just run:
 
 The script will verify if a folder called *./shared* exists. If it doesn't, it will create it for you. this folder will be mapped to the /shared folder into your container. If you put a file called license.key on this folder, IRIS will use it. Otherwise, the IRIS will run without a license.
 
+## Calling the Hello IRIS page
+
+To test if your container is running and loading the source code correctly, you can call the hello IRIS page on http://localhost:52773/csp/app/hello.csp.
+
+
 ## How to customize this image with source code
 
 Ther is an Atelier project on folder ./irisdemodb-atelier-project. You can add your classes and CSP pages to it. When you rebuild the Dockerfile into a new image, this source code will be cooked into the container.
