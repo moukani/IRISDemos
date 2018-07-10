@@ -101,7 +101,7 @@ On the root of your new folder, add a docker-compose.yml file that will define y
 
 # Environment Variables for External Services
 
-This image can contain code that will be calling an IRIS Demo Database container via SOAP, REST or JDBC. Here are the environment variables that you can define for this purpose:
+Demos built with this image should expect to find an IRIS Database located here (if you added one to your stack or demo):
 
 * IRIS_MASTER_HOST=iris  
 * IRIS_MASTER_PORT=51773
@@ -110,7 +110,7 @@ This image can contain code that will be calling an IRIS Demo Database container
 * IRIS_MASTER_PASSWORD=sys
 * IRIS_MASTER_NAMESPACE=INT
 
- Your IRIS code will later be able to call the following code to get these values:
+You may need to connect to it via JDBC, REST or SOAP for your demo purposes. You can have these default values hard coded on YOUR code or you can pass them to your container on your docker-compose.yml file and change your code to get these values using:
 
 ``` asp
 Set IRISIntHost = $System.Util.GetEnviron("IRIS_MASTER_HOST")

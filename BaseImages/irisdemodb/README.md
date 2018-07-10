@@ -95,15 +95,22 @@ On the root of your new folder (MyNewStack), add a docker-compose.yml file that 
 
 # Environment Variables for External Services
 
-This image can contain code that will be calling an IRIS Demo Interoperability based container. Here are the environment variables that you can define for this purpose:
+Demos built with this image should expect to find an IRIS Interoperability container located here (if you added one to your stack or demo):
 
 * IRISINT_MASTER_HOST=irisint 
 * IRISINT_MASTER_PORT=51773
+* IRISINT_MASTER_WEBPORT=52773
 * IRISINT_MASTER_USERNAME=SuperUser 
 * IRISINT_MASTER_PASSWORD=sys
 * IRISINT_MASTER_NAMESPACE=INT
 
  Your IRIS code will later be able to call the following code to get these values:
+
+``` asp
+Set IRISIntHost = $System.Util.GetEnviron("IRISINT_MASTER_HOST")
+```
+
+You may need to connect to it via REST or SOAP for the purposes of your demo. You can have these default values hard coded on YOUR code or you can pass them to your container on your docker-compose.yml file and change your code to get these values using:
 
 ``` asp
 Set IRISIntHost = $System.Util.GetEnviron("IRISINT_MASTER_HOST")
