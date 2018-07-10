@@ -28,7 +28,9 @@ To test if your container is running and loading the source code correctly, you 
 
 ## How to customize this image with source code
 
-Ther is an Atelier project on folder ./irisdemodb-atelier-project. You can add your classes and CSP pages to it. When you rebuild the Dockerfile into a new image, this source code will be cooked into the container.
+Ther is an Atelier project on folder ./irisdemodb-atelier-project. You can add your classes and CSP pages to it. This project already brings the "Hello IRIS" page as an example.
+
+When you rebuild the Dockerfile into a new image, this source code will be cooked into the container.
 
 ## Specifying your namespace
 
