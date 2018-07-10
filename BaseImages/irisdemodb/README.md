@@ -19,7 +19,19 @@ is. If you need help, just run:
 
 ## Specifying the IRIS license
 
-The script will verify if a folder called *./shared* exists. If it doesn't, it will create it for you. this folder will be mapped to the /shared folder into your container. If you put a file called license.key on this folder, IRIS will use it. Otherwise, the IRIS will run without a license.
+The script will verify if a folder called *./shared* exists. If it doesn't, it will create it for you. this folder will be mapped to the /shared folder into your container. If you put a file called license.key on this folder, IRIS will use it. Otherwise, the IRIS will run without a license:
+
+    git  
+    └── IRISDemoImages  
+        └── BaseImages  
+            └─── irisdemodb  
+                 ├── shared  
+                 │   └── license.key  
+                 ├── build.sh
+                 ├── Dockerfile  
+                 ├── README.md  
+                 ├── run.sh
+                 ├── runinstaller.sh
 
 ## Calling the Hello IRIS page
 
