@@ -122,10 +122,17 @@ On the subfolder for the irisdb image, create a Dockerfile that has on its FROM 
 FROM amirsamary/irisdemo:irisdemodb
 LABEL maintainer="Amir Samary <amir.samary@intersystems.com>"
 
-#Your customizations to the image go here!
+# Name of the project folder ex.: my-atelier-project
+ARG IRIS_PROJECT_FOLDER_NAME
+
+# Adding source code that will be loaded by the installer
+ADD ./${IRIS_PROJECT_FOLDER_NAME}/ $IRIS_APP_SOURCEDIR
+
+# Running the installer.
+RUN /usr/irissys/demo/irisdemoinstaller.sh
 ```
 
-You will use this dockerfile to further customize IRIS (by adding source code, data, etc.) for the purposes of your Demo. Copy the irisdemoint-atelier-project with the demo source code as a starting point. 
+You will use this dockerfile to further customize IRIS (by adding source code, data, etc.) for the purposes of your Stack or Demo. Copy the irisdemoint-atelier-project with the demo source code as a starting point. 
 
 On the root of your new folder, add a docker-compose.yml file that will define your stack with all these images. Then, use the IRIS_PROJECT_FOLDER_NAME argument when configuring your docker-compose file to build the image pointing to your project file. Here is an example of a docker-compose.yml:
 

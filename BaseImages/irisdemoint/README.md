@@ -127,11 +127,17 @@ Now add as many sub-folders under *MyNewAwesomeApp* as the number of images on y
 On the subfolder for the irisint image, create a Dockerfile that has on its FROM clause a reference for the irisdemoint image:
 
 ``` yaml
-FROM amirsamary/irisdemo:irisdemoint
+FROM amirsamary/irisdemo:irisdemodb
 LABEL maintainer="Amir Samary <amir.samary@intersystems.com>"
 
-#Your customizations to the image go here!
-```
+# Name of the project folder ex.: my-atelier-project
+ARG IRIS_PROJECT_FOLDER_NAME
+
+# Adding source code that will be loaded by the installer
+ADD ./${IRIS_PROJECT_FOLDER_NAME}/ $IRIS_APP_SOURCEDIR
+
+# Running the installer.
+RUN /usr/irissys/demo/irisdemoinstaller.sh```
 
 You will use this dockerfile to further customize IRIS (by adding source code, data, etc.) for the purposes of your Demo. Copy the irisdemoint-atelier-project with the demo source code as a starting point. 
 
