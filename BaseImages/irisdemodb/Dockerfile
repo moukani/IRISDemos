@@ -1,6 +1,9 @@
 FROM amirsamary/irisdemo:iris.2018.2.0-stable
 LABEL maintainer="Amir Samary <amir.samary@intersystems.com>"
 
+# Name of the project folder ex.: irisdemodb-atelier-project
+ARG IRIS_PROJECT_FOLDER_NAME
+
 # Name of the application. This will be used to define the namespace, database and 
 # name of the CSP application of this application.
 ENV IRIS_APP_NAME="APP"
@@ -13,9 +16,6 @@ ENV IRIS_PASSWORD="sys"
 
 # Installer Manifest to deploy the app
 ENV IRIS_INSTALLER_CLASSNAME="IRISDemo.SYS.Installer"
-
-# Name of the project folder
-ENV IRIS_PROJECT_FOLDER_NAME="irisdemodb-atelier-project"
 
 # Used to specify a folder on the container with the source code (csp pages, classes, etc.)
 # to load into the CSP application.

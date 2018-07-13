@@ -1,6 +1,13 @@
 #!/bin/sh
 
+IRIS_PROJECT_FOLDER_NAME=irisdemodb-atelier-project
+
 source ../../ShellScriptUtils/util.sh
 source ../../ShellScriptUtils/buildandpush.sh
 
-buildAndPush $1
+if [ -z "$1" ]
+then
+    buildAndPush --build-arg IRIS_PROJECT_FOLDER_NAME=$IRIS_PROJECT_FOLDER_NAME
+else
+    buildAndPush $1 --build-arg IRIS_PROJECT_FOLDER_NAME=$IRIS_PROJECT_FOLDER_NAME
+fi

@@ -8,52 +8,29 @@
 #   2- With one parameter that can be "push" or "pushcontainer". If run with push, it will 
 #      build the container and push it to the registry. If run with pushcontainer, it will
 #      build the container, start it, commit it and pushed the committed image instead.
-#   3- With two parameters, where the first is "pushcontainer" and the second is a code to
-#      be executed on the temp container before it is commited and pushed to the repository.
+#   3- With more than one parameter. The second parameter and all others that follow are
+#      passed to docker build command.
 #
 function buildAndPush() {
 
     # The image name will be named after the folder of the Dockerfile
     IMAGE_NAME=amirsamary/irisdemo:${PWD##*/}
 
-    #docker rmi -f $IMAGE_NAME
-
     printfY "\n\nBuilding image ${IMAGE_NAME}...\n\n"
-    docker build --force-rm -t $IMAGE_NAME . 
-    checkError "\n\nImage ${IMAGE_NAME} failed to build!\n\n" "\n\nImage ${IMAGE_NAME} built!\n\n"
-
-    if [ "$1" == "pushcontainer" ]
+    if [ "$1" == "push" ]
     then
-        printfY "\n\nCreating container based on image...\n\n"
-        docker stop tempcontainer > /dev/null
-        docker rm tempcontainer > /dev/null
-        # Must not use --rm flag on this docker run because I need it to continue to exist
-        # after I stop it so I can commit it
-        docker run -d \
-            --name tempcontainer \
-            $IMAGE_NAME
-        checkError "ERROR: Could not create temp container for image ${IMAGE_NAME}!" "Temp container created and running..."
-
-        sleep 5
-        
-        # Do we have to run something on the container?
-        if [ ! "$2" == "" ]
-        then
-            printfY "\n\nExecuting $2...\n\n"
-            docker exec -it tempcontainer $2
-            checkError "ERROR: Error when executing $2 on temp container!" "Done!"
-        fi
-
-        printfY "\n\nStop temp container...\n\n"
-        docker stop tempcontainer
-        checkError "ERROR: Could not stop temp container!" "Temp container stopped..."
-
-        printfY "\n\nCommiting temp container...\n\n"
-        docker commit tempcontainer $IMAGE_NAME
-        checkError "ERROR: Could not commit temp container!" "Temp container commited!"
+        params=${@:2:${#}}
+        printf "\ndocker build ${params} --force-rm -t $IMAGE_NAME .\n"
+        docker build ${params} --force-rm -t $IMAGE_NAME .
+        checkError "\n\nImage ${IMAGE_NAME} failed to build!\n\n" "\n\nImage ${IMAGE_NAME} built!\n\n"
+    else
+        params=${@:1:${#}}
+        printf "\ndocker build ${params} --force-rm -t $IMAGE_NAME . \n"
+        docker build ${params} --force-rm -t $IMAGE_NAME . 
+        checkError "\n\nImage ${IMAGE_NAME} failed to build!\n\n" "\n\nImage ${IMAGE_NAME} built!\n\n"
     fi
 
-    if [ \( "$1" == "push" \) -o \( "$1" == "pushcontainer" \) ]
+    if [ "$1" == "push" ]
     then
         dockerLogin
 

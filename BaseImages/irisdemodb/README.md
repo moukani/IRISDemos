@@ -2,6 +2,45 @@
 
 This is a basic IRIS Database image. It is used by all stacks that need a database. *Do not use it directly!* The instance is configured with the password "sys". You can log into the management portal with the SuperUser account. 
 
+## How to build the image
+
+The image can be easily built by running:
+
+``` shell
+./build.sh
+```
+
+If you want to push it to docker hub, run with the push parameter:
+
+``` shell
+./build.sh push
+```
+
+The script will ask for your Docker Hub username and password. This is a temporary feature. It will last until we have a CI pipeline configured to automatically build the image upon new commits to the GitHub repository.
+
+## How to customize this image with source code
+
+There is an Atelier project on folder ./irisdemodb-atelier-project. You can add your classes and CSP pages to it. This project already brings the "Hello IRIS" page as an example.
+
+When you rebuild the Dockerfile into a new image, this source code will be cooked into the container. On stacks and demos built with this image, you may want to use a different folder for your project. The folder most be at the level of the docker file project but you can call it any way you want. Then, change *your* build.sh file so it will reference this folder instead of "irisdemodb-atelier-project". Here is an example of a modified ./build.sh script for a stack:
+
+``` shell
+#!/bin/sh
+
+#IRIS_PROJECT_FOLDER_NAME=irisdemodb-atelier-project
+IRIS_PROJECT_FOLDER_NAME=my_project
+
+source ../../ShellScriptUtils/util.sh
+source ../../ShellScriptUtils/buildandpush.sh
+
+if [ -z "$1" ]
+then
+    buildAndPush --build-arg IRIS_PROJECT_FOLDER_NAME=$IRIS_PROJECT_FOLDER_NAME
+else
+    buildAndPush $1 --build-arg IRIS_PROJECT_FOLDER_NAME=$IRIS_PROJECT_FOLDER_NAME
+fi
+```
+
 ## How to run the image
 
 If you are working to improve this image and need to test it. An example on how to run this image can be found on shell script run.sh. You can call:
@@ -10,8 +49,7 @@ If you are working to improve this image and need to test it. An example on how 
 ./run.sh
 ```
 
-The script will create an emphemeral container and let you know where the management portal
-is. If you need help, just run:
+The script will create an ephemeral container and let you know where the management portal is. If you need help, just run:
 
 ``` shell
 ./run.sh --help
@@ -35,14 +73,11 @@ The script will verify if a folder called *./shared* exists. If it doesn't, it w
 
 ## Calling the Hello IRIS page
 
-To test if your container is running and loading the source code correctly, you can call the hello IRIS page on http://localhost:52773/csp/app/hello.csp.
+The Dockerfile will add source code from your project into the image. You specify the name of the project with the argument IRIS_PROJECT_FOLDER_NAME.
+The build.sh shows how to build the image passing this argument. This image will use a demo project we have created, with a simple hello world web page
+to show how the mechanism can be used. 
 
-
-## How to customize this image with source code
-
-Ther is an Atelier project on folder ./irisdemodb-atelier-project. You can add your classes and CSP pages to it. This project already brings the "Hello IRIS" page as an example.
-
-When you rebuild the Dockerfile into a new image, this source code will be cooked into the container.
+After running the container, open it on http://localhost:52773/csp/app/hello.csp.
 
 ## Specifying your namespace
 
