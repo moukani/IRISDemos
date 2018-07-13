@@ -4,11 +4,15 @@ This is a basic IRIS Database image. It is used by all stacks that need a databa
 
 ## How to build the image
 
+You should only build this image if you are working on improving it. Otherwize, create a new Dockerfile based on this one. See instructions on the following topics for that.
+
 The image can be easily built by running:
 
 ``` shell
 ./build.sh
 ```
+
+It will run docker build and create an image with the name of the folder you are in. There is an Atelier project on folder ./irisdemodb-atelier-project. You can add your classes to it. This project brings a hello world CSP page and a Installer Manifest (IRISDemo.SYS.Installer) to configure namespaces, databases and security aspects of your application.
 
 If you want to push it to docker hub, run with the push parameter:
 
@@ -18,17 +22,12 @@ If you want to push it to docker hub, run with the push parameter:
 
 The script will ask for your Docker Hub username and password. This is a temporary feature. It will last until we have a CI pipeline configured to automatically build the image upon new commits to the GitHub repository.
 
-## How to customize this image with source code
-
-There is an Atelier project on folder ./irisdemodb-atelier-project. You can add your classes and CSP pages to it. This project already brings the "Hello IRIS" page as an example.
-
-When you rebuild the Dockerfile into a new image, this source code will be cooked into the container. On stacks and demos built with this image, you may want to use a different folder for your project. The folder most be at the level of the docker file project but you can call it any way you want. Then, change *your* build.sh file so it will reference this folder instead of "irisdemodb-atelier-project". Here is an example of a modified ./build.sh script for a stack:
+If you are maintaining *this* image, it is important to know that it is on the build.sh file that we specify the name of the folder where the source code we want inside the image is loaded from:
 
 ``` shell
 #!/bin/sh
 
-#IRIS_PROJECT_FOLDER_NAME=irisdemodb-atelier-project
-IRIS_PROJECT_FOLDER_NAME=my_project
+IRIS_PROJECT_FOLDER_NAME=irisdemodb-atelier-project
 
 source ../../ShellScriptUtils/util.sh
 source ../../ShellScriptUtils/buildandpush.sh
@@ -41,6 +40,8 @@ else
 fi
 ```
 
+It is from this project folder where we load the hello world CSP page and IRISDemo.SYS.Installer with a manifest. Our demos will use this example namespace and we will not be copying this Dockerfile but inheriting from it with the FROM Dockerfile clause. 
+
 ## How to run the image
 
 If you are working to improve this image and need to test it. An example on how to run this image can be found on shell script run.sh. You can call:
@@ -49,7 +50,7 @@ If you are working to improve this image and need to test it. An example on how 
 ./run.sh
 ```
 
-The script will create an ephemeral container and let you know where the management portal is. If you need help, just run:
+The script will create an emphemeral container with the name of the folder you are in (irisdemodb) and let you know where the management portal is. If you need help, just run:
 
 ``` shell
 ./run.sh --help
@@ -124,9 +125,52 @@ LABEL maintainer="Amir Samary <amir.samary@intersystems.com>"
 #Your customizations to the image go here!
 ```
 
-You will use this dockerfile to further customize IRIS (by adding source code, data, etc.) for the purposes of your Stack. 
+You will use this dockerfile to further customize IRIS (by adding source code, data, etc.) for the purposes of your Demo. Copy the irisdemoint-atelier-project with the demo source code as a starting point. 
 
-On the root of your new folder (MyNewStack), add a docker-compose.yml file that will define your stack.
+On the root of your new folder, add a docker-compose.yml file that will define your stack with all these images. Then, use the IRIS_PROJECT_FOLDER_NAME argument when configuring your docker-compose file to build the image pointing to your project file. Here is an example of a docker-compose.yml:
+
+``` yaml
+version: '3.6'
+services:
+  irisdb:
+    build: 
+      context: ./irisdb
+      args:
+      - IRIS_PROJECT_FOLDER_NAME=iris_project
+    image: tomcat-irisdb
+    command: --key /shared/license.key
+    hostname: irisdb
+    environment:
+    - ISC_DATA_DIRECTORY=/shared/iris
+    ports:
+    # 51773 is the superserver default port
+    - "9091:51773"
+    # 52773 is the webserver/management portal port
+    - "9090:52773"
+    volumes:
+    - ${PWD}/iris/shared/:/shared
+
+  app:
+    image: tomcat-app
+    build: 
+      
+      context: ./tomcat
+    ports:
+    - "9095:8080"   # Tomcat
+    volumes:
+    - $PWD/tomcat/shared/:/shared
+    environment:
+    - IRIS_MASTER_HOST=irisdb # DNS based on the name of the SERVICE!
+    - IRIS_MASTER_PORT=51773 
+    - IRIS_MASTER_USERNAME=SuperUser 
+    - IRIS_MASTER_PASSWORD=sys 
+    - IRIS_MASTER_NAMESPACE=USER 
+
+```
+
+If you build and run this docker-compose file, you will the hello iris CSP page plus your source code. You will be able to connect to it using Atelier. You can open your project with Atelier and add more classes, REST services, SOAP services and CSP pages to it. Your source code is stored outside of your container, but Atelier also synchronizes it with the container.
+
+If you don't want the hello iris CSP page or if you want to call your namespace something else, you will want to copy the original *irisdemodb* Dockerfile source code into your Dockerfile instead of simply inheriting from *irisdemodb* image. 
 
 # Environment Variables for External Services
 

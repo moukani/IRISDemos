@@ -1,13 +1,15 @@
 version: '3.6'
 services:
-  iris:
-    environment:
-    - ISC_DATA_DIRECTORY=/shared/iris
-
-    build: ./iris
+  irisdb:
+    build: 
+      context: ./iris
+      args:
+      - IRIS_PROJECT_FOLDER_NAME=iris_project
     image: tomcat-irisdb
     command: --key /shared/license.key
-    hostname: iris
+    hostname: irisdb
+    environment:
+    - ISC_DATA_DIRECTORY=/shared/iris
     ports:
     # 51773 is the superserver default port
     - "9091:51773"
@@ -18,13 +20,15 @@ services:
 
   app:
     image: tomcat-app
-    build: ./tomcat
+    build: 
+      
+      context: ./tomcat
     ports:
     - "9095:8080"   # Tomcat
     volumes:
     - $PWD/tomcat/shared/:/shared
     environment:
-    - IRIS_MASTER_HOST=iris # DNS based on the name of the SERVICE!
+    - IRIS_MASTER_HOST=irisdb # DNS based on the name of the SERVICE!
     - IRIS_MASTER_PORT=51773 
     - IRIS_MASTER_USERNAME=SuperUser 
     - IRIS_MASTER_PASSWORD=sys 

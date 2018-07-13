@@ -1,6 +1,6 @@
 Include %occInclude
 
-Class IRISDemo.SYS.Installer
+Class IRISConfig.Installer
 {
 
 ClassMethod AuthAllowed()
@@ -95,8 +95,8 @@ XData Install [ XMLNamespace = INSTALLER ]
 		
 		<Log Text="Creating CSP Applications for ${Namespace}..." Level="0"/>
 		<Namespace Name="${Namespace}" Create="no">
-			<CSPApplication Url="/csp/${CSPAppName}" Directory="${CSPDIR}${CSPAppName}" AuthenticationMethods="#{##class(IRISDemo.SYS.Installer).AuthForCSP()}" IsNamespaceDefault="true" Grant="AppRole" CookiePath="/csp/${CSPAppName}" Recurse="true" />
-			<CSPApplication Url="/csp/${CSPAppName}/services" Directory="${CSPDIR}${CSPAppName}" AuthenticationMethods="#{##class(IRISDemo.SYS.Installer).AuthForCSP()}" IsNamespaceDefault="false" Grant="AppRole" CookiePath="/csp/${CSPAppName}" Recurse="true"/>
+			<CSPApplication Url="/csp/${CSPAppName}" Directory="${CSPDIR}${CSPAppName}" AuthenticationMethods="#{##class(IRISConfig.Installer).AuthForCSP()}" IsNamespaceDefault="true" Grant="AppRole" CookiePath="/csp/${CSPAppName}" Recurse="true" />
+			<CSPApplication Url="/csp/${CSPAppName}/services" Directory="${CSPDIR}${CSPAppName}" AuthenticationMethods="#{##class(IRISConfig.Installer).AuthForCSP()}" IsNamespaceDefault="false" Grant="AppRole" CookiePath="/csp/${CSPAppName}" Recurse="true"/>
 			<IfDef Var="SourceDir">
 	            <Log Text="SourceDir defined - offline install from ${SourceDir}" Level="0"/>
 	            <Import File="${SourceDir}" Recurse="true"/>

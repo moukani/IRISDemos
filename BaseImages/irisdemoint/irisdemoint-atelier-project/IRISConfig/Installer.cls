@@ -1,6 +1,6 @@
 Include %occInclude
 
-Class IRISDemo.SYS.Installer
+Class IRISConfig.Installer
 {
 
 ClassMethod AuthAllowed()
@@ -130,24 +130,24 @@ XData Install [ XMLNamespace = INSTALLER ]
 	
 	<Log Text="Creating CSP Applications for ${Namespace}..." Level="0"/>
 	<Namespace Name="${Namespace}" Create="no">
-		<CSPApplication Url="/csp/${CSPAppName}" Directory="${CSPDIR}${CSPAppName}" AuthenticationMethods="#{##class(IRISDemo.SYS.Installer).AuthForSMP()}" IsNamespaceDefault="true" CookiePath="/csp/${CSPAppName}" AutoCompile="false" CSPZENEnabled="true" InboundWebServicesEnabled="false" GroupById="%ISCMgtPortal" Resource="%Ens_Portal"/>
-		<CSPApplication Url="/csp/${CSPAppName}/soap" Directory="${CSPDIR}${CSPAppName}" AuthenticationMethods="#{##class(IRISDemo.SYS.Installer).AuthForSOAP()}" IsNamespaceDefault="false" Grant="AppRole" CookiePath="/csp/${CSPAppName}/soap" Recurse="true"  AutoCompile="false" CSPZENEnabled="false" InboundWebServicesEnabled="true" GroupById="${CSPAppName}"/>
+		<CSPApplication Url="/csp/${CSPAppName}" Directory="${CSPDIR}${CSPAppName}" AuthenticationMethods="#{##class(IRISConfig.Installer).AuthForSMP()}" IsNamespaceDefault="true" CookiePath="/csp/${CSPAppName}" AutoCompile="false" CSPZENEnabled="true" InboundWebServicesEnabled="false" GroupById="%ISCMgtPortal" Resource="%Ens_Portal"/>
+		<CSPApplication Url="/csp/${CSPAppName}/soap" Directory="${CSPDIR}${CSPAppName}" AuthenticationMethods="#{##class(IRISConfig.Installer).AuthForSOAP()}" IsNamespaceDefault="false" Grant="AppRole" CookiePath="/csp/${CSPAppName}/soap" Recurse="true"  AutoCompile="false" CSPZENEnabled="false" InboundWebServicesEnabled="true" GroupById="${CSPAppName}"/>
 		
 		<IfDef Var="SourceDir">
             <Log Text="SourceDir defined - offline install from ${SourceDir}" Level="0"/>
             <Import File="${SourceDir}" Recurse="true"/>
         </IfDef>
 
-		<CSPApplication Url="/csp/${CSPAppName}/rest" Directory="${CSPDIR}${CSPAppName}" AuthenticationMethods="#{##class(IRISDemo.SYS.Installer).AuthForREST()}" IsNamespaceDefault="false" Grant="AppRole" CookiePath="/csp/${CSPAppName}/rest" Recurse="true"  AutoCompile="false" CSPZENEnabled="true" InboundWebServicesEnabled="false" GroupById="${CSPAppName}" DispatchClass="IRISDemo.REST.Dispatcher"  UseSessionCookie="1" PermittedClasses='1""IRISDemo.REST."".E'/>
+		<CSPApplication Url="/csp/${CSPAppName}/rest" Directory="${CSPDIR}${CSPAppName}" AuthenticationMethods="#{##class(IRISConfig.Installer).AuthForREST()}" IsNamespaceDefault="false" Grant="AppRole" CookiePath="/csp/${CSPAppName}/rest" Recurse="true"  AutoCompile="false" CSPZENEnabled="true" InboundWebServicesEnabled="false" GroupById="${CSPAppName}" DispatchClass="IRISDemo.REST.Dispatcher"  UseSessionCookie="1" PermittedClasses='1""IRISDemo.REST."".E'/>
 	</Namespace>
 	
 	<Log Text="Applying additional configurations to the new REST CSP Application..." Level="0"/>
-	<Invoke Class="IRISDemo.SYS.Installer" Method="ConfigureAsRESTCSPApp" CheckStatus="true">
+	<Invoke Class="IRISConfig.Installer" Method="ConfigureAsRESTCSPApp" CheckStatus="true">
 		<Arg name="pCSPAppName" Value="/csp/${CSPAppName}/rest"/>
 	</Invoke>
 
 	<Log Text="Configuring production IRISDemo.Production to auto-start." Level="0"/>
-	<Invoke Class="IRISDemo.SYS.Installer" Method="ConfigureAutoStart" CheckStatus="true">
+	<Invoke Class="IRISConfig.Installer" Method="ConfigureAutoStart" CheckStatus="true">
 		<Arg name="pNamespace" Value="${Namespace}"/>
 	</Invoke>
 </Manifest>
