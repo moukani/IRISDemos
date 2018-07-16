@@ -2,6 +2,6 @@ These are images of iris, tomcat, zeppelin, etc. created to support the stacks a
 
 Here is the list of current images we have:
 
-* irisdemodb - Preconfigured IRIS Database
-* irisdemoint - Preconfigured IRIS Interoperability
-* zeppelin-spark - Preconfigured Zeppelin notebook image with IRIS connectivity through Spark and JDBC (the Spark cluster is on the Zeppelin image)
+* [irisdemodb](./irisdemodb/) - Preconfigured IRIS Database
+* [irisdemoint](./irisdemoint/) - Preconfigured IRIS Interoperability
+* [zeppelin-spark](./zeppelin-spark/) - Preconfigured Zeppelin notebook image with IRIS connectivity through Spark and JDBC (the Spark cluster is on the Zeppelin image)
