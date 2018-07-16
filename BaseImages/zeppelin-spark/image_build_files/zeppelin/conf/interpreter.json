@@ -30,7 +30,7 @@
       ],
       "dependencies": [
         {
-          "groupArtifactVersion": "/shared/lib/intersystems-jdbc-3.0.0.jar",
+          "groupArtifactVersion": "/custom/lib/intersystems-jdbc-3.0.0.jar",
           "local": false
         }
       ],
@@ -681,7 +681,7 @@
       ],
       "dependencies": [
         {
-          "groupArtifactVersion": "/shared/lib/intersystems-spark-3.0.0.jar",
+          "groupArtifactVersion": "/custom/lib/intersystems-spark-3.0.0.jar",
           "local": false
         }
       ],
