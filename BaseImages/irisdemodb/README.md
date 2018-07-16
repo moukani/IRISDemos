@@ -2,6 +2,8 @@
 
 This is a basic IRIS Database image. It is used by all stacks that need a database. *Do not use it directly!* The instance is configured with the password "sys". You can log into the management portal with the SuperUser account. 
 
+This image is based on a production image of IRIS but is pre-configured with a default password and CSP applications to make demos easier to build. If you are building a custom application based on this image, change your Dockerfile to remove the default password, change the Installer Manifest to adapt it to your needs and review the CSP application cofigurations to set it up accordingly to your requirements. 
+
 ## How to build the image
 
 You should only build this image if you are working on improving it. Otherwize, create a new Dockerfile based on this one. See instructions on the following topics for that.
