@@ -2,9 +2,9 @@
 
 This repository holds the source code of all IRIS Demos. The demos are to be run with docker compose. Each demo is based on a stack. So, for instance, if you have a demo that is based on IRIS Database, IRIS Interoperability and Zeppelin/Spark, you would probably be combining the [ml](./Stacks/ml/) stack with the [IRIS Interoperability](./BaseImages/irisdemoint/) image.
 
-##BaseImages
+## [BaseImages](./BaseImages)
 
-This folder contain the [base images](./BaseImages) used to build stacks and demos. Normally a demo is built upon a stack, but if it is simple enough, a demo can be built with a single base image. On more complex scenarios, a demo may compose one stack with an additional image. Any combination is possible. The only thing to have in mind is that the images are the basic building blocks of demos.
+This folder contain the base images used to build stacks and demos. Normally a demo is built upon a stack, but if it is simple enough, a demo can be built with a single base image. On more complex scenarios, a demo may compose one stack with an additional image. Any combination is possible. The only thing to have in mind is that the images are the basic building blocks of demos.
 
 You may be asking why do we need to build our own images. Let's give an example: The [irisdemoint](./BaseImages/irisdemodb/) image comes pre-configured with:
 * Password - The default password "sys" is configured for SuperUser
@@ -18,7 +18,7 @@ So, when building a demo of IRIS Interoperability, all you would have to do is t
 
 Another example of why building our own image is important: The Zeppelin-Spark image is a an image that brings Zeppelin and Spark cooked together. It is perfect for demoing Spark, Python, Scala and JDBC with IRIS. It is based on the standard apache zeppelin image. But we add to it IRIS JDBC and IRIS Spark connectors. We have also added configurations and parameters that allows you to simply start this image and use it against your IRIS installation. It just works! No configuration needed.
 
-##Stacks
+## [Stacks](./Stacks)
 
 A stack is a combination of images. It gives you a docker-compose.yml file combining two or more instances. For instance, the [ml](./Stacks/ml/) stack combines the Zeppelin/Spark image with the IRIS Database Image. All you have to do to start Zeppelin, Spark and IRIS is to run *docker-compose up* on your folder! The Zeppelin notebook and Spark will already know where your IRIS instance is. You can easily build a demo with this by adding your classes and data to IRIS and notebooks to Zeppelin. 
 
@@ -28,8 +28,8 @@ Other examples of stacks:
 * Bootstrap/PHP with IRIS Database using REST to communicate (2 images)
 * Django with IRIS Database using REST to communicate (2 images)
 
-You can build a demo by taking one of those [base stacks](./Stacks) and combining it with one or more  images into your demo folder. Just pull them together into your docker-compose file! A stack is there just to give you examples of how to combine them. Think of stacks as templates for your demo!
+You can build a demo by taking one of those base stacks and combining it with one or more  images into your demo folder. Just pull them together into your docker-compose file! A stack is there just to give you examples of how to combine them. Think of stacks as templates for your demo!
 
-##Demos
+## [Demos](./Demos)
 
-[Demos](./Demos) are mini applications built on top of a stack and other images combined. To create a demo, just copy a Stack into a new folder under the Demos folder. Add your source code as appropiate and run it! All the configurations required in terms of drivers, connectivity, security, etc. are sorted out. You should just worry about adding your source code and data to right images.
+Demos are mini applications built on top of a stack and other images combined. To create a demo, just copy a Stack into a new folder under the Demos folder. Add your source code as appropiate and run it! All the configurations required in terms of drivers, connectivity, security, etc. are sorted out. You should just worry about adding your source code and data to right images.
