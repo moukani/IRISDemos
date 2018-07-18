@@ -7,12 +7,20 @@
 # the installer class and run it must be specified on environment variables
 # IRIS_USERNAME and IRIS_PASSWORD.
 
-set -e
-
 # This must not be used on production. This is a work around to have journaling working when
 # working on Mac
 printf "\nAdding configuration to iris.cpf so that Journaling will be enabled when running on non-linux platform (Mac)..."
-sed -i '/\[config\]/ausedirectio=-1' /usr/irissys/iris.cpf
+cat /usr/irissys/iris.cpf | grep usedirectio
+if [ $? -eq 1 ]
+then
+    printf "\n\tAdding ausedirectio=-1 to iris.cpf...\n"
+    sed -i '/\[config\]/ausedirectio=-1' /usr/irissys/iris.cpf
+else
+    printf "\n\tausedirectio=-1 is already there.\n"
+fi
+
+# From now on, any error should interrupt the script
+set -e
 
 printf "\nRunning installer...\n"
 
