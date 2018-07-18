@@ -12,7 +12,7 @@ services:
     #image: amirsamary/irisdemo:iris.2018.2.0-stable
     #image:  docker.iscinternal.com/intersystems/iris:2018.1.1-stable
     command: --key /shared/license.key
-    hostname: iris
+    hostname: irisdb
     ports:
     # 51773 is the superserver default port
     - "9091:51773"
