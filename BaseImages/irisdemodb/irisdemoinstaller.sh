@@ -9,6 +9,11 @@
 
 set -e
 
+# This must not be used on production. This is a work around to have journaling working when
+# working on Mac
+printf "\nAdding configuration to iris.cpf so that Journaling will be enabled when running on non-linux platform (Mac)..."
+sed -i '/\[config\]/ausedirectio=-1' /usr/irissys/iris.cpf
+
 printf "\nRunning installer...\n"
 
 iris start iris
