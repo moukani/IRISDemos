@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 #
 # Amir Samary - 2018
 #

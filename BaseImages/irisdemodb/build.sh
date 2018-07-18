@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 IRIS_PROJECT_FOLDER_NAME=irisdemodb-atelier-project
 
