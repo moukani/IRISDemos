@@ -14,7 +14,7 @@ The image can be easily built by running:
 ./build.sh
 ```
 
-It will run docker build and create an image with the name of the folder you are in. There is an Atelier project on folder ./irisdemoint-atelier-project. You can add your classes to it. This project already brings an empty production called IRISDemo.Production. This production is configured by the Installer Manifest (IRISDemo.SYS.Installer) to auto-start with the container.
+It will run docker build and create an image with the name of the folder you are in. There is an Atelier project on folder ./irisdemoint-atelier-project. You can add your classes to it. This project already brings an empty production called IRISDemo.Production. This production is configured by the Installer Manifest (IRISConfig.Installer) to auto-start with the container.
 
 If you want to push it to docker hub, run with the push parameter:
 

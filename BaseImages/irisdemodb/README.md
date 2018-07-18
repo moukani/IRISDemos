@@ -42,7 +42,7 @@ else
 fi
 ```
 
-It is from this project folder where we load the hello world CSP page and IRISDemo.SYS.Installer with a manifest. Our demos will use this example namespace and we will not be copying this Dockerfile but inheriting from it with the FROM Dockerfile clause. 
+It is from this project folder where we load the hello world CSP page and IRISConfig.Installer with a manifest. Our demos will use this example namespace and we will not be copying this Dockerfile but inheriting from it with the FROM Dockerfile clause. 
 
 ## How to run the image
 
