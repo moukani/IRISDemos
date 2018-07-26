@@ -1,4 +1,3 @@
 container_runtime
 license.key
-shared
 target/*
