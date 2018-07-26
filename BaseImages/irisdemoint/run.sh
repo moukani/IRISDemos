@@ -72,7 +72,7 @@ fi
 
 printfY "\n\nRunning container. Management portal is on http://localhost:52773/csp/sys/UtilHome.csp\n\n"
 docker run $EPHEMERALFLAG -it  \
-    -p 51773:51773 -p 52773:52773 \
+    -p 53773:51773 -p 54773:52773 \
     -v $PWD/shared:/shared \
     --name $CONTAINER_NAME \
     $IMAGE_NAME \

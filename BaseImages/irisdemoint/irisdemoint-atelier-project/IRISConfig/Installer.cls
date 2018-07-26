@@ -20,7 +20,11 @@ ClassMethod AuthForREST()
 
 ClassMethod AuthForSOAP()
 {
-	Quit $$$AutheUnauthenticated
+	Quit $$$AutheLoginToken+$$$AutheCache
+	
+	// You could use unauthenticated if you are using another method to protect your SOAP
+	// service such as a Config class to define orthogonal security
+	//Quit $$$AutheUnauthenticated
 }
 
 /// This method is called by a RUN instruction inside your Dockerfile. It will
@@ -131,7 +135,7 @@ XData Install [ XMLNamespace = INSTALLER ]
 	<Log Text="Creating CSP Applications for ${Namespace}..." Level="0"/>
 	<Namespace Name="${Namespace}" Create="no">
 		<CSPApplication Url="/csp/${CSPAppName}" Directory="${CSPDIR}${CSPAppName}" AuthenticationMethods="#{##class(IRISConfig.Installer).AuthForSMP()}" IsNamespaceDefault="true" CookiePath="/csp/${CSPAppName}" AutoCompile="false" CSPZENEnabled="true" InboundWebServicesEnabled="false" GroupById="%ISCMgtPortal" Resource="%Ens_Portal"/>
-		<CSPApplication Url="/csp/${CSPAppName}/soap" Directory="${CSPDIR}${CSPAppName}" AuthenticationMethods="#{##class(IRISConfig.Installer).AuthForSOAP()}" IsNamespaceDefault="false" Grant="AppRole" CookiePath="/csp/${CSPAppName}/soap" Recurse="true"  AutoCompile="false" CSPZENEnabled="false" InboundWebServicesEnabled="true" GroupById="${CSPAppName}"/>
+		<CSPApplication Url="/csp/${CSPAppName}/soap" Directory="${CSPDIR}${CSPAppName}" AuthenticationMethods="#{##class(IRISConfig.Installer).AuthForSOAP()}" IsNamespaceDefault="false" Grant="AppRole" CookiePath="/csp/${CSPAppName}/soap" Recurse="true"  AutoCompile="false" CSPZENEnabled="true" InboundWebServicesEnabled="true" GroupById="${CSPAppName}"/>
 		
 		<IfDef Var="SourceDir">
             <Log Text="SourceDir defined - offline install from ${SourceDir}" Level="0"/>

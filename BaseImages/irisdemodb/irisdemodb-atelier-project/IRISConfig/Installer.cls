@@ -18,6 +18,20 @@ ClassMethod AuthForInt()
 	Quit $$$AutheUnauthenticated
 }
 
+ClassMethod AuthForREST()
+{
+	Quit $$$AutheLoginToken+$$$AutheCache
+}
+
+ClassMethod AuthForSOAP()
+{
+	Quit $$$AutheLoginToken+$$$AutheCache
+	
+	// You could use unauthenticated if you are using another method to protect your SOAP
+	// service such as a Config class to define orthogonal security
+	//Quit $$$AutheUnauthenticated
+}
+
 /// This method is called by a RUN instruction inside your Dockerfile. It will
 /// use environment variables defined on your Dockerfile to further parameterize
 /// this setup.
@@ -69,6 +83,26 @@ ClassMethod setup(ByRef pVars, pLogLevel As %Integer = 0, pInstaller As %Install
      Quit ##class(%Installer.Manifest).%Generate(%compiledclass, %code, "Install")
 }
 
+ClassMethod ConfigureAsRESTCSPApp(pCSPAppName) As %Status
+{
+	Set tSC = $System.Status.OK()
+	Try
+	{
+		Set oCSPApp = ##class(Security.Applications).%OpenId(pCSPAppName, , .tSC)
+
+		Set oCSPApp.DispatchClass="IRISDemo.REST.Dispatcher"
+		Set oCSPApp.UseCookies=1
+		Set tSC = oCSPApp.%Save()
+		Quit:$System.Status.IsError(tSC)
+	}
+	Catch (oException)
+	{
+		Set tSC = oException.AsStatus()
+	}
+
+	Quit tSC
+}
+
 XData Install [ XMLNamespace = INSTALLER ]
 {
 <Manifest>
@@ -96,12 +130,21 @@ XData Install [ XMLNamespace = INSTALLER ]
 		<Log Text="Creating CSP Applications for ${Namespace}..." Level="0"/>
 		<Namespace Name="${Namespace}" Create="no">
 			<CSPApplication Url="/csp/${CSPAppName}" Directory="${CSPDIR}${CSPAppName}" AuthenticationMethods="#{##class(IRISConfig.Installer).AuthForCSP()}" IsNamespaceDefault="true" Grant="AppRole" CookiePath="/csp/${CSPAppName}" Recurse="true" />
-			<CSPApplication Url="/csp/${CSPAppName}/services" Directory="${CSPDIR}${CSPAppName}" AuthenticationMethods="#{##class(IRISConfig.Installer).AuthForCSP()}" IsNamespaceDefault="false" Grant="AppRole" CookiePath="/csp/${CSPAppName}" Recurse="true"/>
+			
+			<CSPApplication Url="/csp/${CSPAppName}/soap"     Directory="${CSPDIR}${CSPAppName}" AuthenticationMethods="#{##class(IRISConfig.Installer).AuthForSOAP()}" IsNamespaceDefault="false" Grant="AppRole" CookiePath="/csp/${CSPAppName}/soap" Recurse="true"  AutoCompile="false" CSPZENEnabled="true" InboundWebServicesEnabled="true" GroupById="${CSPAppName}" PermittedClasses='1""IRISDemo.SOAP."".E'/>
 			<IfDef Var="SourceDir">
 	            <Log Text="SourceDir defined - offline install from ${SourceDir}" Level="0"/>
 	            <Import File="${SourceDir}" Recurse="true"/>
 	        </IfDef>
+	        
+	        <CSPApplication Url="/csp/${CSPAppName}/rest" Directory="${CSPDIR}${CSPAppName}" AuthenticationMethods="#{##class(IRISConfig.Installer).AuthForREST()}" IsNamespaceDefault="false" Grant="AppRole" CookiePath="/csp/${CSPAppName}/rest" Recurse="true"  AutoCompile="false" CSPZENEnabled="true" InboundWebServicesEnabled="false" GroupById="${CSPAppName}" DispatchClass="IRISDemo.REST.Dispatcher"  UseSessionCookie="1" PermittedClasses='1""IRISDemo.REST."".E'/>
 		</Namespace>
+		
+		<Log Text="Applying additional configurations to the new REST CSP Application..." Level="0"/>
+		<Invoke Class="IRISConfig.Installer" Method="ConfigureAsRESTCSPApp" CheckStatus="true">
+			<Arg name="pCSPAppName" Value="/csp/${CSPAppName}/rest"/>
+		</Invoke>
+
 	</If>
 </Manifest>
 }
