@@ -1,0 +1,71 @@
+version: '3.6'
+services:
+  bankingcore:
+    # environment:
+    # - ISC_DATA_DIRECTORY=/shared/iris
+    build: 
+      context: ./banking_core
+      args:
+      - IRIS_PROJECT_FOLDER_NAME=bankingcore-atelier-project
+    image: bankingcore
+    command: --key /shared/license.key
+    hostname: bankingcore
+    ports:
+    # 51773 is the superserver default port
+    - "9091:51773"
+    # 52773 is the webserver/management portal port
+    - "9090:52773"
+    volumes:
+    - ${PWD}/banking_core/shared/:/shared
+
+  # datalake:
+  #   environment:
+  #   - ISC_DATA_DIRECTORY=/shared/iris
+  #   build: 
+  #     context: ./normalized_datalake
+  #     args:
+  #     - IRIS_PROJECT_FOLDER_NAME=datalake-atelier-project
+  #   image: datalake
+  #   command: --key /shared/license.key
+  #   hostname: datalake
+  #   ports:
+  #   # 51773 is the superserver default port
+  #   - "9095:51773"
+  #   # 52773 is the webserver/management portal port
+  #   - "9094:52773"
+  #   volumes:
+  #   - ${PWD}/normalized_datalake/shared/:/shared
+
+  bankingtrnsrv:
+    # environment:
+    # - ISC_DATA_DIRECTORY=/shared/iris
+    build: 
+      context: ./banking_trn_srv
+      args:
+      - IRIS_PROJECT_FOLDER_NAME=bankingtrnsrv-atelier-project
+    image: bankingtrnsrv
+    command: --key /shared/license.key
+    hostname: bankingtrnsrv
+    ports:
+    # 51773 is the superserver default port
+    - "9093:51773"
+    # 52773 is the webserver/management portal port
+    - "9092:52773"
+    volumes:
+    - ${PWD}/banking_trn_srv/shared/:/shared
+
+  # advancedanalytics:
+  #   build: ./advanced_analytics
+  #   image: advancedanalytics
+  #   ports:
+  #   - "9096:9090"   # Zeppelin
+  #   - "9097:8080"   # Spark Master Portal
+  #   - "9098:8081"   # Spark Worker Portal
+  #   volumes:
+  #   - $PWD/advanced_analytics/shared/:/shared
+  #   environment:
+  #   - IRIS_MASTER_HOST=datalake # DNS based on the name of the service!
+  #   - IRIS_MASTER_PORT=51773 
+  #   - IRIS_MASTER_USERNAME=SuperUser 
+  #   - IRIS_MASTER_PASSWORD=sys 
+  #   - IRIS_MASTER_NAMESPACE=APP 

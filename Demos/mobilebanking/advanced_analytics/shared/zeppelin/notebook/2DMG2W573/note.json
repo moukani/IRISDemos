@@ -1,0 +1,203 @@
+{
+  "paragraphs": [
+    {
+      "text": "%md\n# INTERNAL ONLY - data load to IRIS",
+      "dateUpdated": "Jul 24, 2018 5:01:21 PM",
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/markdown",
+        "editorHide": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003ch1\u003eINTERNAL ONLY - data load to IRIS\u003c/h1\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1532451681104_-292430615",
+      "id": "20170814-214209_1923538140",
+      "dateCreated": "Jul 24, 2018 5:01:21 PM",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "Load one month of taxi data from a csv file",
+      "text": "case class PayTrans (\n  step: Int,\n  transType: String,\n  amount: Double,\n  nameOrig: String,\n  oldbalanceOrg: Double,\t\n  newbalanceOrig: Double,\t\t\n  nameDest: String,\n  oldbalanceDest: Double,\n  newbalanceDest: Double,\t\n  isFraud: Int,\n  isFlaggedFraud: Int\n)\n\nval trans \u003d spark.read\n                .schema(Seq[PayTrans]().toDF.schema)       // applies the case class as a schema\n                .option(\"header\", \"true\")                   // skips the header row\n                .csv(\"/shared/training_set.csv\")     // file name pointer\n\ntrans.count()",
+      "user": "anonymous",
+      "dateUpdated": "Jul 24, 2018 6:37:38 PM",
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "text",
+          "editOnDblClick": false
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/text",
+        "title": false,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "defined class PayTrans\ntrans: org.apache.spark.sql.DataFrame \u003d [step: int, transType: string ... 9 more fields]\nres4: Long \u003d 500000\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1532451681106_-291661117",
+      "id": "20170719-150211_1913551045",
+      "dateCreated": "Jul 24, 2018 5:01:21 PM",
+      "dateStarted": "Jul 24, 2018 5:54:29 PM",
+      "dateFinished": "Jul 24, 2018 5:55:28 PM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "Save the dataframe into a new InterSystems IRIS table",
+      "text": "trans.write\n    .format(\"iris\")                            // tell Spark to use our InterSystems IRIS Spark Connector\n    .option(\"dbtable\",\"TempPackage.Trans\")     // the table name to write to\n    .option(\"isolationlevel\",\"NONE\")\n    .mode(\"OVERWRITE\")                          // overwrite in case table already exists\n    .save()\n    ",
+      "user": "anonymous",
+      "dateUpdated": "Jul 24, 2018 6:37:26 PM",
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "text",
+          "editOnDblClick": false
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/text",
+        "editorHide": false,
+        "title": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "jobName": "paragraph_1532451681107_-292045866",
+      "id": "20170719-151139_278113954",
+      "dateCreated": "Jul 24, 2018 5:01:21 PM",
+      "dateStarted": "Jul 24, 2018 6:25:30 PM",
+      "dateFinished": "Jul 24, 2018 6:26:15 PM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%irisjdbc\nSELECT top 10 *\nFROM FINDEMO_Data.Tran\n",
+      "user": "anonymous",
+      "dateUpdated": "Jul 24, 2018 5:43:55 PM",
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "sql",
+          "editOnDblClick": false
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/sql",
+        "editorHide": false,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TABLE",
+            "data": "step\ttransType\tamount\tnameOrig\toldbalanceOrg\tnewbalanceOrig\tnameDest\toldbalanceDest\tnewbalanceDest\tisFraud\tisFlaggedFraud\n1\tPAYMENT\t9839.64\tC1231006815\t170136.0\t160296.36\tM1979787155\t0.0\t0.0\t0\t0\n1\tPAYMENT\t1864.28\tC1666544295\t21249.0\t19384.72\tM2044282225\t0.0\t0.0\t0\t0\n1\tTRANSFER\t181.0\tC1305486145\t181.0\t0.0\tC553264065\t0.0\t0.0\t1\t0\n1\tCASH_OUT\t181.0\tC840083671\t181.0\t0.0\tC38997010\t21182.0\t0.0\t1\t0\n1\tPAYMENT\t11668.14\tC2048537720\t41554.0\t29885.86\tM1230701703\t0.0\t0.0\t0\t0\n1\tPAYMENT\t7817.71\tC90045638\t53860.0\t46042.29\tM573487274\t0.0\t0.0\t0\t0\n1\tPAYMENT\t7107.77\tC154988899\t183195.0\t176087.23\tM408069119\t0.0\t0.0\t0\t0\n1\tPAYMENT\t7861.64\tC1912850431\t176087.23\t168225.59\tM633326333\t0.0\t0.0\t0\t0\n1\tPAYMENT\t4024.36\tC1265012928\t2671.0\t0.0\tM1176932104\t0.0\t0.0\t0\t0\n1\tDEBIT\t5337.77\tC712410124\t41720.0\t36382.23\tC195600860\t41898.0\t40348.79\t0\t0\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1532451681107_-292045866",
+      "id": "20170719-144603_1596189222",
+      "dateCreated": "Jul 24, 2018 5:01:21 PM",
+      "dateStarted": "Jul 24, 2018 5:43:55 PM",
+      "dateFinished": "Jul 24, 2018 5:44:05 PM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%jdbc\n",
+      "dateUpdated": "Jul 24, 2018 5:01:21 PM",
+      "config": {
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/sql",
+        "results": {},
+        "enabled": true,
+        "editorSetting": {
+          "language": "sql",
+          "editOnDblClick": false
+        }
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1532451681108_-293969610",
+      "id": "20180112-123638_818531600",
+      "dateCreated": "Jul 24, 2018 5:01:21 PM",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    }
+  ],
+  "name": "x. PayTrans - Data Load",
+  "id": "2DMG2W573",
+  "angularObjects": {
+    "2DHWQ7A7V:shared_process": [],
+    "2DGTFGFBC:shared_process": [],
+    "2DHATZD9M:shared_process": [],
+    "2DKDARDPF:shared_process": [],
+    "2DG8A819A:shared_process": [],
+    "2DJVV28U3:shared_process": [],
+    "2DKCAA3TS:shared_process": [],
+    "2DHEPV9M3:shared_process": [],
+    "2DKW8P766:shared_process": [],
+    "2DGHX224C:shared_process": [],
+    "2DGRSNE7G:shared_process": [],
+    "2DGUG4SEP:shared_process": [],
+    "2DHM86BYR:shared_process": [],
+    "2DHYW1ZN6:shared_process": [],
+    "2DJ16C4UE:shared_process": [],
+    "2DJ4VH5DW:shared_process": [],
+    "2DJBEDGYM:shared_process": [],
+    "2DM19CFTF:shared_process": [],
+    "2DHHCF91E:shared_process": [],
+    "2DKCPR9P1:shared_process": []
+  },
+  "config": {},
+  "info": {}
+}

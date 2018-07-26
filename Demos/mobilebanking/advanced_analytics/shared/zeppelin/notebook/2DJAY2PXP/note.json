@@ -1,0 +1,643 @@
+{
+  "paragraphs": [
+    {
+      "text": "%md\n# Analyzing the Data\n\nPreparing data for modeling can take a significant amount of time relative to the entire process of building a predictive model. Ensuring data quality and integrity is crucial to the success of the model. Additionally, the approaches you choose for exploration will determine how you approach building your model. In the following sections, you will see some suggestions on how to approach your dataset. However, you may consider some unhelpful or unnecessary, and you are encouraged to seek the data filtering and refining techniques that you think are most effective. ",
+      "dateUpdated": "Jul 25, 2018 5:11:35 PM",
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/markdown",
+        "editorHide": true,
+        "results": {},
+        "enabled": false
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003ch1\u003eAnalyzing the Data\u003c/h1\u003e\n\u003cp\u003ePreparing data for modeling can take a significant amount of time relative to the entire process of building a predictive model. Ensuring data quality and integrity is crucial to the success of the model. Additionally, the approaches you choose for exploration will determine how you approach building your model. In the following sections, you will see some suggestions on how to approach your dataset. However, you may consider some unhelpful or unnecessary, and you are encouraged to seek the data filtering and refining techniques that you think are most effective.\u003c/p\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1532538695174_-155967406",
+      "id": "20170720-112641_833385781",
+      "dateCreated": "Jul 25, 2018 5:11:35 PM",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%md\n## Fraud Detection \u0026mdash; Analyzing the Data\n\nOne useful approach could be to consider known financial fraud techniques and the elements that could indicate the use of these techniques.\n\nFor example, one common way to steal funds is to transfer money to a fraudulent destination account and then cash out the transfer amount with a merchant that pays in cash. These merchants may or may not be participating in the fraud itself. To investigate this case, consider if there are multiple fraudulent transfers to the same destination account that later cashed out from that account. Remember that account names are marked with *M* as a prefix in all merchant account names in `nameDest`.\n\nFirst, look at the below code that analyzes for this cash-out technique. \n\n ",
+      "dateUpdated": "Jul 25, 2018 5:11:35 PM",
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/markdown",
+        "editorHide": true,
+        "title": false,
+        "results": {},
+        "enabled": false
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003ch2\u003eFraud Detection \u0026mdash; Analyzing the Data\u003c/h2\u003e\n\u003cp\u003eOne useful approach could be to consider known financial fraud techniques and the elements that could indicate the use of these techniques.\u003c/p\u003e\n\u003cp\u003eFor example, one common way to steal funds is to transfer money to a fraudulent destination account and then cash out the transfer amount with a merchant that pays in cash. These merchants may or may not be participating in the fraud itself. To investigate this case, consider if there are multiple fraudulent transfers to the same destination account that later cashed out from that account. Remember that account names are marked with \u003cem\u003eM\u003c/em\u003e as a prefix in all merchant account names in \u003ccode\u003enameDest\u003c/code\u003e.\u003c/p\u003e\n\u003cp\u003eFirst, look at the below code that analyzes for this cash-out technique.\u003c/p\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1532538695178_-157506401",
+      "id": "20180112-162042_488897245",
+      "dateCreated": "Jul 25, 2018 5:11:35 PM",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "Cash Out Fraud",
+      "text": "import com.intersystems.spark._\nval transfer \u003d spark.read.iris(\"SELECT * FROM zeppelin.PayTrans\")\n                        .filter($\"transType\" \u003d\u003d\u003d \"TRANSFER\")\n                        .select(col(\"amount\").alias(\"transferred\"), col(\"nameDest\").alias(\"transferTo\"), col(\"step\").alias(\"transferStep\"))\nval cashout \u003d spark.read.iris(\"SELECT * FROM zeppelin.PayTrans\")\n                        .filter($\"transType\" \u003d\u003d\u003d \"CASH_OUT\")\n                        //.select(col(\"amount\").alias(\"cashed\"), col(\"nameOrig\").alias(\"cashFrom\"), col(\"step\").alias(\"cashStep\"))\n\nval combi \u003d transfer.join(cashout, transfer(\"transferTo\") \u003d\u003d\u003d cashout(\"nameOrig\"))\n\nz.show(combi)",
+      "dateUpdated": "Jul 25, 2018 5:11:35 PM",
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/scala",
+        "editorHide": false,
+        "title": false,
+        "results": {
+          "0": {
+            "graph": {
+              "mode": "table",
+              "height": 300.0,
+              "optionOpen": true,
+              "setting": {
+                "multiBarChart": {
+                  "stacked": false
+                }
+              },
+              "commonSetting": {},
+              "keys": [
+                {
+                  "name": "Expression_1",
+                  "index": 0.0,
+                  "aggr": "sum"
+                }
+              ],
+              "groups": [],
+              "values": [
+                {
+                  "name": "Aggregate_2",
+                  "index": 1.0,
+                  "aggr": "sum"
+                }
+              ]
+            },
+            "helium": {}
+          }
+        },
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1532538695180_-159814895",
+      "id": "20180111-225234_188950042",
+      "dateCreated": "Jul 25, 2018 5:11:35 PM",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%md\nNext, look at the overall incidence of fraud that uses this technique by running the below code.\n\n ",
+      "dateUpdated": "Jul 25, 2018 5:11:35 PM",
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/markdown",
+        "editorHide": true,
+        "title": false,
+        "results": {},
+        "enabled": false
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003cp\u003eNext, look at the overall incidence of fraud that uses this technique by running the below code.\u003c/p\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1532538695184_-149041925",
+      "id": "20180129-205941_1851333279",
+      "dateCreated": "Jul 25, 2018 5:11:35 PM",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "",
+      "text": "val all \u003d spark.read.iris(\"zeppelin.PayTrans\")\n\n// define a utility function to print the fraud rate for a given data(sub)set\ndef printFraudRate[T]( ds : org.apache.spark.sql.Dataset[T], str : String \u003d \"overall\" ) \u003d {\n  \n  // use simple .filter() and .count()\n  val r \u003d ds.filter($\"isFraud\" \u003d\u003d\u003d 1).count().toFloat / ds.count()\n  \n  printf(\"%s fraud incidence: %f\\n\", str, r)\n} \n\nprintFraudRate(all)",
+      "dateUpdated": "Jul 25, 2018 5:11:35 PM",
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/scala",
+        "editorHide": false,
+        "title": false,
+        "results": {
+          "0": {
+            "graph": {
+              "mode": "table",
+              "height": 300.0,
+              "optionOpen": true,
+              "setting": {
+                "multiBarChart": {
+                  "stacked": false
+                }
+              },
+              "commonSetting": {},
+              "keys": [
+                {
+                  "name": "Expression_1",
+                  "index": 0.0,
+                  "aggr": "sum"
+                }
+              ],
+              "groups": [],
+              "values": [
+                {
+                  "name": "Aggregate_2",
+                  "index": 1.0,
+                  "aggr": "sum"
+                }
+              ]
+            },
+            "helium": {}
+          }
+        },
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1532538695187_-148657176",
+      "id": "20180122-204344_453221210",
+      "dateCreated": "Jul 25, 2018 5:11:35 PM",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%md\nWhat happens if you look at transfer and cash-out transactions that result in emptying all funds in the originating account? What is the incidence?\n\n ",
+      "dateUpdated": "Jul 25, 2018 5:11:35 PM",
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/markdown",
+        "editorHide": true,
+        "title": false,
+        "results": {},
+        "enabled": false
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003cp\u003eWhat happens if you look at transfer and cash-out transactions that result in emptying all funds in the originating account? What is the incidence?\u003c/p\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1532538695189_-150965670",
+      "id": "20180123-191101_2111678298",
+      "dateCreated": "Jul 25, 2018 5:11:35 PM",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "val emptying \u003d all.filter($\"newBalanceOrig\" \u003d\u003d\u003d 0).filter($\"oldBalanceOrig\" \u003e 0).filter($\"transType\".isin(\"TRANSFER\",\"CASH_OUT\"))\nprintFraudRate(emptying, \"emptying orig account\")\n\nz.show(emptying.groupBy($\"isFraud\").agg(count($\"isFraud\")))",
+      "dateUpdated": "Jul 25, 2018 5:11:35 PM",
+      "config": {
+        "editorSetting": {
+          "language": "scala"
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/scala",
+        "editorHide": false,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1532538695191_-150196172",
+      "id": "20180122-204340_1045755316",
+      "dateCreated": "Jul 25, 2018 5:11:35 PM",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%md\nNext, take a look at the amount transferred for fraud transactions. If you scan the amounts, you will notice a repeating value. What might this indicate?\n ",
+      "dateUpdated": "Jul 25, 2018 5:11:35 PM",
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/markdown",
+        "editorHide": true,
+        "title": false,
+        "results": {},
+        "enabled": false
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003cp\u003eNext, take a look at the amount transferred for fraud transactions. If you scan the amounts, you will notice a repeating value. What might this indicate?\u003c/p\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1532538695192_-152119917",
+      "id": "20180124-140511_1378948367",
+      "dateCreated": "Jul 25, 2018 5:11:35 PM",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "// show fraudulent transactions with amounts labeled as transferred\n\nval trans1 \u003d transfer\n             .filter($\"isFraud\" \u003d\u003d\u003d \"1\")\n\nz.show(trans1)",
+      "dateUpdated": "Jul 25, 2018 5:11:35 PM",
+      "config": {
+        "editorSetting": {
+          "language": "scala"
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/scala",
+        "editorHide": false,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1532538695194_-151350419",
+      "id": "20180124-141332_1192789555",
+      "dateCreated": "Jul 25, 2018 5:11:35 PM",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%md\nNow, confirm the incidence of fraud for the value you saw repeated in the fraudulent transactions. What does that mean?\n ",
+      "dateUpdated": "Jul 25, 2018 5:11:35 PM",
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/markdown",
+        "editorHide": true,
+        "title": false,
+        "results": {},
+        "enabled": false
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003cp\u003eNow, confirm the incidence of fraud for the value you saw repeated in the fraudulent transactions. What does that mean?\u003c/p\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1532538695194_-151350419",
+      "id": "20180124-142337_1106036898",
+      "dateCreated": "Jul 25, 2018 5:11:35 PM",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "val amount10k \u003d all.filter($\"amount\" \u003d\u003d\u003d 10000000)\nprintFraudRate(amount10k, \"amounts of 10M$\")",
+      "dateUpdated": "Jul 25, 2018 5:11:35 PM",
+      "config": {
+        "editorSetting": {
+          "language": "scala"
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/scala",
+        "editorHide": false,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1532538695195_-151735168",
+      "id": "20180122-204655_1489983479",
+      "dateCreated": "Jul 25, 2018 5:11:35 PM",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%md\nDo more fraudulent transactions happen at a certain time of day? Remember that `step` is the hour of the day, in an ascending number, during one month. \n\nBelow are some ways of viewing the data.\n ",
+      "dateUpdated": "Jul 25, 2018 5:11:35 PM",
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/markdown",
+        "editorHide": true,
+        "title": false,
+        "results": {},
+        "enabled": false
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003cp\u003eDo more fraudulent transactions happen at a certain time of day? Remember that \u003ccode\u003estep\u003c/code\u003e is the hour of the day, in an ascending number, during one month. \u003c/p\u003e\n\u003cp\u003eBelow are some ways of viewing the data.\u003c/p\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1532538695195_-151735168",
+      "id": "20180124-142655_994348633",
+      "dateCreated": "Jul 25, 2018 5:11:35 PM",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "val allH \u003d all.withColumn(\"hourOfDay\", $\"step\" % 24)",
+      "dateUpdated": "Jul 25, 2018 5:11:35 PM",
+      "config": {
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/scala",
+        "results": {},
+        "enabled": true,
+        "editorSetting": {
+          "language": "scala"
+        }
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "allH: org.apache.spark.sql.DataFrame \u003d [ID: bigint, amount: double ... 11 more fields]\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1532538695196_-153658912",
+      "id": "20180122-204534_465176485",
+      "dateCreated": "Jul 25, 2018 5:11:35 PM",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "for (i \u003c- 0 to 23) { printFraudRate( allH.filter($\"hourOfDay\" \u003d\u003d\u003d i) , \"tx at \"+i) }",
+      "dateUpdated": "Jul 25, 2018 5:11:35 PM",
+      "config": {
+        "editorSetting": {
+          "language": "scala"
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/scala",
+        "editorHide": false,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1532538695196_-153658912",
+      "id": "20180122-204759_2105439826",
+      "dateCreated": "Jul 25, 2018 5:11:35 PM",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "z.show(allH.groupBy(\"hourOfDay\").agg(count(\"hourOfDay\")))",
+      "dateUpdated": "Jul 25, 2018 5:11:35 PM",
+      "config": {
+        "editorSetting": {
+          "language": "scala"
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/scala",
+        "editorHide": false,
+        "results": {
+          "0": {
+            "graph": {
+              "mode": "lineChart",
+              "height": 300.0,
+              "optionOpen": false
+            },
+            "helium": {}
+          }
+        },
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1532538695197_-154043661",
+      "id": "20180122-204832_860846838",
+      "dateCreated": "Jul 25, 2018 5:11:35 PM",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "z.show(allH.groupBy(\"hourOfDay\").agg(sum(\"isFraud\") / count(\"isFraud\")))",
+      "dateUpdated": "Jul 25, 2018 5:11:35 PM",
+      "config": {
+        "editorSetting": {
+          "language": "scala"
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/scala",
+        "editorHide": false,
+        "results": {
+          "0": {
+            "graph": {
+              "mode": "lineChart",
+              "height": 300.0,
+              "optionOpen": false
+            },
+            "helium": {}
+          }
+        },
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1532538695197_-154043661",
+      "id": "20180123-182924_676256948",
+      "dateCreated": "Jul 25, 2018 5:11:35 PM",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%md\n\n## Next: Prepare and Create the Predictive Model\nContinue to the next notebook to [prepare and create your model](/#/notebook/FINPLAY3).",
+      "dateUpdated": "Jul 25, 2018 5:11:35 PM",
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/markdown",
+        "editorHide": true,
+        "results": {},
+        "enabled": false
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003ch2\u003eNext: Prepare and Create the Predictive Model\u003c/h2\u003e\n\u003cp\u003eContinue to the next notebook to \u003ca href\u003d\"/#/notebook/FINPLAY3\"\u003eprepare and create your model\u003c/a\u003e.\u003c/p\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1532538695198_-152889414",
+      "id": "20170720-160254_1256360401",
+      "dateCreated": "Jul 25, 2018 5:11:35 PM",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    }
+  ],
+  "name": "2. Financial Fraud Data Analysis",
+  "id": "2DJAY2PXP",
+  "angularObjects": {
+    "2DHWQ7A7V:shared_process": [],
+    "2DGTFGFBC:shared_process": [],
+    "2DHATZD9M:shared_process": [],
+    "2DKDARDPF:shared_process": [],
+    "2DG8A819A:shared_process": [],
+    "2DJVV28U3:shared_process": [],
+    "2DKCAA3TS:shared_process": [],
+    "2DHEPV9M3:shared_process": [],
+    "2DKW8P766:shared_process": [],
+    "2DGHX224C:shared_process": [],
+    "2DGRSNE7G:shared_process": [],
+    "2DGUG4SEP:shared_process": [],
+    "2DHM86BYR:shared_process": [],
+    "2DHYW1ZN6:shared_process": [],
+    "2DJ16C4UE:shared_process": [],
+    "2DJ4VH5DW:shared_process": [],
+    "2DJBEDGYM:shared_process": [],
+    "2DM19CFTF:shared_process": [],
+    "2DHHCF91E:shared_process": [],
+    "2DKCPR9P1:shared_process": []
+  },
+  "config": {},
+  "info": {}
+}
