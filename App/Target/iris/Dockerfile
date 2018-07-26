@@ -8,4 +8,4 @@ ARG IRIS_PROJECT_FOLDER_NAME
 ADD ./${IRIS_PROJECT_FOLDER_NAME}/ $IRIS_APP_SOURCEDIR
 
 # Running the installer.
-#RUN /usr/irissys/demo/irisdemoinstaller.sh
+RUN /usr/irissys/demo/irisdemoinstaller.sh

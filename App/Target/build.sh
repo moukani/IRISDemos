@@ -1,5 +1,12 @@
 #!/bin/bash
 
-printf "\nRunning docker compose..."
+source ../../ShellScriptUtils/util.sh
+source ../../ShellScriptUtils/buildandpush.sh
 
-docker-compose up --build --detach
+set -e
+
+printfY "\nBUILDING...\n"
+docker-compose build --force-rm --no-cache 
+
+printfY "\n\nRUNNING...\n"
+docker-compose up

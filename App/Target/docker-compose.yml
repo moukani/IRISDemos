@@ -3,7 +3,7 @@ services:
   irisdb:
     environment:
     - ISC_DATA_DIRECTORY=/shared/iris
-
+    
     build: 
       context: ./iris
       args:

@@ -1,0 +1,82 @@
+{
+  "paragraphs": [
+    {
+      "text": "%irisjdbc select * from ta.aas",
+      "user": "anonymous",
+      "dateUpdated": "Jul 18, 2018 6:40:38 PM",
+      "config": {
+        "colWidth": 12.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "sql",
+          "editOnDblClick": false
+        },
+        "editorMode": "ace/mode/sql"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "ERROR",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "java.sql.SQLException: [SQLCODE: \u003c-30\u003e:\u003cTable or view not found\u003e]\r\n[Location: \u003cPrepare\u003e]\r\n[%msg: \u003c Table \u0027TA.AAS\u0027 not found\u003e]\n\tat com.intersystems.jdbc.IRISConnection.getServerError(IRISConnection.java:1247)\n\tat com.intersystems.jdbc.IRISConnection.processError(IRISConnection.java:1405)\n\tat com.intersystems.jdbc.InStream.readMessage(InStream.java:263)\n\tat com.intersystems.jdbc.InStream.readMessage(InStream.java:146)\n\tat com.intersystems.jdbc.IRISStatement.sendDirectQueryRequest(IRISStatement.java:324)\n\tat com.intersystems.jdbc.IRISStatement.Query(IRISStatement.java:255)\n\tat com.intersystems.jdbc.IRISStatement.execute(IRISStatement.java:733)\n\tat org.apache.commons.dbcp2.DelegatingStatement.execute(DelegatingStatement.java:291)\n\tat org.apache.commons.dbcp2.DelegatingStatement.execute(DelegatingStatement.java:291)\n\tat org.apache.zeppelin.jdbc.JDBCInterpreter.executeSql(JDBCInterpreter.java:597)\n\tat org.apache.zeppelin.jdbc.JDBCInterpreter.interpret(JDBCInterpreter.java:709)\n\tat org.apache.zeppelin.interpreter.LazyOpenInterpreter.interpret(LazyOpenInterpreter.java:97)\n\tat org.apache.zeppelin.interpreter.remote.RemoteInterpreterServer$InterpretJob.jobRun(RemoteInterpreterServer.java:498)\n\tat org.apache.zeppelin.scheduler.Job.run(Job.java:175)\n\tat org.apache.zeppelin.scheduler.ParallelScheduler$JobRunner.run(ParallelScheduler.java:162)\n\tat java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:511)\n\tat java.util.concurrent.FutureTask.run(FutureTask.java:266)\n\tat java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.access$201(ScheduledThreadPoolExecutor.java:180)\n\tat java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:293)\n\tat java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)\n\tat java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)\n\tat java.lang.Thread.run(Thread.java:748)\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1531939229998_425057461",
+      "id": "20180718-184029_1148942640",
+      "dateCreated": "Jul 18, 2018 6:40:29 PM",
+      "dateStarted": "Jul 18, 2018 6:40:38 PM",
+      "dateFinished": "Jul 18, 2018 6:40:42 PM",
+      "status": "ERROR",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%irisjdbc\n",
+      "user": "anonymous",
+      "dateUpdated": "Jul 18, 2018 6:40:38 PM",
+      "config": {},
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1531939238564_1324230965",
+      "id": "20180718-184038_2053986549",
+      "dateCreated": "Jul 18, 2018 6:40:38 PM",
+      "status": "READY",
+      "progressUpdateIntervalMs": 500
+    }
+  ],
+  "name": "Untitled Note 1",
+  "id": "2DND8QPUK",
+  "angularObjects": {
+    "2DHWQ7A7V:shared_process": [],
+    "2DGTFGFBC:shared_process": [],
+    "2DHATZD9M:shared_process": [],
+    "2DKDARDPF:shared_process": [],
+    "2DG8A819A:shared_process": [],
+    "2DJVV28U3:shared_process": [],
+    "2DKCAA3TS:shared_process": [],
+    "2DHEPV9M3:shared_process": [],
+    "2DKW8P766:shared_process": [],
+    "2DGHX224C:shared_process": [],
+    "2DGRSNE7G:shared_process": [],
+    "2DGUG4SEP:shared_process": [],
+    "2DHM86BYR:shared_process": [],
+    "2DHYW1ZN6:shared_process": [],
+    "2DJ16C4UE:shared_process": [],
+    "2DJ4VH5DW:shared_process": [],
+    "2DJBEDGYM:shared_process": [],
+    "2DM19CFTF:shared_process": [],
+    "2DHHCF91E:shared_process": [],
+    "2DKCPR9P1:shared_process": []
+  },
+  "config": {},
+  "info": {}
+}
