@@ -1,3 +1,5 @@
+Include DEMOMACROS
+
 /// See https://www.kaggle.com/ntnu-testimon/paysim1/home for more information
 Class IRISDemo.MobileTransaction Extends %Persistent
 {
@@ -33,126 +35,111 @@ Class IRISDemo.MobileTransaction Extends %Persistent
 	/// Customer called customer services and, after investigation, this transaction has been confirmed to be a fraud.
 	Property IsFraud As %Boolean;
 
+/// Throws exceptions!
+/// If successful, returns new transaction ID
 /// This method is called by a SOAP service on class IRISDemo.Services.TransactionServices  
 /// It will be called by the BankingServices service.
-ClassMethod CreateTransaction(pTransDateTime As %TimeStamp, pTransType As %String, pAmount As %Double, pFromAccountNumber As %String, pToAccountNumber As %String, pIgnoreLackOfFounds As %Boolean = 0, Output pTransactionId As %String) As %Status 
+ClassMethod CreateTransaction(pTransDateTime As %TimeStamp, pTransType As %String, pAmount As %Double, pFromAccountNumber As %String, pToAccountNumber As %String, pIgnoreLackOfFounds As %Boolean = 0) As %String 
 {
 	#Dim oTrans As IRISDemo.MobileTransaction
 	Set tSC = $$$OK
-	Try
-	{
-		Set oTrans = ..%New()
-		
-		Set oTrans.FromAccount = ##class(Account).AccountNumberIndexOpen(pFromAccountNumber,,.tSC)
-		Quit:$System.Status.IsError(tSC)
+	
+	Set tTransactionId=""
+	Set oTrans = ..%New()
+	
+	Set oTrans.FromAccount = ##class(Account).AccountNumberIndexOpen(pFromAccountNumber,,.tSC)
+	$$$TrowStatusExceptionIfError("AccountNumberNotFoundException", tSC)
 
-		Set oTrans.ToAccount = ##class(Account).AccountNumberIndexOpen(pToAccountNumber,,.tSC)
-		Quit:$System.Status.IsError(tSC)
-		
-		Set oTrans.Amount=pAmount
-		Set oTrans.TransDateTime=pTransDateTime
-		Set oTrans.TransType=pTransType
-		
-		Set oTrans.FromAccountOldBalance=oTrans.FromAccount.Balance
-		Set oTrans.ToAccountOldBalance=oTrans.ToAccount.Balance
-		
-		Set oTrans.ToAccount.Balance=oTrans.ToAccount.Balance+oTrans.Amount
-		Set oTrans.FromAccount.Balance=oTrans.FromAccount.Balance-oTrans.Amount
+	Set oTrans.ToAccount = ##class(Account).AccountNumberIndexOpen(pToAccountNumber,,.tSC)
+	$$$TrowStatusExceptionIfError("AccountNumberNotFoundException", tSC)
 
-		Set tSC = oTrans.ValidateTransaction(pIgnoreLackOfFounds)
-		Quit:$System.Status.IsError(tSC)
-				
-		Set oTrans.FromAccountNewBalance=oTrans.FromAccount.Balance
-		Set oTrans.ToAccountNewBalance=oTrans.ToAccount.Balance
+	Set oTrans.Amount=pAmount
+	Set oTrans.TransDateTime=pTransDateTime
+	Set oTrans.TransType=pTransType
+	
+	Set oTrans.FromAccountOldBalance=oTrans.FromAccount.Balance
+	Set oTrans.ToAccountOldBalance=oTrans.ToAccount.Balance
+	
+	Set oTrans.ToAccount.Balance=oTrans.ToAccount.Balance+oTrans.Amount
+	Set oTrans.FromAccount.Balance=oTrans.FromAccount.Balance-oTrans.Amount
+
+	Set tSC = oTrans.ValidateTransaction(pIgnoreLackOfFounds)
+	Quit:$System.Status.IsError(tSC)
+			
+	Set oTrans.FromAccountNewBalance=oTrans.FromAccount.Balance
+	Set oTrans.ToAccountNewBalance=oTrans.ToAccount.Balance
+	
+	Set tSC = oTrans.%Save(1)
+	$$$TrowStatusExceptionIfError("SaveTransactionException", tSC)
+	
+	Set tTransactionId=oTrans.%Id()
 		
-		Set tSC = oTrans.%Save(1)
-		Quit:$System.Status.IsError(tSC)
-		
-		Set pTransactionId=oTrans.%Id()
-	}
-	Catch (oException)
-	{
-		Set tSC = oException.AsStatus()
-	}
-		
-	Quit tSC
+	Quit tTransactionId
 }
 
-ClassMethod ValidateTransaction(pTransaction As IRISDemo.MobileTransaction, pIgnoreLackOfFounds As %Boolean = 0) As %String [ Private ] 
+/// Throws exception if validation fails!
+ClassMethod ValidateTransaction(pTransaction As IRISDemo.MobileTransaction, pIgnoreLackOfFounds As %Boolean = 0) [ Private ] 
 {
 	#Dim oTrans As IRISDemo.MobileTransaction
 	Set tRet=1
-	Set tSC = $$$OK
-	Try
+	If pTransaction.TransType="CASH_IN"
 	{
-		If pTransaction.TransType="CASH_IN"
-		{
- //			Accordingly to the dataset documentation, this transaction should be between
- //			a customer and a merchant. But all of them on the dataset are between customers!
- //			If oTrans.FromAccount.AccountType'="M"
- //			{
- //				Do ..LogError(iLine, oTrans.TransType_": From Account must be a merchant")
- //				Continue
- //			}
+ //		Accordingly to the dataset documentation, this transaction should be between
+ //		a customer and a merchant. But all of them on the dataset are between customers!
+ //		If oTrans.FromAccount.AccountType'="M"
+ //		{
+ //			Do ..LogError(iLine, oTrans.TransType_": From Account must be a merchant")
+ //			Continue
+ //		}
  //
- //			If oTrans.ToAccount.AccountType'="C"
- //			{
- //				Do ..LogError(iLine, oTrans.TransType_": To Account must be a customer")
- //				Continue
- //			}				
-		}
-		ElseIf (pTransaction.TransType="CASH_OUT")
-		{
- //			Accordingly to the dataset documentation, this transaction should be between
- //			a customer and a merchant. But all of them on the dataset are between customers!
- //			If oTrans.FromAccount.AccountType'="C"
- //			{
- //				Do ..LogError(iLine, oTrans.TransType_": From Account must be a customer")
- //				Continue
- //			}
+ //		If oTrans.ToAccount.AccountType'="C"
+ //		{
+ //			Do ..LogError(iLine, oTrans.TransType_": To Account must be a customer")
+ //			Continue
+ //		}				
+	}
+	ElseIf (pTransaction.TransType="CASH_OUT")
+	{
+ //		Accordingly to the dataset documentation, this transaction should be between
+ //		a customer and a merchant. But all of them on the dataset are between customers!
+ //		If oTrans.FromAccount.AccountType'="C"
+ //		{
+ //			Do ..LogError(iLine, oTrans.TransType_": From Account must be a customer")
+ //			Continue
+ //		}
  //
- //			If oTrans.ToAccount.AccountType'="M"
- //			{
- //				Do ..LogError(iLine, oTrans.TransType_": To Account must be a merchant")
- //				Continue
- //			}				
-		}
-		ElseIf (pTransaction.TransType="PAYMENT")
+ //		If oTrans.ToAccount.AccountType'="M"
+ //		{
+ //			Do ..LogError(iLine, oTrans.TransType_": To Account must be a merchant")
+ //			Continue
+ //		}				
+	}
+	ElseIf (pTransaction.TransType="PAYMENT")
+	{
+		If pTransaction.FromAccount.AccountType'="C"
 		{
-			If pTransaction.FromAccount.AccountType'="C"
-			{
-				Set tSC = $System.Status.Error(5001,oTrans.TransType_": From Account must be a customer")
-				Quit
-			}
+			$$$TrowException("InvalidAccountNumberException", "FromAccountNumber")
+		}
 
-			If pTransaction.ToAccount.AccountType'="M"
-			{
-				Set tSC = $System.Status.Error(5001, oTrans.TransType_": To Account must be a merchant")
-				Quit
-			}				
-		}
-		ElseIf (pTransaction.TransType="DEBIT") || (pTransaction.TransType="TRANSFER")
+		If pTransaction.ToAccount.AccountType'="M"
 		{
-			//No validations
-		}
-		Else
-		{
-			Set tSC = $System.Status.Error(5001, "Invalid type of transaction ("_oTrans.TransType_")")
-			Quit
-		}
-				
-		If 'pIgnoreLackOfFounds && (pTransaction.FromAccount.Balance<0)
-		{
-			Set tSC = $System.Status.Error(5001, "Insufficient funds.")
-			Quit
-		} 
+			$$$TrowException("InvalidAccountNumberException", "ToAccountNumber")
+		}				
 	}
-	Catch (oException)
+	ElseIf (pTransaction.TransType="DEBIT") || (pTransaction.TransType="TRANSFER")
 	{
-		Set tSC = oException.AsStatus()
+		//No validations
 	}
-	
-	Quit tSC
+	Else
+	{
+		Throw ##class(%Exception.General).%New("InvalidTypeOfTransactionException", oTrans.TransType)
+	}
+			
+	If 'pIgnoreLackOfFounds && (pTransaction.FromAccount.Balance<0)
+	{
+		$$$TrowException("InsufficientFundsException", "From Account has insufficient funds.")
+	} 
+
 }
 
 ClassMethod LoadDataFromCSVFile(pFileName As %String) As %Status

@@ -1,3 +1,5 @@
+Include DEMOMACROS
+
 /// This class exposes banking transactional services to the organization. 
 /// It shows how to correctly deal with exceptions when using SOAP (by using Faults) and good
 /// practices on trapping errors. 
@@ -20,18 +22,12 @@ Method CreateTransaction(pTransDateTime As %TimeStamp, pTransType As %String, pA
 	Set tSC = $$$OK
 	Try
 	{
-		Set tSC = ##class(IRISDemo.MobileTransaction).CreateTransaction(pTransDateTime,pTransType,pAmount,pFromAccountNumber,pToAccountNumber,0)
+		Set tTransactionID = ##class(IRISDemo.MobileTransaction).CreateTransaction(pTransDateTime,pTransType,pAmount,pFromAccountNumber,pToAccountNumber,0)
 	}
 	Catch (oException)
 	{
-		Set tSC = oException.AsStatus()
-	}
-	
-	If $System.Status.IsError(tSC)
-	{
-		Set oSOAPFault = ..MakeStatusFault(,,tSC)
-		Do ..ReturnFault(oSOAPFault)
-	}
+		$$$SOAPFaultWithException(oException)
+	}	
 }
 
 }
