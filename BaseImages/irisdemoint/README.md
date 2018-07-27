@@ -204,3 +204,9 @@ You may need to connect to it via JDBC, REST or SOAP for your demo purposes. You
 ``` asp
 Set IRISIntHost = $System.Util.GetEnviron("IRIS_MASTER_HOST")
 ```
+# REST Services
+
+There is something else that is different about this image when compared with irisdemodb. 
+The CSP application created for REST services has EnsLib.REST.Service as REST dispatcher
+instead of IRISDemo.REST.Dispatcher. That is because REST Business Services created on IRIS
+Interoperability must inherit from this class, that acts as the REST Dispatcher.
