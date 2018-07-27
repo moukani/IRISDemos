@@ -104,7 +104,7 @@ ClassMethod ConfigureAsRESTCSPApp(pCSPAppName) As %Status
 	{
 		Set oCSPApp = ##class(Security.Applications).%OpenId(pCSPAppName, , .tSC)
 
-		Set oCSPApp.DispatchClass="IRISDemo.REST.Dispatcher"
+		Set oCSPApp.DispatchClass="EnsLib.REST.Service"
 		Set oCSPApp.UseCookies=1
 		Set tSC = oCSPApp.%Save()
 		Quit:$System.Status.IsError(tSC)
@@ -142,7 +142,7 @@ XData Install [ XMLNamespace = INSTALLER ]
             <Import File="${SourceDir}" Recurse="true"/>
         </IfDef>
 
-		<CSPApplication Url="/csp/${CSPAppName}/rest" Directory="${CSPDIR}${CSPAppName}" AuthenticationMethods="#{##class(IRISConfig.Installer).AuthForREST()}" IsNamespaceDefault="false" Grant="AppRole" CookiePath="/csp/${CSPAppName}/rest" Recurse="true"  AutoCompile="false" CSPZENEnabled="true" InboundWebServicesEnabled="false" GroupById="${CSPAppName}" DispatchClass="IRISDemo.REST.Dispatcher"  UseSessionCookie="1" PermittedClasses='1""IRISDemo.REST."".E'/>
+		<CSPApplication Url="/csp/${CSPAppName}/rest" Directory="${CSPDIR}${CSPAppName}" AuthenticationMethods="#{##class(IRISConfig.Installer).AuthForREST()}" IsNamespaceDefault="false" Grant="AppRole" CookiePath="/csp/${CSPAppName}/rest" Recurse="true"  AutoCompile="false" CSPZENEnabled="true" InboundWebServicesEnabled="false" GroupById="${CSPAppName}" DispatchClass="EnsLib.REST.Service"  UseSessionCookie="1"/>
 	</Namespace>
 	
 	<Log Text="Applying additional configurations to the new REST CSP Application..." Level="0"/>
