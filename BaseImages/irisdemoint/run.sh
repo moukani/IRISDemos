@@ -70,7 +70,7 @@ else
     EPHEMERALFLAG="--rm"
 fi
 
-printfY "\n\nRunning container. Management portal is on http://localhost:52773/csp/sys/UtilHome.csp\n\n"
+printfY "\n\nRunning container. Management portal is on http://localhost:54773/csp/sys/UtilHome.csp\n\n"
 docker run $EPHEMERALFLAG -it  \
     -p 53773:51773 -p 54773:52773 \
     -v $PWD/shared:/shared \
