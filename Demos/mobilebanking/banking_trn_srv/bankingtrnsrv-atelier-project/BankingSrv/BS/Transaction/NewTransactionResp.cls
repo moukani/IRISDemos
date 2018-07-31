@@ -1,19 +1,8 @@
+Include DEMOMACROS
+
 Class BankingSrv.BS.Transaction.NewTransactionResp  Extends %Persistent
 {
 	Property TransactionId As %String;
-	
-	Property Exception As IRISDemo.Exception;
-	
-	Method AsDynamicObject()
-	{
-		Set o={}
-		Set o.TransactionId=..TransactionId
-		If (..Exception'="") && (..Exception.Name'="")
-		{
-			Set o.Exception=..Exception.AsDynamicObject().Exception
-		}
-		Quit o		
-	}
 	
 Storage Default
 {

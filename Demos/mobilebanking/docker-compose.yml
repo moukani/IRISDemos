@@ -17,6 +17,9 @@ services:
     - "9090:52773"
     volumes:
     - ${PWD}/banking_core/shared/:/shared
+    networks:
+    - bankingcore-tier
+
 
   # datalake:
   #   environment:
@@ -53,6 +56,9 @@ services:
     - "9092:52773"
     volumes:
     - ${PWD}/banking_trn_srv/shared/:/shared
+    networks:
+    - bankingtrnsrv-tier
+    - bankingcore-tier
 
   # advancedanalytics:
   #   build: ./advanced_analytics
@@ -69,3 +75,9 @@ services:
   #   - IRIS_MASTER_USERNAME=SuperUser 
   #   - IRIS_MASTER_PASSWORD=sys 
   #   - IRIS_MASTER_NAMESPACE=APP 
+
+networks:
+  bankingtrnsrv-tier:
+    driver: bridge
+  bankingcore-tier:
+    driver: bridge

@@ -1,7 +1,11 @@
-ROUTINE DEMOMACROS [TYPE=INC]
+ROUTINE DEMOMACROS [Type=INC]
 
-#define TrowStatusExceptionIfError(%Name,%Status) If $System.Status.IsError(tSC) Set e = ##class(%Exception.StatusException).CreateFromStatus(%Status) Set e.Name=%Name	Throw e
+ //#define TrowStatusExceptionIfError(%Name,%Status) If $System.Status.IsError(tSC) Set tFaultCode=$Piece($Piece($System.Status.GetErrorText(tSC),"faultcode=",2),$C(13)) Set tFaultActor=$Piece($Piece($System.Status.GetErrorText(tSC),"faultactor=",2),$C(13)) Set e = ##class(%Exception.StatusException).CreateFromStatus(%Status) If tFaultCode'="" { Set e.Name=tFaultCode,e.Location=tFaultActor}	Throw e
+#define TrowStatusExceptionIfError(%Status, %Name, %sessionId)	Do ##class(IRISDemo.Utils).TrowStatusExceptionIfError(%Status, %Name, %sessionId)
 
-#define TrowException(%Name,%Details) Set e = ##class(%Exception.GeneralException).%New(%Name, %Name,,%Details) Throw e
+#define TrowException(%Name,%Details) Set e = ##class(%Exception.General).%New(%Name, %Name,,%Details) Throw e
 
-#define SOAPFaultWithException(%e) If %e.%ClassName()="StatusException"	{ Set f = ##class(%SOAP.WebService).MakeStatusFault(%e.Name, %e.Code, %e.AsStatus()) } Else { Set f = ##class(%SOAP.WebService).MakeFault(%e.Name, %e.Code)	} Do ##class(%SOAP.WebService).ReturnFault(f)
+ //#define SOAPFaultWithException(%e) If %e.%ClassName()="StatusException"	{ Set f = ##class(%SOAP.WebService).MakeStatusFault(%e.Name, %e.Code, %e.AsStatus(), $System) } Else { Set f = ##class(%SOAP.WebService).MakeFault(%e.Name, %e.Code, $System)	} Do ##class(%SOAP.WebService).ReturnFault(f) 
+#define SOAPFaultWithException(%eexception, %sessionId)	Do ##class(IRISDemo.Utils).SOAPFaultWithException(%exception, %sessionId)
+
+#define ExceptionAsJSON(%exception,%sessionId) ##class(IRISDemo.Utils).ExceptionAsJSON(%exception, %sessionId)

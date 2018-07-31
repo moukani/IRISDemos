@@ -16,7 +16,7 @@ Parameter CHARSET = "utf-8";
 XData UrlMap
 {
   <Routes>
-    <Map Prefix="/transaction" Forward="BankingSrv.Transaction.Service"/>
+    <Map Prefix="/transaction" Forward="BankingSrv.BS.Transaction.Service"/>
   </Routes>
 }
 

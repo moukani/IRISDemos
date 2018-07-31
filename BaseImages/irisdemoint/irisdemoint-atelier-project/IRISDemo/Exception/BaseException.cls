@@ -1,4 +1,4 @@
-Class IRISDemo.Exception Extends (%SerialObject, %XML.Adaptor)
+Class IRISDemo.Exception.BaseException Extends (%SerialObject, %XML.Adaptor)
 {
 	Property Name As %String;
 	
@@ -7,17 +7,6 @@ Class IRISDemo.Exception Extends (%SerialObject, %XML.Adaptor)
 	Property Location As %String (MAXLEN="");
 	
 	Property Data As %String (MAXLEN="");
-	
-	ClassMethod CreateFromException(pException As %Exception.AbstractException) As IRISDemo.Exception
-	{
-		Set e = ..%New()
-		Set e.Name = pException.Name
-		Set e.Code = pException.Code
-		Set e.Location = pException.Location
-		Set e.Data = pException.Data
-		
-		Quit e
-	}
 
 	Method AsDynamicObject()
 	{
@@ -25,7 +14,7 @@ Class IRISDemo.Exception Extends (%SerialObject, %XML.Adaptor)
 		Set o.Exception={}
 		Set o.Exception.Name=..Name
 		Set o.Exception.Code=..Code
-		Set o.Exception.Location=..Location
+		Set o.Exception.Location=$System_" => "_..Location
 		Set o.Exception.Data=..Data
 		
 		Quit o		
@@ -33,14 +22,14 @@ Class IRISDemo.Exception Extends (%SerialObject, %XML.Adaptor)
 	
 	Method AsSOAPFault() As %SOAP.Fault
 	{
-		Set fault = ##class(%SOAP.WebService).MakeFault(..Name, ..Code, ..Location_" - "_..Data)
+		Set fault = ##class(%SOAP.WebService).MakeFault(..Name, ..Code, ..Data, $System_" => "_..Location)
 		
 		Quit fault
 	}
 	
 Storage Default
 {
-<Data name="ExceptionState">
+<Data name="BaseExceptionState">
 <Value name="1">
 <Value>Name</Value>
 </Value>
@@ -54,8 +43,8 @@ Storage Default
 <Value>Data</Value>
 </Value>
 </Data>
-<State>ExceptionState</State>
-<StreamLocation>^IRISDemo.ExceptionS</StreamLocation>
+<State>BaseExceptionState</State>
+<StreamLocation>^IRISDemo.Exc41C1.BaseExceptionS</StreamLocation>
 <Type>%Storage.Serial</Type>
 }
 

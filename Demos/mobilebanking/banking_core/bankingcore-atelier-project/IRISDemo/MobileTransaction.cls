@@ -48,10 +48,10 @@ ClassMethod CreateTransaction(pTransDateTime As %TimeStamp, pTransType As %Strin
 	Set oTrans = ..%New()
 	
 	Set oTrans.FromAccount = ##class(Account).AccountNumberIndexOpen(pFromAccountNumber,,.tSC)
-	$$$TrowStatusExceptionIfError("AccountNumberNotFoundException", tSC)
+	$$$TrowStatusExceptionIfError(tSC, "SourceAccountNumberNotFoundException")
 
 	Set oTrans.ToAccount = ##class(Account).AccountNumberIndexOpen(pToAccountNumber,,.tSC)
-	$$$TrowStatusExceptionIfError("AccountNumberNotFoundException", tSC)
+	$$$TrowStatusExceptionIfError(tSC, "DestinationAccountNumberNotFoundException")
 
 	Set oTrans.Amount=pAmount
 	Set oTrans.TransDateTime=pTransDateTime
@@ -70,7 +70,7 @@ ClassMethod CreateTransaction(pTransDateTime As %TimeStamp, pTransType As %Strin
 	Set oTrans.ToAccountNewBalance=oTrans.ToAccount.Balance
 	
 	Set tSC = oTrans.%Save(1)
-	$$$TrowStatusExceptionIfError("SaveTransactionException", tSC)
+	$$$TrowStatusExceptionIfError(tSC, "SaveTransactionException")
 	
 	Set tTransactionId=oTrans.%Id()
 		
@@ -118,12 +118,12 @@ ClassMethod ValidateTransaction(pTransaction As IRISDemo.MobileTransaction, pIgn
 	{
 		If pTransaction.FromAccount.AccountType'="C"
 		{
-			$$$TrowException("InvalidAccountNumberException", "FromAccountNumber")
+			$$$TrowException("InvalidSourceAccountNumberException", "Source account type should be Customer")
 		}
 
 		If pTransaction.ToAccount.AccountType'="M"
 		{
-			$$$TrowException("InvalidAccountNumberException", "ToAccountNumber")
+			$$$TrowException("InvalidDestinationAccountNumberException", "Destination account type should be Merchant")
 		}				
 	}
 	ElseIf (pTransaction.TransType="DEBIT") || (pTransaction.TransType="TRANSFER")
@@ -137,7 +137,7 @@ ClassMethod ValidateTransaction(pTransaction As IRISDemo.MobileTransaction, pIgn
 			
 	If 'pIgnoreLackOfFounds && (pTransaction.FromAccount.Balance<0)
 	{
-		$$$TrowException("InsufficientFundsException", "From Account has insufficient funds.")
+		$$$TrowException("InsufficientFundsOnSourceException", "Source account has insufficient funds.")
 	} 
 
 }
