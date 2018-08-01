@@ -14,13 +14,23 @@ Parameter CONVERTINPUTSTREAM = 1;
 Parameter CHARSET = "utf-8";
 
 /// This is a utility method that can be used by methods on this class and 
-ClassMethod CallBusinessService(pBusinessServiceConfigItemName As %String, pRequest As %Persistent, pResponse As %Persistent)
+ClassMethod CallBusinessService(pBusinessServiceConfigItemName As %String, pRequest As %Persistent, pResponse As %Persistent) As %Status
 {
-	Set tSC = ##class(Ens.Director).CreateBusinessService(pBusinessServiceConfigItemName, .oService)
-	$$$TrowStatusExceptionIfError(tSC, "CreateBusinessServiceException", ..%SessionId)
-	
-	Set tSC = oService.ProcessInput(pRequest, .pResponse)
-	$$$TrowStatusExceptionIfError(tSC, "ProcessInputException", ..%SessionId)
+	Set tSC = $$$OK
+	Try
+	{
+		Set tSC = ##class(Ens.Director).CreateBusinessService(pBusinessServiceConfigItemName, .oService)
+		Quit:$System.Status.IsError(tSC)
+		
+		Set tSC = oService.ProcessInput(pRequest, .pResponse)
+		Quit:$System.Status.IsError(tSC)
+	}
+	Catch (oException)
+	{
+		Set tSC = oException.AsStatus()
+	}
+
+	Quit tSC
 }
 
 }
