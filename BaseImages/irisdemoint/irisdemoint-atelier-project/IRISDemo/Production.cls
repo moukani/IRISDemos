@@ -9,4 +9,16 @@ XData ProductionDefinition
 </Production>
 }
 
+ClassMethod OnConfigChange(pProduction As Ens.Config.Production, pItem As Ens.Config.Item)
+{
+  Do ##class(IRISDemo.Utils).IndexProductionItems()  
+}
+
+ClassMethod Start() As %Status
+{
+	Set tSC = ##super()
+  Quit:$$$System.Status.IsError(tSC) tSC
+
+  Quit ##class(IRISDemo.Utils).IndexProductionItems()
+}
 }

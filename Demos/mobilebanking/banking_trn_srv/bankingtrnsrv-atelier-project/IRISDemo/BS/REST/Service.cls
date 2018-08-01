@@ -13,24 +13,33 @@ Parameter CONVERTINPUTSTREAM = 1;
 
 Parameter CHARSET = "utf-8";
 
-/// This is a utility method that can be used by methods on this class and 
-ClassMethod CallBusinessService(pBusinessServiceConfigItemName As %String, pRequest As %Persistent, pResponse As %Persistent) As %Status
+/// Call this method from your REST method to send a request to a business operation or business process
+/// It will do it through your business service automatically
+ClassMethod DispatchTo(pConfigItemName As %String, pRequest As %Persistent, Output pResponse As %Persistent)
 {
-	Set tSC = $$$OK
-	Try
-	{
-		Set tSC = ##class(Ens.Director).CreateBusinessService(pBusinessServiceConfigItemName, .oService)
-		Quit:$System.Status.IsError(tSC)
-		
-		Set tSC = oService.ProcessInput(pRequest, .pResponse)
-		Quit:$System.Status.IsError(tSC)
-	}
-	Catch (oException)
-	{
-		Set tSC = oException.AsStatus()
-	}
+	Set tSC = ##class(IRISDemo.Utils).GetBusinessServiceConfigItemName(..%ClassName(1), .tBusinessServiceConfigItemName)
+	$$$TrowStatusExceptionIfError(tSC, "FindBusinessServiceConfigItemNameException")
 
-	Quit tSC
+	//$$$TRACE("tBusinessServiceConfigItemName for "_..%ClassName(1)_": "_tBusinessServiceConfigItemName)
+
+	Set tSC = ##class(Ens.Director).CreateBusinessService(tBusinessServiceConfigItemName, .oService)
+	$$$TrowStatusExceptionIfError(tSC, "CreateBusinessServiceException")
+	
+	Set tSC = oService.ProcessInput(pRequest, .pResponse, pConfigItemName)
+	$$$TrowStatusExceptionIfError(tSC, "ProcessInputException")
 }
 
+Method OnProcessInput(pInput As %Stream.Object, Output pOutput As %Stream.Object, pHint As %String) As %Status
+	{
+		Set tSC = $$$OK
+		Try
+		{
+			Set tSC = ..SendRequestSync(pHint, pInput, .pOutput)
+		}
+		Catch (oException)
+		{
+			Set tSC = oException.AsStatus()
+		}
+		Quit tSC
+	}
 }
