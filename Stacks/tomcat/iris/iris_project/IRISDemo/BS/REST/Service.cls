@@ -30,7 +30,7 @@ ClassMethod DispatchTo(pConfigItemName As %String, pRequest As %Persistent, Outp
 }
 
 Method OnProcessInput(pInput As %Stream.Object, Output pOutput As %Stream.Object, pHint As %String) As %Status
-	{
+{
 		Set tSC = $$$OK
 		Try
 		{
@@ -41,5 +41,6 @@ Method OnProcessInput(pInput As %Stream.Object, Output pOutput As %Stream.Object
 			Set tSC = oException.AsStatus()
 		}
 		Quit tSC
-	}
+}
+
 }
