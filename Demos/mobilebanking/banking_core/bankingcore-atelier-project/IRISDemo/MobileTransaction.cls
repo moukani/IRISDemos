@@ -48,10 +48,10 @@ ClassMethod CreateTransaction(pTransDateTime As %TimeStamp, pTransType As %Strin
 	Set oTrans = ..%New()
 	
 	Set oTrans.FromAccount = ##class(Account).AccountNumberIndexOpen(pFromAccountNumber,,.tSC)
-	$$$TrowStatusExceptionIfError(tSC, "SourceAccountNumberNotFoundException")
+	$$$ThrowStatusExceptionIfError(tSC, "SourceAccountNumberNotFoundException")
 
 	Set oTrans.ToAccount = ##class(Account).AccountNumberIndexOpen(pToAccountNumber,,.tSC)
-	$$$TrowStatusExceptionIfError(tSC, "DestinationAccountNumberNotFoundException")
+	$$$ThrowStatusExceptionIfError(tSC, "DestinationAccountNumberNotFoundException")
 
 	Set oTrans.Amount=pAmount
 	Set oTrans.TransDateTime=pTransDateTime
@@ -70,7 +70,7 @@ ClassMethod CreateTransaction(pTransDateTime As %TimeStamp, pTransType As %Strin
 	Set oTrans.ToAccountNewBalance=oTrans.ToAccount.Balance
 	
 	Set tSC = oTrans.%Save(1)
-	$$$TrowStatusExceptionIfError(tSC, "SaveTransactionException")
+	$$$ThrowStatusExceptionIfError(tSC, "SaveTransactionException")
 	
 	Set tTransactionId=oTrans.%Id()
 		
@@ -118,12 +118,12 @@ ClassMethod ValidateTransaction(pTransaction As IRISDemo.MobileTransaction, pIgn
 	{
 		If pTransaction.FromAccount.AccountType'="C"
 		{
-			$$$TrowException("InvalidSourceAccountNumberException", "Source account type should be Customer")
+			$$$ThrowException("InvalidSourceAccountNumberException", "Source account type should be Customer")
 		}
 
 		If pTransaction.ToAccount.AccountType'="M"
 		{
-			$$$TrowException("InvalidDestinationAccountNumberException", "Destination account type should be Merchant")
+			$$$ThrowException("InvalidDestinationAccountNumberException", "Destination account type should be Merchant")
 		}				
 	}
 	ElseIf (pTransaction.TransType="DEBIT") || (pTransaction.TransType="TRANSFER")
@@ -137,7 +137,7 @@ ClassMethod ValidateTransaction(pTransaction As IRISDemo.MobileTransaction, pIgn
 			
 	If 'pIgnoreLackOfFounds && (pTransaction.FromAccount.Balance<0)
 	{
-		$$$TrowException("InsufficientFundsOnSourceException", "Source account has insufficient funds.")
+		$$$ThrowException("InsufficientFundsOnSourceException", "Source account has insufficient funds.")
 	} 
 
 }

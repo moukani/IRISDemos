@@ -77,19 +77,16 @@ ClassMethod Install()
 		Do $zu(4,$j,0) // exit status 0
 	} 
 }
-
 ClassMethod setup(ByRef pVars, pLogLevel As %Integer = 0, pInstaller As %Installer.Installer) As %Status [ CodeMode = objectgenerator, Internal ]
 {
      Quit ##class(%Installer.Manifest).%Generate(%compiledclass, %code, "Install")
 }
-
 ClassMethod ConfigureAsRESTCSPApp(pCSPAppName) As %Status
 {
 	Set tSC = $System.Status.OK()
 	Try
 	{
 		Set oCSPApp = ##class(Security.Applications).%OpenId(pCSPAppName, , .tSC)
-
 		Set oCSPApp.DispatchClass="IRISDemo.REST.Dispatcher"
 		Set oCSPApp.UseCookies=1
 		Set tSC = oCSPApp.%Save()
@@ -99,10 +96,8 @@ ClassMethod ConfigureAsRESTCSPApp(pCSPAppName) As %Status
 	{
 		Set tSC = oException.AsStatus()
 	}
-
 	Quit tSC
 }
-
 XData Install [ XMLNamespace = INSTALLER ]
 {
 <Manifest>
@@ -144,7 +139,6 @@ XData Install [ XMLNamespace = INSTALLER ]
 		<Invoke Class="IRISConfig.Installer" Method="ConfigureAsRESTCSPApp" CheckStatus="true">
 			<Arg name="pCSPAppName" Value="/csp/${CSPAppName}/rest"/>
 		</Invoke>
-
 	</If>
 </Manifest>
 }

@@ -1,4 +1,4 @@
-Class BankingSrv.BS.Transaction.NewTransactionReq  Extends (%Persistent, %XML.Adaptor)
+Class BankingSrv.BS.Transaction.NewTransactionReq  Extends (%Persistent, Ens.Request)
 {
 
 	Property TransDateTime As %TimeStamp [ Required ];

@@ -1,6 +1,6 @@
 Include DEMOMACROS
 
-Class BankingSrv.BS.Transaction.NewTransactionResp  Extends %Persistent
+Class BankingSrv.BS.Transaction.NewTransactionResp  Extends (%Persistent, Ens.Response)
 {
 	Property TransactionId As %String;
 	

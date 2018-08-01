@@ -1,4 +1,0 @@
-Class IRISDemo.Exception.SOAPException
-{
-
-}

@@ -2,17 +2,18 @@ Include Ensemble
 
 Class IRISDemo.Utils
 {
-	/// This method is called on the include macro DEMOMACROS.inc by the macro of the same name
-	/// The macro is used in two scenarios:
-	/// 1- When we call a SOAP Business Operation. It can transform a SOAP Fault into a Status code and 
-	///    we may been to throw it as an exception when we are using Try/Catch error handling style. In 
-	///    this scenario, the exception's name will be set with the SOAP Fault's faultcode attribute.
-	///
-	/// 2- When we need to raise a new exception with a Status code received from a method call
-	///    that has nothing to do with SOAP. In this scenario, pExceptionName can be used to enrich
-	///    the created exception with a more meaningful name.  
-	ClassMethod TrowStatusExceptionIfError(pSC As %Status, pExceptionName As %String, pSessionId As %String = "")
-	{
+
+/// This method is called on the include macro DEMOMACROS.inc by the macro of the same name
+/// The macro is used in two scenarios:
+/// 1- When we call a SOAP Business Operation. It can transform a SOAP Fault into a Status code and 
+///    we may been to throw it as an exception when we are using Try/Catch error handling style. In 
+///    this scenario, the exception's name will be set with the SOAP Fault's faultcode attribute.
+/// 
+/// 2- When we need to raise a new exception with a Status code received from a method call
+///    that has nothing to do with SOAP. In this scenario, pExceptionName can be used to enrich
+///    the created exception with a more meaningful name.  
+ClassMethod ThrowStatusExceptionIfError(pSC As %Status, pExceptionName As %String, pSessionId As %String = "")
+{
 		If $System.Status.IsError(pSC) 
 		{
 			If pSessionId'=""
@@ -55,13 +56,13 @@ Class IRISDemo.Utils
 			
 			Throw e
 		}
-	}
-	
-	/// This method is called on the include macro DEMOMACROS.inc by the macro of the same name
-	/// It must be used only inside a SOAP service to report a SOAP Fault based on an exception that
-	/// was captured by a Try/Catch block
-	ClassMethod SOAPFaultWithException(pException As %Exception.AbstractException, pSessionId As %String = "")
-	{
+}
+
+/// This method is called on the include macro DEMOMACROS.inc by the macro of the same name
+/// It must be used only inside a SOAP service to report a SOAP Fault based on an exception that
+/// was captured by a Try/Catch block
+ClassMethod SOAPFaultWithException(pException As %Exception.AbstractException, pSessionId As %String = "")
+{
 		If pSessionId'=""
 		{
 			Set tSessionId="("_pSessionId_")"
@@ -87,11 +88,11 @@ Class IRISDemo.Utils
 		} 
 		
 		Do ##class(%SOAP.WebService).ReturnFault(f)
-	}
-	
-	/// This will convert
-	ClassMethod ExceptionAsJSON(pException As %Exception.AbstractException, pSessionId As %String = "") As %Library.DynamicObject
-	{
+}
+
+/// This will convert
+ClassMethod ExceptionAsJSON(pException As %Exception.AbstractException, pSessionId As %String = "") As %Library.DynamicObject
+{
 		If pSessionId'=""
 		{
 			Set tSessionId="("_pSessionId_")"
@@ -125,10 +126,10 @@ Class IRISDemo.Utils
 		}
 		
 		Quit o
-	}
+}
 
-	ClassMethod IndexProductionItems() As %Status
-	{
+ClassMethod IndexProductionItems() As %Status
+{
 		Set tSC = $System.Status.OK()
 		Try
 		{
@@ -157,10 +158,10 @@ Class IRISDemo.Utils
 		Lock -^IRIS.Temp.IRISDemoIndex
 
 		Quit tSC
-	}
+}
 
-	ClassMethod GetBusinessServiceConfigItemName(pClassName As %String, Output pConfigItemName As %String) As %Status
-	{
+ClassMethod GetBusinessServiceConfigItemName(pClassName As %String, Output pConfigItemName As %String) As %Status
+{
 		Set tSC = $System.Status.OK()
 		Try
 		{
@@ -188,5 +189,6 @@ Class IRISDemo.Utils
 		Lock -^IRIS.Temp.IRISDemoIndex
 
 		Quit tSC
-	}
+}
+
 }
