@@ -29,10 +29,12 @@ Class BankingSrv.BS.Transaction.Service extends IRISDemo.BS.REST.Service
 
 			Set doResponse.TransactionResult.Status="OK"
 			Set doResponse.TransactionResult.TransactionId=oResponse.TransactionId
+			Do doResponse.TransactionResult.%Set("Approved", oResponse.TransactionApproved, "boolean")
 		}
 		Catch (oException)
 		{
 			Set doResponse.TransactionResult.Status="Error"
+			Do doResponse.TransactionResult.%Set("Approved", 0, "boolean")
 			Set doResponse.TransactionResult.Exception=$$$ExceptionAsJSON(oException)
 		}
 		

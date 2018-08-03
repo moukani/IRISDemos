@@ -63,8 +63,7 @@ ClassMethod CreateTransaction(pTransDateTime As %TimeStamp, pTransType As %Strin
 	Set oTrans.ToAccount.Balance=oTrans.ToAccount.Balance+oTrans.Amount
 	Set oTrans.FromAccount.Balance=oTrans.FromAccount.Balance-oTrans.Amount
 
-	Set tSC = oTrans.ValidateTransaction(pIgnoreLackOfFounds)
-	Quit:$System.Status.IsError(tSC)
+	Do oTrans.ValidateTransaction(pIgnoreLackOfFounds)
 			
 	Set oTrans.FromAccountNewBalance=oTrans.FromAccount.Balance
 	Set oTrans.ToAccountNewBalance=oTrans.ToAccount.Balance
@@ -78,11 +77,11 @@ ClassMethod CreateTransaction(pTransDateTime As %TimeStamp, pTransType As %Strin
 }
 
 /// Throws exception if validation fails!
-ClassMethod ValidateTransaction(pTransaction As IRISDemo.MobileTransaction, pIgnoreLackOfFounds As %Boolean = 0) [ Private ] 
+Method ValidateTransaction(pIgnoreLackOfFounds As %Boolean = 0) [ Private ] 
 {
 	#Dim oTrans As IRISDemo.MobileTransaction
 	Set tRet=1
-	If pTransaction.TransType="CASH_IN"
+	If ..TransType="CASH_IN"
 	{
  //		Accordingly to the dataset documentation, this transaction should be between
  //		a customer and a merchant. But all of them on the dataset are between customers!
@@ -98,7 +97,7 @@ ClassMethod ValidateTransaction(pTransaction As IRISDemo.MobileTransaction, pIgn
  //			Continue
  //		}				
 	}
-	ElseIf (pTransaction.TransType="CASH_OUT")
+	ElseIf (..TransType="CASH_OUT")
 	{
  //		Accordingly to the dataset documentation, this transaction should be between
  //		a customer and a merchant. But all of them on the dataset are between customers!
@@ -114,28 +113,28 @@ ClassMethod ValidateTransaction(pTransaction As IRISDemo.MobileTransaction, pIgn
  //			Continue
  //		}				
 	}
-	ElseIf (pTransaction.TransType="PAYMENT")
+	ElseIf (..TransType="PAYMENT")
 	{
-		If pTransaction.FromAccount.AccountType'="C"
+		If ..FromAccount.AccountType'="C"
 		{
 			$$$ThrowException("InvalidSourceAccountNumberException", "Source account type should be Customer")
 		}
 
-		If pTransaction.ToAccount.AccountType'="M"
+		If ..ToAccount.AccountType'="M"
 		{
 			$$$ThrowException("InvalidDestinationAccountNumberException", "Destination account type should be Merchant")
 		}				
 	}
-	ElseIf (pTransaction.TransType="DEBIT") || (pTransaction.TransType="TRANSFER")
+	ElseIf (..TransType="DEBIT") || (..TransType="TRANSFER")
 	{
 		//No validations
 	}
 	Else
 	{
-		Throw ##class(%Exception.General).%New("InvalidTypeOfTransactionException", oTrans.TransType)
+		Throw ##class(%Exception.General).%New("InvalidTypeOfTransactionException", ..TransType)
 	}
 			
-	If 'pIgnoreLackOfFounds && (pTransaction.FromAccount.Balance<0)
+	If 'pIgnoreLackOfFounds && (..FromAccount.Balance<0)
 	{
 		$$$ThrowException("InsufficientFundsOnSourceException", "Source account has insufficient funds.")
 	} 
@@ -200,8 +199,7 @@ ClassMethod LoadDataFromCSVFile(pFileName As %String) As %Status
 			Set oTrans.ToAccount.Balance=oTrans.ToAccount.Balance+oTrans.Amount
 			Set oTrans.FromAccount.Balance=oTrans.FromAccount.Balance-oTrans.Amount
 			
-			Set tSC = ..ValidateTransaction(oTrans, 1)
-			Quit:$System.Status.IsError(tSC)
+			Do oTrans.ValidateTransaction(1)
 			
 			Set oTrans.FromAccountNewBalance=oTrans.FromAccount.Balance
 			Set oTrans.ToAccountNewBalance=oTrans.ToAccount.Balance

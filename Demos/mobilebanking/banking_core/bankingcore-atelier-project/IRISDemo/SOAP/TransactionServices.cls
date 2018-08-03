@@ -23,11 +23,13 @@ Method CreateTransaction(pTransDateTime As %TimeStamp, pTransType As %String, pA
 	Try
 	{
 		Set tTransactionID = ##class(IRISDemo.MobileTransaction).CreateTransaction(pTransDateTime,pTransType,pAmount,pFromAccountNumber,pToAccountNumber,0)
+		
+		Return tTransactionID
 	}
 	Catch (oException)
 	{
 		$$$SOAPFaultWithException(oException)
-	}	
+	}
 }
 
 }

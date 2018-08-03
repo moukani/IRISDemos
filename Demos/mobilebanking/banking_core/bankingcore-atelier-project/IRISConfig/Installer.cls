@@ -62,7 +62,7 @@ ClassMethod LoadTransactionalData(pNamespace As %String) As %Status
 	{
 		ZN pNamespace
 		
-		//TODO: Load the data
+		Set tSC = ##class(IRISDemo.MobileTransaction).LoadDataFromCSVFile("/tmp/training_set.csv")
 	}
 	Catch (oException)
 	{

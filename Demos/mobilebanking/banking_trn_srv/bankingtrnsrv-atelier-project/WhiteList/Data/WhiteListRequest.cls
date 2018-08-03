@@ -11,7 +11,7 @@ Class WhiteList.Data.WhiteListRequest Extends %Persistent
 	
 	Index WhiteListIndex On (FromAccountNumber, FromDate, ToDate) [ Unique ];
 	
-	Method %OnNew(pRequestDate As %TimeStamp, pFromAccountNumber As %String, pFromDate As %String, pToDate As %String) As %Status
+	Method %OnNew(pRequestDate As %TimeStamp, pFromAccountNumber As %String, pFromDate As %Date, pToDate As %Date) As %Status
 	{
 		Set ..RequestDate = pRequestDate
 		Set ..FromAccountNumber = pFromAccountNumber

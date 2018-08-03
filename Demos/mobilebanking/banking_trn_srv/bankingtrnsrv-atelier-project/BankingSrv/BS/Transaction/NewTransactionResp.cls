@@ -2,6 +2,8 @@ Include DEMOMACROS
 
 Class BankingSrv.BS.Transaction.NewTransactionResp  Extends (%Persistent, Ens.Response)
 {
+	Property TransactionApproved As %Boolean;
+	
 	Property TransactionId As %String;
 	
 Storage Default
@@ -15,6 +17,9 @@ Storage Default
 </Value>
 <Value name="3">
 <Value>Exception</Value>
+</Value>
+<Value name="4">
+<Value>TransactionApproved</Value>
 </Value>
 </Data>
 <DataLocation>^BankingSrvB430.NewTransactA597D</DataLocation>

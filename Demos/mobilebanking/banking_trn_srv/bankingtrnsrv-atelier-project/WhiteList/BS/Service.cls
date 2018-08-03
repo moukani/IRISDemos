@@ -19,7 +19,7 @@ Class WhiteList.BS.Service extends IRISDemo.BS.REST.Service
 			Set %response.ContentType=..#CONTENTTYPEJSON
 			Set doWhiteListRequest=##class(%DynamicObject).%FromJSON(%request.Content)
 			
-			Set oRequest = ##class(BankingSrv.BS.WhiteList.WhiteListReq).CreateNewFromDynamicObj(doWhiteListRequest)
+			Set oRequest = ##class(WhiteList.BS.WhiteListReq).CreateNewFromDynamicObj(doWhiteListRequest)
 			
 			// I can't call ProcessInput directly because I am running on a class method that was called
 			// by the dispatcher. The Business Service's instance hasn't been created yet. This method will

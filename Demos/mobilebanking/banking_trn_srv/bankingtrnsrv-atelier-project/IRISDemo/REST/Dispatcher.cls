@@ -17,7 +17,7 @@ XData UrlMap
 {
   <Routes>
     <Map Prefix="/transaction" Forward="BankingSrv.BS.Transaction.Service"/>
-    <Map Prefix="/whitelist" Forward="BankingSrv.BS.WhiteList.Service"/>
+    <Map Prefix="/whitelist" Forward="WhiteList.BS.Service"/>
   </Routes>
 }
 

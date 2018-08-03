@@ -14,7 +14,7 @@ Class WhiteList.BS.WhiteListReq Extends (%Persistent, Ens.Request)
 		Set obj = ..%New()
 		
 		Set obj.FromAccountNumber=pDynamicObj.FromAccountNumber
-		Set obj.FromDate=$ZDateH(DynamicObj.FromDate,3)
+		Set obj.FromDate=$ZDateH(pDynamicObj.FromDate,3)
 		Set obj.ToDate=$ZDateH(pDynamicObj.ToDate,3)
 		
 		Quit obj
