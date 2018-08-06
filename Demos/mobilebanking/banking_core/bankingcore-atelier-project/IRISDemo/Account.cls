@@ -1,7 +1,5 @@
 Class IRISDemo.Account Extends %Persistent
 {
-	Property AccountType As %String (VALUELIST=",C,M",DISPLAYLIST=",Customer,Merchant") [ Required ];
-	
 	Property AccountNumber As %String [ Required ];
 	
 	Property Balance As %Library.Double [ InitialExpression = 0, Required ];
@@ -42,9 +40,17 @@ Class IRISDemo.Account Extends %Persistent
 			Quit:$IsObject(pObject)
 			
 			// If not, let's create it:
-			Set pObject = ..%New()
+			Set tAccountType=$Extract(tAccountNumber)
+			If tAccountType="C"
+			{
+				Set pObject = ##class(IRISDemo.CustomerAccount).%New()
+				Set pObject.Balance=1000 //Every customer will start with US$1000!
+			}
+			Else
+			{
+				Set pObject = ##class(IRISDemo.MerchantAccount).%New()
+			}
 			Set pObject.AccountNumber=tAccountNumber
-			Set pObject.AccountType=$Extract(tAccountNumber)
 			
 			// I will not call %Save on this. I will let it be called by the object that 
 			// is pointing to this new object, as part of a single transaction.
@@ -57,28 +63,4 @@ Class IRISDemo.Account Extends %Persistent
 		Quit tSC
 	}
 	
-Storage Default
-{
-<Data name="AccountDefaultData">
-<Value name="1">
-<Value>%%CLASSNAME</Value>
-</Value>
-<Value name="2">
-<Value>AccountType</Value>
-</Value>
-<Value name="3">
-<Value>AccountNumber</Value>
-</Value>
-<Value name="4">
-<Value>Balance</Value>
-</Value>
-</Data>
-<DataLocation>^IRISDemo.AccountD</DataLocation>
-<DefaultData>AccountDefaultData</DefaultData>
-<IdLocation>^IRISDemo.AccountD</IdLocation>
-<IndexLocation>^IRISDemo.AccountI</IndexLocation>
-<StreamLocation>^IRISDemo.AccountS</StreamLocation>
-<Type>%Storage.Persistent</Type>
-}
-
 }

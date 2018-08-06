@@ -30,7 +30,7 @@ ClassMethod IndexHeader(pHeader As %String, pSeparator As %String = ",", Output 
 		Set pHeaderIndex("Regex")=""
 		For i=1:1:pHeaderIndex
 		{
-			Set $Piece(pHeaderIndex("Regex"),tRegexSeparator,i)="\""?(.*?)\""?"
+			Set $Piece(pHeaderIndex("Regex"),tRegexSeparator,i)="\""?'?(.*?)\""?'?"
 		}
 		Set pHeaderIndex("Regex")="^"_pHeaderIndex("Regex")
 		

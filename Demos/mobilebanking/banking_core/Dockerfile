@@ -8,7 +8,7 @@ ARG IRIS_PROJECT_FOLDER_NAME
 ADD ./${IRIS_PROJECT_FOLDER_NAME}/ $IRIS_APP_SOURCEDIR
 
 # This file will be loaded into the APP namespace and deleted by the IRISConfig.Installer
-ADD ./image_build_files/training_set.csv /tmp/
+ADD ./image_build_files/bs140513_032310.csv /tmp/
 
 # Running the installer. This will load the source from our project.
 RUN /usr/irissys/demo/irisdemoinstaller.sh

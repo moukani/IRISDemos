@@ -17,7 +17,7 @@ Parameter CHARSET = "utf-8";
 /// It will do it through your business service automatically
 ClassMethod DispatchTo(pConfigItemName As %String, pRequest As %Persistent, Output pResponse As %Persistent)
 {
-	Set tSC = ##class(IRISDemo.Utils).GetBusinessServiceConfigItemName(..%ClassName(1), .tBusinessServiceConfigItemName)
+	Set tSC = ##class(IRISDemo.Util.InteroperabilitySupport).GetBusinessServiceConfigItemName(..%ClassName(1), .tBusinessServiceConfigItemName)
 	$$$ThrowStatusExceptionIfError(tSC, "FindBusinessServiceConfigItemNameException")
 
 	//$$$TRACE("tBusinessServiceConfigItemName for "_..%ClassName(1)_": "_tBusinessServiceConfigItemName)
