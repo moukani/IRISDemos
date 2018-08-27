@@ -24,10 +24,19 @@
 # ./run.sh -h
 #
 
+# Multi-build Dockerfile. This image will not be included into our final image. 
+# We just need a reference to it. I will use that to extract IRIS jar files from it.
+# Think of it as a parallel universe we just entered and it is called now "universe 0".
+FROM amirsamary/irisdemo:irisdemodb
+
+# Here is our real image. This is the universe we are going to stay on. 
 FROM apache/zeppelin:0.7.3
 LABEL maintainer="Amir Samary <amir.samary@intersystems.com>"
 
-# Zeppelin will be started on port
+# Now we can extract those jar files from universe 0, and bring them into our universe... ;)
+COPY --from=0 /usr/irissys/dev/java/lib/JDK18/*.jar /custom/lib/
+
+# Zeppelin will be started on port:
 EXPOSE 9090
 
 # Spark Master will be started on its default port 8080
@@ -42,7 +51,7 @@ ENV ZEPPELIN_CONF_DIR /shared/zeppelin/conf
 ENV ZEPPELIN_LOG_DIR /shared/zeppelin/logs
 
 # Spark dependencies
-ENV APACHE_SPARK_VERSION 2.1.2
+ENV APACHE_SPARK_VERSION 2.1.3
 ENV HADOOP_VERSION 2.7
 
 # In the future, we may expose 7077 so we can let outside workers to join the 
@@ -82,8 +91,6 @@ RUN cd /tmp && \
         tar xzf spark-${APACHE_SPARK_VERSION}-bin-hadoop${HADOOP_VERSION}.tgz -C /usr/local --owner root --group root --no-same-owner && \
         rm spark-${APACHE_SPARK_VERSION}-bin-hadoop${HADOOP_VERSION}.tgz
 RUN cd /usr/local && ln -s spark-${APACHE_SPARK_VERSION}-bin-hadoop${HADOOP_VERSION} spark
-
-ADD ./image_build_files/lib/*.jar /custom/lib/
 
 # These configuration files have variables that need to be replaced before zeppelin or spark
 # start. This substituion is done by /custom/bin/startservices.sh custom script that I
