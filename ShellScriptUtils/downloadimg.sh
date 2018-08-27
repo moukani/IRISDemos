@@ -4,10 +4,10 @@
 #
 # Parameters
 #
-OLDTAG=2018.2.0.387.0
+OLDTAG=2018.2.0.389.0
 TAG=2018.2.0-stable
 
-source ./common/util.sh
+source ./util.sh
 
 printfY "\nDeleting old images...\n"
 
@@ -56,30 +56,3 @@ do
         exit 0
     fi
 done
-
-printfY "\n\Starting a Temp IRIS container so we can extract the lates JAR files...\n"
-docker run -d --name TEMPIRIS amirsamary/irisdemo:iris.$TAG
-if [ $? -eq 0 ]; then 
-    printfG "\Temp container running. Ready for extracting jar files...\n"
-else
-    printfR "\Could not start temp container for extraction of jar files!\n"
-    exit 0
-fi
-
-printfY "\n\Removing old jar files...\n"
-rm -f ./containers/common/lib/iris/*
-
-printfY "\n\Extracting jar files from temp container...\n"
-docker cp TEMPIRIS:/usr/irissys/dev/java/lib/JDK18/. ./containers/common/lib/iris/
-if [ $? -eq 0 ]; then 
-    printfG "\File extracted successfully!\n"
-else
-    printfR "\Could not extract the jar files!\n"
-    exit 0
-fi
-
-printfY "\n\Stopping Temp container...\n"
-docker stop TEMPIRIS
-
-printfY "\n\Removing Temp container...\n"
-docker rm TEMPIRIS
