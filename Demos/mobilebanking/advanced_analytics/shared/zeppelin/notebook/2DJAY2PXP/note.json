@@ -2,7 +2,8 @@
   "paragraphs": [
     {
       "text": "%md\n# Analyzing the Data\n\nPreparing data for modeling can take a significant amount of time relative to the entire process of building a predictive model. Ensuring data quality and integrity is crucial to the success of the model. Additionally, the approaches you choose for exploration will determine how you approach building your model. In the following sections, you will see some suggestions on how to approach your dataset. However, you may consider some unhelpful or unnecessary, and you are encouraged to seek the data filtering and refining techniques that you think are most effective. ",
-      "dateUpdated": "Jul 25, 2018 5:11:35 PM",
+      "user": "anonymous",
+      "dateUpdated": "Aug 27, 2018 2:28:56 PM",
       "config": {
         "tableHide": false,
         "editorSetting": {
@@ -38,7 +39,8 @@
     },
     {
       "text": "%md\n## Fraud Detection \u0026mdash; Analyzing the Data\n\nOne useful approach could be to consider known financial fraud techniques and the elements that could indicate the use of these techniques.\n\nFor example, one common way to steal funds is to transfer money to a fraudulent destination account and then cash out the transfer amount with a merchant that pays in cash. These merchants may or may not be participating in the fraud itself. To investigate this case, consider if there are multiple fraudulent transfers to the same destination account that later cashed out from that account. Remember that account names are marked with *M* as a prefix in all merchant account names in `nameDest`.\n\nFirst, look at the below code that analyzes for this cash-out technique. \n\n ",
-      "dateUpdated": "Jul 25, 2018 5:11:35 PM",
+      "user": "anonymous",
+      "dateUpdated": "Aug 27, 2018 2:28:56 PM",
       "config": {
         "tableHide": false,
         "editorSetting": {
@@ -76,15 +78,16 @@
     {
       "title": "Cash Out Fraud",
       "text": "import com.intersystems.spark._\nval transfer \u003d spark.read.iris(\"SELECT * FROM zeppelin.PayTrans\")\n                        .filter($\"transType\" \u003d\u003d\u003d \"TRANSFER\")\n                        .select(col(\"amount\").alias(\"transferred\"), col(\"nameDest\").alias(\"transferTo\"), col(\"step\").alias(\"transferStep\"))\nval cashout \u003d spark.read.iris(\"SELECT * FROM zeppelin.PayTrans\")\n                        .filter($\"transType\" \u003d\u003d\u003d \"CASH_OUT\")\n                        //.select(col(\"amount\").alias(\"cashed\"), col(\"nameOrig\").alias(\"cashFrom\"), col(\"step\").alias(\"cashStep\"))\n\nval combi \u003d transfer.join(cashout, transfer(\"transferTo\") \u003d\u003d\u003d cashout(\"nameOrig\"))\n\nz.show(combi)",
-      "dateUpdated": "Jul 25, 2018 5:11:35 PM",
+      "user": "anonymous",
+      "dateUpdated": "Aug 27, 2018 2:28:56 PM",
       "config": {
         "tableHide": false,
         "editorSetting": {
-          "language": "scala",
+          "language": "text",
           "editOnDblClick": false
         },
         "colWidth": 12.0,
-        "editorMode": "ace/mode/scala",
+        "editorMode": "ace/mode/text",
         "editorHide": false,
         "title": false,
         "results": {
@@ -124,17 +127,28 @@
         "params": {},
         "forms": {}
       },
+      "results": {
+        "code": "ERROR",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "import com.intersystems.spark._\njava.sql.SQLException: [SQLCODE: \u003c-30\u003e:\u003cTable or view not found\u003e]\n[Location: \u003cPrepare\u003e]\n[%msg: \u003c Table \u0027ZEPPELIN.PAYTRANS\u0027 not found\u003e]\n  at com.intersystems.jdbc.IRISConnection.getServerError(IRISConnection.java:1247)\n  at com.intersystems.jdbc.IRISConnection.processError(IRISConnection.java:1405)\n  at com.intersystems.jdbc.InStream.readMessage(InStream.java:263)\n  at com.intersystems.jdbc.InStream.readMessage(InStream.java:146)\n  at com.intersystems.jdbc.IRISPreparedStatement.prepareInternal(IRISPreparedStatement.java:634)\n  at com.intersystems.jdbc.IRISPreparedStatement.prepare(IRISPreparedStatement.java:593)\n  at com.intersystems.jdbc.IRISPreparedStatement.\u003cinit\u003e(IRISPreparedStatement.java:22)\n  at com.intersystems.jdbc.IRISConnection.getOrCreatePossiblyShardedIRISPreparedStatement(IRISConnection.java:2204)\n  at com.intersystems.jdbc.IRISConnection.prepareStatement(IRISConnection.java:1702)\n  at com.intersystems.jdbc.IRISConnection.prepareStatement(IRISConnection.java:350)\n  at com.intersystems.spark.core.Master$$anonfun$evaluate$1.apply(Master.scala:180)\n  at com.intersystems.spark.core.Master$$anonfun$evaluate$1.apply(Master.scala:180)\n  at resource.DefaultManagedResource.open(AbstractManagedResource.scala:110)\n  at resource.AbstractManagedResource.acquireFor(AbstractManagedResource.scala:87)\n  at resource.ManagedResourceOperations$$anon$2.acquireFor(ManagedResourceOperations.scala:49)\n  at resource.ManagedResourceOperations$class.apply(ManagedResourceOperations.scala:26)\n  at resource.ManagedResourceOperations$$anon$2.apply(ManagedResourceOperations.scala:47)\n  at resource.ManagedResourceOperations$class.acquireAndGet(ManagedResourceOperations.scala:25)\n  at resource.ManagedResourceOperations$$anon$2.acquireAndGet(ManagedResourceOperations.scala:47)\n  at com.intersystems.spark.core.Utilities$class.autoclose(Utilities.scala:139)\n  at com.intersystems.spark.core.Master.evaluate(Master.scala:179)\n  at com.intersystems.spark.core.Master.schema(Master.scala:104)\n  at com.intersystems.spark.core.Relation.schema$lzycompute(Relation.scala:66)\n  at com.intersystems.spark.core.Relation.schema(Relation.scala:64)\n  at org.apache.spark.sql.execution.datasources.LogicalRelation.\u003cinit\u003e(LogicalRelation.scala:40)\n  at org.apache.spark.sql.SparkSession.baseRelationToDataFrame(SparkSession.scala:397)\n  at org.apache.spark.sql.DataFrameReader.load(DataFrameReader.scala:146)\n  at org.apache.spark.sql.DataFrameReader.load(DataFrameReader.scala:125)\n  at com.intersystems.spark.package$DataFrameReaderEx.iris(Package.scala:351)\n  ... 49 elided\n"
+          }
+        ]
+      },
       "apps": [],
       "jobName": "paragraph_1532538695180_-159814895",
       "id": "20180111-225234_188950042",
       "dateCreated": "Jul 25, 2018 5:11:35 PM",
-      "status": "READY",
-      "errorMessage": "",
+      "dateStarted": "Aug 27, 2018 2:28:56 PM",
+      "dateFinished": "Aug 27, 2018 2:29:01 PM",
+      "status": "ERROR",
       "progressUpdateIntervalMs": 500
     },
     {
       "text": "%md\nNext, look at the overall incidence of fraud that uses this technique by running the below code.\n\n ",
-      "dateUpdated": "Jul 25, 2018 5:11:35 PM",
+      "user": "anonymous",
+      "dateUpdated": "Aug 27, 2018 2:28:56 PM",
       "config": {
         "tableHide": false,
         "editorSetting": {
@@ -172,15 +186,16 @@
     {
       "title": "",
       "text": "val all \u003d spark.read.iris(\"zeppelin.PayTrans\")\n\n// define a utility function to print the fraud rate for a given data(sub)set\ndef printFraudRate[T]( ds : org.apache.spark.sql.Dataset[T], str : String \u003d \"overall\" ) \u003d {\n  \n  // use simple .filter() and .count()\n  val r \u003d ds.filter($\"isFraud\" \u003d\u003d\u003d 1).count().toFloat / ds.count()\n  \n  printf(\"%s fraud incidence: %f\\n\", str, r)\n} \n\nprintFraudRate(all)",
-      "dateUpdated": "Jul 25, 2018 5:11:35 PM",
+      "user": "anonymous",
+      "dateUpdated": "Aug 27, 2018 2:28:57 PM",
       "config": {
         "tableHide": false,
         "editorSetting": {
-          "language": "scala",
+          "language": "text",
           "editOnDblClick": false
         },
         "colWidth": 12.0,
-        "editorMode": "ace/mode/scala",
+        "editorMode": "ace/mode/text",
         "editorHide": false,
         "title": false,
         "results": {
@@ -220,17 +235,28 @@
         "params": {},
         "forms": {}
       },
+      "results": {
+        "code": "ERROR",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "java.sql.SQLException: [SQLCODE: \u003c-30\u003e:\u003cTable or view not found\u003e]\n[Location: \u003cPrepare\u003e]\n[%msg: \u003c Table \u0027ZEPPELIN.PAYTRANS\u0027 not found\u003e]\n  at com.intersystems.jdbc.IRISConnection.getServerError(IRISConnection.java:1247)\n  at com.intersystems.jdbc.IRISConnection.processError(IRISConnection.java:1405)\n  at com.intersystems.jdbc.InStream.readMessage(InStream.java:263)\n  at com.intersystems.jdbc.InStream.readMessage(InStream.java:146)\n  at com.intersystems.jdbc.IRISPreparedStatement.prepareInternal(IRISPreparedStatement.java:634)\n  at com.intersystems.jdbc.IRISPreparedStatement.prepare(IRISPreparedStatement.java:593)\n  at com.intersystems.jdbc.IRISPreparedStatement.\u003cinit\u003e(IRISPreparedStatement.java:22)\n  at com.intersystems.jdbc.IRISConnection.getOrCreatePossiblyShardedIRISPreparedStatement(IRISConnection.java:2204)\n  at com.intersystems.jdbc.IRISConnection.prepareStatement(IRISConnection.java:1702)\n  at com.intersystems.jdbc.IRISConnection.prepareStatement(IRISConnection.java:350)\n  at com.intersystems.spark.core.Master$$anonfun$evaluate$1.apply(Master.scala:180)\n  at com.intersystems.spark.core.Master$$anonfun$evaluate$1.apply(Master.scala:180)\n  at resource.DefaultManagedResource.open(AbstractManagedResource.scala:110)\n  at resource.AbstractManagedResource.acquireFor(AbstractManagedResource.scala:87)\n  at resource.ManagedResourceOperations$$anon$2.acquireFor(ManagedResourceOperations.scala:49)\n  at resource.ManagedResourceOperations$class.apply(ManagedResourceOperations.scala:26)\n  at resource.ManagedResourceOperations$$anon$2.apply(ManagedResourceOperations.scala:47)\n  at resource.ManagedResourceOperations$class.acquireAndGet(ManagedResourceOperations.scala:25)\n  at resource.ManagedResourceOperations$$anon$2.acquireAndGet(ManagedResourceOperations.scala:47)\n  at com.intersystems.spark.core.Utilities$class.autoclose(Utilities.scala:139)\n  at com.intersystems.spark.core.Master.evaluate(Master.scala:179)\n  at com.intersystems.spark.core.Master.schema(Master.scala:104)\n  at com.intersystems.spark.core.Relation.schema$lzycompute(Relation.scala:66)\n  at com.intersystems.spark.core.Relation.schema(Relation.scala:64)\n  at org.apache.spark.sql.execution.datasources.LogicalRelation.\u003cinit\u003e(LogicalRelation.scala:40)\n  at org.apache.spark.sql.SparkSession.baseRelationToDataFrame(SparkSession.scala:397)\n  at org.apache.spark.sql.DataFrameReader.load(DataFrameReader.scala:146)\n  at org.apache.spark.sql.DataFrameReader.load(DataFrameReader.scala:125)\n  at com.intersystems.spark.package$DataFrameReaderEx.iris(Package.scala:351)\n  ... 49 elided\n"
+          }
+        ]
+      },
       "apps": [],
       "jobName": "paragraph_1532538695187_-148657176",
       "id": "20180122-204344_453221210",
       "dateCreated": "Jul 25, 2018 5:11:35 PM",
-      "status": "READY",
-      "errorMessage": "",
+      "dateStarted": "Aug 27, 2018 2:28:57 PM",
+      "dateFinished": "Aug 27, 2018 2:29:02 PM",
+      "status": "ERROR",
       "progressUpdateIntervalMs": 500
     },
     {
       "text": "%md\nWhat happens if you look at transfer and cash-out transactions that result in emptying all funds in the originating account? What is the incidence?\n\n ",
-      "dateUpdated": "Jul 25, 2018 5:11:35 PM",
+      "user": "anonymous",
+      "dateUpdated": "Aug 27, 2018 2:28:57 PM",
       "config": {
         "tableHide": false,
         "editorSetting": {
@@ -267,13 +293,15 @@
     },
     {
       "text": "val emptying \u003d all.filter($\"newBalanceOrig\" \u003d\u003d\u003d 0).filter($\"oldBalanceOrig\" \u003e 0).filter($\"transType\".isin(\"TRANSFER\",\"CASH_OUT\"))\nprintFraudRate(emptying, \"emptying orig account\")\n\nz.show(emptying.groupBy($\"isFraud\").agg(count($\"isFraud\")))",
-      "dateUpdated": "Jul 25, 2018 5:11:35 PM",
+      "user": "anonymous",
+      "dateUpdated": "Aug 27, 2018 2:28:57 PM",
       "config": {
         "editorSetting": {
-          "language": "scala"
+          "language": "text",
+          "editOnDblClick": false
         },
         "colWidth": 12.0,
-        "editorMode": "ace/mode/scala",
+        "editorMode": "ace/mode/text",
         "editorHide": false,
         "results": {},
         "enabled": true
@@ -282,17 +310,28 @@
         "params": {},
         "forms": {}
       },
+      "results": {
+        "code": "ERROR",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "\u003cconsole\u003e:28: error: not found: value all\n       val emptying \u003d all.filter($\"newBalanceOrig\" \u003d\u003d\u003d 0).filter($\"oldBalanceOrig\" \u003e 0).filter($\"transType\".isin(\"TRANSFER\",\"CASH_OUT\"))\n                      ^\n"
+          }
+        ]
+      },
       "apps": [],
       "jobName": "paragraph_1532538695191_-150196172",
       "id": "20180122-204340_1045755316",
       "dateCreated": "Jul 25, 2018 5:11:35 PM",
-      "status": "READY",
-      "errorMessage": "",
+      "dateStarted": "Aug 27, 2018 2:29:02 PM",
+      "dateFinished": "Aug 27, 2018 2:29:02 PM",
+      "status": "ERROR",
       "progressUpdateIntervalMs": 500
     },
     {
       "text": "%md\nNext, take a look at the amount transferred for fraud transactions. If you scan the amounts, you will notice a repeating value. What might this indicate?\n ",
-      "dateUpdated": "Jul 25, 2018 5:11:35 PM",
+      "user": "anonymous",
+      "dateUpdated": "Aug 27, 2018 2:28:57 PM",
       "config": {
         "tableHide": false,
         "editorSetting": {
@@ -329,13 +368,15 @@
     },
     {
       "text": "// show fraudulent transactions with amounts labeled as transferred\n\nval trans1 \u003d transfer\n             .filter($\"isFraud\" \u003d\u003d\u003d \"1\")\n\nz.show(trans1)",
-      "dateUpdated": "Jul 25, 2018 5:11:35 PM",
+      "user": "anonymous",
+      "dateUpdated": "Aug 27, 2018 2:28:58 PM",
       "config": {
         "editorSetting": {
-          "language": "scala"
+          "language": "text",
+          "editOnDblClick": false
         },
         "colWidth": 12.0,
-        "editorMode": "ace/mode/scala",
+        "editorMode": "ace/mode/text",
         "editorHide": false,
         "results": {},
         "enabled": true
@@ -344,17 +385,28 @@
         "params": {},
         "forms": {}
       },
+      "results": {
+        "code": "ERROR",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "\u003cconsole\u003e:30: error: not found: value transfer\n       val trans1 \u003d transfer\n                    ^\n"
+          }
+        ]
+      },
       "apps": [],
       "jobName": "paragraph_1532538695194_-151350419",
       "id": "20180124-141332_1192789555",
       "dateCreated": "Jul 25, 2018 5:11:35 PM",
-      "status": "READY",
-      "errorMessage": "",
+      "dateStarted": "Aug 27, 2018 2:29:02 PM",
+      "dateFinished": "Aug 27, 2018 2:29:02 PM",
+      "status": "ERROR",
       "progressUpdateIntervalMs": 500
     },
     {
       "text": "%md\nNow, confirm the incidence of fraud for the value you saw repeated in the fraudulent transactions. What does that mean?\n ",
-      "dateUpdated": "Jul 25, 2018 5:11:35 PM",
+      "user": "anonymous",
+      "dateUpdated": "Aug 27, 2018 2:28:58 PM",
       "config": {
         "tableHide": false,
         "editorSetting": {
@@ -391,13 +443,15 @@
     },
     {
       "text": "val amount10k \u003d all.filter($\"amount\" \u003d\u003d\u003d 10000000)\nprintFraudRate(amount10k, \"amounts of 10M$\")",
-      "dateUpdated": "Jul 25, 2018 5:11:35 PM",
+      "user": "anonymous",
+      "dateUpdated": "Aug 27, 2018 2:28:58 PM",
       "config": {
         "editorSetting": {
-          "language": "scala"
+          "language": "text",
+          "editOnDblClick": false
         },
         "colWidth": 12.0,
-        "editorMode": "ace/mode/scala",
+        "editorMode": "ace/mode/text",
         "editorHide": false,
         "results": {},
         "enabled": true
@@ -406,17 +460,28 @@
         "params": {},
         "forms": {}
       },
+      "results": {
+        "code": "ERROR",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "\u003cconsole\u003e:28: error: not found: value all\n       val amount10k \u003d all.filter($\"amount\" \u003d\u003d\u003d 10000000)\n                       ^\n"
+          }
+        ]
+      },
       "apps": [],
       "jobName": "paragraph_1532538695195_-151735168",
       "id": "20180122-204655_1489983479",
       "dateCreated": "Jul 25, 2018 5:11:35 PM",
-      "status": "READY",
-      "errorMessage": "",
+      "dateStarted": "Aug 27, 2018 2:29:02 PM",
+      "dateFinished": "Aug 27, 2018 2:29:02 PM",
+      "status": "ERROR",
       "progressUpdateIntervalMs": 500
     },
     {
       "text": "%md\nDo more fraudulent transactions happen at a certain time of day? Remember that `step` is the hour of the day, in an ascending number, during one month. \n\nBelow are some ways of viewing the data.\n ",
-      "dateUpdated": "Jul 25, 2018 5:11:35 PM",
+      "user": "anonymous",
+      "dateUpdated": "Aug 27, 2018 2:28:58 PM",
       "config": {
         "tableHide": false,
         "editorSetting": {
@@ -453,14 +518,16 @@
     },
     {
       "text": "val allH \u003d all.withColumn(\"hourOfDay\", $\"step\" % 24)",
-      "dateUpdated": "Jul 25, 2018 5:11:35 PM",
+      "user": "anonymous",
+      "dateUpdated": "Aug 27, 2018 2:28:58 PM",
       "config": {
         "colWidth": 12.0,
-        "editorMode": "ace/mode/scala",
+        "editorMode": "ace/mode/text",
         "results": {},
         "enabled": true,
         "editorSetting": {
-          "language": "scala"
+          "language": "text",
+          "editOnDblClick": false
         }
       },
       "settings": {
@@ -468,11 +535,11 @@
         "forms": {}
       },
       "results": {
-        "code": "SUCCESS",
+        "code": "ERROR",
         "msg": [
           {
             "type": "TEXT",
-            "data": "allH: org.apache.spark.sql.DataFrame \u003d [ID: bigint, amount: double ... 11 more fields]\n"
+            "data": "\u003cconsole\u003e:28: error: not found: value all\n       val allH \u003d all.withColumn(\"hourOfDay\", $\"step\" % 24)\n                  ^\n"
           }
         ]
       },
@@ -480,19 +547,22 @@
       "jobName": "paragraph_1532538695196_-153658912",
       "id": "20180122-204534_465176485",
       "dateCreated": "Jul 25, 2018 5:11:35 PM",
-      "status": "READY",
-      "errorMessage": "",
+      "dateStarted": "Aug 27, 2018 2:29:02 PM",
+      "dateFinished": "Aug 27, 2018 2:29:02 PM",
+      "status": "ERROR",
       "progressUpdateIntervalMs": 500
     },
     {
       "text": "for (i \u003c- 0 to 23) { printFraudRate( allH.filter($\"hourOfDay\" \u003d\u003d\u003d i) , \"tx at \"+i) }",
-      "dateUpdated": "Jul 25, 2018 5:11:35 PM",
+      "user": "anonymous",
+      "dateUpdated": "Aug 27, 2018 2:28:58 PM",
       "config": {
         "editorSetting": {
-          "language": "scala"
+          "language": "text",
+          "editOnDblClick": false
         },
         "colWidth": 12.0,
-        "editorMode": "ace/mode/scala",
+        "editorMode": "ace/mode/text",
         "editorHide": false,
         "results": {},
         "enabled": true
@@ -501,23 +571,35 @@
         "params": {},
         "forms": {}
       },
+      "results": {
+        "code": "ERROR",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "\u003cconsole\u003e:29: error: not found: value printFraudRate\n       for (i \u003c- 0 to 23) { printFraudRate( allH.filter($\"hourOfDay\" \u003d\u003d\u003d i) , \"tx at \"+i) }\n                            ^\n\u003cconsole\u003e:29: error: not found: value allH\n       for (i \u003c- 0 to 23) { printFraudRate( allH.filter($\"hourOfDay\" \u003d\u003d\u003d i) , \"tx at \"+i) }\n                                            ^\n"
+          }
+        ]
+      },
       "apps": [],
       "jobName": "paragraph_1532538695196_-153658912",
       "id": "20180122-204759_2105439826",
       "dateCreated": "Jul 25, 2018 5:11:35 PM",
-      "status": "READY",
-      "errorMessage": "",
+      "dateStarted": "Aug 27, 2018 2:29:02 PM",
+      "dateFinished": "Aug 27, 2018 2:29:03 PM",
+      "status": "ERROR",
       "progressUpdateIntervalMs": 500
     },
     {
       "text": "z.show(allH.groupBy(\"hourOfDay\").agg(count(\"hourOfDay\")))",
-      "dateUpdated": "Jul 25, 2018 5:11:35 PM",
+      "user": "anonymous",
+      "dateUpdated": "Aug 27, 2018 2:28:58 PM",
       "config": {
         "editorSetting": {
-          "language": "scala"
+          "language": "text",
+          "editOnDblClick": false
         },
         "colWidth": 12.0,
-        "editorMode": "ace/mode/scala",
+        "editorMode": "ace/mode/text",
         "editorHide": false,
         "results": {
           "0": {
@@ -534,24 +616,36 @@
       "settings": {
         "params": {},
         "forms": {}
+      },
+      "results": {
+        "code": "ERROR",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "\u003cconsole\u003e:31: error: not found: value allH\n       z.show(allH.groupBy(\"hourOfDay\").agg(count(\"hourOfDay\")))\n              ^\n"
+          }
+        ]
       },
       "apps": [],
       "jobName": "paragraph_1532538695197_-154043661",
       "id": "20180122-204832_860846838",
       "dateCreated": "Jul 25, 2018 5:11:35 PM",
-      "status": "READY",
-      "errorMessage": "",
+      "dateStarted": "Aug 27, 2018 2:29:03 PM",
+      "dateFinished": "Aug 27, 2018 2:29:03 PM",
+      "status": "ERROR",
       "progressUpdateIntervalMs": 500
     },
     {
       "text": "z.show(allH.groupBy(\"hourOfDay\").agg(sum(\"isFraud\") / count(\"isFraud\")))",
-      "dateUpdated": "Jul 25, 2018 5:11:35 PM",
+      "user": "anonymous",
+      "dateUpdated": "Aug 27, 2018 2:28:58 PM",
       "config": {
         "editorSetting": {
-          "language": "scala"
+          "language": "text",
+          "editOnDblClick": false
         },
         "colWidth": 12.0,
-        "editorMode": "ace/mode/scala",
+        "editorMode": "ace/mode/text",
         "editorHide": false,
         "results": {
           "0": {
@@ -569,17 +663,28 @@
         "params": {},
         "forms": {}
       },
+      "results": {
+        "code": "ERROR",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "\u003cconsole\u003e:31: error: not found: value allH\n       z.show(allH.groupBy(\"hourOfDay\").agg(sum(\"isFraud\") / count(\"isFraud\")))\n              ^\n"
+          }
+        ]
+      },
       "apps": [],
       "jobName": "paragraph_1532538695197_-154043661",
       "id": "20180123-182924_676256948",
       "dateCreated": "Jul 25, 2018 5:11:35 PM",
-      "status": "READY",
-      "errorMessage": "",
+      "dateStarted": "Aug 27, 2018 2:29:03 PM",
+      "dateFinished": "Aug 27, 2018 2:29:03 PM",
+      "status": "ERROR",
       "progressUpdateIntervalMs": 500
     },
     {
       "text": "%md\n\n## Next: Prepare and Create the Predictive Model\nContinue to the next notebook to [prepare and create your model](/#/notebook/FINPLAY3).",
-      "dateUpdated": "Jul 25, 2018 5:11:35 PM",
+      "user": "anonymous",
+      "dateUpdated": "Aug 27, 2018 2:28:58 PM",
       "config": {
         "tableHide": false,
         "editorSetting": {
@@ -611,6 +716,22 @@
       "dateCreated": "Jul 25, 2018 5:11:35 PM",
       "status": "READY",
       "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%md\n",
+      "user": "anonymous",
+      "dateUpdated": "Aug 27, 2018 2:28:58 PM",
+      "config": {},
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1535380138528_2123624554",
+      "id": "20180827-142858_1194270585",
+      "dateCreated": "Aug 27, 2018 2:28:58 PM",
+      "status": "READY",
       "progressUpdateIntervalMs": 500
     }
   ],

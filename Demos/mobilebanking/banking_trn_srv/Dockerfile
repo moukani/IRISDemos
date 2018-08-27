@@ -1,5 +1,11 @@
+FROM mobilebanking_datalake:latest
+
+
 FROM amirsamary/irisdemo:irisdemoint
 LABEL maintainer="Amir Samary <amir.samary@intersystems.com>"
+
+# Let's copy the exported file whitelist.csv from the datalake image into our image
+COPY --from=0 /tmp/whitelist.csv /tmp/
 
 # Name of the project folder ex.: my-atelier-project
 ARG IRIS_PROJECT_FOLDER_NAME

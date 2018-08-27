@@ -1,7 +1,7 @@
 Class BankingCore.Transaction.CreateTransactionResponse Extends Ens.Response [ ProcedureBlock ]
 {
 
-Property CreateTransactionResult As %String;
+Property CreateTransactionResult As BankingCore.Transaction.WSProxy.s0.CreateTransactionResp;
 
 Storage Default
 {

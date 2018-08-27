@@ -17,14 +17,24 @@ Parameter NAMESPACE = "http://bankingcore.demo";
 /// Namespaces of referenced classes will be used in the WSDL.
 Parameter USECLASSNAMESPACES = 1;
 
-Method CreateTransaction(pTransDateTime As %TimeStamp, pTransType As %String, pAmount As %Double, pFromAccountNumber As %String, pToAccountNumber As %String) As %String [ WebMethod ]
+Method CreateTransaction(pTransDateTime As %TimeStamp, pTransType As %String(VALUELIST=",PAYMENT,REFUND,CASH_IN,CASH_OUT,TRANSFER") = "TRANSFER", pAmount As %Double, pFromAccountNumber As %String, pToAccountNumber As %String) As CreateTransactionResp [ WebMethod ]
 {
+	#Dim oResp As IRISDemo.SOAP.CreateTransactionResp
+	#Dim oTrans As IRISDemo.CheckingTrans
+	
 	Set tSC = $$$OK
 	Try
 	{
-		Set tTransactionID = ##class(IRISDemo.MobileTransaction).CreateTransaction(pTransDateTime,pTransType,pAmount,pFromAccountNumber,pToAccountNumber,0)
+		Set oTrans = ##class(IRISDemo.CheckingTrans).CreateTransaction(pTransDateTime,pTransType,pAmount,pFromAccountNumber,pToAccountNumber,0)
 		
-		Return tTransactionID
+		Set oResp = ##class(CreateTransactionResp).%New()
+		Set oResp.TransactionId = oTrans.%Id()
+		Set oResp.FromAccountNewBalance=oTrans.FromAccountNewBalance
+		Set oResp.FromAccountOldBalance=oTrans.FromAccountOldBalance
+		Set oResp.ToAccountNewBalance=oTrans.ToAccountNewBalance
+		Set oResp.ToAccountOldBalance=oTrans.ToAccountOldBalance
+
+		Return oResp
 	}
 	Catch (oException)
 	{

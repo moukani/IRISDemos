@@ -44,11 +44,12 @@ Class IRISDemo.Account Extends %Persistent
 			If tAccountType="C"
 			{
 				Set pObject = ##class(IRISDemo.CustomerAccount).%New()
-				Set pObject.Balance=1000 //Every customer will start with US$1000!
+				Set pObject.Balance=6000 //Every customer will start with US$1000!
 			}
 			Else
 			{
 				Set pObject = ##class(IRISDemo.MerchantAccount).%New()
+				Set pObject.Balance=-6000 //Every merchant will start with - US$6000!
 			}
 			Set pObject.AccountNumber=tAccountNumber
 			
@@ -63,4 +64,25 @@ Class IRISDemo.Account Extends %Persistent
 		Quit tSC
 	}
 	
+Storage Default
+{
+<Data name="AccountDefaultData">
+<Value name="1">
+<Value>%%CLASSNAME</Value>
+</Value>
+<Value name="2">
+<Value>AccountNumber</Value>
+</Value>
+<Value name="3">
+<Value>Balance</Value>
+</Value>
+</Data>
+<DataLocation>^IRISDemo.AccountD</DataLocation>
+<DefaultData>AccountDefaultData</DefaultData>
+<IdLocation>^IRISDemo.AccountD</IdLocation>
+<IndexLocation>^IRISDemo.AccountI</IndexLocation>
+<StreamLocation>^IRISDemo.AccountS</StreamLocation>
+<Type>%Storage.Persistent</Type>
+}
+
 }

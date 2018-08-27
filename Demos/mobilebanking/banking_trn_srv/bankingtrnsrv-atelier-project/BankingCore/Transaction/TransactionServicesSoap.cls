@@ -10,7 +10,7 @@ Method CreateTransaction(pRequest As BankingCore.Transaction.CreateTransactionRe
  Set tSC = pRequest.NewResponse(.pResponse)  Quit:$$$ISERR(tSC) tSC
  Set pResponse.CreateTransactionResult=$get(CreateTransactionResult)
  Quit $$$OK
-}
+} 
 
 XData MessageMap
 {

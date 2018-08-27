@@ -2,6 +2,8 @@ Class WhiteList.BO.QueryWhiteListResp Extends (%Persistent,Ens.Response)
 {
 	Property WhiteListRequestFound As %Boolean [ InitialExpression = 0, Required ];
 	
+	Property WhiteListRequestId As %String;
+	
 	Property RequestDate As %TimeStamp;
 	
 	Property FromAccountNumber As %String ;
@@ -17,19 +19,22 @@ Storage Default
 <Value>%%CLASSNAME</Value>
 </Value>
 <Value name="2">
-<Value>RequestDate</Value>
+<Value>WhiteListRequestFound</Value>
 </Value>
 <Value name="3">
-<Value>FromAccountNumber</Value>
+<Value>WhiteListRequestId</Value>
 </Value>
 <Value name="4">
-<Value>FromDate</Value>
+<Value>RequestDate</Value>
 </Value>
 <Value name="5">
-<Value>ToDate</Value>
+<Value>FromAccountNumber</Value>
 </Value>
 <Value name="6">
-<Value>WhiteListRequestFound</Value>
+<Value>FromDate</Value>
+</Value>
+<Value name="7">
+<Value>ToDate</Value>
 </Value>
 </Data>
 <DataLocation>^WhiteList.BO.QueryWhiteLE1DBD</DataLocation>

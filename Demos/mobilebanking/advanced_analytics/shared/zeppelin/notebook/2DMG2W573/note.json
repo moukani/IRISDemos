@@ -37,6 +37,31 @@
       "progressUpdateIntervalMs": 500
     },
     {
+      "text": "spark.\n",
+      "user": "anonymous",
+      "dateUpdated": "Aug 19, 2018 9:11:55 PM",
+      "config": {
+        "colWidth": 12.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": true
+        },
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1534713107389_-516575782",
+      "id": "20180819-211147_345868640",
+      "dateCreated": "Aug 19, 2018 9:11:47 PM",
+      "status": "READY",
+      "progressUpdateIntervalMs": 500
+    },
+    {
       "title": "Load one month of taxi data from a csv file",
       "text": "case class PayTrans (\n  step: Int,\n  transType: String,\n  amount: Double,\n  nameOrig: String,\n  oldbalanceOrg: Double,\t\n  newbalanceOrig: Double,\t\t\n  nameDest: String,\n  oldbalanceDest: Double,\n  newbalanceDest: Double,\t\n  isFraud: Int,\n  isFlaggedFraud: Int\n)\n\nval trans \u003d spark.read\n                .schema(Seq[PayTrans]().toDF.schema)       // applies the case class as a schema\n                .option(\"header\", \"true\")                   // skips the header row\n                .csv(\"/shared/training_set.csv\")     // file name pointer\n\ntrans.count()",
       "user": "anonymous",

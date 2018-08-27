@@ -28,10 +28,18 @@ iris start iris
 
 VerifySC='If $System.Status.IsError(tSC) { Do $System.Status.DisplayError(tSC) Do $zu(4,$j,1) } Else { Do $zu(4,$j,0) }'
 
-printf "\n\nLoading /tmp/appinstaller.cls..."
+printf "\n\nLoading Installer..."
+
+# This specific command may fail on images that are based on this because I don't expect to find IRISDemo.InstallerBase 
+# on the developer's project (they should not override this class on their projects!)
+# That is why this command ends with a "|| true". This will tell bash that the result of executing it was true despite
+# the final result (that may be an error because the class does not exist)
+printf "%s\n%s\nzn \"%s\"\nSet tSC=\$system.OBJ.Load(\"%s\",\"ck\")\n$VerifySC\n" "$IRIS_USERNAME" "$IRIS_PASSWORD" "%SYS" "/tmp/iris_project/IRISConfig/InstallerBase.cls" | irissession IRIS || true
+
+# This, on the other hand, should never fail:
 printf "%s\n%s\nzn \"%s\"\nSet tSC=\$system.OBJ.Load(\"%s\",\"ck\")\n$VerifySC\n" "$IRIS_USERNAME" "$IRIS_PASSWORD" "%SYS" "/tmp/iris_project/IRISConfig/Installer.cls" | irissession IRIS
 
-printf "\n\nRunning /tmp/appinstaller.cls..."
+printf "\n\nRunning Installer..."
 printf "%s\n%s\n%s\n%s\n" "$IRIS_USERNAME" "$IRIS_PASSWORD" "zn \"%SYS\"" "Do ##class(IRISConfig.Installer).Install()" | irissession IRIS
 
 printf "\n\nCleanning up..."
@@ -40,7 +48,7 @@ printf "%s\n%s\n%s\n%s\n%s\n%s\n" "$IRIS_USERNAME" "$IRIS_PASSWORD" "zn \"%SYS\"
 iris stop iris quietly
 
 rm $ISC_PACKAGE_INSTALLDIR/mgr/IRIS.WIJ
-
+rm -f $ISC_PACKAGE_INSTALLDIR/mgr/iris.ids
 rm $ISC_PACKAGE_INSTALLDIR/mgr/journal/*
 
 rm -rf /tmp/iris_project

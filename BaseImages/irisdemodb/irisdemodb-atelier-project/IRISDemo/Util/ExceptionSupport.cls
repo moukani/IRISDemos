@@ -45,6 +45,19 @@ ClassMethod ThrowStatusExceptionIfError(pSC As %Status, pExceptionName As %Strin
 	}
 }
 
+
+ClassMethod ThrowSQLExceptionIfError(pSQLCODE As %Status, pMsg As %String, pExceptionName As %String)
+{
+	Quit:SQLCODE>=0
+	
+	//Let's create a simple sql exception first
+	Set sqlException = ##class(%Exception.SQL).CreateFromSQLCODE(pSQLCODE, pMsg) 
+			
+	Set myException = ##class(%Exception.General).%New(pExceptionName, pExceptionName, $System, , sqlException)
+	
+	Throw myException	
+}
+
 /// This method is called on the include macro DEMOMACROS.inc by the macro of the same name
 /// It must be used only inside a SOAP service to report a SOAP Fault based on an exception that
 /// was captured by a Try/Catch block

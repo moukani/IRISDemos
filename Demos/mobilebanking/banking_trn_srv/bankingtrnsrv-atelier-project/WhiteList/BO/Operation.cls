@@ -4,12 +4,12 @@ Class WhiteList.BO.Operation extends Ens.BusinessOperation {
 
 Parameter INVOCATION = "Queue";
 
-Method WhiteListReq(pInput As WhiteList.BS.WhiteListReq, Output pOutput As WhiteList.BS.WhiteListResp) As %Status
+Method CreateWhiteList(pInput As CreateWhiteListReq, Output pOutput As CreateWhiteListResp) As %Status
 {
 	Set tSC = $$$OK
 	Try
 	{
-		Set pOutput=##class(WhiteList.BS.WhiteListResp).%New()
+		Set pOutput=##class(CreateWhiteListResp).%New()
 		
 		Set %objlasterror=$$$OK
 		Set oWhiteListReq = ##class(WhiteList.Data.WhiteListRequest).%New(pInput.RequestDate, pInput.FromAccountNumber, pInput.FromDate, pInput.ToDate)
@@ -54,6 +54,7 @@ Method QueryWhiteList(pInput As QueryWhiteListReq, Output pOutput As QueryWhiteL
 		If oRS.Next()
 		{
 			Set pOutput.WhiteListRequestFound=1
+			Set pOutput.WhiteListRequestId=oRS.Get("ID")
 			Set pOutput.FromAccountNumber=pInput.FromAccountNumber
 			Set pOutput.FromDate=oRS.Get("FromDate")
 			Set pOutput.ToDate=oRS.Get("ToDate")
@@ -70,8 +71,8 @@ Method QueryWhiteList(pInput As QueryWhiteListReq, Output pOutput As QueryWhiteL
 
 XData MessageMap {
 <MapItems>
-    <MapItem MessageType="WhiteList.BS.WhiteListReq">
-        <Method>WhiteListReq</Method>
+    <MapItem MessageType="WhiteList.BO.CreateWhiteListReq">
+        <Method>CreateWhiteList</Method>
     </MapItem>
     <MapItem MessageType="QueryWhiteListReq">
         <Method>QueryWhiteList</Method>

@@ -1,6 +1,6 @@
 Class WhiteList.BS.WhiteListResp Extends (%Persistent,Ens.Response)
 {
-	Property WhiteListRequestId As %String [ Required ];
+	Property WhiteListRequestId As %String ;
 	
 Storage Default
 {

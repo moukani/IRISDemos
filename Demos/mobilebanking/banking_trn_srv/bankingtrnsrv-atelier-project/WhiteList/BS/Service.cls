@@ -24,7 +24,7 @@ Class WhiteList.BS.Service extends IRISDemo.BS.REST.Service
 			// I can't call ProcessInput directly because I am running on a class method that was called
 			// by the dispatcher. The Business Service's instance hasn't been created yet. This method will
 			// create it for me and call ProcessInput:
-			Do ..DispatchTo("White List Operation", oRequest, .oResponse)
+			Do ..DispatchTo("Create White List Process", oRequest, .oResponse)
 
 			Set doResponse.RequestResult.Status="OK"
 			Set doResponse.RequestResult.WhiteListRequestId=oResponse.WhiteListRequestId
