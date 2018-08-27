@@ -32,8 +32,13 @@ XData Install [ XMLNamespace = INSTALLER ]
 	</Namespace>
 	
 	<Log Text="Applying additional configurations to the new REST CSP Application..." Level="0"/>
-	<Invoke Class="IRISConfig.Installer" Method="ConfigureAsRESTCSPApp" CheckStatus="true">
+	<Invoke Class="IRISConfig.Installer" Method="CSPAppConfigureAsREST" CheckStatus="true">
 		<Arg name="pCSPAppName" Value="/csp/${CSPAppName}/rest"/>
+	</Invoke>
+
+	<Log Text="Enabling Analytics on main CSP application so we can import PMML and see production statistics." Level="0"/>
+	<Invoke Class="IRISConfig.Installer" Method="CSPAppEnableAnalytics" CheckStatus="true">
+		<Arg name="pCSPAppName" Value="/csp/${CSPAppName}"/>
 	</Invoke>
 
 	<Log Text="Configuring production IRISDemo.Production to auto-start." Level="0"/>

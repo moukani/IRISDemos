@@ -105,7 +105,7 @@ Class IRISConfig.InstallerBase [ Abstract ]
 		Quit tSC 
 	}
 	
-	ClassMethod ConfigureAsRESTCSPApp(pCSPAppName) As %Status
+	ClassMethod CSPAppConfigureAsREST(pCSPAppName) As %Status
 	{
 		Set tSC = $System.Status.OK()
 		Try
@@ -125,6 +125,24 @@ Class IRISConfig.InstallerBase [ Abstract ]
 		Quit tSC
 	}
 
+	ClassMethod CSPAppEnableAnalytics(pCSPAppName) As %Status
+	{
+		Set tSC = $System.Status.OK()
+		Try
+		{
+			Set oCSPApp = ##class(Security.Applications).%OpenId(pCSPAppName, , .tSC)
+	
+			Set oCSPApp.DeepSeeEnabled=1
+			Set tSC = oCSPApp.%Save()
+			Quit:$System.Status.IsError(tSC)
+		}
+		Catch (oException)
+		{
+			Set tSC = oException.AsStatus()
+		}
+	
+		Quit tSC
+	}
 	
 	XData Install [ XMLNamespace = INSTALLER ]
 	{

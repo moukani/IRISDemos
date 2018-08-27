@@ -41,7 +41,7 @@ Class IRISConfig.Installer Extends IRISConfig.InstallerBase
 			</Namespace>
 			
 			<Log Text="Applying additional configurations to the new REST CSP Application..." Level="0"/>
-			<Invoke Class="IRISConfig.Installer" Method="ConfigureAsRESTCSPApp" CheckStatus="true">
+			<Invoke Class="IRISConfig.Installer" Method="CSPAppConfigureAsREST" CheckStatus="true">
 				<Arg name="pCSPAppName" Value="/csp/${CSPAppName}/rest"/>
 			</Invoke>
 		</If>
