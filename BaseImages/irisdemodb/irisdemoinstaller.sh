@@ -32,11 +32,11 @@ printf "\n\nLoading Installer..."
 
 # This specific command may fail on images that are based on this because I don't expect to find IRISDemo.InstallerBase 
 # on the developer's project (they should not override this class on their projects!)
-# That is why this command ends with a "|| true". This will tell bash that the result of executing it was true despite
-# the final result (that may be an error because the class does not exist)
-printf "%s\n%s\nzn \"%s\"\nSet tSC=\$system.OBJ.Load(\"%s\",\"ck\")\n$VerifySC\n" "$IRIS_USERNAME" "$IRIS_PASSWORD" "%SYS" "/tmp/iris_project/IRISConfig/InstallerBase.cls" | irissession IRIS || true
+# That is why we are not checking the status code.
+printf "%s\n%s\nzn \"%s\"\nSet tSC=\$system.OBJ.Load(\"%s\",\"ck\")\n" "$IRIS_USERNAME" "$IRIS_PASSWORD" "%SYS" "/tmp/iris_project/IRISConfig/InstallerBase.cls" | irissession IRIS
 
-# This, on the other hand, should never fail:
+# This, on the other hand, should never fail and as it depends on the existence of the previous class
+# it may fail if it hasn't been loaded correctly. 
 printf "%s\n%s\nzn \"%s\"\nSet tSC=\$system.OBJ.Load(\"%s\",\"ck\")\n$VerifySC\n" "$IRIS_USERNAME" "$IRIS_PASSWORD" "%SYS" "/tmp/iris_project/IRISConfig/Installer.cls" | irissession IRIS
 
 printf "\n\nRunning Installer..."
