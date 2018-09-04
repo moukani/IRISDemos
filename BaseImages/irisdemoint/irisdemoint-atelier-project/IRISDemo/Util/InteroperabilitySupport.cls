@@ -2,8 +2,13 @@ Include Ensemble
 
 Class IRISDemo.Util.InteroperabilitySupport
 {
-ClassMethod IndexProductionItems() As %Status
-{
+	ClassMethod AreLookupTablesConsistent() As %Boolean
+	{
+		Quit ($Get(^IRISDemo.BS.LookupTable("Updating"),0)=0)
+	}
+	
+	ClassMethod IndexProductionItems() As %Status
+	{
 		Set tSC = $System.Status.OK()
 		Try
 		{
@@ -32,10 +37,10 @@ ClassMethod IndexProductionItems() As %Status
 		Lock -^IRIS.Temp.IRISDemoIndex
 
 		Quit tSC
-}
+	}
 
-ClassMethod GetBusinessServiceConfigItemName(pClassName As %String, Output pConfigItemName As %String) As %Status
-{
+	ClassMethod GetBusinessServiceConfigItemName(pClassName As %String, Output pConfigItemName As %String) As %Status
+	{
 		Set tSC = $System.Status.OK()
 		Try
 		{
@@ -63,5 +68,5 @@ ClassMethod GetBusinessServiceConfigItemName(pClassName As %String, Output pConf
 		Lock -^IRIS.Temp.IRISDemoIndex
 
 		Quit tSC
-}
+	}
 }

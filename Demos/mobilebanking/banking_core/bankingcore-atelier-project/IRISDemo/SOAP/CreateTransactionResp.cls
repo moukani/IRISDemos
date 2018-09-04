@@ -9,4 +9,4 @@ Class IRISDemo.SOAP.CreateTransactionResp Extends (%RegisteredObject,%XML.Adapto
 	Property ToAccountOldBalance As %Library.Double ;
 	
 	Property ToAccountNewBalance As %Library.Double ;
-}
+} 

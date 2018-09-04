@@ -9,6 +9,7 @@ XData ProductionDefinition
   <Item Name="Banking Core Transaction Operation" Category="Banking Core" ClassName="BankingCore.Transaction.TransactionServicesSoap" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
     <Setting Target="Adapter" Name="SOAPCredentials">BankingCore</Setting>
     <Setting Target="Host" Name="SendSuperSession">0</Setting>
+    <Setting Target="Adapter" Name="WebServiceURL">http://bankingcore:52773/csp/app/IRISDemo.SOAP.TransactionServices.cls</Setting>
   </Item>
   <Item Name="Banking Transaction Service" Category="Banking Tran. Srv." ClassName="BankingSrv.BS.Transaction.Service" PoolSize="0" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
   </Item>
@@ -24,6 +25,7 @@ XData ProductionDefinition
     <Setting Target="Adapter" Name="DSN">jdbc:IRIS://datalake:51773/APP</Setting>
     <Setting Target="Adapter" Name="JDBCDriver">com.intersystems.jdbc.IRISDriver</Setting>
     <Setting Target="Adapter" Name="JGService">Java Gateway Service</Setting>
+    <Setting Target="Adapter" Name="StayConnected">30</Setting>
   </Item>
   <Item Name="Java Gateway Service" Category="Datalake" ClassName="EnsLib.JavaGateway.Service" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
   </Item>
@@ -34,6 +36,22 @@ XData ProductionDefinition
     <Setting Target="Adapter" Name="Credentials">Datalake</Setting>
     <Setting Target="Adapter" Name="DSN">jdbc:IRIS://datalake:51773/APP</Setting>
     <Setting Target="Adapter" Name="JDBCDriver">com.intersystems.jdbc.IRISDriver</Setting>
+  </Item>
+  <Item Name="Populate Lookup Table Service" Category="Datalake" ClassName="IRISDemo.BS.LookupTable.Service" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="true" Schedule="">
+    <Setting Target="Host" Name="LookupTableLoadingSpec"><![CDATA[Merchant_Category_Feature, IRISDemo.BC_MERCH_ACCOUNT, BC_ACC_NUMBER, BC_MERCH_CATEGORY->BC_MERCH_CAT_CODE
+Merchant_Feature, IRISDemo.BC_MERCH_ACCOUNT, BC_ACC_NUMBER, BC_MERCH_CODE]]></Setting>
+    <Setting Target="Host" Name="DownloadBusinessOperation">Datalake Lookup Table Download Operation</Setting>
+  </Item>
+  <Item Name="Datalake Lookup Table Download Operation" Category="Datalake" ClassName="IRISDemo.BO.LookupTable.Operation" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+    <Setting Target="Adapter" Name="Credentials">Datalake</Setting>
+    <Setting Target="Adapter" Name="DSN">jdbc:IRIS://datalake:51773/APP</Setting>
+    <Setting Target="Adapter" Name="JGService">Java Gateway Service</Setting>
+    <Setting Target="Adapter" Name="StayConnected">-1</Setting>
+    <Setting Target="Adapter" Name="JDBCDriver">com.intersystems.jdbc.IRISDriver</Setting>
+    <Setting Target="Host" Name="ReplyCodeActions">E=R</Setting>
+  </Item>
+  <Item Name="Fraud Prediction ML Model" Category="" ClassName="IRISDemo.BO.PMML.Operation" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+    <Setting Target="Host" Name="PMML">BankingSrv.PMML.FraudPrevModel</Setting>
   </Item>
 </Production>
 }

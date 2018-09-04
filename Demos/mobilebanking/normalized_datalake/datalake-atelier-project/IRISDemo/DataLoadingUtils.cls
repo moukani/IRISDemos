@@ -28,6 +28,7 @@ Class IRISDemo.DataLoadingUtils
 			While oRSTransactions.Next()
 			{
 				Set iLine=iLine+1
+				Quit:iLine>10000
 				
 				// I should use SQL instead of objects here since SQL will allow me 
 				// to insert with flags such as %NOINDEX and build the indices later
@@ -49,11 +50,9 @@ Class IRISDemo.DataLoadingUtils
 				Set oTrans.ToAccount=oToAccount
 				If oTrans.ToAccount.%Id()=""
 				{
-					Set tCategoryCode=$Piece(oRSTransactions.Get("category"),"_",2)
-					Set tSC=##class(MerchantCategory).OpenOrCreateByCode(tCategoryCode, .oCategory)
+					Set tCategoryDesc=$ZConvert($Piece(oRSTransactions.Get("category"),"_",2), "S")
+					Set tSC=##class(MerchantCategory).OpenOrCreateByDesc(tCategoryDesc, .oCategory)
 					$$$ThrowStatusExceptionIfError(tSC, "CreateCategoryException")
-					
-					Set oCategory.Description=$ZConvert(tCategoryCode, "S")
 					
 					Set oTrans.ToAccount.Category=oCategory
 				}
@@ -93,6 +92,9 @@ Class IRISDemo.DataLoadingUtils
 			Quit:$System.Status.IsError(tSC)
 			
 			Set tSC = ..ExportWhiteList()
+			Quit:$System.Status.IsError(tSC)
+			
+			Set tSC = ..LabelEncode()
 			
 		}
 		Catch (oException)
@@ -139,6 +141,59 @@ Class IRISDemo.DataLoadingUtils
 		Quit tSC
 	}
 
+	/// This will encode some of the code tables we have, such as Merchant Categories,
+	/// in the same way python sklearn.preprocessing.LabelEncoder would do. I am doing this
+	/// because Nitor (the partner) built a ML model for us and used this method to encode the
+	/// values of their string features. When we migrat this to Spark, we may end up using this 
+	ClassMethod LabelEncode() As %Status
+	{
+		Set tSC = $$$OK
+		Try
+		{
+			Set oRS = ##class(%ResultSet).%New()
+			Set tSC = oRS.Prepare("select ID from IRISDemo.BC_MERCH_CATEGORY order by BC_MERCH_CAT_DESC")
+			Quit:$System.Status.IsError(tSC)
+			
+			Set tSC = oRS.Execute()
+			Quit:$System.Status.IsError(tSC)
+			
+			For iCode=0:1
+			{
+				Quit:'oRS.Next()
+				
+				Set oMerchantCat = ##class(IRISDemo.MerchantCategory).%OpenId(oRS.GetData(1))
+				Set oMerchantCat.Code=iCode
+				Set tSC = oMerchantCat.%Save()
+				Quit:$System.Status.IsError(tSC)
+			}
+			Quit:$System.Status.IsError(tSC)
+			
+			Set oRS = ##class(%ResultSet).%New()
+			Set tSC = oRS.Prepare("select ID from IRISDemo.BC_MERCH_ACCOUNT order by BC_ACC_NUMBER")
+			Quit:$System.Status.IsError(tSC)
+			
+			Set tSC = oRS.Execute()
+			Quit:$System.Status.IsError(tSC)
+			
+			For iCode=0:1
+			{
+				Quit:'oRS.Next()
+				
+				Set oMerchant = ##class(IRISDemo.MerchantAccount).%OpenId(oRS.GetData(1))
+				Set oMerchant.Code=iCode
+				Set tSC = oMerchant.%Save()
+				Quit:$System.Status.IsError(tSC)
+			}
+			Quit:$System.Status.IsError(tSC)
+		}
+		Catch (oException)
+		{
+			Set tSC = oException.AsStatus()
+		}
+				
+		Quit tSC
+	}
+	
 	ClassMethod PopulateWhiteList() As %Status
 	{
 		#Dim oFraudComplaint As IRISDemo.FraudComplaint

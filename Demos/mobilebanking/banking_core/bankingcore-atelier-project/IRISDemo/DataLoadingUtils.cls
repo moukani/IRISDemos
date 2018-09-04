@@ -26,6 +26,7 @@ Class IRISDemo.DataLoadingUtils
 			While oRSTransactions.Next()
 			{
 				Set iLine=iLine+1
+				Quit:iLine>10000
 				
 				Set oTrans = ##class(CheckingTrans).%New()
 				

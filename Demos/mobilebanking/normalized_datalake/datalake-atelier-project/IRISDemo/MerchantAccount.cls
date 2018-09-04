@@ -5,9 +5,15 @@
 /// The "BC_" prefix stands for "Banking Core"
 Class IRISDemo.MerchantAccount Extends Account [ SqlTableName = "BC_MERCH_ACCOUNT" ]
 {
+	/// Code is not required here because I will be populating it AFTER we have
+	/// loaded all records from the file. We will be following sklearn.preprocessing.LabelEncoder 
+	/// encoding method for it.
+	Property Code As %Integer [ SqlFieldName = "BC_MERCH_CODE" ];
+	
 	Property Category As MerchantCategory [ Required, SqlFieldName = "BC_MERCH_CATEGORY" ];
 	
 	ForeignKey MerchantCategoryFK(Category) References IRISDemo.MerchantCategory();
+	
 	
 Storage Default
 {
@@ -15,6 +21,9 @@ Storage Default
 <Subscript>"MerchantAccount"</Subscript>
 <Value name="1">
 <Value>Category</Value>
+</Value>
+<Value name="2">
+<Value>Code</Value>
 </Value>
 </Data>
 <DefaultData>MerchantAccountDefaultData</DefaultData>

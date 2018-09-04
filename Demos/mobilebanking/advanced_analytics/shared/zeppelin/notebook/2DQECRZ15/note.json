@@ -26,6 +26,42 @@
       "progressUpdateIntervalMs": 500
     },
     {
+      "text": "%irisjdbc\n\nselect * from IRISDemo.BC_MERCH_CATEGORY",
+      "user": "anonymous",
+      "dateUpdated": "Aug 30, 2018 3:39:26 PM",
+      "config": {
+        "colWidth": 12.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "sql",
+          "editOnDblClick": false
+        },
+        "editorMode": "ace/mode/sql"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TABLE",
+            "data": "ID\tBC_MERCH_CAT_CODE\tBC_MERCH_CAT_DESC\n1\t12\tTransportation\n2\t4\tHealth\n3\t9\tOtherservices\n4\t3\tFood\n5\t6\tHotelservices\n6\t0\tBarsandrestaurants\n7\t11\tTech\n8\t10\tSportsandtoys\n9\t14\tWellnessandbeauty\n10\t7\tHyper\n11\t2\tFashion\n12\t5\tHome\n13\t1\tContents\n14\t13\tTravel\n15\t8\tLeisure\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1535411946828_973439587",
+      "id": "20180827-231906_879263362",
+      "dateCreated": "Aug 27, 2018 11:19:06 PM",
+      "dateStarted": "Aug 30, 2018 3:39:26 PM",
+      "dateFinished": "Aug 30, 2018 3:39:28 PM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
       "text": "%irisjdbc\n\nselect top 10 * from IRISDemo.BC_TRANSACTIONS",
       "user": "anonymous",
       "dateUpdated": "Aug 22, 2018 7:25:38 PM",

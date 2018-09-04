@@ -18,6 +18,8 @@ Class IRISDemo.CheckingTrans Extends %Persistent [ SqlTableName = "BC_TRANSACTIO
 	/// Customer/Merchant who started the transaction
 	Property FromAccount As Account [ SqlFieldName = "BC_TRANS_SRC_ACC" ];
 	
+	/// Must declare this as a Foreign Key so that our data dictionary
+	/// will report it
 	ForeignKey FromAccountFK(FromAccount) References IRISDemo.Account();
 	
 	/// Initial balance before the transaction
@@ -39,6 +41,7 @@ Class IRISDemo.CheckingTrans Extends %Persistent [ SqlTableName = "BC_TRANSACTIO
 	
 	Property WhiteListedBy As IRISDemo.WhiteListRequest [ SqlFieldName = "BC_TRANS_WHITELISTED_BY" ];
 	
+	/// This flag marks a transaction that is reported as fraudulent. There will be no WhiteList for it.
 	Property IsFraud As %Boolean [ SqlFieldName = "BC_TRANS_IS_FRAUD" ];
 	
 	Index FromAccountBitMapIndex On (FromAccount) [ Type = BitMap ];

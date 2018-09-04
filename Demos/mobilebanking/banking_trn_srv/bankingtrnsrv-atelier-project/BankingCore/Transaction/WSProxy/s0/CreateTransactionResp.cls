@@ -12,15 +12,15 @@ Parameter XMLSEQUENCE = 1;
 
 Parameter XMLIGNORENULL = 1;
 
-Property TransactionId As %String(MAXLEN = "", XMLNAME = "TransactionId") ;
+Property TransactionId As %String(MAXLEN = "", XMLNAME = "TransactionId");
 
-Property FromAccountOldBalance As %xsd.double(XMLNAME = "FromAccountOldBalance") ;
+Property FromAccountOldBalance As %xsd.double(XMLNAME = "FromAccountOldBalance");
 
-Property FromAccountNewBalance As %xsd.double(XMLNAME = "FromAccountNewBalance") ;
+Property FromAccountNewBalance As %xsd.double(XMLNAME = "FromAccountNewBalance");
 
-Property ToAccountOldBalance As %xsd.double(XMLNAME = "ToAccountOldBalance") ;
+Property ToAccountOldBalance As %xsd.double(XMLNAME = "ToAccountOldBalance");
 
-Property ToAccountNewBalance As %xsd.double(XMLNAME = "ToAccountNewBalance") ;
+Property ToAccountNewBalance As %xsd.double(XMLNAME = "ToAccountNewBalance");
 
 Storage Default
 {

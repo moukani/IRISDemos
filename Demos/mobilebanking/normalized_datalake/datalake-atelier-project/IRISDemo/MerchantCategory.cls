@@ -5,11 +5,18 @@
 Class IRISDemo.MerchantCategory Extends (%Persistent) [ SqlTableName = "BC_MERCH_CATEGORY" ]
 {
 
-Property Code As %String [ SqlFieldName = "BC_MERCH_CAT_CODE", Required ];
+/// Code is not required here because I will be populating it AFTER we have
+/// loaded all records from the file. We will be following sklearn.preprocessing.LabelEncoder 
+/// encoding method for it.
+Property Code As %Integer [ SqlFieldName = "BC_MERCH_CAT_CODE" ];
 
 Property Description As %String [ SqlFieldName = "BC_MERCH_CAT_DESC", Required ];
 
 Index CodeIndex On Code [ Unique ];
+
+/// This would not be normally required. But I use it to populate the table from
+/// the text file. 
+Index DescriptionIndex On Description [ Unique ];
 
 	ClassMethod OpenOrCreateByCode(pCode As %String, Output pObject As %Persistent) As %Status
 	{
@@ -61,6 +68,49 @@ Index CodeIndex On Code [ Unique ];
 		Quit tSC
 	}
 
+	ClassMethod OpenOrCreateByDesc(pDesc As %String, Output pObject As %Persistent) As %Status
+	{
+		Set tSC = $$$OK
+		Try
+		{
+			Set tDescription=$ZStrip(pDesc, "<>W")
+			
+			// Let's try to find the object by it's code, using the index:
+			Set pObject = ..DescriptionIndexOpen(tDescription,,.tSC)
+			
+			// We must always check the status code:
+			If $System.Status.IsError(tSC)
+			{
+				// If the error is something different from "object does not exist", 
+				// let's quit because something went really wrong...
+				If $System.Status.GetErrorCodes(tSC)'["5770"
+				{
+					Quit
+				}
+				
+				// If I am here, that is because the error is "object does not exist"
+				// So let's reset it to Ok, because we are going to create this object...
+				Set tSC = $$$OK
+			}
+			
+			// If I found the object, we are done!
+			Quit:$IsObject(pObject)
+			
+			// If not, let's create it:
+			Set pObject = ..%New()
+			Set pObject.Description=tDescription
+			// As I said before, we are leaving the code null right now. We will populate it later.
+			
+			// I will not call %Save on this. I will let it be called by the object that 
+			// is pointing to this new object, as part of a single transaction.
+		}
+		Catch (oException)
+		{
+			Set tSC = oException.AsStatus()
+		}
+		
+		Quit tSC
+	}
 Storage Default
 {
 <Data name="MerchantCategoryDefaultData">
