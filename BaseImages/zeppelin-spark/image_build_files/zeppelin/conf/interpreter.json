@@ -681,7 +681,7 @@
       ],
       "dependencies": [
         {
-          "groupArtifactVersion": "/custom/lib/intersystems-spark-3.0.0.jar",
+          "groupArtifactVersion": "/custom/lib/intersystems-spark-1.0.0.jar",
           "local": false
         }
       ],
