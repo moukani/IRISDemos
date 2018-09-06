@@ -1,0 +1,88 @@
+{
+  "paragraphs": [
+    {
+      "text": "%spark.pyspark\n\nfilePathAndMask \u003d \"/custom/zeppelin/Spark-The-Definitive-Guide/data/retail-data/by-day/*.csv\"\n\nstaticDataFrame \u003d spark.read.format(\"csv\") \\\n    .option(\"header\", \"true\") \\\n    .option(\"inferSchema\", \"true\") \\\n    .load(filePathAndMask)\n    \nstaticDataFrame.createOrReplaceTempView(\"retail_data\") \n\nstaticSchema \u003d staticDataFrame.schema\n\n",
+      "dateUpdated": "Jul 24, 2018 5:00:49 PM",
+      "config": {
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "results": {},
+        "enabled": true,
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false
+        }
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "jobName": "paragraph_1532451649415_-897301858",
+      "id": "20180703-231509_1761526689",
+      "dateCreated": "Jul 24, 2018 5:00:49 PM",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\n\nstaticSchema",
+      "dateUpdated": "Jul 24, 2018 5:00:49 PM",
+      "config": {
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "results": {},
+        "enabled": true,
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false
+        }
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "StructType(List(StructField(InvoiceNo,StringType,true),StructField(StockCode,StringType,true),StructField(Description,StringType,true),StructField(Quantity,IntegerType,true),StructField(InvoiceDate,TimestampType,true),StructField(UnitPrice,DoubleType,true),StructField(CustomerID,DoubleType,true),StructField(Country,StringType,true)))\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1532451649428_-891530625",
+      "id": "20180703-231950_416009241",
+      "dateCreated": "Jul 24, 2018 5:00:49 PM",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\n",
+      "dateUpdated": "Jul 24, 2018 5:00:49 PM",
+      "config": {},
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1532451649428_-891530625",
+      "id": "20180703-232125_1010770581",
+      "dateCreated": "Jul 24, 2018 5:00:49 PM",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    }
+  ],
+  "name": "~Trash/Spark - Definitive Guide: Chapter 2",
+  "id": "2DMRBMGWR",
+  "angularObjects": {},
+  "config": {},
+  "info": {}
+}

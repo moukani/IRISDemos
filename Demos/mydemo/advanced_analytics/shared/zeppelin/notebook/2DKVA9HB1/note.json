@@ -1,0 +1,301 @@
+{
+  "paragraphs": [
+    {
+      "text": "%spark.pyspark\n\nfileName \u003d \"/custom/zeppelin/Spark-The-Definitive-Guide/data/flight-data/csv/2015-summary.csv\"\n\nflightData2015 \u003d spark \\\n    .read \\\n    .option(\"inferSchema\", \"true\") \\\n    .option(\"header\", \"true\") \\\n    .csv(fileName)\n\nflightData2015.count()\n",
+      "dateUpdated": "Jul 24, 2018 5:01:11 PM",
+      "config": {
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "results": {},
+        "enabled": true,
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false
+        }
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "256\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1532451671165_1758665772",
+      "id": "20180703-184847_95272951",
+      "dateCreated": "Jul 24, 2018 5:01:11 PM",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\n\n# Show will give me the list of records\nflightData2015.show()\n",
+      "dateUpdated": "Jul 24, 2018 5:01:11 PM",
+      "config": {
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "results": {},
+        "enabled": true,
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false
+        }
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "+--------------------+-------------------+-----+\n|   DEST_COUNTRY_NAME|ORIGIN_COUNTRY_NAME|count|\n+--------------------+-------------------+-----+\n|       United States|            Romania|   15|\n|       United States|            Croatia|    1|\n|       United States|            Ireland|  344|\n|               Egypt|      United States|   15|\n|       United States|              India|   62|\n|       United States|          Singapore|    1|\n|       United States|            Grenada|   62|\n|          Costa Rica|      United States|  588|\n|             Senegal|      United States|   40|\n|             Moldova|      United States|    1|\n|       United States|       Sint Maarten|  325|\n|       United States|   Marshall Islands|   39|\n|              Guyana|      United States|   64|\n|               Malta|      United States|    1|\n|            Anguilla|      United States|   41|\n|             Bolivia|      United States|   30|\n|       United States|           Paraguay|    6|\n|             Algeria|      United States|    4|\n|Turks and Caicos ...|      United States|  230|\n|       United States|          Gibraltar|    1|\n+--------------------+-------------------+-----+\nonly showing top 20 rows\n\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1532451671166_1759820018",
+      "id": "20180703-223934_1146614718",
+      "dateCreated": "Jul 24, 2018 5:01:11 PM",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\n\n# Take will give me a python structure I can iterate through...\nflights\u003dflightData2015.take(5)\nfor flight in flights:\n    print \"Destination: \" + flight.DEST_COUNTRY_NAME",
+      "dateUpdated": "Jul 24, 2018 5:01:11 PM",
+      "config": {
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "results": {},
+        "enabled": true,
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false
+        }
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "Destination: United States\nDestination: United States\nDestination: United States\nDestination: Egypt\nDestination: United States\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1532451671167_1759435270",
+      "id": "20180703-184852_1663954492",
+      "dateCreated": "Jul 24, 2018 5:01:11 PM",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\n\n# explain is useful to understand how spark solves our queries:\nflightData2015.sort(\"count\").explain()",
+      "dateUpdated": "Jul 24, 2018 5:01:11 PM",
+      "config": {
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "results": {},
+        "enabled": true,
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false
+        }
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "\u003d\u003d Physical Plan \u003d\u003d\n*Sort [count#103 ASC NULLS FIRST], true, 0\n+- Exchange rangepartitioning(count#103 ASC NULLS FIRST, 200)\n   +- *FileScan csv [DEST_COUNTRY_NAME#101,ORIGIN_COUNTRY_NAME#102,count#103] Batched: false, Format: CSV, Location: InMemoryFileIndex[file:/custom/zeppelin/Spark-The-Definitive-Guide/data/flight-data/csv/2015-summ..., PartitionFilters: [], PushedFilters: [], ReadSchema: struct\u003cDEST_COUNTRY_NAME:string,ORIGIN_COUNTRY_NAME:string,count:int\u003e\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1532451671167_1759435270",
+      "id": "20180703-224301_1463985938",
+      "dateCreated": "Jul 24, 2018 5:01:11 PM",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\n\n# Setting this property is usefull when working on a small machine such as our notebook.\n# There is no point in creating so many partitions if we don\u0027t have too many cores and IOPS to \n# process them in parallel. \nspark.conf.set(\"spark.sql.shuffle.partitions\", \"5\")\n\n# If you look at the generated plan, you will notice that the number of partitions was reduced from 200 to 5:\nflightData2015.sort(\"count\").explain()",
+      "dateUpdated": "Jul 24, 2018 5:01:11 PM",
+      "config": {
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "results": {},
+        "enabled": true,
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false
+        }
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "\u003d\u003d Physical Plan \u003d\u003d\n*Sort [count#103 ASC NULLS FIRST], true, 0\n+- Exchange rangepartitioning(count#103 ASC NULLS FIRST, 5)\n   +- *FileScan csv [DEST_COUNTRY_NAME#101,ORIGIN_COUNTRY_NAME#102,count#103] Batched: false, Format: CSV, Location: InMemoryFileIndex[file:/custom/zeppelin/Spark-The-Definitive-Guide/data/flight-data/csv/2015-summ..., PartitionFilters: [], PushedFilters: [], ReadSchema: struct\u003cDEST_COUNTRY_NAME:string,ORIGIN_COUNTRY_NAME:string,count:int\u003e\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1532451671167_1759435270",
+      "id": "20180703-212508_30199727",
+      "dateCreated": "Jul 24, 2018 5:01:11 PM",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\n\n# You can see that the generated plan for direct spark manipulations and SQL is the same:\nflightData2015.createOrReplaceTempView(\"flight_data_2015\")\nsqlWay \u003d spark.sql(\"\"\"\nselect dest_country_name, count(1)\nfrom flight_data_2015\ngroup by dest_country_name\n\"\"\")\n\ndataFrameWay \u003d flightData2015 \\\n    .groupBy(\"DEST_COUNTRY_NAME\") \\\n    .count()\n    \nsqlWay.explain()\ndataFrameWay.explain()",
+      "dateUpdated": "Jul 24, 2018 5:01:11 PM",
+      "config": {
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "results": {},
+        "enabled": true,
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false
+        }
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "ERROR",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "+--------------------+-----+\n|   DEST_COUNTRY_NAME|count|\n+--------------------+-----+\n|             Moldova|    1|\n|             Bolivia|    1|\n|             Algeria|    1|\n|Turks and Caicos ...|    1|\n|            Pakistan|    1|\n|    Marshall Islands|    1|\n|            Suriname|    1|\n|              Panama|    1|\n|         New Zealand|    1|\n|             Liberia|    1|\n|             Ireland|    1|\n|              Zambia|    1|\n|            Malaysia|    1|\n|               Japan|    1|\n|    French Polynesia|    1|\n|           Singapore|    1|\n|             Denmark|    1|\n|               Spain|    1|\n|             Bermuda|    1|\n|            Kiribati|    1|\n+--------------------+-----+\nonly showing top 20 rows\n\n\u003d\u003d Physical Plan \u003d\u003d\n*HashAggregate(keys\u003d[dest_country_name#165], functions\u003d[count(1)])\n+- Exchange hashpartitioning(dest_country_name#165, 5)\n   +- *HashAggregate(keys\u003d[dest_country_name#165], functions\u003d[partial_count(1)])\n      +- *FileScan csv [DEST_COUNTRY_NAME#165] Batched: false, Format: CSV, Location: InMemoryFileIndex[file:/custom/zeppelin/Spark-The-Definitive-Guide/data/flight-data/csv/2015-summ..., PartitionFilters: [], PushedFilters: [], ReadSchema: struct\u003cDEST_COUNTRY_NAME:string\u003e\n"
+          },
+          {
+            "type": "TEXT",
+            "data": "Traceback (most recent call last):\n  File \"/tmp/zeppelin_pyspark-3696438092973145502.py\", line 367, in \u003cmodule\u003e\n    raise Exception(traceback.format_exc())\nException: Traceback (most recent call last):\n  File \"/tmp/zeppelin_pyspark-3696438092973145502.py\", line 360, in \u003cmodule\u003e\n    exec(code, _zcUserQueryNameSpace)\n  File \"\u003cstdin\u003e\", line 11, in \u003cmodule\u003e\nAttributeError: \u0027NoneType\u0027 object has no attribute \u0027explain\u0027\n\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1532451671168_1843695279",
+      "id": "20180703-224615_208504954",
+      "dateCreated": "Jul 24, 2018 5:01:11 PM",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\n\nfrom pyspark.sql.functions import desc\n\nmoreComplexDFSql \u003d spark.sql(\"select DEST_COUNTRY_NAME, sum(count) as TOTAL from flight_data_2015 group by DEST_COUNTRY_NAME order by TOTAL Desc limit 5\")\nmoreComplexDFSql.show()\n\nmoreComplexDF \u003d flightData2015.groupBy(\"DEST_COUNTRY_NAME\") \\\n    .sum(\"count\") \\\n    .withColumnRenamed(\"sum(count)\", \"destination_total\") \\\n    .sort(desc(\"destination_total\")) \\\n    .limit(5)\n    \nmoreComplexDF.show()",
+      "dateUpdated": "Jul 24, 2018 5:01:11 PM",
+      "config": {
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "results": {},
+        "enabled": true,
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false
+        }
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "+-----------------+------+\n|DEST_COUNTRY_NAME| TOTAL|\n+-----------------+------+\n|    United States|411352|\n|           Canada|  8399|\n|           Mexico|  7140|\n|   United Kingdom|  2025|\n|            Japan|  1548|\n+-----------------+------+\n\n+-----------------+-----------------+\n|DEST_COUNTRY_NAME|destination_total|\n+-----------------+-----------------+\n|    United States|           411352|\n|           Canada|             8399|\n|           Mexico|             7140|\n|   United Kingdom|             2025|\n|            Japan|             1548|\n+-----------------+-----------------+\n\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1532451671168_1843695279",
+      "id": "20180703-225108_254070637",
+      "dateCreated": "Jul 24, 2018 5:01:11 PM",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\n\nmoreComplexDFSql.explain()\n\nmoreComplexDF.explain()",
+      "dateUpdated": "Jul 24, 2018 5:01:11 PM",
+      "config": {
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "results": {},
+        "enabled": true,
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false
+        }
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "\u003d\u003d Physical Plan \u003d\u003d\nTakeOrderedAndProject(limit\u003d5, orderBy\u003d[TOTAL#389L DESC NULLS LAST], output\u003d[DEST_COUNTRY_NAME#165,TOTAL#389L])\n+- *HashAggregate(keys\u003d[DEST_COUNTRY_NAME#165], functions\u003d[sum(cast(count#167 as bigint))])\n   +- Exchange hashpartitioning(DEST_COUNTRY_NAME#165, 5)\n      +- *HashAggregate(keys\u003d[DEST_COUNTRY_NAME#165], functions\u003d[partial_sum(cast(count#167 as bigint))])\n         +- *FileScan csv [DEST_COUNTRY_NAME#165,count#167] Batched: false, Format: CSV, Location: InMemoryFileIndex[file:/custom/zeppelin/Spark-The-Definitive-Guide/data/flight-data/csv/2015-summ..., PartitionFilters: [], PushedFilters: [], ReadSchema: struct\u003cDEST_COUNTRY_NAME:string,count:int\u003e\n\u003d\u003d Physical Plan \u003d\u003d\nTakeOrderedAndProject(limit\u003d5, orderBy\u003d[destination_total#412L DESC NULLS LAST], output\u003d[DEST_COUNTRY_NAME#165,destination_total#412L])\n+- *HashAggregate(keys\u003d[DEST_COUNTRY_NAME#165], functions\u003d[sum(cast(count#167 as bigint))])\n   +- Exchange hashpartitioning(DEST_COUNTRY_NAME#165, 5)\n      +- *HashAggregate(keys\u003d[DEST_COUNTRY_NAME#165], functions\u003d[partial_sum(cast(count#167 as bigint))])\n         +- *FileScan csv [DEST_COUNTRY_NAME#165,count#167] Batched: false, Format: CSV, Location: InMemoryFileIndex[file:/custom/zeppelin/Spark-The-Definitive-Guide/data/flight-data/csv/2015-summ..., PartitionFilters: [], PushedFilters: [], ReadSchema: struct\u003cDEST_COUNTRY_NAME:string,count:int\u003e\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1532451671169_1843310530",
+      "id": "20180703-225831_1701177926",
+      "dateCreated": "Jul 24, 2018 5:01:11 PM",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\n",
+      "dateUpdated": "Jul 24, 2018 5:01:11 PM",
+      "config": {},
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1532451671170_1844464777",
+      "id": "20180703-231219_1715038959",
+      "dateCreated": "Jul 24, 2018 5:01:11 PM",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    }
+  ],
+  "name": "~Trash/Spark - Definitive Guide: Chapter 1",
+  "id": "2DKVA9HB1",
+  "angularObjects": {},
+  "config": {},
+  "info": {}
+}

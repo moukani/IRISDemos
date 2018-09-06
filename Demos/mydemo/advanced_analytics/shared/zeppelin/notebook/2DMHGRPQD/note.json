@@ -1,0 +1,57 @@
+{
+  "paragraphs": [
+    {
+      "text": "import org.apache.spark.sql.functions.date_format\n\nval preppedDataFrame \u003d staticDataFrame.na.fill(0)",
+      "dateUpdated": "Jul 24, 2018 5:01:32 PM",
+      "config": {
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/scala",
+        "results": {},
+        "enabled": true,
+        "editorSetting": {
+          "language": "scala"
+        }
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "ERROR",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "import org.apache.spark.sql.functions.date_format\n\u003cconsole\u003e:27: error: not found: value staticDataFrame\n       val preppedDataFrame \u003d staticDataFrame.na.fill(0)\n                              ^\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1532451692014_358780707",
+      "id": "20180703-190114_562312042",
+      "dateCreated": "Jul 24, 2018 5:01:32 PM",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "dateUpdated": "Jul 24, 2018 5:01:32 PM",
+      "config": {},
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1532451692015_358395958",
+      "id": "20180703-190151_1099524519",
+      "dateCreated": "Jul 24, 2018 5:01:32 PM",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    }
+  ],
+  "name": "~Trash/Untitled Note 2",
+  "id": "2DMHGRPQD",
+  "angularObjects": {},
+  "config": {},
+  "info": {}
+}

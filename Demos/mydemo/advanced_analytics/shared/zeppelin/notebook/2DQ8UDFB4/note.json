@@ -1,0 +1,311 @@
+{
+  "paragraphs": [
+    {
+      "text": "%irisjdbc\n\nselect * from IRISDemo.product",
+      "user": "anonymous",
+      "dateUpdated": "Sep 6, 2018 3:30:51 PM",
+      "config": {
+        "colWidth": 12.0,
+        "enabled": true,
+        "results": {
+          "0": {
+            "graph": {
+              "mode": "table",
+              "height": 300.0,
+              "optionOpen": false
+            },
+            "helium": {}
+          }
+        },
+        "editorSetting": {
+          "language": "sql",
+          "editOnDblClick": false
+        },
+        "editorMode": "ace/mode/sql"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TABLE",
+            "data": "name\niPhone\nPC\nWatch\nPensil\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1536247434736_1561903843",
+      "id": "20180906-152354_1364086516",
+      "dateCreated": "Sep 6, 2018 3:23:54 PM",
+      "dateStarted": "Sep 6, 2018 3:24:20 PM",
+      "dateFinished": "Sep 6, 2018 3:24:20 PM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "I am going to do this because I think it is cool...\n",
+      "user": "anonymous",
+      "dateUpdated": "Sep 6, 2018 3:30:21 PM",
+      "config": {
+        "colWidth": 12.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1536247809731_29740657",
+      "id": "20180906-153009_1534483196",
+      "dateCreated": "Sep 6, 2018 3:30:09 PM",
+      "status": "READY",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "myvar\u003d1\n",
+      "user": "anonymous",
+      "dateUpdated": "Sep 6, 2018 3:28:54 PM",
+      "config": {
+        "colWidth": 12.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "jobName": "paragraph_1536247709190_1890847184",
+      "id": "20180906-152829_1289548796",
+      "dateCreated": "Sep 6, 2018 3:28:29 PM",
+      "dateStarted": "Sep 6, 2018 3:28:54 PM",
+      "dateFinished": "Sep 6, 2018 3:28:57 PM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "Ok. I realized that the data sucks,...",
+      "user": "anonymous",
+      "dateUpdated": "Sep 6, 2018 3:30:40 PM",
+      "config": {
+        "colWidth": 12.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1536247821818_-1259552907",
+      "id": "20180906-153021_1208740894",
+      "dateCreated": "Sep 6, 2018 3:30:21 PM",
+      "status": "READY",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "print myvar",
+      "user": "anonymous",
+      "dateUpdated": "Sep 6, 2018 3:29:09 PM",
+      "config": {
+        "colWidth": 12.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "1\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1536247741455_1973183973",
+      "id": "20180906-152901_1431121461",
+      "dateCreated": "Sep 6, 2018 3:29:01 PM",
+      "dateStarted": "Sep 6, 2018 3:29:09 PM",
+      "dateFinished": "Sep 6, 2018 3:29:09 PM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "fruits \u003d [\"apple\", \"banana\", \"cherry\"]\nfor x in fruits:\n  print(x)",
+      "user": "anonymous",
+      "dateUpdated": "Sep 6, 2018 3:29:41 PM",
+      "config": {
+        "colWidth": 12.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "apple\nbanana\ncherry\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1536247751482_-2108217036",
+      "id": "20180906-152911_476700160",
+      "dateCreated": "Sep 6, 2018 3:29:11 PM",
+      "dateStarted": "Sep 6, 2018 3:29:41 PM",
+      "dateFinished": "Sep 6, 2018 3:29:41 PM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "z.show(fruits)",
+      "user": "anonymous",
+      "dateUpdated": "Sep 6, 2018 3:31:14 PM",
+      "config": {
+        "colWidth": 12.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "jobName": "paragraph_1536247864412_-298572748",
+      "id": "20180906-153104_445276553",
+      "dateCreated": "Sep 6, 2018 3:31:04 PM",
+      "dateStarted": "Sep 6, 2018 3:31:14 PM",
+      "dateFinished": "Sep 6, 2018 3:31:14 PM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\n\nmy_python_array \u003d spark.read.format(\"iris\").option(\"dbtable\",\"IRISDemo.product\").load().take()\n\n",
+      "user": "anonymous",
+      "dateUpdated": "Sep 6, 2018 3:49:25 PM",
+      "config": {
+        "colWidth": 12.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "text",
+          "editOnDblClick": false
+        },
+        "editorMode": "ace/mode/text"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "ERROR",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "Traceback (most recent call last):\n  File \"/tmp/zeppelin_pyspark-7861680580041732715.py\", line 367, in \u003cmodule\u003e\n    raise Exception(traceback.format_exc())\nException: Traceback (most recent call last):\n  File \"/tmp/zeppelin_pyspark-7861680580041732715.py\", line 360, in \u003cmodule\u003e\n    exec(code, _zcUserQueryNameSpace)\n  File \"\u003cstdin\u003e\", line 1, in \u003cmodule\u003e\n  File \"/usr/local/spark/python/pyspark/sql/readwriter.py\", line 155, in load\n    return self._df(self._jreader.load())\n  File \"/usr/local/spark/python/lib/py4j-0.10.7-src.zip/py4j/java_gateway.py\", line 1257, in __call__\n    answer, self.gateway_client, self.target_id, self.name)\n  File \"/usr/local/spark/python/pyspark/sql/utils.py\", line 63, in deco\n    return f(*a, **kw)\n  File \"/usr/local/spark/python/lib/py4j-0.10.7-src.zip/py4j/protocol.py\", line 328, in get_return_value\n    format(target_id, \".\", name), value)\nPy4JJavaError: An error occurred while calling o50.load.\n: java.lang.ClassNotFoundException: Failed to find data source: iris. Please find packages at http://spark.apache.org/third-party-projects.html\n\tat org.apache.spark.sql.execution.datasources.DataSource$.lookupDataSource(DataSource.scala:594)\n\tat org.apache.spark.sql.execution.datasources.DataSource.providingClass$lzycompute(DataSource.scala:86)\n\tat org.apache.spark.sql.execution.datasources.DataSource.providingClass(DataSource.scala:86)\n\tat org.apache.spark.sql.execution.datasources.DataSource.resolveRelation(DataSource.scala:325)\n\tat org.apache.spark.sql.DataFrameReader.load(DataFrameReader.scala:152)\n\tat org.apache.spark.sql.DataFrameReader.load(DataFrameReader.scala:125)\n\tat sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.lang.reflect.Method.invoke(Method.java:498)\n\tat py4j.reflection.MethodInvoker.invoke(MethodInvoker.java:244)\n\tat py4j.reflection.ReflectionEngine.invoke(ReflectionEngine.java:357)\n\tat py4j.Gateway.invoke(Gateway.java:282)\n\tat py4j.commands.AbstractCommand.invokeMethod(AbstractCommand.java:132)\n\tat py4j.commands.CallCommand.execute(CallCommand.java:79)\n\tat py4j.GatewayConnection.run(GatewayConnection.java:238)\n\tat java.lang.Thread.run(Thread.java:748)\nCaused by: java.lang.ClassNotFoundException: iris.DefaultSource\n\tat java.net.URLClassLoader.findClass(URLClassLoader.java:381)\n\tat java.lang.ClassLoader.loadClass(ClassLoader.java:424)\n\tat java.lang.ClassLoader.loadClass(ClassLoader.java:357)\n\tat org.apache.spark.sql.execution.datasources.DataSource$$anonfun$25$$anonfun$apply$13.apply(DataSource.scala:579)\n\tat org.apache.spark.sql.execution.datasources.DataSource$$anonfun$25$$anonfun$apply$13.apply(DataSource.scala:579)\n\tat scala.util.Try$.apply(Try.scala:192)\n\tat org.apache.spark.sql.execution.datasources.DataSource$$anonfun$25.apply(DataSource.scala:579)\n\tat org.apache.spark.sql.execution.datasources.DataSource$$anonfun$25.apply(DataSource.scala:579)\n\tat scala.util.Try.orElse(Try.scala:84)\n\tat org.apache.spark.sql.execution.datasources.DataSource$.lookupDataSource(DataSource.scala:579)\n\t... 16 more\n\n\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1536247453551_84483391",
+      "id": "20180906-152413_2048856726",
+      "dateCreated": "Sep 6, 2018 3:24:13 PM",
+      "dateStarted": "Sep 6, 2018 3:49:25 PM",
+      "dateFinished": "Sep 6, 2018 3:50:22 PM",
+      "status": "ERROR",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\n",
+      "user": "anonymous",
+      "dateUpdated": "Sep 6, 2018 3:26:09 PM",
+      "config": {},
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1536247569695_-2139244303",
+      "id": "20180906-152609_1768423",
+      "dateCreated": "Sep 6, 2018 3:26:09 PM",
+      "status": "READY",
+      "progressUpdateIntervalMs": 500
+    }
+  ],
+  "name": "NITOR",
+  "id": "2DQ8UDFB4",
+  "angularObjects": {
+    "2DHWQ7A7V:shared_process": [],
+    "2DGTFGFBC:shared_process": [],
+    "2DHATZD9M:shared_process": [],
+    "2DKDARDPF:shared_process": [],
+    "2DG8A819A:shared_process": [],
+    "2DJVV28U3:shared_process": [],
+    "2DKCAA3TS:shared_process": [],
+    "2DHEPV9M3:shared_process": [],
+    "2DKW8P766:shared_process": [],
+    "2DGHX224C:shared_process": [],
+    "2DGRSNE7G:shared_process": [],
+    "2DGUG4SEP:shared_process": [],
+    "2DHM86BYR:shared_process": [],
+    "2DHYW1ZN6:shared_process": [],
+    "2DJ16C4UE:shared_process": [],
+    "2DJ4VH5DW:shared_process": [],
+    "2DJBEDGYM:shared_process": [],
+    "2DM19CFTF:shared_process": [],
+    "2DHHCF91E:shared_process": [],
+    "2DKCPR9P1:shared_process": []
+  },
+  "config": {},
+  "info": {}
+}
