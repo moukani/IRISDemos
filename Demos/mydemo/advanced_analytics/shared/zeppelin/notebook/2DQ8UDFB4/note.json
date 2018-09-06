@@ -1,6 +1,86 @@
 {
   "paragraphs": [
     {
+      "title": "Documenting with Zeppelin",
+      "text": "%md\n\nUse the buttons on the top right corner of this note to show/hide the editor. You will see that this note is actually a markdown \"program\" that, when run, will hide the editor and display only the output. If you want to change the content, you just have to ask to see the editor and change it.\n\nYou can also ask to see the Title of the note so you can add a title to ANY note on your notebook (not only the markdown ones).",
+      "user": "anonymous",
+      "dateUpdated": "Sep 6, 2018 5:50:33 PM",
+      "config": {
+        "colWidth": 12.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true
+        },
+        "editorMode": "ace/mode/markdown",
+        "title": true,
+        "editorHide": true,
+        "tableHide": false
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003cp\u003eUse the buttons on the top right corner of this note to show/hide the editor. You will see that this note is actually a markdown \u0026ldquo;program\u0026rdquo; that, when run, will hide the editor and display only the output. If you want to change the content, you just have to ask to see the editor and change it.\u003c/p\u003e\n\u003cp\u003eYou can also ask to see the Title of the note so you can add a title to ANY note on your notebook (not only the markdown ones).\u003c/p\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1536256119909_-1338889290",
+      "id": "20180906-174839_656699039",
+      "dateCreated": "Sep 6, 2018 5:48:39 PM",
+      "dateStarted": "Sep 6, 2018 5:50:33 PM",
+      "dateFinished": "Sep 6, 2018 5:50:33 PM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "Generic JDBC Interpreter for Apache Zeppelin",
+      "text": "%md\n\nRead more about using JDBC with Zeppelin [here](https://zeppelin.apache.org/docs/0.8.0/interpreter/jdbc.html)\n\nThe following example shows how to do a simple SELECT query on IRIS using JDBC. The data won\u0027t be stored on any python variable though.\n",
+      "user": "anonymous",
+      "dateUpdated": "Sep 6, 2018 5:51:07 PM",
+      "config": {
+        "colWidth": 12.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true
+        },
+        "editorMode": "ace/mode/markdown",
+        "title": true,
+        "tableHide": false,
+        "editorHide": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003cp\u003eRead more about using JDBC with Zeppelin \u003ca href\u003d\"https://zeppelin.apache.org/docs/0.8.0/interpreter/jdbc.html\"\u003ehere\u003c/a\u003e\u003c/p\u003e\n\u003cp\u003eThe following example shows how to do a simple SELECT query on IRIS using JDBC. The data won\u0026rsquo;t be stored on any python variable though.\u003c/p\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1536255641818_-463926716",
+      "id": "20180906-174041_1235154465",
+      "dateCreated": "Sep 6, 2018 5:40:41 PM",
+      "dateStarted": "Sep 6, 2018 5:51:07 PM",
+      "dateFinished": "Sep 6, 2018 5:51:07 PM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
       "text": "%irisjdbc\n\nselect * from IRISDemo.product",
       "user": "anonymous",
       "dateUpdated": "Sep 6, 2018 3:30:51 PM",
@@ -46,193 +126,49 @@
       "progressUpdateIntervalMs": 500
     },
     {
-      "text": "I am going to do this because I think it is cool...\n",
+      "title": "Reading data into a python variable",
+      "text": "%md\n\nNow let\u0027s try to read data into a python variable. For that, we need to use Spark.",
       "user": "anonymous",
-      "dateUpdated": "Sep 6, 2018 3:30:21 PM",
+      "dateUpdated": "Sep 6, 2018 5:51:46 PM",
       "config": {
         "colWidth": 12.0,
         "enabled": true,
         "results": {},
         "editorSetting": {
-          "language": "python",
-          "editOnDblClick": false
+          "language": "markdown",
+          "editOnDblClick": true
         },
-        "editorMode": "ace/mode/python"
+        "editorMode": "ace/mode/markdown",
+        "title": true,
+        "editorHide": true,
+        "tableHide": false
       },
       "settings": {
         "params": {},
         "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003cp\u003eNow let\u0026rsquo;s try to read data into a python variable. For that, we need to use Spark.\u003c/p\u003e\n\u003c/div\u003e"
+          }
+        ]
       },
       "apps": [],
       "jobName": "paragraph_1536247809731_29740657",
       "id": "20180906-153009_1534483196",
       "dateCreated": "Sep 6, 2018 3:30:09 PM",
-      "status": "READY",
-      "progressUpdateIntervalMs": 500
-    },
-    {
-      "text": "myvar\u003d1\n",
-      "user": "anonymous",
-      "dateUpdated": "Sep 6, 2018 3:28:54 PM",
-      "config": {
-        "colWidth": 12.0,
-        "enabled": true,
-        "results": {},
-        "editorSetting": {
-          "language": "python",
-          "editOnDblClick": false
-        },
-        "editorMode": "ace/mode/python"
-      },
-      "settings": {
-        "params": {},
-        "forms": {}
-      },
-      "results": {
-        "code": "SUCCESS",
-        "msg": []
-      },
-      "apps": [],
-      "jobName": "paragraph_1536247709190_1890847184",
-      "id": "20180906-152829_1289548796",
-      "dateCreated": "Sep 6, 2018 3:28:29 PM",
-      "dateStarted": "Sep 6, 2018 3:28:54 PM",
-      "dateFinished": "Sep 6, 2018 3:28:57 PM",
+      "dateStarted": "Sep 6, 2018 5:51:44 PM",
+      "dateFinished": "Sep 6, 2018 5:51:44 PM",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
     {
-      "text": "Ok. I realized that the data sucks,...",
+      "text": "%spark.pyspark\n\nmy_python_list \u003d spark.read.format(\"iris\").option(\"dbtable\",\"IRISDemo.product\").load().collect()\n\nfor x in my_python_list:\n  print(x)\n\n",
       "user": "anonymous",
-      "dateUpdated": "Sep 6, 2018 3:30:40 PM",
-      "config": {
-        "colWidth": 12.0,
-        "enabled": true,
-        "results": {},
-        "editorSetting": {
-          "language": "python",
-          "editOnDblClick": false
-        },
-        "editorMode": "ace/mode/python"
-      },
-      "settings": {
-        "params": {},
-        "forms": {}
-      },
-      "apps": [],
-      "jobName": "paragraph_1536247821818_-1259552907",
-      "id": "20180906-153021_1208740894",
-      "dateCreated": "Sep 6, 2018 3:30:21 PM",
-      "status": "READY",
-      "progressUpdateIntervalMs": 500
-    },
-    {
-      "text": "print myvar",
-      "user": "anonymous",
-      "dateUpdated": "Sep 6, 2018 3:29:09 PM",
-      "config": {
-        "colWidth": 12.0,
-        "enabled": true,
-        "results": {},
-        "editorSetting": {
-          "language": "python",
-          "editOnDblClick": false
-        },
-        "editorMode": "ace/mode/python"
-      },
-      "settings": {
-        "params": {},
-        "forms": {}
-      },
-      "results": {
-        "code": "SUCCESS",
-        "msg": [
-          {
-            "type": "TEXT",
-            "data": "1\n"
-          }
-        ]
-      },
-      "apps": [],
-      "jobName": "paragraph_1536247741455_1973183973",
-      "id": "20180906-152901_1431121461",
-      "dateCreated": "Sep 6, 2018 3:29:01 PM",
-      "dateStarted": "Sep 6, 2018 3:29:09 PM",
-      "dateFinished": "Sep 6, 2018 3:29:09 PM",
-      "status": "FINISHED",
-      "progressUpdateIntervalMs": 500
-    },
-    {
-      "text": "fruits \u003d [\"apple\", \"banana\", \"cherry\"]\nfor x in fruits:\n  print(x)",
-      "user": "anonymous",
-      "dateUpdated": "Sep 6, 2018 3:29:41 PM",
-      "config": {
-        "colWidth": 12.0,
-        "enabled": true,
-        "results": {},
-        "editorSetting": {
-          "language": "python",
-          "editOnDblClick": false
-        },
-        "editorMode": "ace/mode/python"
-      },
-      "settings": {
-        "params": {},
-        "forms": {}
-      },
-      "results": {
-        "code": "SUCCESS",
-        "msg": [
-          {
-            "type": "TEXT",
-            "data": "apple\nbanana\ncherry\n"
-          }
-        ]
-      },
-      "apps": [],
-      "jobName": "paragraph_1536247751482_-2108217036",
-      "id": "20180906-152911_476700160",
-      "dateCreated": "Sep 6, 2018 3:29:11 PM",
-      "dateStarted": "Sep 6, 2018 3:29:41 PM",
-      "dateFinished": "Sep 6, 2018 3:29:41 PM",
-      "status": "FINISHED",
-      "progressUpdateIntervalMs": 500
-    },
-    {
-      "text": "z.show(fruits)",
-      "user": "anonymous",
-      "dateUpdated": "Sep 6, 2018 3:31:14 PM",
-      "config": {
-        "colWidth": 12.0,
-        "enabled": true,
-        "results": {},
-        "editorSetting": {
-          "language": "python",
-          "editOnDblClick": false
-        },
-        "editorMode": "ace/mode/python"
-      },
-      "settings": {
-        "params": {},
-        "forms": {}
-      },
-      "results": {
-        "code": "SUCCESS",
-        "msg": []
-      },
-      "apps": [],
-      "jobName": "paragraph_1536247864412_-298572748",
-      "id": "20180906-153104_445276553",
-      "dateCreated": "Sep 6, 2018 3:31:04 PM",
-      "dateStarted": "Sep 6, 2018 3:31:14 PM",
-      "dateFinished": "Sep 6, 2018 3:31:14 PM",
-      "status": "FINISHED",
-      "progressUpdateIntervalMs": 500
-    },
-    {
-      "text": "%spark.pyspark\n\nmy_python_array \u003d spark.read.format(\"iris\").option(\"dbtable\",\"IRISDemo.product\").load().take()\n\n",
-      "user": "anonymous",
-      "dateUpdated": "Sep 6, 2018 3:49:25 PM",
+      "dateUpdated": "Sep 6, 2018 5:52:33 PM",
       "config": {
         "colWidth": 12.0,
         "enabled": true,
@@ -248,11 +184,11 @@
         "forms": {}
       },
       "results": {
-        "code": "ERROR",
+        "code": "SUCCESS",
         "msg": [
           {
             "type": "TEXT",
-            "data": "Traceback (most recent call last):\n  File \"/tmp/zeppelin_pyspark-7861680580041732715.py\", line 367, in \u003cmodule\u003e\n    raise Exception(traceback.format_exc())\nException: Traceback (most recent call last):\n  File \"/tmp/zeppelin_pyspark-7861680580041732715.py\", line 360, in \u003cmodule\u003e\n    exec(code, _zcUserQueryNameSpace)\n  File \"\u003cstdin\u003e\", line 1, in \u003cmodule\u003e\n  File \"/usr/local/spark/python/pyspark/sql/readwriter.py\", line 155, in load\n    return self._df(self._jreader.load())\n  File \"/usr/local/spark/python/lib/py4j-0.10.7-src.zip/py4j/java_gateway.py\", line 1257, in __call__\n    answer, self.gateway_client, self.target_id, self.name)\n  File \"/usr/local/spark/python/pyspark/sql/utils.py\", line 63, in deco\n    return f(*a, **kw)\n  File \"/usr/local/spark/python/lib/py4j-0.10.7-src.zip/py4j/protocol.py\", line 328, in get_return_value\n    format(target_id, \".\", name), value)\nPy4JJavaError: An error occurred while calling o50.load.\n: java.lang.ClassNotFoundException: Failed to find data source: iris. Please find packages at http://spark.apache.org/third-party-projects.html\n\tat org.apache.spark.sql.execution.datasources.DataSource$.lookupDataSource(DataSource.scala:594)\n\tat org.apache.spark.sql.execution.datasources.DataSource.providingClass$lzycompute(DataSource.scala:86)\n\tat org.apache.spark.sql.execution.datasources.DataSource.providingClass(DataSource.scala:86)\n\tat org.apache.spark.sql.execution.datasources.DataSource.resolveRelation(DataSource.scala:325)\n\tat org.apache.spark.sql.DataFrameReader.load(DataFrameReader.scala:152)\n\tat org.apache.spark.sql.DataFrameReader.load(DataFrameReader.scala:125)\n\tat sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.lang.reflect.Method.invoke(Method.java:498)\n\tat py4j.reflection.MethodInvoker.invoke(MethodInvoker.java:244)\n\tat py4j.reflection.ReflectionEngine.invoke(ReflectionEngine.java:357)\n\tat py4j.Gateway.invoke(Gateway.java:282)\n\tat py4j.commands.AbstractCommand.invokeMethod(AbstractCommand.java:132)\n\tat py4j.commands.CallCommand.execute(CallCommand.java:79)\n\tat py4j.GatewayConnection.run(GatewayConnection.java:238)\n\tat java.lang.Thread.run(Thread.java:748)\nCaused by: java.lang.ClassNotFoundException: iris.DefaultSource\n\tat java.net.URLClassLoader.findClass(URLClassLoader.java:381)\n\tat java.lang.ClassLoader.loadClass(ClassLoader.java:424)\n\tat java.lang.ClassLoader.loadClass(ClassLoader.java:357)\n\tat org.apache.spark.sql.execution.datasources.DataSource$$anonfun$25$$anonfun$apply$13.apply(DataSource.scala:579)\n\tat org.apache.spark.sql.execution.datasources.DataSource$$anonfun$25$$anonfun$apply$13.apply(DataSource.scala:579)\n\tat scala.util.Try$.apply(Try.scala:192)\n\tat org.apache.spark.sql.execution.datasources.DataSource$$anonfun$25.apply(DataSource.scala:579)\n\tat org.apache.spark.sql.execution.datasources.DataSource$$anonfun$25.apply(DataSource.scala:579)\n\tat scala.util.Try.orElse(Try.scala:84)\n\tat org.apache.spark.sql.execution.datasources.DataSource$.lookupDataSource(DataSource.scala:579)\n\t... 16 more\n\n\n"
+            "data": "Row(name\u003du\u0027iPhone\u0027)\nRow(name\u003du\u0027PC\u0027)\nRow(name\u003du\u0027Watch\u0027)\nRow(name\u003du\u0027Pensil\u0027)\n"
           }
         ]
       },
@@ -260,24 +196,62 @@
       "jobName": "paragraph_1536247453551_84483391",
       "id": "20180906-152413_2048856726",
       "dateCreated": "Sep 6, 2018 3:24:13 PM",
-      "dateStarted": "Sep 6, 2018 3:49:25 PM",
-      "dateFinished": "Sep 6, 2018 3:50:22 PM",
-      "status": "ERROR",
+      "dateStarted": "Sep 6, 2018 5:52:33 PM",
+      "dateFinished": "Sep 6, 2018 5:52:33 PM",
+      "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
     {
-      "text": "%spark.pyspark\n",
+      "text": "%md\n\nNow you can use Python machine learning libraries on your array. In real use cases, that is not ideal since it will bring ALL your data to your driver node (your PC). But for our purposes, that should work.\n\nWe should try to use Spark fully in the future.",
       "user": "anonymous",
-      "dateUpdated": "Sep 6, 2018 3:26:09 PM",
+      "dateUpdated": "Sep 6, 2018 5:54:13 PM",
+      "config": {
+        "colWidth": 12.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true
+        },
+        "editorMode": "ace/mode/markdown",
+        "editorHide": true,
+        "tableHide": false
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003cp\u003eNow you can use Python machine learning libraries on your array. In real use cases, that is not ideal since it will bring ALL your data to your driver node (your PC). But for our purposes, that should work.\u003c/p\u003e\n\u003cp\u003eWe should try to use Spark fully in the future.\u003c/p\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1536255574340_-797362806",
+      "id": "20180906-173934_1376430896",
+      "dateCreated": "Sep 6, 2018 5:39:34 PM",
+      "dateStarted": "Sep 6, 2018 5:54:13 PM",
+      "dateFinished": "Sep 6, 2018 5:54:13 PM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%md\n",
+      "user": "anonymous",
+      "dateUpdated": "Sep 6, 2018 5:54:13 PM",
       "config": {},
       "settings": {
         "params": {},
         "forms": {}
       },
       "apps": [],
-      "jobName": "paragraph_1536247569695_-2139244303",
-      "id": "20180906-152609_1768423",
-      "dateCreated": "Sep 6, 2018 3:26:09 PM",
+      "jobName": "paragraph_1536256453233_885635261",
+      "id": "20180906-175413_51388712",
+      "dateCreated": "Sep 6, 2018 5:54:13 PM",
       "status": "READY",
       "progressUpdateIntervalMs": 500
     }
