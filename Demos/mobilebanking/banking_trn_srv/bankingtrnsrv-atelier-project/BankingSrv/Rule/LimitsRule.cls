@@ -1,20 +1,20 @@
 /// 
-Class BankingSrv.Rule.LimitsRule Extends Ens.Rule.Definition
+Class BankingSrv.Rule.AIRule Extends Ens.Rule.Definition
 {
 
 Parameter RuleAssistClass = "Ens.Rule.GeneralBusinessRuleAssist";
 
 XData RuleDefinition [ XMLNamespace = "http://www.intersystems.com/rule" ]
 {
-<ruleDefinition alias="LimitsRule" context="BankingSrv.BP.Transaction.Process.Context" production="">
-<ruleSet name="Above Limit Rules" effectiveBegin="" effectiveEnd="">
-<rule name="Cash Out" disabled="false">
-<when condition="(Request.TransType=&quot;CASH_OUT&quot;)&amp;&amp;(Request.Amount&gt;500)">
+<ruleDefinition alias="AIRule" context="BankingSrv.BP.Transaction.Process.Context" production="">
+<ruleSet name="Evaluate ML Response" effectiveBegin="" effectiveEnd="">
+<rule name="Payments" disabled="false">
+<when condition="(Request.TransType=&quot;PAYMENT&quot;)&amp;&amp;(ProbabilityOfFraud&gt;0.5)">
 <return>1</return>
 </when>
 </rule>
 <rule name="Transfers" disabled="false">
-<when condition="(Request.TransType=&quot;TRANSFER&quot;)&amp;&amp;(Request.Amount&gt;1000)">
+<when condition="(Request.TransType=&quot;TRANSFER&quot;)&amp;&amp;(ProbabilityOfFraud&gt;0.8)">
 <return>1</return>
 </when>
 </rule>

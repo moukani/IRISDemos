@@ -1,7 +1,7 @@
 Class IRISDemo.BO.PMML.ExecuteModelReq Extends (%Persistent,Ens.Request)
 {
 
-	Property ModelData As %DeepSee.PMML.Data;
+	Property ModelData As Array of %String;
 
 Storage Default
 {

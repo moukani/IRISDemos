@@ -1,6 +1,6 @@
 Class IRISDemo.BO.PMML.ExecuteModelResp Extends (%Persistent,Ens.Response)
 {
-	Property ModelOutput As %DeepSee.PMML.ModelOutput;
+	Property ModelOutput As Array of %String;
 	
 Storage Default
 {
