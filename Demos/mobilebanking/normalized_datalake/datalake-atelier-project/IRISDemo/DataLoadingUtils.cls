@@ -28,7 +28,7 @@ Class IRISDemo.DataLoadingUtils
 			While oRSTransactions.Next()
 			{
 				Set iLine=iLine+1
-				Quit:iLine>10000
+				//Quit:iLine>10000
 				
 				// I should use SQL instead of objects here since SQL will allow me 
 				// to insert with flags such as %NOINDEX and build the indices later
