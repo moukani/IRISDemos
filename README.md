@@ -14,7 +14,7 @@ You may be asking why do we need to build our own images. Let's give an example:
 * REST Application - A /csp/appint/rest CSP application and an empty IRISDemo.REST.Dispatcher to expose your REST services with the proper security
 * Installer - To load your source code from your Atelier project
 
-So, when building a demo of IRIS Interoperability, all you would have to do is to create a folder for your demo under the Demos folder, create your own Dockerfile based on irisdemodb. Then you create an Atelier project on this folder and build your image following the documentation! No need to configure anythign else!
+So, when building a demo of IRIS Interoperability, all you would have to do is to create a folder for your demo under the Demos folder, create your own Dockerfile based on irisdemodb. Then you create an Atelier project on this folder and build your image following the documentation! No need to configure anything else!
 
 Another example of why building our own image is important: The Zeppelin-Spark image is a an image that brings Zeppelin and Spark cooked together. It is perfect for demoing Spark, Python, Scala and JDBC with IRIS. It is based on the standard apache zeppelin image. But we add to it IRIS JDBC and IRIS Spark connectors. We have also added configurations and parameters that allows you to simply start this image and use it against your IRIS installation. It just works! No configuration needed.
 
