@@ -1,0 +1,75 @@
+version: '3.6'
+services:
+  ################## DATA LAKE INSTANCES that can be based on irisdemodb-template ############################
+  datalake:
+    environment:
+    - ISC_DATA_DIRECTORY=/shared/iris                          # USE THIS TO ENABLE PERSISTENT %SYS 
+    build: 
+      context: ./datalake                                      # RENAME THIS ON YOUR DEMO FOLDER TO THE NAME YOU PICKED
+      args:
+      - IRIS_PROJECT_FOLDER_NAME=template-atelier-project      # RENAME THIS ON YOUR DEMO FOLDER TO THE NAME YOU PICKED
+    image: <YOUR DEMO FOLDER NAME>_datalake                    # RENAME THIS ON YOUR DEMO FOLDER TO THE NAME YOU PICKED
+    command: --key /shared/license.key
+    hostname: datalake                                         # RENAME THIS ON YOUR DEMO FOLDER TO THE NAME YOU PICKED
+    ports:
+    # 51773 is the superserver default port
+    - "9095:51773"
+    # 52773 is the webserver/management portal port
+    - "9094:52773"
+    volumes:
+    - ${PWD}/<YOUR DEMO FOLDER NAME>_datalake/shared/:/shared   # RENAME THIS ON YOUR DEMO FOLDER TO THE NAME YOU PICKED
+
+  ################## APPLICATION DATA DRIVEN SERVICES that can be based on irisdemodb-template ##############
+  myapp:
+    environment:
+     - ISC_DATA_DIRECTORY=/shared/iris                          # USE THIS TO ENABLE PERSISTENT %SYS 
+    build: 
+      context: ./myapp                                          # RENAME THIS ON YOUR DEMO FOLDER TO THE NAME YOU PICKED
+      args:
+      - IRIS_PROJECT_FOLDER_NAME=template-atelier-project       # RENAME THIS ON YOUR DEMO FOLDER TO THE NAME YOU PICKED
+    image: <YOUR DEMO FOLDER NAME>_myapp                        # RENAME THIS ON YOUR DEMO FOLDER TO THE NAME YOU PICKED
+    command: --key /shared/license.key
+    hostname: myapp                                             # RENAME THIS ON YOUR DEMO FOLDER TO THE NAME YOU PICKED
+    ports:
+    # 51773 is the superserver default port
+    - "9091:51773"
+    # 52773 is the webserver/management portal port
+    - "9090:52773"
+    volumes:
+    - ${PWD}/myapp/shared/:/shared                              # RENAME THIS ON YOUR DEMO FOLDER TO THE NAME YOU PICKED
+
+  ################## INTEROPERABILITY SERVICES that can be based on irisdemoint-template ##################
+  intsrv:
+    environment:
+    - ISC_DATA_DIRECTORY=/shared/iris                           # USE THIS TO ENABLE PERSISTENT %SYS 
+    build: 
+      context: ./intsrv                                         # RENAME THIS ON YOUR DEMO FOLDER TO THE NAME YOU PICKED
+      args:
+      - IRIS_PROJECT_FOLDER_NAME=template-atelier-project       # RENAME THIS ON YOUR DEMO FOLDER TO THE NAME YOU PICKED
+    image: <YOUR DEMO FOLDER NAME>_intsrv                       # RENAME THIS ON YOUR DEMO FOLDER TO THE NAME YOU PICKED
+    command: --key /shared/license.key
+    hostname: intsrv                                            # RENAME THIS ON YOUR DEMO FOLDER TO THE NAME YOU PICKED
+    ports:
+    # 51773 is the superserver default port
+    - "9093:51773"
+    # 52773 is the webserver/management portal port
+    - "9092:52773"
+    volumes:
+    - ${PWD}/intsrv/shared/:/shared                             # RENAME THIS ON YOUR DEMO FOLDER TO THE NAME YOU PICKED
+
+  ################## DATA SCIENCE NODES that can be based on zeppelin-spark-template #########################
+  advancedanalytics:
+    build: ./advancedanalytics                                 # RENAME THIS ON YOUR DEMO FOLDER TO THE NAME YOU PICKED
+    image: <YOUR DEMO FOLDER NAME>_advancedanalytics            # RENAME THIS ON YOUR DEMO FOLDER TO THE NAME YOU PICKED
+    ports:
+    - "9096:9090"   # Zeppelin
+    - "9097:8080"   # Spark Master Portal
+    - "9098:8081"   # Spark Worker Portal
+    volumes:
+    - $PWD/advanced_analytics/shared/:/shared
+    environment:
+    - IRIS_MASTER_HOST=myapp                                    # DNS based on the name of the service! This is how you point zeppelin to your IRIS instance
+    - IRIS_MASTER_PORT=51773 
+    - IRIS_MASTER_USERNAME=SuperUser 
+    - IRIS_MASTER_PASSWORD=sys 
+    - IRIS_MASTER_NAMESPACE=APP 
