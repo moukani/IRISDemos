@@ -7,7 +7,7 @@ services:
       context: ./normalized_datalake
       args:
       - IRIS_PROJECT_FOLDER_NAME=datalake-atelier-project
-    image: mobilebanking_datalake
+    image: amirsamary/irisdemo:mobilebanking_datalake
     command: --key /shared/license.key
     hostname: datalake
     ports:
@@ -28,7 +28,7 @@ services:
       context: ./banking_core
       args:
       - IRIS_PROJECT_FOLDER_NAME=bankingcore-atelier-project
-    image: mobilebanking_bankingcore
+    image: amirsamary/irisdemo:mobilebanking_bankingcore
     command: --key /shared/license.key
     hostname: bankingcore
     ports:
@@ -48,7 +48,7 @@ services:
       context: ./banking_trn_srv
       args:
       - IRIS_PROJECT_FOLDER_NAME=bankingtrnsrv-atelier-project
-    image: mobilebanking_bankingtrnsrv
+    image: amirsamary/irisdemo:mobilebanking_bankingtrnsrv
     command: --key /shared/license.key
     hostname: bankingtrnsrv
     ports:
@@ -64,7 +64,7 @@ services:
 
   advancedanalytics:
     build: ./advanced_analytics
-    image: mobilebanking_advancedanalytics
+    image: amirsamary/irisdemo:mobilebanking_advancedanalytics
     ports:
     - "9096:9090"   # Zeppelin
     - "9097:8080"   # Spark Master Portal

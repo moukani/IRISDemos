@@ -8,7 +8,7 @@ services:
       context: ./datalake                                      # RENAME THIS ON YOUR DEMO FOLDER TO THE NAME YOU PICKED
       args:
       - IRIS_PROJECT_FOLDER_NAME=template-atelier-project      # RENAME THIS ON YOUR DEMO FOLDER TO THE NAME YOU PICKED
-    image: <YOUR DEMO FOLDER NAME>_datalake                    # RENAME THIS ON YOUR DEMO FOLDER TO THE NAME YOU PICKED
+    image: amirsamary/irisdemo:<YOUR DEMO FOLDER NAME>_datalake                    # RENAME THIS ON YOUR DEMO FOLDER TO THE NAME YOU PICKED
     command: --key /shared/license.key
     hostname: datalake                                         # RENAME THIS ON YOUR DEMO FOLDER TO THE NAME YOU PICKED
     ports:
@@ -27,7 +27,7 @@ services:
       context: ./myapp                                          # RENAME THIS ON YOUR DEMO FOLDER TO THE NAME YOU PICKED
       args:
       - IRIS_PROJECT_FOLDER_NAME=template-atelier-project       # RENAME THIS ON YOUR DEMO FOLDER TO THE NAME YOU PICKED
-    image: <YOUR DEMO FOLDER NAME>_myapp                        # RENAME THIS ON YOUR DEMO FOLDER TO THE NAME YOU PICKED
+    image: amirsamary/irisdemo:<YOUR DEMO FOLDER NAME>_myapp                        # RENAME THIS ON YOUR DEMO FOLDER TO THE NAME YOU PICKED
     command: --key /shared/license.key
     hostname: myapp                                             # RENAME THIS ON YOUR DEMO FOLDER TO THE NAME YOU PICKED
     ports:
@@ -46,7 +46,7 @@ services:
       context: ./intsrv                                         # RENAME THIS ON YOUR DEMO FOLDER TO THE NAME YOU PICKED
       args:
       - IRIS_PROJECT_FOLDER_NAME=template-atelier-project       # RENAME THIS ON YOUR DEMO FOLDER TO THE NAME YOU PICKED
-    image: <YOUR DEMO FOLDER NAME>_intsrv                       # RENAME THIS ON YOUR DEMO FOLDER TO THE NAME YOU PICKED
+    image: amirsamary/irisdemo:<YOUR DEMO FOLDER NAME>_intsrv                       # RENAME THIS ON YOUR DEMO FOLDER TO THE NAME YOU PICKED
     command: --key /shared/license.key
     hostname: intsrv                                            # RENAME THIS ON YOUR DEMO FOLDER TO THE NAME YOU PICKED
     ports:
@@ -60,7 +60,7 @@ services:
   ################## DATA SCIENCE NODES that can be based on zeppelin-spark-template #########################
   advancedanalytics:
     build: ./advancedanalytics                                 # RENAME THIS ON YOUR DEMO FOLDER TO THE NAME YOU PICKED
-    image: <YOUR DEMO FOLDER NAME>_advancedanalytics            # RENAME THIS ON YOUR DEMO FOLDER TO THE NAME YOU PICKED
+    image: amirsamary/irisdemo:<YOUR DEMO FOLDER NAME>_advancedanalytics            # RENAME THIS ON YOUR DEMO FOLDER TO THE NAME YOU PICKED
     ports:
     - "9096:9090"   # Zeppelin
     - "9097:8080"   # Spark Master Portal
