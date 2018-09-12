@@ -1,8 +1,8 @@
 version: '3.6'
 services:
   datalake:
-    environment:
-    - ISC_DATA_DIRECTORY=/shared/iris
+    # environment:
+    # - ISC_DATA_DIRECTORY=/shared/iris
     build: 
       context: ./normalized_datalake
       args:

@@ -2,8 +2,8 @@ version: '3.6'
 services:
   ################## DATA LAKE INSTANCES that can be based on irisdemodb-template ############################
   datalake:
-    environment:
-    - ISC_DATA_DIRECTORY=/shared/iris                          # USE THIS TO ENABLE PERSISTENT %SYS 
+    # environment:
+    # - ISC_DATA_DIRECTORY=/shared/iris                          # USE THIS TO ENABLE PERSISTENT %SYS 
     build: 
       context: ./datalake                                      # RENAME THIS ON YOUR DEMO FOLDER TO THE NAME YOU PICKED
       args:
@@ -21,8 +21,8 @@ services:
 
   ################## APPLICATION DATA DRIVEN SERVICES that can be based on irisdemodb-template ##############
   myapp:
-    environment:
-     - ISC_DATA_DIRECTORY=/shared/iris                          # USE THIS TO ENABLE PERSISTENT %SYS 
+    # environment:
+    #  - ISC_DATA_DIRECTORY=/shared/iris                          # USE THIS TO ENABLE PERSISTENT %SYS 
     build: 
       context: ./myapp                                          # RENAME THIS ON YOUR DEMO FOLDER TO THE NAME YOU PICKED
       args:
@@ -40,8 +40,8 @@ services:
 
   ################## INTEROPERABILITY SERVICES that can be based on irisdemoint-template ##################
   intsrv:
-    environment:
-    - ISC_DATA_DIRECTORY=/shared/iris                           # USE THIS TO ENABLE PERSISTENT %SYS 
+    # environment:
+    # - ISC_DATA_DIRECTORY=/shared/iris                           # USE THIS TO ENABLE PERSISTENT %SYS 
     build: 
       context: ./intsrv                                         # RENAME THIS ON YOUR DEMO FOLDER TO THE NAME YOU PICKED
       args:
