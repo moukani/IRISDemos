@@ -22,6 +22,12 @@ fi
 # From now on, any error should interrupt the script
 set -e
 
+printf "\n Configuring global buffers..."
+sed -i "s/globals=.*/globals=0,0,$IRIS_GLOBAL_BUFFERS,0,0,0/" /usr/irissys/iris.cpf
+
+printf "\n Configuring routine buffers..."
+sed -i "s/routines=.*/routines=$IRIS_ROUTINE_BUFFERS/" /usr/irissys/iris.cpf
+
 printf "\nRunning installer...\n"
 
 iris start iris
