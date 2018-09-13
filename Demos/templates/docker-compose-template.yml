@@ -9,7 +9,7 @@ services:
       args:
       - IRIS_PROJECT_FOLDER_NAME=template-atelier-project      # RENAME THIS ON YOUR DEMO FOLDER TO THE NAME YOU PICKED
     image: amirsamary/irisdemo:<YOUR DEMO FOLDER NAME>_datalake                    # RENAME THIS ON YOUR DEMO FOLDER TO THE NAME YOU PICKED
-    command: --key /shared/license.key
+    command: --key /shared/iris.key
     hostname: datalake                                         # RENAME THIS ON YOUR DEMO FOLDER TO THE NAME YOU PICKED
     ports:
     # 51773 is the superserver default port
@@ -28,7 +28,7 @@ services:
       args:
       - IRIS_PROJECT_FOLDER_NAME=template-atelier-project       # RENAME THIS ON YOUR DEMO FOLDER TO THE NAME YOU PICKED
     image: amirsamary/irisdemo:<YOUR DEMO FOLDER NAME>_myapp                        # RENAME THIS ON YOUR DEMO FOLDER TO THE NAME YOU PICKED
-    command: --key /shared/license.key
+    command: --key /shared/iris.key
     hostname: myapp                                             # RENAME THIS ON YOUR DEMO FOLDER TO THE NAME YOU PICKED
     ports:
     # 51773 is the superserver default port
@@ -47,7 +47,7 @@ services:
       args:
       - IRIS_PROJECT_FOLDER_NAME=template-atelier-project       # RENAME THIS ON YOUR DEMO FOLDER TO THE NAME YOU PICKED
     image: amirsamary/irisdemo:<YOUR DEMO FOLDER NAME>_intsrv                       # RENAME THIS ON YOUR DEMO FOLDER TO THE NAME YOU PICKED
-    command: --key /shared/license.key
+    command: --key /shared/iris.key
     hostname: intsrv                                            # RENAME THIS ON YOUR DEMO FOLDER TO THE NAME YOU PICKED
     ports:
     # 51773 is the superserver default port

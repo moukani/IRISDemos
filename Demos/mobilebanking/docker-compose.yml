@@ -8,7 +8,7 @@ services:
       args:
       - IRIS_PROJECT_FOLDER_NAME=datalake-atelier-project
     image: amirsamary/irisdemo:mobilebanking_datalake
-    command: --key /shared/license.key
+    command: --key /shared/iris.key
     hostname: datalake
     ports:
     # 51773 is the superserver default port
@@ -29,7 +29,7 @@ services:
       args:
       - IRIS_PROJECT_FOLDER_NAME=bankingcore-atelier-project
     image: amirsamary/irisdemo:mobilebanking_bankingcore
-    command: --key /shared/license.key
+    command: --key /shared/iris.key
     hostname: bankingcore
     ports:
     # 51773 is the superserver default port
@@ -49,7 +49,7 @@ services:
       args:
       - IRIS_PROJECT_FOLDER_NAME=bankingtrnsrv-atelier-project
     image: amirsamary/irisdemo:mobilebanking_bankingtrnsrv
-    command: --key /shared/license.key
+    command: --key /shared/iris.key
     hostname: bankingtrnsrv
     ports:
     # 51773 is the superserver default port
