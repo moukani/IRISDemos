@@ -12,5 +12,9 @@ ADD ./${IRIS_PROJECT_FOLDER_NAME}/ $IRIS_APP_SOURCEDIR
 # I opened it to convert it from CR/LF to LF and compressed it into a tar.gz file
 ADD ./banksim_data.tar.gz /tmp/
 
+# IRIS Global buffers and Routine Buffers
+ENV IRIS_GLOBAL_BUFFERS=1024
+ENV IRIS_ROUTINE_BUFFERS=64
+
 # Running the installer. This will load the source from our project.
 RUN /usr/irissys/demo/irisdemoinstaller.sh

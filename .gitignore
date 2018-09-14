@@ -1,4 +1,5 @@
 container_runtime
 license.key
+iris.key
 target/*
 .DS_Store

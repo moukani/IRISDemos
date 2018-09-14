@@ -1,5 +1,4 @@
-FROM mobilebanking_datalake:latest
-
+FROM amirsamary/irisdemo:mobilebanking_datalake
 
 FROM amirsamary/irisdemo:irisdemoint
 LABEL maintainer="Amir Samary <amir.samary@intersystems.com>"

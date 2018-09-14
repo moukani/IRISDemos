@@ -41,6 +41,41 @@
       "progressUpdateIntervalMs": 500
     },
     {
+      "title": "Loading data into IRIS",
+      "text": "%spark.pyspark\n\nproducts \u003d spark.read.option(\"header\", \"true\").csv(\"/shared/products.csv\")\n\n#z.show(products)\n\nproducts.write.format(\"iris\").option(\"dbtable\",\"IRISDemo.products2\").option(\"isolationlevel\",\"NONE\").mode(\"OVERWRITE\").save()\n",
+      "user": "anonymous",
+      "dateUpdated": "Sep 11, 2018 12:24:21 PM",
+      "config": {
+        "colWidth": 12.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": true
+        },
+        "editorMode": "ace/mode/python",
+        "title": true,
+        "editorHide": false,
+        "tableHide": false
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "jobName": "paragraph_1536668258272_542946350",
+      "id": "20180911-121738_826491648",
+      "dateCreated": "Sep 11, 2018 12:17:38 PM",
+      "dateStarted": "Sep 11, 2018 12:23:52 PM",
+      "dateFinished": "Sep 11, 2018 12:23:58 PM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
       "title": "Generic JDBC Interpreter for Apache Zeppelin",
       "text": "%md\n\nRead more about using JDBC with Zeppelin [here](https://zeppelin.apache.org/docs/0.8.0/interpreter/jdbc.html)\n\nThe following example shows how to do a simple SELECT query on IRIS using JDBC. The data won\u0027t be stored on any python variable though.\n",
       "user": "anonymous",
@@ -81,7 +116,7 @@
       "progressUpdateIntervalMs": 500
     },
     {
-      "text": "%irisjdbc\n\nselect * from IRISDemo.product",
+      "text": "%irisjdbc\n\nselect * from IRISDemo.products2",
       "user": "anonymous",
       "dateUpdated": "Sep 14, 2018 11:43:51 AM",
       "config": {
@@ -112,7 +147,7 @@
         "msg": [
           {
             "type": "TABLE",
-            "data": "name\niPhone\nPC\nWatch\nPensil\n"
+            "data": "Name\niPhone\nPC\nWatch\nPensil\n"
           }
         ]
       },
@@ -166,7 +201,7 @@
       "progressUpdateIntervalMs": 500
     },
     {
-      "text": "%spark.pyspark\n\nmy_python_list \u003d spark.read.format(\"iris\").option(\"dbtable\",\"IRISDemo.product\").load().collect()\n\nfor x in my_python_list:\n  print(x)\n\n",
+      "text": "%spark.pyspark\n\nmy_python_list \u003d spark.read.format(\"iris\").option(\"dbtable\",\"IRISDemo.products2\").load().collect()\n\nfor x in my_python_list:\n  print(x)\n\n",
       "user": "anonymous",
       "dateUpdated": "Sep 14, 2018 11:43:57 AM",
       "config": {
@@ -174,10 +209,10 @@
         "enabled": true,
         "results": {},
         "editorSetting": {
-          "language": "text",
+          "language": "python",
           "editOnDblClick": false
         },
-        "editorMode": "ace/mode/text"
+        "editorMode": "ace/mode/python"
       },
       "settings": {
         "params": {},

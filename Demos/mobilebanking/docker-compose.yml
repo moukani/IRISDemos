@@ -1,14 +1,14 @@
 version: '3.6'
 services:
   datalake:
-    environment:
-    - ISC_DATA_DIRECTORY=/shared/iris
+    # environment:
+    # - ISC_DATA_DIRECTORY=/shared/iris
     build: 
       context: ./normalized_datalake
       args:
       - IRIS_PROJECT_FOLDER_NAME=datalake-atelier-project
-    image: mobilebanking_datalake
-    command: --key /shared/license.key
+    image: amirsamary/irisdemo:mobilebanking_datalake
+    command: --key /shared/iris.key
     hostname: datalake
     ports:
     # 51773 is the superserver default port
@@ -28,8 +28,8 @@ services:
       context: ./banking_core
       args:
       - IRIS_PROJECT_FOLDER_NAME=bankingcore-atelier-project
-    image: mobilebanking_bankingcore
-    command: --key /shared/license.key
+    image: amirsamary/irisdemo:mobilebanking_bankingcore
+    command: --key /shared/iris.key
     hostname: bankingcore
     ports:
     # 51773 is the superserver default port
@@ -48,8 +48,8 @@ services:
       context: ./banking_trn_srv
       args:
       - IRIS_PROJECT_FOLDER_NAME=bankingtrnsrv-atelier-project
-    image: mobilebanking_bankingtrnsrv
-    command: --key /shared/license.key
+    image: amirsamary/irisdemo:mobilebanking_bankingtrnsrv
+    command: --key /shared/iris.key
     hostname: bankingtrnsrv
     ports:
     # 51773 is the superserver default port
@@ -64,7 +64,7 @@ services:
 
   advancedanalytics:
     build: ./advanced_analytics
-    image: mobilebanking_advancedanalytics
+    image: amirsamary/irisdemo:mobilebanking_advancedanalytics
     ports:
     - "9096:9090"   # Zeppelin
     - "9097:8080"   # Spark Master Portal

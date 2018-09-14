@@ -19,8 +19,11 @@ ENV IRIS_USERNAME="SuperUser"
 ENV IRIS_PASSWORD="sys"
 
 # This is an image for using with demos. I don't care about protecting the password
-#
 RUN echo "$IRIS_PASSWORD" >> /tmp/pwd.isc && /usr/irissys/dev/Cloud/ICM/changePassword.sh /tmp/pwd.isc; if [ $? -eq 5 ]; then exit 0; else exit $?; fi
+
+# IRIS Global buffers and Routine Buffers
+ENV IRIS_GLOBAL_BUFFERS=256
+ENV IRIS_ROUTINE_BUFFERS=64
 
 # Adding source code that will be loaded by the installer
 ADD ./${IRIS_PROJECT_FOLDER_NAME}/ $IRIS_APP_SOURCEDIR
