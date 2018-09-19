@@ -80,6 +80,19 @@ services:
     networks:
     - datalake-tier
 
+  pos:
+    build: ./pos
+    image: amirsamary/irisdemo:mobilebanking_pos
+    ports:
+      - "9099:4200"
+    #user: "node"
+    working_dir: /home/node/app
+    environment:
+      - NODE_ENV=production
+    command: "npm run proxy"
+    networks:
+      - bankingtrnsrv-tier
+
 networks:
   bankingtrnsrv-tier:
     driver: bridge
