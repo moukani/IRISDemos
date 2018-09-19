@@ -4,18 +4,18 @@
       "title": "Documenting with Zeppelin",
       "text": "%md\n\nUse the buttons on the top right corner of this note to show/hide the editor. You will see that this note is actually a markdown \"program\" that, when run, will hide the editor and display only the output. If you want to change the content, you just have to ask to see the editor and change it.\n\nYou can also ask to see the Title of the note so you can add a title to ANY note on your notebook (not only the markdown ones).",
       "user": "anonymous",
-      "dateUpdated": "Sep 11, 2018 11:19:56 AM",
+      "dateUpdated": "Sep 14, 2018 11:43:43 AM",
       "config": {
         "colWidth": 12.0,
         "enabled": true,
         "results": {},
         "editorSetting": {
-          "language": "markdown",
-          "editOnDblClick": true
+          "language": "text",
+          "editOnDblClick": false
         },
-        "editorMode": "ace/mode/markdown",
+        "editorMode": "ace/mode/text",
         "title": true,
-        "editorHide": true,
+        "editorHide": false,
         "tableHide": false
       },
       "settings": {
@@ -35,8 +35,8 @@
       "jobName": "paragraph_1536256119909_-1338889290",
       "id": "20180906-174839_656699039",
       "dateCreated": "Sep 6, 2018 5:48:39 PM",
-      "dateStarted": "Sep 6, 2018 5:50:33 PM",
-      "dateFinished": "Sep 6, 2018 5:50:33 PM",
+      "dateStarted": "Sep 14, 2018 11:43:43 AM",
+      "dateFinished": "Sep 14, 2018 11:43:44 AM",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
@@ -79,19 +79,19 @@
       "title": "Generic JDBC Interpreter for Apache Zeppelin",
       "text": "%md\n\nRead more about using JDBC with Zeppelin [here](https://zeppelin.apache.org/docs/0.8.0/interpreter/jdbc.html)\n\nThe following example shows how to do a simple SELECT query on IRIS using JDBC. The data won\u0027t be stored on any python variable though.\n",
       "user": "anonymous",
-      "dateUpdated": "Sep 6, 2018 5:51:07 PM",
+      "dateUpdated": "Sep 14, 2018 11:43:47 AM",
       "config": {
         "colWidth": 12.0,
         "enabled": true,
         "results": {},
         "editorSetting": {
-          "language": "markdown",
-          "editOnDblClick": true
+          "language": "text",
+          "editOnDblClick": false
         },
-        "editorMode": "ace/mode/markdown",
+        "editorMode": "ace/mode/text",
         "title": true,
         "tableHide": false,
-        "editorHide": true
+        "editorHide": false
       },
       "settings": {
         "params": {},
@@ -110,15 +110,15 @@
       "jobName": "paragraph_1536255641818_-463926716",
       "id": "20180906-174041_1235154465",
       "dateCreated": "Sep 6, 2018 5:40:41 PM",
-      "dateStarted": "Sep 6, 2018 5:51:07 PM",
-      "dateFinished": "Sep 6, 2018 5:51:07 PM",
+      "dateStarted": "Sep 14, 2018 11:43:47 AM",
+      "dateFinished": "Sep 14, 2018 11:43:47 AM",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
     {
       "text": "%irisjdbc\n\nselect * from IRISDemo.products2",
       "user": "anonymous",
-      "dateUpdated": "Sep 11, 2018 12:30:35 PM",
+      "dateUpdated": "Sep 14, 2018 11:43:51 AM",
       "config": {
         "colWidth": 12.0,
         "enabled": true,
@@ -133,10 +133,10 @@
           }
         },
         "editorSetting": {
-          "language": "sql",
+          "language": "text",
           "editOnDblClick": false
         },
-        "editorMode": "ace/mode/sql"
+        "editorMode": "ace/mode/text"
       },
       "settings": {
         "params": {},
@@ -155,8 +155,8 @@
       "jobName": "paragraph_1536247434736_1561903843",
       "id": "20180906-152354_1364086516",
       "dateCreated": "Sep 6, 2018 3:23:54 PM",
-      "dateStarted": "Sep 11, 2018 12:30:35 PM",
-      "dateFinished": "Sep 11, 2018 12:30:36 PM",
+      "dateStarted": "Sep 14, 2018 11:43:51 AM",
+      "dateFinished": "Sep 14, 2018 11:43:52 AM",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
@@ -203,7 +203,7 @@
     {
       "text": "%spark.pyspark\n\nmy_python_list \u003d spark.read.format(\"iris\").option(\"dbtable\",\"IRISDemo.products2\").load().collect()\n\nfor x in my_python_list:\n  print(x)\n\n",
       "user": "anonymous",
-      "dateUpdated": "Sep 11, 2018 12:30:53 PM",
+      "dateUpdated": "Sep 14, 2018 11:43:57 AM",
       "config": {
         "colWidth": 12.0,
         "enabled": true,
@@ -231,8 +231,8 @@
       "jobName": "paragraph_1536247453551_84483391",
       "id": "20180906-152413_2048856726",
       "dateCreated": "Sep 6, 2018 3:24:13 PM",
-      "dateStarted": "Sep 11, 2018 12:15:56 PM",
-      "dateFinished": "Sep 11, 2018 12:16:42 PM",
+      "dateStarted": "Sep 14, 2018 11:43:57 AM",
+      "dateFinished": "Sep 14, 2018 11:44:17 AM",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
@@ -275,9 +275,9 @@
       "progressUpdateIntervalMs": 500
     },
     {
-      "text": "%spark.pyspark\n\nfor x in my_python_list:\n  print(x)\n",
+      "text": "%spark.pyspark\n\nproducts \u003d spark.read.option(\"header\",\"true\").csv(\"products.csv\")\n",
       "user": "anonymous",
-      "dateUpdated": "Sep 11, 2018 12:16:48 PM",
+      "dateUpdated": "Sep 14, 2018 12:38:10 PM",
       "config": {
         "colWidth": 12.0,
         "enabled": true,
@@ -293,11 +293,11 @@
         "forms": {}
       },
       "results": {
-        "code": "SUCCESS",
+        "code": "ERROR",
         "msg": [
           {
             "type": "TEXT",
-            "data": "Row(name\u003du\u0027iPhone\u0027)\nRow(name\u003du\u0027PC\u0027)\nRow(name\u003du\u0027Watch\u0027)\nRow(name\u003du\u0027Pensil\u0027)\n"
+            "data": "Traceback (most recent call last):\n  File \"/tmp/zeppelin_pyspark-5165314110742673233.py\", line 367, in \u003cmodule\u003e\n    raise Exception(traceback.format_exc())\nException: Traceback (most recent call last):\n  File \"/tmp/zeppelin_pyspark-5165314110742673233.py\", line 360, in \u003cmodule\u003e\n    exec(code, _zcUserQueryNameSpace)\n  File \"\u003cstdin\u003e\", line 1, in \u003cmodule\u003e\n  File \"/usr/local/spark/python/pyspark/sql/readwriter.py\", line 380, in csv\n    return self._df(self._jreader.csv(self._spark._sc._jvm.PythonUtils.toSeq(path)))\n  File \"/usr/local/spark/python/lib/py4j-0.10.4-src.zip/py4j/java_gateway.py\", line 1133, in __call__\n    answer, self.gateway_client, self.target_id, self.name)\n  File \"/usr/local/spark/python/pyspark/sql/utils.py\", line 69, in deco\n    raise AnalysisException(s.split(\u0027: \u0027, 1)[1], stackTrace)\nAnalysisException: u\u0027Path does not exist: file:/zeppelin/products.csv;\u0027\n\n"
           }
         ]
       },
@@ -305,22 +305,24 @@
       "jobName": "paragraph_1536256453233_885635261",
       "id": "20180906-175413_51388712",
       "dateCreated": "Sep 6, 2018 5:54:13 PM",
-      "dateStarted": "Sep 11, 2018 12:16:48 PM",
-      "dateFinished": "Sep 11, 2018 12:16:48 PM",
-      "status": "FINISHED",
+      "dateStarted": "Sep 14, 2018 12:38:10 PM",
+      "dateFinished": "Sep 14, 2018 12:38:10 PM",
+      "status": "ERROR",
       "progressUpdateIntervalMs": 500
     },
     {
+      "text": "%spark.pyspark\n",
       "user": "anonymous",
+      "dateUpdated": "Sep 14, 2018 11:45:04 AM",
       "config": {},
       "settings": {
         "params": {},
         "forms": {}
       },
       "apps": [],
-      "jobName": "paragraph_1536667891217_-1426683437",
-      "id": "20180911-121131_332615757",
-      "dateCreated": "Sep 11, 2018 12:11:31 PM",
+      "jobName": "paragraph_1536925504193_2074503180",
+      "id": "20180914-114504_527866740",
+      "dateCreated": "Sep 14, 2018 11:45:04 AM",
       "status": "READY",
       "progressUpdateIntervalMs": 500
     }
