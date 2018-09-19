@@ -1,6 +1,6 @@
 {
   "/csp": {
-    "target": "http://54.153.84.212:9092",
+    "target": "http://bankingtrnsrv:52773",
     "secure": false
   }
 }

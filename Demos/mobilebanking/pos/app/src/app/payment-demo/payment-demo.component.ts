@@ -7,17 +7,17 @@ import {HttpClient, HttpHeaders} from '@angular/common/http';
   styleUrls: ['./payment-demo.component.scss']
 })
 export class PaymentDemoComponent implements OnInit {
-  public userName = '_system';
+  public userName = 'SuperUser';
   public password = 'sys';
   public url = '/csp/appint/rest/transaction/';
   public currentDate: number = Date.now();
   public currentTime: number = Date.now();
   public clickBtnSound = new Audio();
   public requestValue = {
-    TransType: 'TRANSFER',
+    TransType: 'PAYMENT',
     Amount: '0',
-    FromAccountNumber: 'C1093826151',
-    ToAccountNumber: 'C352968107'
+    FromAccountNumber: 'C1822295676',
+    ToAccountNumber: 'M85975013'
   };
   public isCreditCardInserted = false;
   public Object = Object;
@@ -137,11 +137,11 @@ export class PaymentDemoComponent implements OnInit {
   sendRequest() {
     const options = {
       headers: new HttpHeaders({
-        'Content-Type': 'application/json',
+        'Content-Type': 'application/json; charset=utf-8',
         'Authorization': 'Basic ' + btoa(this.userName + ':' + this.password),
       }),
     };
-    this.http.post(this.url, this.requestValue).subscribe((r) => {
+    this.http.post(this.url, this.requestValue, options).subscribe((r) => {
       this.response = r;
     });
   }
