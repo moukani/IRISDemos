@@ -683,6 +683,10 @@
         {
           "groupArtifactVersion": "/custom/lib/intersystems-spark-1.0.0.jar",
           "local": false
+        },
+        {
+          "groupArtifactVersion": "/custom/lib/jpmml-sparkml-executable-1.2.12.jar",
+          "local": false
         }
       ],
       "option": {

@@ -92,6 +92,10 @@ RUN cd /tmp && \
         rm spark-${APACHE_SPARK_VERSION}-bin-hadoop${HADOOP_VERSION}.tgz
 RUN cd /usr/local && ln -s spark-${APACHE_SPARK_VERSION}-bin-hadoop${HADOOP_VERSION} spark
 
+RUN cd /custom/lib && \
+    wget -q https://github.com/jpmml/jpmml-sparkml/releases/download/1.2.12/jpmml-sparkml-executable-1.2.12.jar
+
+
 # These configuration files have variables that need to be replaced before zeppelin or spark
 # start. This substituion is done by /custom/bin/startservices.sh custom script that I
 # built. 
