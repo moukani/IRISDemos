@@ -110,16 +110,16 @@
     },
     {
       "text": "%md\n## An Important Note on the Data\n\n\nAs mentioned, the data in this Play experience is publicly available as \u003ca href\u003d\"https://www.researchgate.net/profile/Stefan_Axelsson4/publication/313138956_PAYSIM_A_FINANCIAL_MOBILE_MONEY_SIMULATOR_FOR_FRAUD_DETECTION/links/5890f87e92851cda2568a295/PAYSIM-A-FINANCIAL-MOBILE-MONEY-SIMULATOR-FOR-FRAUD-DETECTION.pdf\" target\u003d\"_blank\"\u003ePaySim\u003c/a\u003e. PaySim is a tool that generates transaction data based on a historical dataset of a real-world digital payment system. However, PaySim has some aspects of the data that are not straightforward and could seem like anomalies. The below notes will prepare you for these aspects so you can account for them in your data investigation. \n\nHowever, if you prefer to discover the data on your own without assistance, skip the explanation below and continue on to the next section “Review the Data \u0026mdash; First Look.”\n\n\n### Floating Point Issues\n\nAs a result of how the data was loaded, you will need to use the round function to accurately perform mathematic equivalencies. For example: \n`round($\"amount\") \u003d\u003d\u003d round($\"newbalanceDest\" - $\"oldbalanceDest\")`\n\n\n### Expected Transaction Atomicity\n\nWith the names *Originating Account* and *Destination Account*, you might expect that the amounts are debited from the origin account and credited to the destination account in the same transaction record for all instances. For example: \n\n     Amount \u003d New Balance Destination – Old Balance Destination AND Amount \u003d Old Balance Origin – New Balance Origin\n\nAs a filter in Scala, this equation would look like this: \n`.filter(round($\"amount\") \u003d\u003d\u003d round($\"newbalanceDest\" - $\"oldbalanceDest\") \u0026\u0026 (round($\"amount\") \u003d\u003d\u003d round($\"oldbalanceOrig\" - $\"newbalanceOrig\")))`  \n\n\nHowever, these equations do not always hold. Funds are credited and debited differently based on transaction type (`transType`) and some transactions even vary from these general rules. Remember this dataset mimics a real-world digital payment system with regular users and merchants. Some transactions involve trading the digital currency for real-world cash or goods, which are not captured in the system. Here are how the transactions differ in general based on their type: \n\n`PAYMENT` – debits the origin account; always leaves destination balances as zeros\n`CASH_IN` – credits the origin account; debits the destination account\n`TRANSFER` – only the destination is credited the amount\n`CASH_OUT` – the destination account is credited; the origin account left with zero balance\n`DEBIT` – the origin account is debited the amount; the destination is credited the amount\n\nAs part of your data investigation, you may need to account for these differing transactions. \n\n\n### Nulls As Zeros\n\nPaySim’s data creation process unfortunately does not distinguish between null values (for unrecorded data) and zeros. Because this you will see a high incidence of zero amounts in the account balances. \n\n### How To Proceed\n\nThe above issues may make the data look strange at first, but PaySim accurately mimics the distributions seen in the real-world dataset on which it was based. For a more detailed explanation of the data, see the \u003ca href\u003d\"https://www.researchgate.net/profile/Stefan_Axelsson4/publication/313138956_PAYSIM_A_FINANCIAL_MOBILE_MONEY_SIMULATOR_FOR_FRAUD_DETECTION/links/5890f87e92851cda2568a295/PAYSIM-A-FINANCIAL-MOBILE-MONEY-SIMULATOR-FOR-FRAUD-DETECTION.pdf\" target\u003d\"_blank\"\u003ePaySim research publication\u003c/a\u003e. \n\nIn this realistic scenario, you, like any data scientist, will decide how to proceed. You can build your model based on this raw data. Or, you can clean the data to ensure it is free from the transactions that do not fit our intuitive definition of atomicity and perform your analysis on a sterile subset. The choice is yours and so is the data – enjoy!\n\n\n ",
-      "dateUpdated": "Jul 25, 2018 5:11:15 PM",
+      "dateUpdated": "Sep 18, 2018 2:16:05 PM",
       "config": {
-        "tableHide": false,
+        "tableHide": true,
         "editorSetting": {
           "language": "markdown",
           "editOnDblClick": true
         },
         "colWidth": 12.0,
         "editorMode": "ace/mode/markdown",
-        "editorHide": true,
+        "editorHide": false,
         "results": {},
         "enabled": false
       },
@@ -658,7 +658,7 @@
       "progressUpdateIntervalMs": 500
     }
   ],
-  "name": "1. Financial Fraud Detection Challenge",
+  "name": "~Trash/1. Financial Fraud Detection Challenge",
   "id": "2DNXDWVQQ",
   "angularObjects": {
     "2DHWQ7A7V:shared_process": [],
