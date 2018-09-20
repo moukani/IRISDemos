@@ -7,6 +7,16 @@ Class IRISConfig.Installer Extends IRISConfig.InstallerBase
 	{
 	<Manifest>
 		
+		<Log Text="Configuring roles for ${Namespace}..." Level="0"/>
+		<Resource Name="%DB_APP" Description="Resource used to protect the application"/>
+		<Role Name="AppRole" Description="Role to access and use the App" Resources="%DB_APP:RW,%DB_IRISSYS:R" />
+
+		<Log Text="Giving CSPSystem access to our database so the OPTIONS request from HTTP CORS calls will work." Level="0"/>
+		<Invoke Class="IRISConfig.Installer" Method="AddRoleToUser" CheckStatus="true">
+			<Arg name="pUsername" Value="CSPSystem"/>
+			<Arg name="pRole" Value="%DB_APP"/>
+		</Invoke>
+
 		<If Condition="${UseUSERNamespace}">
 			<Namespace Name="USER" Create="no">
 				<IfDef Var="SourceDir">
@@ -15,11 +25,8 @@ Class IRISConfig.Installer Extends IRISConfig.InstallerBase
 		        </IfDef>
 			</Namespace>
 		</If>
+		
 		<If Condition="'${UseUSERNamespace}">
-			<Log Text="Configuring roles for ${Namespace}..." Level="0"/>
-			<Resource Name="%DB_APP" Description="Resource used to protect the application"/>
-			<Role Name="AppRole" Description="Role to access and use the App" Resources="%DB_APP:RW,%DB_IRISSYS:R" />
-			
 			<Log Text="Configuring namespace ${Namespace}..." Level="0"/>
 			<Namespace Name="${Namespace}" Create="yes" Code="${Namespace}" Ensemble="0" Data="${Namespace}">
 				<Configuration>

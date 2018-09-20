@@ -7,6 +7,8 @@ Include DEMOMACROS
 Class IRISDemo.BS.REST.Service Extends (%CSP.REST, Ens.BusinessService)
 {
 
+Parameter HandleCorsRequest = 1;
+
 Parameter UseSession = 1;
 
 Parameter CONVERTINPUTSTREAM = 1;

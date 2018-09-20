@@ -9,7 +9,8 @@ import {HttpClient, HttpHeaders} from '@angular/common/http';
 export class PaymentDemoComponent implements OnInit {
   public userName = 'SuperUser';
   public password = 'sys';
-  public url = '/csp/appint/rest/transaction/';
+  //public url = '/csp/appint/rest/transaction/';
+  public url = 'http://localhost:9092/csp/appint/rest/transaction/';
   public currentDate: number = Date.now();
   public currentTime: number = Date.now();
   public clickBtnSound = new Audio();

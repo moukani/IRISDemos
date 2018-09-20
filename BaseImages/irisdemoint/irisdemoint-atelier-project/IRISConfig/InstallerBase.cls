@@ -125,6 +125,11 @@ Class IRISConfig.InstallerBase [ Abstract ]
 		Quit tSC
 	}
 
+	ClassMethod AddRoleToUser(pUserName As %String, pRole As %String) As %Status
+	{
+		Quit ##class(Security.Users).AddRoles(pUserName, pRole)
+	}
+	
 	ClassMethod CSPAppEnableAnalytics(pCSPAppName) As %Status
 	{
 		Set tSC = $System.Status.OK()

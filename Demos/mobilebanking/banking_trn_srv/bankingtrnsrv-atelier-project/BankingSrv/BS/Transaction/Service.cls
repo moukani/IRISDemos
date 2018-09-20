@@ -1,8 +1,6 @@
 Include DEMOMACROS
-Class BankingSrv.BS.Transaction.Service extends IRISDemo.BS.REST.Service 
+Class BankingSrv.BS.Transaction.Service extends (IRISDemo.BS.REST.Service) 
 { 
-	
-	Parameter HandleCorsRequest = 1; 
 	
 	XData UrlMap
 	{ 
