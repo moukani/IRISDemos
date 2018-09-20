@@ -23,7 +23,7 @@ Class IRISConfig.Installer Extends IRISConfig.InstallerBase
 			<Log Text="Configuring namespace ${Namespace}..." Level="0"/>
 			<Namespace Name="${Namespace}" Create="yes" Code="${Namespace}" Ensemble="0" Data="${Namespace}">
 				<Configuration>
-						<Database Name="${Namespace}" Dir="${MGRDIR}${Namespace}" Create="yes" MountRequired="1" Resource="%DB_APP}"/>
+						<Database Name="${Namespace}" Dir="${MGRDIR}${Namespace}" Create="yes" MountRequired="1" Resource="%DB_APP"/>
 				</Configuration>
 			</Namespace>
 			
