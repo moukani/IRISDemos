@@ -1,6 +1,8 @@
 Class IRISDemo.REST.Dispatcher Extends %CSP.REST
 {
 
+Parameter HandleCorsRequest = 1;
+
 Parameter UseSession = 1;
 
 Parameter CONVERTINPUTSTREAM = 1;
