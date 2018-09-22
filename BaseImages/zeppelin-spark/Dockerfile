@@ -95,6 +95,10 @@ RUN cd /usr/local && ln -s spark-${APACHE_SPARK_VERSION}-bin-hadoop${HADOOP_VERS
 RUN cd /custom/lib && \
     wget -q https://github.com/jpmml/jpmml-sparkml/releases/download/1.2.12/jpmml-sparkml-executable-1.2.12.jar
 
+RUN pip install --upgrade pip && \
+    pip install pandas && \
+    pip install seaborn && \
+    pip install sklearn
 
 # These configuration files have variables that need to be replaced before zeppelin or spark
 # start. This substituion is done by /custom/bin/startservices.sh custom script that I
