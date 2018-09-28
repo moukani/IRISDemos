@@ -9,7 +9,7 @@ XData Install [ XMLNamespace = INSTALLER ]
 	
 	<Log Text="Configuring roles for ${Namespace}..." Level="0"/>
 	<Resource Name="%DB_APPINT" Description="Resource used to protect the application"/>
-	<Role Name="AppRole" Description="Role to access and use the App" Resources="%DB_APPINT:RW,%DB_IRISSYS:R" />
+	<Role Name="AppRole" Description="Role to access and use the App" Resources="%DB_APPINT:RW,%DB_IRISSYS:R,%Ens_Portal:U" />
 	
 	<Log Text="Giving CSPSystem access to our database so the OPTIONS request from HTTP CORS calls will work." Level="0"/>
 	<Invoke Class="IRISConfig.Installer" Method="AddRoleToUser" CheckStatus="true">

@@ -44,16 +44,25 @@
       "title": "Merchant Categories",
       "text": "%irisjdbc\n\nselect * from IRISDemo.BC_MERCH_CATEGORY",
       "user": "anonymous",
-      "dateUpdated": "Sep 13, 2018 8:15:25 PM",
+      "dateUpdated": "Sep 24, 2018 1:02:25 PM",
       "config": {
         "editorSetting": {
-          "language": "sql",
+          "language": "text",
           "editOnDblClick": false
         },
         "colWidth": 12.0,
-        "editorMode": "ace/mode/sql",
+        "editorMode": "ace/mode/text",
         "title": false,
-        "results": {},
+        "results": {
+          "0": {
+            "graph": {
+              "mode": "multiBarChart",
+              "height": 300.0,
+              "optionOpen": false
+            },
+            "helium": {}
+          }
+        },
         "enabled": true
       },
       "settings": {
@@ -207,15 +216,15 @@
     {
       "text": "%spark.pyspark\n\ndf \u003d spark.read.format(\"iris\").option(\"dbtable\",\"IRISDemo.BC_TRANSACTIONS\").load().limit(100)\ndf.show()",
       "user": "anonymous",
-      "dateUpdated": "Sep 18, 2018 12:45:24 PM",
+      "dateUpdated": "Sep 24, 2018 1:03:02 PM",
       "config": {
         "lineNumbers": false,
         "editorSetting": {
-          "language": "python",
+          "language": "text",
           "editOnDblClick": false
         },
         "colWidth": 12.0,
-        "editorMode": "ace/mode/python",
+        "editorMode": "ace/mode/text",
         "title": false,
         "results": {},
         "enabled": true
@@ -225,11 +234,11 @@
         "forms": {}
       },
       "results": {
-        "code": "ERROR",
+        "code": "SUCCESS",
         "msg": [
           {
             "type": "TEXT",
-            "data": "Traceback (most recent call last):\n  File \"/tmp/zeppelin_pyspark-1965123400784564452.py\", line 367, in \u003cmodule\u003e\n    raise Exception(traceback.format_exc())\nException: Traceback (most recent call last):\n  File \"/tmp/zeppelin_pyspark-1965123400784564452.py\", line 355, in \u003cmodule\u003e\n    exec(code, _zcUserQueryNameSpace)\n  File \"\u003cstdin\u003e\", line 1, in \u003cmodule\u003e\nAttributeError: \u0027function\u0027 object has no attribute \u0027iris\u0027\n\n"
+            "data": "+---+---------------+----------------+------------------------+------------------------+-----------------+-----------------+-------------------------+-------------------------+--------------------+-------------+------------+-----------------------+\n| ID|BC_TRANS_AMOUNT|BC_TRANS_SRC_ACC|BC_TRANS_SRC_ACC_NEW_BAL|BC_TRANS_SRC_ACC_OLD_BAL|BC_TRANS_IS_FRAUD|BC_TRANS_DEST_ACC|BC_TRANS_DEST_ACC_NEW_BAL|BC_TRANS_DEST_ACC_OLD_BAL|       BC_TRANS_DATE|BC_TRANS_TYPE|BC_TRANS_NUM|BC_TRANS_WHITELISTED_BY|\n+---+---------------+----------------+------------------------+------------------------+-----------------+-----------------+-------------------------+-------------------------+--------------------+-------------+------------+-----------------------+\n|  1|           4.55|               1|                 5995.45|                  6000.0|            false|                2|                 -5995.45|                  -6000.0|2018-01-01 00:00:...|      PAYMENT|           1|                      0|\n|  2|          39.68|               3|                 5960.32|                  6000.0|            false|                2|      -5955.7699999999995|                 -5995.45|2018-01-01 00:00:...|      PAYMENT|           2|                      0|\n|  3|          26.89|               5|                 5973.11|                  6000.0|            false|                4|                 -5973.11|                  -6000.0|2018-01-01 00:00:...|      PAYMENT|           3|                      0|\n|  4|          17.25|               6|                 5982.75|                  6000.0|            false|                2|      -5938.5199999999995|      -5955.7699999999995|2018-01-01 00:00:...|      PAYMENT|           4|                      0|\n|  5|          35.72|               7|                 5964.28|                  6000.0|            false|                2|       -5902.799999999999|      -5938.5199999999995|2018-01-01 00:00:...|      PAYMENT|           5|                      0|\n|  6|          25.81|               8|                 5974.19|                  6000.0|            false|                2|       -5876.989999999999|       -5902.799999999999|2018-01-01 00:00:...|      PAYMENT|           6|                      0|\n|  7|            9.1|               9|                  5990.9|                  6000.0|            false|                2|      -5867.8899999999985|       -5876.989999999999|2018-01-01 00:00:...|      PAYMENT|           7|                      0|\n|  8|          21.17|              10|                 5978.83|                  6000.0|            false|                2|       -5846.719999999998|      -5867.8899999999985|2018-01-01 00:00:...|      PAYMENT|           8|                      0|\n|  9|           32.4|              11|                  5967.6|                  6000.0|            false|                2|       -5814.319999999999|       -5846.719999999998|2018-01-01 00:00:...|      PAYMENT|           9|                      0|\n| 10|           35.4|              12|                  5964.6|                  6000.0|            false|                2|       -5778.919999999999|       -5814.319999999999|2018-01-01 00:00:...|      PAYMENT|          10|                      0|\n| 11|          14.95|              13|                 5985.05|                  6000.0|            false|                2|       -5763.969999999999|       -5778.919999999999|2018-01-01 00:00:...|      PAYMENT|          11|                      0|\n| 12|           1.51|              14|                 5998.49|                  6000.0|            false|                4|       -5971.599999999999|                 -5973.11|2018-01-01 00:00:...|      PAYMENT|          12|                      0|\n| 13|          68.79|              15|                 5931.21|                  6000.0|            false|               16|                 -5931.21|                  -6000.0|2018-01-01 00:00:...|      PAYMENT|          13|                      0|\n| 14|          20.32|              17|                 5979.68|                  6000.0|            false|                4|                 -5951.28|       -5971.599999999999|2018-01-01 00:00:...|      PAYMENT|          14|                      0|\n| 15|          13.56|              18|                 5986.44|                  6000.0|            false|                2|       -5750.409999999999|       -5763.969999999999|2018-01-01 00:00:...|      PAYMENT|          15|                      0|\n| 16|          30.19|              19|                 5969.81|                  6000.0|            false|                2|       -5720.219999999999|       -5750.409999999999|2018-01-01 00:00:...|      PAYMENT|          16|                      0|\n| 17|          17.54|              20|                 5982.46|                  6000.0|            false|                4|                 -5933.74|                 -5951.28|2018-01-01 00:00:...|      PAYMENT|          17|                      0|\n| 18|          40.69|              21|                 5959.31|                  6000.0|            false|                2|                 -5679.53|       -5720.219999999999|2018-01-01 00:00:...|      PAYMENT|          18|                      0|\n| 19|          21.21|              22|                 5978.79|                  6000.0|            false|                2|                 -5658.32|                 -5679.53|2018-01-01 00:00:...|      PAYMENT|          19|                      0|\n| 20|          10.09|              23|                 5989.91|                  6000.0|            false|                2|                 -5648.23|                 -5658.32|2018-01-01 00:00:...|      PAYMENT|          20|                      0|\n+---+---------------+----------------+------------------------+------------------------+-----------------+-----------------+-------------------------+-------------------------+--------------------+-------------+------------+-----------------------+\nonly showing top 20 rows\n\n"
           }
         ]
       },
@@ -237,9 +246,9 @@
       "jobName": "paragraph_1536869149555_-1653086794",
       "id": "20180815-194102_349085272",
       "dateCreated": "Sep 13, 2018 8:05:49 PM",
-      "dateStarted": "Sep 18, 2018 12:45:15 PM",
-      "dateFinished": "Sep 18, 2018 12:45:15 PM",
-      "status": "ERROR",
+      "dateStarted": "Sep 24, 2018 1:03:02 PM",
+      "dateFinished": "Sep 24, 2018 1:03:48 PM",
+      "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
     {

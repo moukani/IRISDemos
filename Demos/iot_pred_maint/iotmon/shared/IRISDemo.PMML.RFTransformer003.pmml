@@ -1,0 +1,2874 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<PMML xmlns="http://www.dmg.org/PMML-4_3" xmlns:data="http://jpmml.org/jpmml-model/InlineTable" version="4.3">
+	<Header>
+		<Application name="JPMML-SparkML" version="1.2.12"/>
+		<Timestamp>2018-09-27T16:47:01Z</Timestamp>
+	</Header>
+	<DataDictionary>
+		<DataField name="TopOilTemperature" optype="continuous" dataType="double"/>
+		<DataField name="OilVolume" optype="continuous" dataType="double"/>
+		<DataField name="VibrationLevel" optype="continuous" dataType="integer"/>
+		<DataField name="Threat" optype="categorical" dataType="integer">
+			<Value value="0"/>
+			<Value value="1"/>
+			<Value value="2"/>
+			<Value value="3"/>
+			<Value value="4"/>
+			<Value value="5"/>
+		</DataField>
+	</DataDictionary>
+	<MiningModel functionName="classification">
+		<MiningSchema>
+			<MiningField name="Threat" usageType="target"/>
+			<MiningField name="OilVolume"/>
+			<MiningField name="TopOilTemperature"/>
+			<MiningField name="VibrationLevel"/>
+		</MiningSchema>
+		<Output>
+			<OutputField name="pmml(prediction)" optype="categorical" dataType="integer" feature="predictedValue"/>
+			<OutputField name="prediction" optype="categorical" dataType="double" feature="transformedValue">
+				<MapValues outputColumn="data:output">
+					<FieldColumnPair field="pmml(prediction)" column="data:input"/>
+					<InlineTable>
+						<row>
+							<data:input>0</data:input>
+							<data:output>0</data:output>
+						</row>
+						<row>
+							<data:input>1</data:input>
+							<data:output>1</data:output>
+						</row>
+						<row>
+							<data:input>2</data:input>
+							<data:output>2</data:output>
+						</row>
+						<row>
+							<data:input>3</data:input>
+							<data:output>3</data:output>
+						</row>
+						<row>
+							<data:input>4</data:input>
+							<data:output>4</data:output>
+						</row>
+						<row>
+							<data:input>5</data:input>
+							<data:output>5</data:output>
+						</row>
+					</InlineTable>
+				</MapValues>
+			</OutputField>
+			<OutputField name="probability(0)" optype="continuous" dataType="double" feature="probability" value="0"/>
+			<OutputField name="probability(1)" optype="continuous" dataType="double" feature="probability" value="1"/>
+			<OutputField name="probability(2)" optype="continuous" dataType="double" feature="probability" value="2"/>
+			<OutputField name="probability(3)" optype="continuous" dataType="double" feature="probability" value="3"/>
+			<OutputField name="probability(4)" optype="continuous" dataType="double" feature="probability" value="4"/>
+			<OutputField name="probability(5)" optype="continuous" dataType="double" feature="probability" value="5"/>
+		</Output>
+		<Segmentation multipleModelMethod="average">
+			<Segment id="1">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction" splitCharacteristic="multiSplit">
+					<MiningSchema>
+						<MiningField name="TopOilTemperature"/>
+						<MiningField name="OilVolume"/>
+						<MiningField name="VibrationLevel"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node>
+							<SimplePredicate field="VibrationLevel" operator="lessOrEqual" value="2.0"/>
+							<Node score="0" recordCount="462.0">
+								<SimplePredicate field="TopOilTemperature" operator="lessOrEqual" value="80.15538566"/>
+								<ScoreDistribution value="0" recordCount="462.0"/>
+								<ScoreDistribution value="1" recordCount="0.0"/>
+								<ScoreDistribution value="2" recordCount="0.0"/>
+								<ScoreDistribution value="3" recordCount="0.0"/>
+								<ScoreDistribution value="4" recordCount="0.0"/>
+								<ScoreDistribution value="5" recordCount="0.0"/>
+							</Node>
+							<Node score="1" recordCount="4.0">
+								<True/>
+								<ScoreDistribution value="0" recordCount="0.0"/>
+								<ScoreDistribution value="1" recordCount="4.0"/>
+								<ScoreDistribution value="2" recordCount="0.0"/>
+								<ScoreDistribution value="3" recordCount="0.0"/>
+								<ScoreDistribution value="4" recordCount="0.0"/>
+								<ScoreDistribution value="5" recordCount="0.0"/>
+							</Node>
+						</Node>
+						<Node>
+							<SimplePredicate field="OilVolume" operator="lessOrEqual" value="895.7088911"/>
+							<Node>
+								<SimplePredicate field="OilVolume" operator="lessOrEqual" value="891.83537"/>
+								<Node>
+									<SimplePredicate field="VibrationLevel" operator="lessOrEqual" value="3.0"/>
+									<Node score="2" recordCount="13.0">
+										<SimplePredicate field="TopOilTemperature" operator="lessOrEqual" value="90.25474132"/>
+										<ScoreDistribution value="0" recordCount="1.0"/>
+										<ScoreDistribution value="1" recordCount="3.0"/>
+										<ScoreDistribution value="2" recordCount="9.0"/>
+										<ScoreDistribution value="3" recordCount="0.0"/>
+										<ScoreDistribution value="4" recordCount="0.0"/>
+										<ScoreDistribution value="5" recordCount="0.0"/>
+									</Node>
+									<Node score="4" recordCount="4.0">
+										<True/>
+										<ScoreDistribution value="0" recordCount="0.0"/>
+										<ScoreDistribution value="1" recordCount="0.0"/>
+										<ScoreDistribution value="2" recordCount="0.0"/>
+										<ScoreDistribution value="3" recordCount="1.0"/>
+										<ScoreDistribution value="4" recordCount="3.0"/>
+										<ScoreDistribution value="5" recordCount="0.0"/>
+									</Node>
+								</Node>
+								<Node score="5" recordCount="1.0">
+									<True/>
+									<ScoreDistribution value="0" recordCount="0.0"/>
+									<ScoreDistribution value="1" recordCount="0.0"/>
+									<ScoreDistribution value="2" recordCount="0.0"/>
+									<ScoreDistribution value="3" recordCount="0.0"/>
+									<ScoreDistribution value="4" recordCount="0.0"/>
+									<ScoreDistribution value="5" recordCount="1.0"/>
+								</Node>
+							</Node>
+							<Node score="0" recordCount="4.0">
+								<SimplePredicate field="TopOilTemperature" operator="lessOrEqual" value="80.15538566"/>
+								<ScoreDistribution value="0" recordCount="4.0"/>
+								<ScoreDistribution value="1" recordCount="0.0"/>
+								<ScoreDistribution value="2" recordCount="0.0"/>
+								<ScoreDistribution value="3" recordCount="0.0"/>
+								<ScoreDistribution value="4" recordCount="0.0"/>
+								<ScoreDistribution value="5" recordCount="0.0"/>
+							</Node>
+							<Node score="4" recordCount="3.0">
+								<SimplePredicate field="OilVolume" operator="lessOrEqual" value="893.7275049"/>
+								<ScoreDistribution value="0" recordCount="0.0"/>
+								<ScoreDistribution value="1" recordCount="0.0"/>
+								<ScoreDistribution value="2" recordCount="1.0"/>
+								<ScoreDistribution value="3" recordCount="0.0"/>
+								<ScoreDistribution value="4" recordCount="2.0"/>
+								<ScoreDistribution value="5" recordCount="0.0"/>
+							</Node>
+							<Node score="4" recordCount="5.0">
+								<True/>
+								<ScoreDistribution value="0" recordCount="0.0"/>
+								<ScoreDistribution value="1" recordCount="0.0"/>
+								<ScoreDistribution value="2" recordCount="0.0"/>
+								<ScoreDistribution value="3" recordCount="2.0"/>
+								<ScoreDistribution value="4" recordCount="3.0"/>
+								<ScoreDistribution value="5" recordCount="0.0"/>
+							</Node>
+						</Node>
+						<Node>
+							<SimplePredicate field="TopOilTemperature" operator="lessOrEqual" value="80.15538566"/>
+							<Node score="0" recordCount="549.0">
+								<SimplePredicate field="OilVolume" operator="lessOrEqual" value="952.8965317"/>
+								<ScoreDistribution value="0" recordCount="549.0"/>
+								<ScoreDistribution value="1" recordCount="0.0"/>
+								<ScoreDistribution value="2" recordCount="0.0"/>
+								<ScoreDistribution value="3" recordCount="0.0"/>
+								<ScoreDistribution value="4" recordCount="0.0"/>
+								<ScoreDistribution value="5" recordCount="0.0"/>
+							</Node>
+							<Node score="0" recordCount="28.0">
+								<True/>
+								<ScoreDistribution value="0" recordCount="27.0"/>
+								<ScoreDistribution value="1" recordCount="1.0"/>
+								<ScoreDistribution value="2" recordCount="0.0"/>
+								<ScoreDistribution value="3" recordCount="0.0"/>
+								<ScoreDistribution value="4" recordCount="0.0"/>
+								<ScoreDistribution value="5" recordCount="0.0"/>
+							</Node>
+						</Node>
+						<Node>
+							<SimplePredicate field="VibrationLevel" operator="lessOrEqual" value="3.0"/>
+							<Node score="1" recordCount="14.0">
+								<SimplePredicate field="OilVolume" operator="lessOrEqual" value="906.1749935"/>
+								<ScoreDistribution value="0" recordCount="0.0"/>
+								<ScoreDistribution value="1" recordCount="7.0"/>
+								<ScoreDistribution value="2" recordCount="5.0"/>
+								<ScoreDistribution value="3" recordCount="1.0"/>
+								<ScoreDistribution value="4" recordCount="1.0"/>
+								<ScoreDistribution value="5" recordCount="0.0"/>
+							</Node>
+							<Node score="1" recordCount="7.0">
+								<True/>
+								<ScoreDistribution value="0" recordCount="0.0"/>
+								<ScoreDistribution value="1" recordCount="7.0"/>
+								<ScoreDistribution value="2" recordCount="0.0"/>
+								<ScoreDistribution value="3" recordCount="0.0"/>
+								<ScoreDistribution value="4" recordCount="0.0"/>
+								<ScoreDistribution value="5" recordCount="0.0"/>
+							</Node>
+						</Node>
+						<Node score="1" recordCount="37.0">
+							<SimplePredicate field="TopOilTemperature" operator="lessOrEqual" value="90.25474132"/>
+							<ScoreDistribution value="0" recordCount="0.0"/>
+							<ScoreDistribution value="1" recordCount="31.0"/>
+							<ScoreDistribution value="2" recordCount="4.0"/>
+							<ScoreDistribution value="3" recordCount="2.0"/>
+							<ScoreDistribution value="4" recordCount="0.0"/>
+							<ScoreDistribution value="5" recordCount="0.0"/>
+						</Node>
+						<Node score="3" recordCount="28.0">
+							<True/>
+							<ScoreDistribution value="0" recordCount="0.0"/>
+							<ScoreDistribution value="1" recordCount="0.0"/>
+							<ScoreDistribution value="2" recordCount="0.0"/>
+							<ScoreDistribution value="3" recordCount="16.0"/>
+							<ScoreDistribution value="4" recordCount="6.0"/>
+							<ScoreDistribution value="5" recordCount="6.0"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="2">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction" splitCharacteristic="multiSplit">
+					<MiningSchema>
+						<MiningField name="TopOilTemperature"/>
+						<MiningField name="OilVolume"/>
+						<MiningField name="VibrationLevel"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node>
+							<SimplePredicate field="VibrationLevel" operator="lessOrEqual" value="2.0"/>
+							<Node score="0" recordCount="448.0">
+								<SimplePredicate field="TopOilTemperature" operator="lessOrEqual" value="80.15538566"/>
+								<ScoreDistribution value="0" recordCount="448.0"/>
+								<ScoreDistribution value="1" recordCount="0.0"/>
+								<ScoreDistribution value="2" recordCount="0.0"/>
+								<ScoreDistribution value="3" recordCount="0.0"/>
+								<ScoreDistribution value="4" recordCount="0.0"/>
+								<ScoreDistribution value="5" recordCount="0.0"/>
+							</Node>
+							<Node score="1" recordCount="4.0">
+								<True/>
+								<ScoreDistribution value="0" recordCount="0.0"/>
+								<ScoreDistribution value="1" recordCount="4.0"/>
+								<ScoreDistribution value="2" recordCount="0.0"/>
+								<ScoreDistribution value="3" recordCount="0.0"/>
+								<ScoreDistribution value="4" recordCount="0.0"/>
+								<ScoreDistribution value="5" recordCount="0.0"/>
+							</Node>
+						</Node>
+						<Node score="0" recordCount="629.0">
+							<SimplePredicate field="TopOilTemperature" operator="lessOrEqual" value="80.15538566"/>
+							<ScoreDistribution value="0" recordCount="629.0"/>
+							<ScoreDistribution value="1" recordCount="0.0"/>
+							<ScoreDistribution value="2" recordCount="0.0"/>
+							<ScoreDistribution value="3" recordCount="0.0"/>
+							<ScoreDistribution value="4" recordCount="0.0"/>
+							<ScoreDistribution value="5" recordCount="0.0"/>
+						</Node>
+						<Node score="1" recordCount="31.0">
+							<SimplePredicate field="TopOilTemperature" operator="lessOrEqual" value="83.85991517"/>
+							<ScoreDistribution value="0" recordCount="0.0"/>
+							<ScoreDistribution value="1" recordCount="31.0"/>
+							<ScoreDistribution value="2" recordCount="0.0"/>
+							<ScoreDistribution value="3" recordCount="0.0"/>
+							<ScoreDistribution value="4" recordCount="0.0"/>
+							<ScoreDistribution value="5" recordCount="0.0"/>
+						</Node>
+						<Node>
+							<SimplePredicate field="OilVolume" operator="lessOrEqual" value="902.787005"/>
+							<Node score="5" recordCount="2.0">
+								<SimplePredicate field="OilVolume" operator="lessOrEqual" value="881.7962106"/>
+								<ScoreDistribution value="0" recordCount="0.0"/>
+								<ScoreDistribution value="1" recordCount="0.0"/>
+								<ScoreDistribution value="2" recordCount="0.0"/>
+								<ScoreDistribution value="3" recordCount="0.0"/>
+								<ScoreDistribution value="4" recordCount="0.0"/>
+								<ScoreDistribution value="5" recordCount="2.0"/>
+							</Node>
+							<Node score="2" recordCount="23.0">
+								<True/>
+								<ScoreDistribution value="0" recordCount="0.0"/>
+								<ScoreDistribution value="1" recordCount="2.0"/>
+								<ScoreDistribution value="2" recordCount="12.0"/>
+								<ScoreDistribution value="3" recordCount="3.0"/>
+								<ScoreDistribution value="4" recordCount="5.0"/>
+								<ScoreDistribution value="5" recordCount="1.0"/>
+							</Node>
+						</Node>
+						<Node score="2" recordCount="24.0">
+							<SimplePredicate field="TopOilTemperature" operator="lessOrEqual" value="90.25474132"/>
+							<ScoreDistribution value="0" recordCount="0.0"/>
+							<ScoreDistribution value="1" recordCount="6.0"/>
+							<ScoreDistribution value="2" recordCount="14.0"/>
+							<ScoreDistribution value="3" recordCount="4.0"/>
+							<ScoreDistribution value="4" recordCount="0.0"/>
+							<ScoreDistribution value="5" recordCount="0.0"/>
+						</Node>
+						<Node score="3" recordCount="33.0">
+							<True/>
+							<ScoreDistribution value="0" recordCount="0.0"/>
+							<ScoreDistribution value="1" recordCount="0.0"/>
+							<ScoreDistribution value="2" recordCount="0.0"/>
+							<ScoreDistribution value="3" recordCount="20.0"/>
+							<ScoreDistribution value="4" recordCount="4.0"/>
+							<ScoreDistribution value="5" recordCount="9.0"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="3">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction" splitCharacteristic="multiSplit">
+					<MiningSchema>
+						<MiningField name="TopOilTemperature"/>
+						<MiningField name="OilVolume"/>
+						<MiningField name="VibrationLevel"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node>
+							<SimplePredicate field="VibrationLevel" operator="lessOrEqual" value="2.0"/>
+							<Node score="0" recordCount="426.0">
+								<SimplePredicate field="TopOilTemperature" operator="lessOrEqual" value="80.15538566"/>
+								<ScoreDistribution value="0" recordCount="426.0"/>
+								<ScoreDistribution value="1" recordCount="0.0"/>
+								<ScoreDistribution value="2" recordCount="0.0"/>
+								<ScoreDistribution value="3" recordCount="0.0"/>
+								<ScoreDistribution value="4" recordCount="0.0"/>
+								<ScoreDistribution value="5" recordCount="0.0"/>
+							</Node>
+							<Node score="1" recordCount="4.0">
+								<True/>
+								<ScoreDistribution value="0" recordCount="0.0"/>
+								<ScoreDistribution value="1" recordCount="4.0"/>
+								<ScoreDistribution value="2" recordCount="0.0"/>
+								<ScoreDistribution value="3" recordCount="0.0"/>
+								<ScoreDistribution value="4" recordCount="0.0"/>
+								<ScoreDistribution value="5" recordCount="0.0"/>
+							</Node>
+						</Node>
+						<Node>
+							<SimplePredicate field="TopOilTemperature" operator="lessOrEqual" value="80.15538566"/>
+							<Node>
+								<SimplePredicate field="OilVolume" operator="lessOrEqual" value="907.7994454"/>
+								<Node score="0" recordCount="80.0">
+									<SimplePredicate field="TopOilTemperature" operator="lessOrEqual" value="77.7835393"/>
+									<ScoreDistribution value="0" recordCount="80.0"/>
+									<ScoreDistribution value="1" recordCount="0.0"/>
+									<ScoreDistribution value="2" recordCount="0.0"/>
+									<ScoreDistribution value="3" recordCount="0.0"/>
+									<ScoreDistribution value="4" recordCount="0.0"/>
+									<ScoreDistribution value="5" recordCount="0.0"/>
+								</Node>
+								<Node score="0" recordCount="8.0">
+									<True/>
+									<ScoreDistribution value="0" recordCount="7.0"/>
+									<ScoreDistribution value="1" recordCount="1.0"/>
+									<ScoreDistribution value="2" recordCount="0.0"/>
+									<ScoreDistribution value="3" recordCount="0.0"/>
+									<ScoreDistribution value="4" recordCount="0.0"/>
+									<ScoreDistribution value="5" recordCount="0.0"/>
+								</Node>
+							</Node>
+							<Node score="0" recordCount="512.0">
+								<True/>
+								<ScoreDistribution value="0" recordCount="512.0"/>
+								<ScoreDistribution value="1" recordCount="0.0"/>
+								<ScoreDistribution value="2" recordCount="0.0"/>
+								<ScoreDistribution value="3" recordCount="0.0"/>
+								<ScoreDistribution value="4" recordCount="0.0"/>
+								<ScoreDistribution value="5" recordCount="0.0"/>
+							</Node>
+						</Node>
+						<Node>
+							<SimplePredicate field="TopOilTemperature" operator="lessOrEqual" value="90.25474132"/>
+							<Node score="1" recordCount="18.0">
+								<SimplePredicate field="TopOilTemperature" operator="lessOrEqual" value="83.85991517"/>
+								<ScoreDistribution value="0" recordCount="0.0"/>
+								<ScoreDistribution value="1" recordCount="18.0"/>
+								<ScoreDistribution value="2" recordCount="0.0"/>
+								<ScoreDistribution value="3" recordCount="0.0"/>
+								<ScoreDistribution value="4" recordCount="0.0"/>
+								<ScoreDistribution value="5" recordCount="0.0"/>
+							</Node>
+							<Node score="2" recordCount="4.0">
+								<SimplePredicate field="OilVolume" operator="lessOrEqual" value="891.83537"/>
+								<ScoreDistribution value="0" recordCount="0.0"/>
+								<ScoreDistribution value="1" recordCount="0.0"/>
+								<ScoreDistribution value="2" recordCount="4.0"/>
+								<ScoreDistribution value="3" recordCount="0.0"/>
+								<ScoreDistribution value="4" recordCount="0.0"/>
+								<ScoreDistribution value="5" recordCount="0.0"/>
+							</Node>
+							<Node score="2" recordCount="20.0">
+								<True/>
+								<ScoreDistribution value="0" recordCount="0.0"/>
+								<ScoreDistribution value="1" recordCount="6.0"/>
+								<ScoreDistribution value="2" recordCount="13.0"/>
+								<ScoreDistribution value="3" recordCount="1.0"/>
+								<ScoreDistribution value="4" recordCount="0.0"/>
+								<ScoreDistribution value="5" recordCount="0.0"/>
+							</Node>
+						</Node>
+						<Node>
+							<SimplePredicate field="OilVolume" operator="lessOrEqual" value="925.2613626"/>
+							<Node score="3" recordCount="11.0">
+								<SimplePredicate field="VibrationLevel" operator="lessOrEqual" value="3.0"/>
+								<ScoreDistribution value="0" recordCount="0.0"/>
+								<ScoreDistribution value="1" recordCount="0.0"/>
+								<ScoreDistribution value="2" recordCount="0.0"/>
+								<ScoreDistribution value="3" recordCount="5.0"/>
+								<ScoreDistribution value="4" recordCount="5.0"/>
+								<ScoreDistribution value="5" recordCount="1.0"/>
+							</Node>
+							<Node score="3" recordCount="14.0">
+								<True/>
+								<ScoreDistribution value="0" recordCount="0.0"/>
+								<ScoreDistribution value="1" recordCount="0.0"/>
+								<ScoreDistribution value="2" recordCount="0.0"/>
+								<ScoreDistribution value="3" recordCount="8.0"/>
+								<ScoreDistribution value="4" recordCount="3.0"/>
+								<ScoreDistribution value="5" recordCount="3.0"/>
+							</Node>
+						</Node>
+						<Node score="5" recordCount="5.0">
+							<SimplePredicate field="OilVolume" operator="lessOrEqual" value="952.8965317"/>
+							<ScoreDistribution value="0" recordCount="0.0"/>
+							<ScoreDistribution value="1" recordCount="0.0"/>
+							<ScoreDistribution value="2" recordCount="0.0"/>
+							<ScoreDistribution value="3" recordCount="0.0"/>
+							<ScoreDistribution value="4" recordCount="0.0"/>
+							<ScoreDistribution value="5" recordCount="5.0"/>
+						</Node>
+						<Node score="5" recordCount="3.0">
+							<True/>
+							<ScoreDistribution value="0" recordCount="0.0"/>
+							<ScoreDistribution value="1" recordCount="0.0"/>
+							<ScoreDistribution value="2" recordCount="0.0"/>
+							<ScoreDistribution value="3" recordCount="0.0"/>
+							<ScoreDistribution value="4" recordCount="1.0"/>
+							<ScoreDistribution value="5" recordCount="2.0"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="4">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction" splitCharacteristic="multiSplit">
+					<MiningSchema>
+						<MiningField name="TopOilTemperature"/>
+						<MiningField name="OilVolume"/>
+						<MiningField name="VibrationLevel"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node>
+							<SimplePredicate field="TopOilTemperature" operator="lessOrEqual" value="80.15538566"/>
+							<Node score="0" recordCount="939.0">
+								<SimplePredicate field="TopOilTemperature" operator="lessOrEqual" value="77.7835393"/>
+								<ScoreDistribution value="0" recordCount="939.0"/>
+								<ScoreDistribution value="1" recordCount="0.0"/>
+								<ScoreDistribution value="2" recordCount="0.0"/>
+								<ScoreDistribution value="3" recordCount="0.0"/>
+								<ScoreDistribution value="4" recordCount="0.0"/>
+								<ScoreDistribution value="5" recordCount="0.0"/>
+							</Node>
+							<Node>
+								<SimplePredicate field="OilVolume" operator="lessOrEqual" value="938.2839621"/>
+								<Node score="0" recordCount="17.0">
+									<SimplePredicate field="OilVolume" operator="lessOrEqual" value="906.1749935"/>
+									<ScoreDistribution value="0" recordCount="17.0"/>
+									<ScoreDistribution value="1" recordCount="0.0"/>
+									<ScoreDistribution value="2" recordCount="0.0"/>
+									<ScoreDistribution value="3" recordCount="0.0"/>
+									<ScoreDistribution value="4" recordCount="0.0"/>
+									<ScoreDistribution value="5" recordCount="0.0"/>
+								</Node>
+								<Node score="1" recordCount="1.0">
+									<SimplePredicate field="OilVolume" operator="lessOrEqual" value="907.7994454"/>
+									<ScoreDistribution value="0" recordCount="0.0"/>
+									<ScoreDistribution value="1" recordCount="1.0"/>
+									<ScoreDistribution value="2" recordCount="0.0"/>
+									<ScoreDistribution value="3" recordCount="0.0"/>
+									<ScoreDistribution value="4" recordCount="0.0"/>
+									<ScoreDistribution value="5" recordCount="0.0"/>
+								</Node>
+								<Node score="0" recordCount="13.0">
+									<True/>
+									<ScoreDistribution value="0" recordCount="13.0"/>
+									<ScoreDistribution value="1" recordCount="0.0"/>
+									<ScoreDistribution value="2" recordCount="0.0"/>
+									<ScoreDistribution value="3" recordCount="0.0"/>
+									<ScoreDistribution value="4" recordCount="0.0"/>
+									<ScoreDistribution value="5" recordCount="0.0"/>
+								</Node>
+							</Node>
+							<Node score="1" recordCount="1.0">
+								<True/>
+								<ScoreDistribution value="0" recordCount="0.0"/>
+								<ScoreDistribution value="1" recordCount="1.0"/>
+								<ScoreDistribution value="2" recordCount="0.0"/>
+								<ScoreDistribution value="3" recordCount="0.0"/>
+								<ScoreDistribution value="4" recordCount="0.0"/>
+								<ScoreDistribution value="5" recordCount="0.0"/>
+							</Node>
+						</Node>
+						<Node score="1" recordCount="9.0">
+							<SimplePredicate field="VibrationLevel" operator="lessOrEqual" value="2.0"/>
+							<ScoreDistribution value="0" recordCount="0.0"/>
+							<ScoreDistribution value="1" recordCount="9.0"/>
+							<ScoreDistribution value="2" recordCount="0.0"/>
+							<ScoreDistribution value="3" recordCount="0.0"/>
+							<ScoreDistribution value="4" recordCount="0.0"/>
+							<ScoreDistribution value="5" recordCount="0.0"/>
+						</Node>
+						<Node score="1" recordCount="29.0">
+							<SimplePredicate field="TopOilTemperature" operator="lessOrEqual" value="83.85991517"/>
+							<ScoreDistribution value="0" recordCount="0.0"/>
+							<ScoreDistribution value="1" recordCount="29.0"/>
+							<ScoreDistribution value="2" recordCount="0.0"/>
+							<ScoreDistribution value="3" recordCount="0.0"/>
+							<ScoreDistribution value="4" recordCount="0.0"/>
+							<ScoreDistribution value="5" recordCount="0.0"/>
+						</Node>
+						<Node>
+							<SimplePredicate field="VibrationLevel" operator="lessOrEqual" value="3.0"/>
+							<Node score="4" recordCount="1.0">
+								<SimplePredicate field="OilVolume" operator="lessOrEqual" value="880.2610517"/>
+								<ScoreDistribution value="0" recordCount="0.0"/>
+								<ScoreDistribution value="1" recordCount="0.0"/>
+								<ScoreDistribution value="2" recordCount="0.0"/>
+								<ScoreDistribution value="3" recordCount="0.0"/>
+								<ScoreDistribution value="4" recordCount="1.0"/>
+								<ScoreDistribution value="5" recordCount="0.0"/>
+							</Node>
+							<Node score="2" recordCount="21.0">
+								<True/>
+								<ScoreDistribution value="0" recordCount="0.0"/>
+								<ScoreDistribution value="1" recordCount="1.0"/>
+								<ScoreDistribution value="2" recordCount="17.0"/>
+								<ScoreDistribution value="3" recordCount="1.0"/>
+								<ScoreDistribution value="4" recordCount="2.0"/>
+								<ScoreDistribution value="5" recordCount="0.0"/>
+							</Node>
+						</Node>
+						<Node score="1" recordCount="18.0">
+							<SimplePredicate field="OilVolume" operator="lessOrEqual" value="921.2647829"/>
+							<ScoreDistribution value="0" recordCount="0.0"/>
+							<ScoreDistribution value="1" recordCount="6.0"/>
+							<ScoreDistribution value="2" recordCount="4.0"/>
+							<ScoreDistribution value="3" recordCount="5.0"/>
+							<ScoreDistribution value="4" recordCount="1.0"/>
+							<ScoreDistribution value="5" recordCount="2.0"/>
+						</Node>
+						<Node score="2" recordCount="17.0">
+							<True/>
+							<ScoreDistribution value="0" recordCount="0.0"/>
+							<ScoreDistribution value="1" recordCount="0.0"/>
+							<ScoreDistribution value="2" recordCount="10.0"/>
+							<ScoreDistribution value="3" recordCount="0.0"/>
+							<ScoreDistribution value="4" recordCount="2.0"/>
+							<ScoreDistribution value="5" recordCount="5.0"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="5">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction" splitCharacteristic="multiSplit">
+					<MiningSchema>
+						<MiningField name="TopOilTemperature"/>
+						<MiningField name="OilVolume"/>
+						<MiningField name="VibrationLevel"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node score="0" recordCount="1052.0">
+							<SimplePredicate field="TopOilTemperature" operator="lessOrEqual" value="80.15538566"/>
+							<ScoreDistribution value="0" recordCount="1052.0"/>
+							<ScoreDistribution value="1" recordCount="0.0"/>
+							<ScoreDistribution value="2" recordCount="0.0"/>
+							<ScoreDistribution value="3" recordCount="0.0"/>
+							<ScoreDistribution value="4" recordCount="0.0"/>
+							<ScoreDistribution value="5" recordCount="0.0"/>
+						</Node>
+						<Node score="1" recordCount="42.0">
+							<SimplePredicate field="TopOilTemperature" operator="lessOrEqual" value="83.85991517"/>
+							<ScoreDistribution value="0" recordCount="0.0"/>
+							<ScoreDistribution value="1" recordCount="42.0"/>
+							<ScoreDistribution value="2" recordCount="0.0"/>
+							<ScoreDistribution value="3" recordCount="0.0"/>
+							<ScoreDistribution value="4" recordCount="0.0"/>
+							<ScoreDistribution value="5" recordCount="0.0"/>
+						</Node>
+						<Node>
+							<SimplePredicate field="TopOilTemperature" operator="lessOrEqual" value="90.25474132"/>
+							<Node score="1" recordCount="1.0">
+								<SimplePredicate field="VibrationLevel" operator="lessOrEqual" value="2.0"/>
+								<ScoreDistribution value="0" recordCount="0.0"/>
+								<ScoreDistribution value="1" recordCount="1.0"/>
+								<ScoreDistribution value="2" recordCount="0.0"/>
+								<ScoreDistribution value="3" recordCount="0.0"/>
+								<ScoreDistribution value="4" recordCount="0.0"/>
+								<ScoreDistribution value="5" recordCount="0.0"/>
+							</Node>
+							<Node score="2" recordCount="21.0">
+								<SimplePredicate field="VibrationLevel" operator="lessOrEqual" value="3.0"/>
+								<ScoreDistribution value="0" recordCount="0.0"/>
+								<ScoreDistribution value="1" recordCount="0.0"/>
+								<ScoreDistribution value="2" recordCount="21.0"/>
+								<ScoreDistribution value="3" recordCount="0.0"/>
+								<ScoreDistribution value="4" recordCount="0.0"/>
+								<ScoreDistribution value="5" recordCount="0.0"/>
+							</Node>
+							<Node score="2" recordCount="14.0">
+								<True/>
+								<ScoreDistribution value="0" recordCount="0.0"/>
+								<ScoreDistribution value="1" recordCount="1.0"/>
+								<ScoreDistribution value="2" recordCount="12.0"/>
+								<ScoreDistribution value="3" recordCount="1.0"/>
+								<ScoreDistribution value="4" recordCount="0.0"/>
+								<ScoreDistribution value="5" recordCount="0.0"/>
+							</Node>
+						</Node>
+						<Node>
+							<SimplePredicate field="OilVolume" operator="lessOrEqual" value="925.2613626"/>
+							<Node score="3" recordCount="8.0">
+								<SimplePredicate field="VibrationLevel" operator="lessOrEqual" value="3.0"/>
+								<ScoreDistribution value="0" recordCount="0.0"/>
+								<ScoreDistribution value="1" recordCount="0.0"/>
+								<ScoreDistribution value="2" recordCount="0.0"/>
+								<ScoreDistribution value="3" recordCount="5.0"/>
+								<ScoreDistribution value="4" recordCount="3.0"/>
+								<ScoreDistribution value="5" recordCount="0.0"/>
+							</Node>
+							<Node score="3" recordCount="18.0">
+								<True/>
+								<ScoreDistribution value="0" recordCount="0.0"/>
+								<ScoreDistribution value="1" recordCount="0.0"/>
+								<ScoreDistribution value="2" recordCount="0.0"/>
+								<ScoreDistribution value="3" recordCount="9.0"/>
+								<ScoreDistribution value="4" recordCount="2.0"/>
+								<ScoreDistribution value="5" recordCount="7.0"/>
+							</Node>
+						</Node>
+						<Node score="5" recordCount="3.0">
+							<SimplePredicate field="OilVolume" operator="lessOrEqual" value="944.5162317"/>
+							<ScoreDistribution value="0" recordCount="0.0"/>
+							<ScoreDistribution value="1" recordCount="0.0"/>
+							<ScoreDistribution value="2" recordCount="0.0"/>
+							<ScoreDistribution value="3" recordCount="1.0"/>
+							<ScoreDistribution value="4" recordCount="0.0"/>
+							<ScoreDistribution value="5" recordCount="2.0"/>
+						</Node>
+						<Node score="5" recordCount="5.0">
+							<True/>
+							<ScoreDistribution value="0" recordCount="0.0"/>
+							<ScoreDistribution value="1" recordCount="0.0"/>
+							<ScoreDistribution value="2" recordCount="0.0"/>
+							<ScoreDistribution value="3" recordCount="0.0"/>
+							<ScoreDistribution value="4" recordCount="0.0"/>
+							<ScoreDistribution value="5" recordCount="5.0"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="6">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction" splitCharacteristic="multiSplit">
+					<MiningSchema>
+						<MiningField name="TopOilTemperature"/>
+						<MiningField name="OilVolume"/>
+						<MiningField name="VibrationLevel"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node>
+							<SimplePredicate field="VibrationLevel" operator="lessOrEqual" value="2.0"/>
+							<Node score="0" recordCount="427.0">
+								<SimplePredicate field="TopOilTemperature" operator="lessOrEqual" value="80.15538566"/>
+								<ScoreDistribution value="0" recordCount="427.0"/>
+								<ScoreDistribution value="1" recordCount="0.0"/>
+								<ScoreDistribution value="2" recordCount="0.0"/>
+								<ScoreDistribution value="3" recordCount="0.0"/>
+								<ScoreDistribution value="4" recordCount="0.0"/>
+								<ScoreDistribution value="5" recordCount="0.0"/>
+							</Node>
+							<Node score="1" recordCount="5.0">
+								<True/>
+								<ScoreDistribution value="0" recordCount="0.0"/>
+								<ScoreDistribution value="1" recordCount="5.0"/>
+								<ScoreDistribution value="2" recordCount="0.0"/>
+								<ScoreDistribution value="3" recordCount="0.0"/>
+								<ScoreDistribution value="4" recordCount="0.0"/>
+								<ScoreDistribution value="5" recordCount="0.0"/>
+							</Node>
+						</Node>
+						<Node score="0" recordCount="567.0">
+							<SimplePredicate field="TopOilTemperature" operator="lessOrEqual" value="80.15538566"/>
+							<ScoreDistribution value="0" recordCount="567.0"/>
+							<ScoreDistribution value="1" recordCount="0.0"/>
+							<ScoreDistribution value="2" recordCount="0.0"/>
+							<ScoreDistribution value="3" recordCount="0.0"/>
+							<ScoreDistribution value="4" recordCount="0.0"/>
+							<ScoreDistribution value="5" recordCount="0.0"/>
+						</Node>
+						<Node score="1" recordCount="40.0">
+							<SimplePredicate field="TopOilTemperature" operator="lessOrEqual" value="83.85991517"/>
+							<ScoreDistribution value="0" recordCount="0.0"/>
+							<ScoreDistribution value="1" recordCount="40.0"/>
+							<ScoreDistribution value="2" recordCount="0.0"/>
+							<ScoreDistribution value="3" recordCount="0.0"/>
+							<ScoreDistribution value="4" recordCount="0.0"/>
+							<ScoreDistribution value="5" recordCount="0.0"/>
+						</Node>
+						<Node>
+							<SimplePredicate field="TopOilTemperature" operator="lessOrEqual" value="90.25474132"/>
+							<Node score="2" recordCount="14.0">
+								<SimplePredicate field="OilVolume" operator="lessOrEqual" value="909.531586"/>
+								<ScoreDistribution value="0" recordCount="0.0"/>
+								<ScoreDistribution value="1" recordCount="1.0"/>
+								<ScoreDistribution value="2" recordCount="13.0"/>
+								<ScoreDistribution value="3" recordCount="0.0"/>
+								<ScoreDistribution value="4" recordCount="0.0"/>
+								<ScoreDistribution value="5" recordCount="0.0"/>
+							</Node>
+							<Node score="2" recordCount="17.0">
+								<True/>
+								<ScoreDistribution value="0" recordCount="0.0"/>
+								<ScoreDistribution value="1" recordCount="6.0"/>
+								<ScoreDistribution value="2" recordCount="8.0"/>
+								<ScoreDistribution value="3" recordCount="3.0"/>
+								<ScoreDistribution value="4" recordCount="0.0"/>
+								<ScoreDistribution value="5" recordCount="0.0"/>
+							</Node>
+						</Node>
+						<Node score="4" recordCount="11.0">
+							<SimplePredicate field="VibrationLevel" operator="lessOrEqual" value="3.0"/>
+							<ScoreDistribution value="0" recordCount="0.0"/>
+							<ScoreDistribution value="1" recordCount="0.0"/>
+							<ScoreDistribution value="2" recordCount="0.0"/>
+							<ScoreDistribution value="3" recordCount="5.0"/>
+							<ScoreDistribution value="4" recordCount="6.0"/>
+							<ScoreDistribution value="5" recordCount="0.0"/>
+						</Node>
+						<Node score="3" recordCount="20.0">
+							<True/>
+							<ScoreDistribution value="0" recordCount="0.0"/>
+							<ScoreDistribution value="1" recordCount="0.0"/>
+							<ScoreDistribution value="2" recordCount="0.0"/>
+							<ScoreDistribution value="3" recordCount="9.0"/>
+							<ScoreDistribution value="4" recordCount="4.0"/>
+							<ScoreDistribution value="5" recordCount="7.0"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="7">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction" splitCharacteristic="multiSplit">
+					<MiningSchema>
+						<MiningField name="TopOilTemperature"/>
+						<MiningField name="OilVolume"/>
+						<MiningField name="VibrationLevel"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node>
+							<SimplePredicate field="TopOilTemperature" operator="lessOrEqual" value="80.15538566"/>
+							<Node score="0" recordCount="1001.0">
+								<SimplePredicate field="OilVolume" operator="lessOrEqual" value="952.8965317"/>
+								<ScoreDistribution value="0" recordCount="1001.0"/>
+								<ScoreDistribution value="1" recordCount="0.0"/>
+								<ScoreDistribution value="2" recordCount="0.0"/>
+								<ScoreDistribution value="3" recordCount="0.0"/>
+								<ScoreDistribution value="4" recordCount="0.0"/>
+								<ScoreDistribution value="5" recordCount="0.0"/>
+							</Node>
+							<Node score="0" recordCount="30.0">
+								<SimplePredicate field="TopOilTemperature" operator="lessOrEqual" value="71.45510342"/>
+								<ScoreDistribution value="0" recordCount="30.0"/>
+								<ScoreDistribution value="1" recordCount="0.0"/>
+								<ScoreDistribution value="2" recordCount="0.0"/>
+								<ScoreDistribution value="3" recordCount="0.0"/>
+								<ScoreDistribution value="4" recordCount="0.0"/>
+								<ScoreDistribution value="5" recordCount="0.0"/>
+							</Node>
+							<Node score="1" recordCount="1.0">
+								<True/>
+								<ScoreDistribution value="0" recordCount="0.0"/>
+								<ScoreDistribution value="1" recordCount="1.0"/>
+								<ScoreDistribution value="2" recordCount="0.0"/>
+								<ScoreDistribution value="3" recordCount="0.0"/>
+								<ScoreDistribution value="4" recordCount="0.0"/>
+								<ScoreDistribution value="5" recordCount="0.0"/>
+							</Node>
+						</Node>
+						<Node>
+							<SimplePredicate field="OilVolume" operator="lessOrEqual" value="907.7994454"/>
+							<Node>
+								<SimplePredicate field="TopOilTemperature" operator="lessOrEqual" value="90.25474132"/>
+								<Node score="1" recordCount="3.0">
+									<SimplePredicate field="VibrationLevel" operator="lessOrEqual" value="2.0"/>
+									<ScoreDistribution value="0" recordCount="0.0"/>
+									<ScoreDistribution value="1" recordCount="3.0"/>
+									<ScoreDistribution value="2" recordCount="0.0"/>
+									<ScoreDistribution value="3" recordCount="0.0"/>
+									<ScoreDistribution value="4" recordCount="0.0"/>
+									<ScoreDistribution value="5" recordCount="0.0"/>
+								</Node>
+								<Node score="1" recordCount="10.0">
+									<SimplePredicate field="TopOilTemperature" operator="lessOrEqual" value="83.85991517"/>
+									<ScoreDistribution value="0" recordCount="0.0"/>
+									<ScoreDistribution value="1" recordCount="10.0"/>
+									<ScoreDistribution value="2" recordCount="0.0"/>
+									<ScoreDistribution value="3" recordCount="0.0"/>
+									<ScoreDistribution value="4" recordCount="0.0"/>
+									<ScoreDistribution value="5" recordCount="0.0"/>
+								</Node>
+								<Node score="2" recordCount="13.0">
+									<True/>
+									<ScoreDistribution value="0" recordCount="0.0"/>
+									<ScoreDistribution value="1" recordCount="0.0"/>
+									<ScoreDistribution value="2" recordCount="13.0"/>
+									<ScoreDistribution value="3" recordCount="0.0"/>
+									<ScoreDistribution value="4" recordCount="0.0"/>
+									<ScoreDistribution value="5" recordCount="0.0"/>
+								</Node>
+							</Node>
+							<Node score="4" recordCount="2.0">
+								<SimplePredicate field="OilVolume" operator="lessOrEqual" value="887.8660418"/>
+								<ScoreDistribution value="0" recordCount="0.0"/>
+								<ScoreDistribution value="1" recordCount="0.0"/>
+								<ScoreDistribution value="2" recordCount="0.0"/>
+								<ScoreDistribution value="3" recordCount="0.0"/>
+								<ScoreDistribution value="4" recordCount="2.0"/>
+								<ScoreDistribution value="5" recordCount="0.0"/>
+							</Node>
+							<Node score="3" recordCount="12.0">
+								<SimplePredicate field="VibrationLevel" operator="lessOrEqual" value="3.0"/>
+								<ScoreDistribution value="0" recordCount="0.0"/>
+								<ScoreDistribution value="1" recordCount="0.0"/>
+								<ScoreDistribution value="2" recordCount="0.0"/>
+								<ScoreDistribution value="3" recordCount="9.0"/>
+								<ScoreDistribution value="4" recordCount="3.0"/>
+								<ScoreDistribution value="5" recordCount="0.0"/>
+							</Node>
+							<Node score="3" recordCount="6.0">
+								<True/>
+								<ScoreDistribution value="0" recordCount="0.0"/>
+								<ScoreDistribution value="1" recordCount="0.0"/>
+								<ScoreDistribution value="2" recordCount="0.0"/>
+								<ScoreDistribution value="3" recordCount="3.0"/>
+								<ScoreDistribution value="4" recordCount="3.0"/>
+								<ScoreDistribution value="5" recordCount="0.0"/>
+							</Node>
+						</Node>
+						<Node>
+							<SimplePredicate field="TopOilTemperature" operator="lessOrEqual" value="90.25474132"/>
+							<Node score="1" recordCount="8.0">
+								<SimplePredicate field="VibrationLevel" operator="lessOrEqual" value="3.0"/>
+								<ScoreDistribution value="0" recordCount="0.0"/>
+								<ScoreDistribution value="1" recordCount="8.0"/>
+								<ScoreDistribution value="2" recordCount="0.0"/>
+								<ScoreDistribution value="3" recordCount="0.0"/>
+								<ScoreDistribution value="4" recordCount="0.0"/>
+								<ScoreDistribution value="5" recordCount="0.0"/>
+							</Node>
+							<Node score="1" recordCount="14.0">
+								<SimplePredicate field="TopOilTemperature" operator="lessOrEqual" value="83.85991517"/>
+								<ScoreDistribution value="0" recordCount="0.0"/>
+								<ScoreDistribution value="1" recordCount="14.0"/>
+								<ScoreDistribution value="2" recordCount="0.0"/>
+								<ScoreDistribution value="3" recordCount="0.0"/>
+								<ScoreDistribution value="4" recordCount="0.0"/>
+								<ScoreDistribution value="5" recordCount="0.0"/>
+							</Node>
+							<Node score="1" recordCount="22.0">
+								<True/>
+								<ScoreDistribution value="0" recordCount="0.0"/>
+								<ScoreDistribution value="1" recordCount="9.0"/>
+								<ScoreDistribution value="2" recordCount="9.0"/>
+								<ScoreDistribution value="3" recordCount="4.0"/>
+								<ScoreDistribution value="4" recordCount="0.0"/>
+								<ScoreDistribution value="5" recordCount="0.0"/>
+							</Node>
+						</Node>
+						<Node>
+							<SimplePredicate field="OilVolume" operator="lessOrEqual" value="925.2613626"/>
+							<Node score="5" recordCount="1.0">
+								<SimplePredicate field="OilVolume" operator="lessOrEqual" value="909.531586"/>
+								<ScoreDistribution value="0" recordCount="0.0"/>
+								<ScoreDistribution value="1" recordCount="0.0"/>
+								<ScoreDistribution value="2" recordCount="0.0"/>
+								<ScoreDistribution value="3" recordCount="0.0"/>
+								<ScoreDistribution value="4" recordCount="0.0"/>
+								<ScoreDistribution value="5" recordCount="1.0"/>
+							</Node>
+							<Node score="3" recordCount="12.0">
+								<True/>
+								<ScoreDistribution value="0" recordCount="0.0"/>
+								<ScoreDistribution value="1" recordCount="0.0"/>
+								<ScoreDistribution value="2" recordCount="0.0"/>
+								<ScoreDistribution value="3" recordCount="10.0"/>
+								<ScoreDistribution value="4" recordCount="2.0"/>
+								<ScoreDistribution value="5" recordCount="0.0"/>
+							</Node>
+						</Node>
+						<Node score="5" recordCount="6.0">
+							<True/>
+							<ScoreDistribution value="0" recordCount="0.0"/>
+							<ScoreDistribution value="1" recordCount="0.0"/>
+							<ScoreDistribution value="2" recordCount="0.0"/>
+							<ScoreDistribution value="3" recordCount="2.0"/>
+							<ScoreDistribution value="4" recordCount="1.0"/>
+							<ScoreDistribution value="5" recordCount="3.0"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="8">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction" splitCharacteristic="multiSplit">
+					<MiningSchema>
+						<MiningField name="TopOilTemperature"/>
+						<MiningField name="OilVolume"/>
+						<MiningField name="VibrationLevel"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node>
+							<SimplePredicate field="TopOilTemperature" operator="lessOrEqual" value="80.15538566"/>
+							<Node>
+								<SimplePredicate field="OilVolume" operator="lessOrEqual" value="952.8965317"/>
+								<Node>
+									<SimplePredicate field="OilVolume" operator="lessOrEqual" value="907.7994454"/>
+									<Node score="0" recordCount="503.0">
+										<SimplePredicate field="TopOilTemperature" operator="lessOrEqual" value="77.7835393"/>
+										<ScoreDistribution value="0" recordCount="503.0"/>
+										<ScoreDistribution value="1" recordCount="0.0"/>
+										<ScoreDistribution value="2" recordCount="0.0"/>
+										<ScoreDistribution value="3" recordCount="0.0"/>
+										<ScoreDistribution value="4" recordCount="0.0"/>
+										<ScoreDistribution value="5" recordCount="0.0"/>
+									</Node>
+									<Node score="0" recordCount="17.0">
+										<SimplePredicate field="OilVolume" operator="lessOrEqual" value="906.1749935"/>
+										<ScoreDistribution value="0" recordCount="17.0"/>
+										<ScoreDistribution value="1" recordCount="0.0"/>
+										<ScoreDistribution value="2" recordCount="0.0"/>
+										<ScoreDistribution value="3" recordCount="0.0"/>
+										<ScoreDistribution value="4" recordCount="0.0"/>
+										<ScoreDistribution value="5" recordCount="0.0"/>
+									</Node>
+									<Node score="1" recordCount="2.0">
+										<True/>
+										<ScoreDistribution value="0" recordCount="0.0"/>
+										<ScoreDistribution value="1" recordCount="2.0"/>
+										<ScoreDistribution value="2" recordCount="0.0"/>
+										<ScoreDistribution value="3" recordCount="0.0"/>
+										<ScoreDistribution value="4" recordCount="0.0"/>
+										<ScoreDistribution value="5" recordCount="0.0"/>
+									</Node>
+								</Node>
+								<Node score="0" recordCount="504.0">
+									<True/>
+									<ScoreDistribution value="0" recordCount="504.0"/>
+									<ScoreDistribution value="1" recordCount="0.0"/>
+									<ScoreDistribution value="2" recordCount="0.0"/>
+									<ScoreDistribution value="3" recordCount="0.0"/>
+									<ScoreDistribution value="4" recordCount="0.0"/>
+									<ScoreDistribution value="5" recordCount="0.0"/>
+								</Node>
+							</Node>
+							<Node score="0" recordCount="31.0">
+								<SimplePredicate field="TopOilTemperature" operator="lessOrEqual" value="72.18122484"/>
+								<ScoreDistribution value="0" recordCount="31.0"/>
+								<ScoreDistribution value="1" recordCount="0.0"/>
+								<ScoreDistribution value="2" recordCount="0.0"/>
+								<ScoreDistribution value="3" recordCount="0.0"/>
+								<ScoreDistribution value="4" recordCount="0.0"/>
+								<ScoreDistribution value="5" recordCount="0.0"/>
+							</Node>
+							<Node score="1" recordCount="1.0">
+								<True/>
+								<ScoreDistribution value="0" recordCount="0.0"/>
+								<ScoreDistribution value="1" recordCount="1.0"/>
+								<ScoreDistribution value="2" recordCount="0.0"/>
+								<ScoreDistribution value="3" recordCount="0.0"/>
+								<ScoreDistribution value="4" recordCount="0.0"/>
+								<ScoreDistribution value="5" recordCount="0.0"/>
+							</Node>
+						</Node>
+						<Node>
+							<SimplePredicate field="TopOilTemperature" operator="lessOrEqual" value="90.25474132"/>
+							<Node score="1" recordCount="42.0">
+								<SimplePredicate field="TopOilTemperature" operator="lessOrEqual" value="83.85991517"/>
+								<ScoreDistribution value="0" recordCount="0.0"/>
+								<ScoreDistribution value="1" recordCount="42.0"/>
+								<ScoreDistribution value="2" recordCount="0.0"/>
+								<ScoreDistribution value="3" recordCount="0.0"/>
+								<ScoreDistribution value="4" recordCount="0.0"/>
+								<ScoreDistribution value="5" recordCount="0.0"/>
+							</Node>
+							<Node>
+								<SimplePredicate field="OilVolume" operator="lessOrEqual" value="925.2613626"/>
+								<Node score="2" recordCount="13.0">
+									<SimplePredicate field="VibrationLevel" operator="lessOrEqual" value="3.0"/>
+									<ScoreDistribution value="0" recordCount="0.0"/>
+									<ScoreDistribution value="1" recordCount="3.0"/>
+									<ScoreDistribution value="2" recordCount="10.0"/>
+									<ScoreDistribution value="3" recordCount="0.0"/>
+									<ScoreDistribution value="4" recordCount="0.0"/>
+									<ScoreDistribution value="5" recordCount="0.0"/>
+								</Node>
+								<Node score="1" recordCount="12.0">
+									<True/>
+									<ScoreDistribution value="0" recordCount="0.0"/>
+									<ScoreDistribution value="1" recordCount="8.0"/>
+									<ScoreDistribution value="2" recordCount="3.0"/>
+									<ScoreDistribution value="3" recordCount="1.0"/>
+									<ScoreDistribution value="4" recordCount="0.0"/>
+									<ScoreDistribution value="5" recordCount="0.0"/>
+								</Node>
+							</Node>
+							<Node score="2" recordCount="8.0">
+								<SimplePredicate field="OilVolume" operator="lessOrEqual" value="934.5771133"/>
+								<ScoreDistribution value="0" recordCount="0.0"/>
+								<ScoreDistribution value="1" recordCount="0.0"/>
+								<ScoreDistribution value="2" recordCount="8.0"/>
+								<ScoreDistribution value="3" recordCount="0.0"/>
+								<ScoreDistribution value="4" recordCount="0.0"/>
+								<ScoreDistribution value="5" recordCount="0.0"/>
+							</Node>
+							<Node score="2" recordCount="3.0">
+								<True/>
+								<ScoreDistribution value="0" recordCount="0.0"/>
+								<ScoreDistribution value="1" recordCount="1.0"/>
+								<ScoreDistribution value="2" recordCount="2.0"/>
+								<ScoreDistribution value="3" recordCount="0.0"/>
+								<ScoreDistribution value="4" recordCount="0.0"/>
+								<ScoreDistribution value="5" recordCount="0.0"/>
+							</Node>
+						</Node>
+						<Node>
+							<SimplePredicate field="VibrationLevel" operator="lessOrEqual" value="3.0"/>
+							<Node score="5" recordCount="1.0">
+								<SimplePredicate field="OilVolume" operator="lessOrEqual" value="881.7962106"/>
+								<ScoreDistribution value="0" recordCount="0.0"/>
+								<ScoreDistribution value="1" recordCount="0.0"/>
+								<ScoreDistribution value="2" recordCount="0.0"/>
+								<ScoreDistribution value="3" recordCount="0.0"/>
+								<ScoreDistribution value="4" recordCount="0.0"/>
+								<ScoreDistribution value="5" recordCount="1.0"/>
+							</Node>
+							<Node score="4" recordCount="18.0">
+								<True/>
+								<ScoreDistribution value="0" recordCount="0.0"/>
+								<ScoreDistribution value="1" recordCount="0.0"/>
+								<ScoreDistribution value="2" recordCount="0.0"/>
+								<ScoreDistribution value="3" recordCount="6.0"/>
+								<ScoreDistribution value="4" recordCount="12.0"/>
+								<ScoreDistribution value="5" recordCount="0.0"/>
+							</Node>
+						</Node>
+						<Node>
+							<SimplePredicate field="OilVolume" operator="lessOrEqual" value="906.1749935"/>
+							<Node score="5" recordCount="1.0">
+								<SimplePredicate field="OilVolume" operator="lessOrEqual" value="889.8451283"/>
+								<ScoreDistribution value="0" recordCount="0.0"/>
+								<ScoreDistribution value="1" recordCount="0.0"/>
+								<ScoreDistribution value="2" recordCount="0.0"/>
+								<ScoreDistribution value="3" recordCount="0.0"/>
+								<ScoreDistribution value="4" recordCount="0.0"/>
+								<ScoreDistribution value="5" recordCount="1.0"/>
+							</Node>
+							<Node score="4" recordCount="5.0">
+								<True/>
+								<ScoreDistribution value="0" recordCount="0.0"/>
+								<ScoreDistribution value="1" recordCount="0.0"/>
+								<ScoreDistribution value="2" recordCount="0.0"/>
+								<ScoreDistribution value="3" recordCount="0.0"/>
+								<ScoreDistribution value="4" recordCount="5.0"/>
+								<ScoreDistribution value="5" recordCount="0.0"/>
+							</Node>
+						</Node>
+						<Node score="3" recordCount="5.0">
+							<SimplePredicate field="OilVolume" operator="lessOrEqual" value="917.023106"/>
+							<ScoreDistribution value="0" recordCount="0.0"/>
+							<ScoreDistribution value="1" recordCount="0.0"/>
+							<ScoreDistribution value="2" recordCount="0.0"/>
+							<ScoreDistribution value="3" recordCount="4.0"/>
+							<ScoreDistribution value="4" recordCount="0.0"/>
+							<ScoreDistribution value="5" recordCount="1.0"/>
+						</Node>
+						<Node score="4" recordCount="8.0">
+							<True/>
+							<ScoreDistribution value="0" recordCount="0.0"/>
+							<ScoreDistribution value="1" recordCount="0.0"/>
+							<ScoreDistribution value="2" recordCount="0.0"/>
+							<ScoreDistribution value="3" recordCount="2.0"/>
+							<ScoreDistribution value="4" recordCount="3.0"/>
+							<ScoreDistribution value="5" recordCount="3.0"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="9">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction" splitCharacteristic="multiSplit">
+					<MiningSchema>
+						<MiningField name="TopOilTemperature"/>
+						<MiningField name="OilVolume"/>
+						<MiningField name="VibrationLevel"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node>
+							<SimplePredicate field="VibrationLevel" operator="lessOrEqual" value="2.0"/>
+							<Node>
+								<SimplePredicate field="OilVolume" operator="lessOrEqual" value="886.1509613"/>
+								<Node score="0" recordCount="128.0">
+									<SimplePredicate field="TopOilTemperature" operator="lessOrEqual" value="80.15538566"/>
+									<ScoreDistribution value="0" recordCount="128.0"/>
+									<ScoreDistribution value="1" recordCount="0.0"/>
+									<ScoreDistribution value="2" recordCount="0.0"/>
+									<ScoreDistribution value="3" recordCount="0.0"/>
+									<ScoreDistribution value="4" recordCount="0.0"/>
+									<ScoreDistribution value="5" recordCount="0.0"/>
+								</Node>
+								<Node score="1" recordCount="4.0">
+									<True/>
+									<ScoreDistribution value="0" recordCount="0.0"/>
+									<ScoreDistribution value="1" recordCount="4.0"/>
+									<ScoreDistribution value="2" recordCount="0.0"/>
+									<ScoreDistribution value="3" recordCount="0.0"/>
+									<ScoreDistribution value="4" recordCount="0.0"/>
+									<ScoreDistribution value="5" recordCount="0.0"/>
+								</Node>
+							</Node>
+							<Node score="0" recordCount="282.0">
+								<True/>
+								<ScoreDistribution value="0" recordCount="282.0"/>
+								<ScoreDistribution value="1" recordCount="0.0"/>
+								<ScoreDistribution value="2" recordCount="0.0"/>
+								<ScoreDistribution value="3" recordCount="0.0"/>
+								<ScoreDistribution value="4" recordCount="0.0"/>
+								<ScoreDistribution value="5" recordCount="0.0"/>
+							</Node>
+						</Node>
+						<Node>
+							<SimplePredicate field="OilVolume" operator="lessOrEqual" value="895.7088911"/>
+							<Node>
+								<SimplePredicate field="TopOilTemperature" operator="lessOrEqual" value="90.25474132"/>
+								<Node>
+									<SimplePredicate field="TopOilTemperature" operator="lessOrEqual" value="83.85991517"/>
+									<Node score="0" recordCount="3.0">
+										<SimplePredicate field="TopOilTemperature" operator="lessOrEqual" value="80.15538566"/>
+										<ScoreDistribution value="0" recordCount="3.0"/>
+										<ScoreDistribution value="1" recordCount="0.0"/>
+										<ScoreDistribution value="2" recordCount="0.0"/>
+										<ScoreDistribution value="3" recordCount="0.0"/>
+										<ScoreDistribution value="4" recordCount="0.0"/>
+										<ScoreDistribution value="5" recordCount="0.0"/>
+									</Node>
+									<Node score="1" recordCount="1.0">
+										<True/>
+										<ScoreDistribution value="0" recordCount="0.0"/>
+										<ScoreDistribution value="1" recordCount="1.0"/>
+										<ScoreDistribution value="2" recordCount="0.0"/>
+										<ScoreDistribution value="3" recordCount="0.0"/>
+										<ScoreDistribution value="4" recordCount="0.0"/>
+										<ScoreDistribution value="5" recordCount="0.0"/>
+									</Node>
+								</Node>
+								<Node score="2" recordCount="8.0">
+									<True/>
+									<ScoreDistribution value="0" recordCount="0.0"/>
+									<ScoreDistribution value="1" recordCount="0.0"/>
+									<ScoreDistribution value="2" recordCount="8.0"/>
+									<ScoreDistribution value="3" recordCount="0.0"/>
+									<ScoreDistribution value="4" recordCount="0.0"/>
+									<ScoreDistribution value="5" recordCount="0.0"/>
+								</Node>
+							</Node>
+							<Node>
+								<SimplePredicate field="OilVolume" operator="lessOrEqual" value="893.7275049"/>
+								<Node score="4" recordCount="5.0">
+									<SimplePredicate field="OilVolume" operator="lessOrEqual" value="887.8660418"/>
+									<ScoreDistribution value="0" recordCount="0.0"/>
+									<ScoreDistribution value="1" recordCount="0.0"/>
+									<ScoreDistribution value="2" recordCount="0.0"/>
+									<ScoreDistribution value="3" recordCount="0.0"/>
+									<ScoreDistribution value="4" recordCount="5.0"/>
+									<ScoreDistribution value="5" recordCount="0.0"/>
+								</Node>
+								<Node score="4" recordCount="4.0">
+									<True/>
+									<ScoreDistribution value="0" recordCount="0.0"/>
+									<ScoreDistribution value="1" recordCount="0.0"/>
+									<ScoreDistribution value="2" recordCount="0.0"/>
+									<ScoreDistribution value="3" recordCount="1.0"/>
+									<ScoreDistribution value="4" recordCount="3.0"/>
+									<ScoreDistribution value="5" recordCount="0.0"/>
+								</Node>
+							</Node>
+							<Node score="3" recordCount="4.0">
+								<True/>
+								<ScoreDistribution value="0" recordCount="0.0"/>
+								<ScoreDistribution value="1" recordCount="0.0"/>
+								<ScoreDistribution value="2" recordCount="0.0"/>
+								<ScoreDistribution value="3" recordCount="3.0"/>
+								<ScoreDistribution value="4" recordCount="1.0"/>
+								<ScoreDistribution value="5" recordCount="0.0"/>
+							</Node>
+						</Node>
+						<Node>
+							<SimplePredicate field="OilVolume" operator="lessOrEqual" value="901.1225822"/>
+							<Node score="0" recordCount="14.0">
+								<SimplePredicate field="TopOilTemperature" operator="lessOrEqual" value="80.15538566"/>
+								<ScoreDistribution value="0" recordCount="14.0"/>
+								<ScoreDistribution value="1" recordCount="0.0"/>
+								<ScoreDistribution value="2" recordCount="0.0"/>
+								<ScoreDistribution value="3" recordCount="0.0"/>
+								<ScoreDistribution value="4" recordCount="0.0"/>
+								<ScoreDistribution value="5" recordCount="0.0"/>
+							</Node>
+							<Node score="1" recordCount="5.0">
+								<SimplePredicate field="TopOilTemperature" operator="lessOrEqual" value="83.85991517"/>
+								<ScoreDistribution value="0" recordCount="0.0"/>
+								<ScoreDistribution value="1" recordCount="5.0"/>
+								<ScoreDistribution value="2" recordCount="0.0"/>
+								<ScoreDistribution value="3" recordCount="0.0"/>
+								<ScoreDistribution value="4" recordCount="0.0"/>
+								<ScoreDistribution value="5" recordCount="0.0"/>
+							</Node>
+							<Node score="4" recordCount="2.0">
+								<True/>
+								<ScoreDistribution value="0" recordCount="0.0"/>
+								<ScoreDistribution value="1" recordCount="0.0"/>
+								<ScoreDistribution value="2" recordCount="0.0"/>
+								<ScoreDistribution value="3" recordCount="0.0"/>
+								<ScoreDistribution value="4" recordCount="2.0"/>
+								<ScoreDistribution value="5" recordCount="0.0"/>
+							</Node>
+						</Node>
+						<Node>
+							<SimplePredicate field="TopOilTemperature" operator="lessOrEqual" value="80.15538566"/>
+							<Node score="0" recordCount="547.0">
+								<SimplePredicate field="TopOilTemperature" operator="lessOrEqual" value="77.7835393"/>
+								<ScoreDistribution value="0" recordCount="547.0"/>
+								<ScoreDistribution value="1" recordCount="0.0"/>
+								<ScoreDistribution value="2" recordCount="0.0"/>
+								<ScoreDistribution value="3" recordCount="0.0"/>
+								<ScoreDistribution value="4" recordCount="0.0"/>
+								<ScoreDistribution value="5" recordCount="0.0"/>
+							</Node>
+							<Node score="0" recordCount="28.0">
+								<True/>
+								<ScoreDistribution value="0" recordCount="26.0"/>
+								<ScoreDistribution value="1" recordCount="2.0"/>
+								<ScoreDistribution value="2" recordCount="0.0"/>
+								<ScoreDistribution value="3" recordCount="0.0"/>
+								<ScoreDistribution value="4" recordCount="0.0"/>
+								<ScoreDistribution value="5" recordCount="0.0"/>
+							</Node>
+						</Node>
+						<Node score="1" recordCount="24.0">
+							<SimplePredicate field="TopOilTemperature" operator="lessOrEqual" value="83.85991517"/>
+							<ScoreDistribution value="0" recordCount="0.0"/>
+							<ScoreDistribution value="1" recordCount="24.0"/>
+							<ScoreDistribution value="2" recordCount="0.0"/>
+							<ScoreDistribution value="3" recordCount="0.0"/>
+							<ScoreDistribution value="4" recordCount="0.0"/>
+							<ScoreDistribution value="5" recordCount="0.0"/>
+						</Node>
+						<Node score="3" recordCount="45.0">
+							<True/>
+							<ScoreDistribution value="0" recordCount="0.0"/>
+							<ScoreDistribution value="1" recordCount="8.0"/>
+							<ScoreDistribution value="2" recordCount="10.0"/>
+							<ScoreDistribution value="3" recordCount="16.0"/>
+							<ScoreDistribution value="4" recordCount="3.0"/>
+							<ScoreDistribution value="5" recordCount="8.0"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="10">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction" splitCharacteristic="multiSplit">
+					<MiningSchema>
+						<MiningField name="TopOilTemperature"/>
+						<MiningField name="OilVolume"/>
+						<MiningField name="VibrationLevel"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node>
+							<SimplePredicate field="TopOilTemperature" operator="lessOrEqual" value="80.15538566"/>
+							<Node score="0" recordCount="957.0">
+								<SimplePredicate field="TopOilTemperature" operator="lessOrEqual" value="77.7835393"/>
+								<ScoreDistribution value="0" recordCount="957.0"/>
+								<ScoreDistribution value="1" recordCount="0.0"/>
+								<ScoreDistribution value="2" recordCount="0.0"/>
+								<ScoreDistribution value="3" recordCount="0.0"/>
+								<ScoreDistribution value="4" recordCount="0.0"/>
+								<ScoreDistribution value="5" recordCount="0.0"/>
+							</Node>
+							<Node>
+								<SimplePredicate field="OilVolume" operator="lessOrEqual" value="944.5162317"/>
+								<Node>
+									<SimplePredicate field="OilVolume" operator="lessOrEqual" value="907.7994454"/>
+									<Node score="0" recordCount="7.0">
+										<SimplePredicate field="OilVolume" operator="lessOrEqual" value="906.1749935"/>
+										<ScoreDistribution value="0" recordCount="7.0"/>
+										<ScoreDistribution value="1" recordCount="0.0"/>
+										<ScoreDistribution value="2" recordCount="0.0"/>
+										<ScoreDistribution value="3" recordCount="0.0"/>
+										<ScoreDistribution value="4" recordCount="0.0"/>
+										<ScoreDistribution value="5" recordCount="0.0"/>
+									</Node>
+									<Node score="0" recordCount="3.0">
+										<True/>
+										<ScoreDistribution value="0" recordCount="2.0"/>
+										<ScoreDistribution value="1" recordCount="1.0"/>
+										<ScoreDistribution value="2" recordCount="0.0"/>
+										<ScoreDistribution value="3" recordCount="0.0"/>
+										<ScoreDistribution value="4" recordCount="0.0"/>
+										<ScoreDistribution value="5" recordCount="0.0"/>
+									</Node>
+								</Node>
+								<Node score="0" recordCount="21.0">
+									<True/>
+									<ScoreDistribution value="0" recordCount="21.0"/>
+									<ScoreDistribution value="1" recordCount="0.0"/>
+									<ScoreDistribution value="2" recordCount="0.0"/>
+									<ScoreDistribution value="3" recordCount="0.0"/>
+									<ScoreDistribution value="4" recordCount="0.0"/>
+									<ScoreDistribution value="5" recordCount="0.0"/>
+								</Node>
+							</Node>
+							<Node score="1" recordCount="1.0">
+								<True/>
+								<ScoreDistribution value="0" recordCount="0.0"/>
+								<ScoreDistribution value="1" recordCount="1.0"/>
+								<ScoreDistribution value="2" recordCount="0.0"/>
+								<ScoreDistribution value="3" recordCount="0.0"/>
+								<ScoreDistribution value="4" recordCount="0.0"/>
+								<ScoreDistribution value="5" recordCount="0.0"/>
+							</Node>
+						</Node>
+						<Node score="1" recordCount="38.0">
+							<SimplePredicate field="TopOilTemperature" operator="lessOrEqual" value="83.85991517"/>
+							<ScoreDistribution value="0" recordCount="0.0"/>
+							<ScoreDistribution value="1" recordCount="38.0"/>
+							<ScoreDistribution value="2" recordCount="0.0"/>
+							<ScoreDistribution value="3" recordCount="0.0"/>
+							<ScoreDistribution value="4" recordCount="0.0"/>
+							<ScoreDistribution value="5" recordCount="0.0"/>
+						</Node>
+						<Node>
+							<SimplePredicate field="TopOilTemperature" operator="lessOrEqual" value="90.25474132"/>
+							<Node score="1" recordCount="2.0">
+								<SimplePredicate field="OilVolume" operator="lessOrEqual" value="880.2610517"/>
+								<ScoreDistribution value="0" recordCount="0.0"/>
+								<ScoreDistribution value="1" recordCount="2.0"/>
+								<ScoreDistribution value="2" recordCount="0.0"/>
+								<ScoreDistribution value="3" recordCount="0.0"/>
+								<ScoreDistribution value="4" recordCount="0.0"/>
+								<ScoreDistribution value="5" recordCount="0.0"/>
+							</Node>
+							<Node score="2" recordCount="35.0">
+								<SimplePredicate field="OilVolume" operator="lessOrEqual" value="934.5771133"/>
+								<ScoreDistribution value="0" recordCount="0.0"/>
+								<ScoreDistribution value="1" recordCount="6.0"/>
+								<ScoreDistribution value="2" recordCount="28.0"/>
+								<ScoreDistribution value="3" recordCount="1.0"/>
+								<ScoreDistribution value="4" recordCount="0.0"/>
+								<ScoreDistribution value="5" recordCount="0.0"/>
+							</Node>
+							<Node score="1" recordCount="2.0">
+								<True/>
+								<ScoreDistribution value="0" recordCount="0.0"/>
+								<ScoreDistribution value="1" recordCount="2.0"/>
+								<ScoreDistribution value="2" recordCount="0.0"/>
+								<ScoreDistribution value="3" recordCount="0.0"/>
+								<ScoreDistribution value="4" recordCount="0.0"/>
+								<ScoreDistribution value="5" recordCount="0.0"/>
+							</Node>
+						</Node>
+						<Node score="3" recordCount="13.0">
+							<SimplePredicate field="VibrationLevel" operator="lessOrEqual" value="3.0"/>
+							<ScoreDistribution value="0" recordCount="0.0"/>
+							<ScoreDistribution value="1" recordCount="0.0"/>
+							<ScoreDistribution value="2" recordCount="0.0"/>
+							<ScoreDistribution value="3" recordCount="9.0"/>
+							<ScoreDistribution value="4" recordCount="3.0"/>
+							<ScoreDistribution value="5" recordCount="1.0"/>
+						</Node>
+						<Node score="5" recordCount="4.0">
+							<SimplePredicate field="OilVolume" operator="lessOrEqual" value="911.1373069"/>
+							<ScoreDistribution value="0" recordCount="0.0"/>
+							<ScoreDistribution value="1" recordCount="0.0"/>
+							<ScoreDistribution value="2" recordCount="0.0"/>
+							<ScoreDistribution value="3" recordCount="0.0"/>
+							<ScoreDistribution value="4" recordCount="1.0"/>
+							<ScoreDistribution value="5" recordCount="3.0"/>
+						</Node>
+						<Node score="3" recordCount="13.0">
+							<True/>
+							<ScoreDistribution value="0" recordCount="0.0"/>
+							<ScoreDistribution value="1" recordCount="0.0"/>
+							<ScoreDistribution value="2" recordCount="0.0"/>
+							<ScoreDistribution value="3" recordCount="5.0"/>
+							<ScoreDistribution value="4" recordCount="4.0"/>
+							<ScoreDistribution value="5" recordCount="4.0"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="11">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction" splitCharacteristic="multiSplit">
+					<MiningSchema>
+						<MiningField name="TopOilTemperature"/>
+						<MiningField name="OilVolume"/>
+						<MiningField name="VibrationLevel"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node>
+							<SimplePredicate field="TopOilTemperature" operator="lessOrEqual" value="80.15538566"/>
+							<Node score="0" recordCount="994.0">
+								<SimplePredicate field="TopOilTemperature" operator="lessOrEqual" value="77.7835393"/>
+								<ScoreDistribution value="0" recordCount="994.0"/>
+								<ScoreDistribution value="1" recordCount="0.0"/>
+								<ScoreDistribution value="2" recordCount="0.0"/>
+								<ScoreDistribution value="3" recordCount="0.0"/>
+								<ScoreDistribution value="4" recordCount="0.0"/>
+								<ScoreDistribution value="5" recordCount="0.0"/>
+							</Node>
+							<Node>
+								<SimplePredicate field="VibrationLevel" operator="lessOrEqual" value="3.0"/>
+								<Node score="0" recordCount="4.0">
+									<SimplePredicate field="VibrationLevel" operator="lessOrEqual" value="2.0"/>
+									<ScoreDistribution value="0" recordCount="4.0"/>
+									<ScoreDistribution value="1" recordCount="0.0"/>
+									<ScoreDistribution value="2" recordCount="0.0"/>
+									<ScoreDistribution value="3" recordCount="0.0"/>
+									<ScoreDistribution value="4" recordCount="0.0"/>
+									<ScoreDistribution value="5" recordCount="0.0"/>
+								</Node>
+								<Node score="0" recordCount="9.0">
+									<SimplePredicate field="OilVolume" operator="lessOrEqual" value="907.7994454"/>
+									<ScoreDistribution value="0" recordCount="7.0"/>
+									<ScoreDistribution value="1" recordCount="2.0"/>
+									<ScoreDistribution value="2" recordCount="0.0"/>
+									<ScoreDistribution value="3" recordCount="0.0"/>
+									<ScoreDistribution value="4" recordCount="0.0"/>
+									<ScoreDistribution value="5" recordCount="0.0"/>
+								</Node>
+								<Node score="0" recordCount="9.0">
+									<True/>
+									<ScoreDistribution value="0" recordCount="9.0"/>
+									<ScoreDistribution value="1" recordCount="0.0"/>
+									<ScoreDistribution value="2" recordCount="0.0"/>
+									<ScoreDistribution value="3" recordCount="0.0"/>
+									<ScoreDistribution value="4" recordCount="0.0"/>
+									<ScoreDistribution value="5" recordCount="0.0"/>
+								</Node>
+							</Node>
+							<Node score="0" recordCount="9.0">
+								<True/>
+								<ScoreDistribution value="0" recordCount="9.0"/>
+								<ScoreDistribution value="1" recordCount="0.0"/>
+								<ScoreDistribution value="2" recordCount="0.0"/>
+								<ScoreDistribution value="3" recordCount="0.0"/>
+								<ScoreDistribution value="4" recordCount="0.0"/>
+								<ScoreDistribution value="5" recordCount="0.0"/>
+							</Node>
+						</Node>
+						<Node>
+							<SimplePredicate field="OilVolume" operator="lessOrEqual" value="906.1749935"/>
+							<Node>
+								<SimplePredicate field="TopOilTemperature" operator="lessOrEqual" value="90.25474132"/>
+								<Node score="1" recordCount="12.0">
+									<SimplePredicate field="TopOilTemperature" operator="lessOrEqual" value="83.85991517"/>
+									<ScoreDistribution value="0" recordCount="0.0"/>
+									<ScoreDistribution value="1" recordCount="12.0"/>
+									<ScoreDistribution value="2" recordCount="0.0"/>
+									<ScoreDistribution value="3" recordCount="0.0"/>
+									<ScoreDistribution value="4" recordCount="0.0"/>
+									<ScoreDistribution value="5" recordCount="0.0"/>
+								</Node>
+								<Node score="1" recordCount="1.0">
+									<SimplePredicate field="VibrationLevel" operator="lessOrEqual" value="2.0"/>
+									<ScoreDistribution value="0" recordCount="0.0"/>
+									<ScoreDistribution value="1" recordCount="1.0"/>
+									<ScoreDistribution value="2" recordCount="0.0"/>
+									<ScoreDistribution value="3" recordCount="0.0"/>
+									<ScoreDistribution value="4" recordCount="0.0"/>
+									<ScoreDistribution value="5" recordCount="0.0"/>
+								</Node>
+								<Node score="2" recordCount="23.0">
+									<True/>
+									<ScoreDistribution value="0" recordCount="0.0"/>
+									<ScoreDistribution value="1" recordCount="1.0"/>
+									<ScoreDistribution value="2" recordCount="22.0"/>
+									<ScoreDistribution value="3" recordCount="0.0"/>
+									<ScoreDistribution value="4" recordCount="0.0"/>
+									<ScoreDistribution value="5" recordCount="0.0"/>
+								</Node>
+							</Node>
+							<Node score="4" recordCount="17.0">
+								<SimplePredicate field="VibrationLevel" operator="lessOrEqual" value="3.0"/>
+								<ScoreDistribution value="0" recordCount="0.0"/>
+								<ScoreDistribution value="1" recordCount="0.0"/>
+								<ScoreDistribution value="2" recordCount="0.0"/>
+								<ScoreDistribution value="3" recordCount="7.0"/>
+								<ScoreDistribution value="4" recordCount="8.0"/>
+								<ScoreDistribution value="5" recordCount="2.0"/>
+							</Node>
+							<Node score="4" recordCount="4.0">
+								<SimplePredicate field="OilVolume" operator="lessOrEqual" value="901.1225822"/>
+								<ScoreDistribution value="0" recordCount="0.0"/>
+								<ScoreDistribution value="1" recordCount="0.0"/>
+								<ScoreDistribution value="2" recordCount="0.0"/>
+								<ScoreDistribution value="3" recordCount="0.0"/>
+								<ScoreDistribution value="4" recordCount="4.0"/>
+								<ScoreDistribution value="5" recordCount="0.0"/>
+							</Node>
+							<Node score="3" recordCount="3.0">
+								<True/>
+								<ScoreDistribution value="0" recordCount="0.0"/>
+								<ScoreDistribution value="1" recordCount="0.0"/>
+								<ScoreDistribution value="2" recordCount="0.0"/>
+								<ScoreDistribution value="3" recordCount="2.0"/>
+								<ScoreDistribution value="4" recordCount="1.0"/>
+								<ScoreDistribution value="5" recordCount="0.0"/>
+							</Node>
+						</Node>
+						<Node score="1" recordCount="9.0">
+							<SimplePredicate field="VibrationLevel" operator="lessOrEqual" value="3.0"/>
+							<ScoreDistribution value="0" recordCount="0.0"/>
+							<ScoreDistribution value="1" recordCount="9.0"/>
+							<ScoreDistribution value="2" recordCount="0.0"/>
+							<ScoreDistribution value="3" recordCount="0.0"/>
+							<ScoreDistribution value="4" recordCount="0.0"/>
+							<ScoreDistribution value="5" recordCount="0.0"/>
+						</Node>
+						<Node>
+							<SimplePredicate field="TopOilTemperature" operator="lessOrEqual" value="90.25474132"/>
+							<Node score="1" recordCount="20.0">
+								<SimplePredicate field="OilVolume" operator="lessOrEqual" value="927.9477285"/>
+								<ScoreDistribution value="0" recordCount="0.0"/>
+								<ScoreDistribution value="1" recordCount="12.0"/>
+								<ScoreDistribution value="2" recordCount="6.0"/>
+								<ScoreDistribution value="3" recordCount="2.0"/>
+								<ScoreDistribution value="4" recordCount="0.0"/>
+								<ScoreDistribution value="5" recordCount="0.0"/>
+							</Node>
+							<Node score="1" recordCount="12.0">
+								<True/>
+								<ScoreDistribution value="0" recordCount="0.0"/>
+								<ScoreDistribution value="1" recordCount="11.0"/>
+								<ScoreDistribution value="2" recordCount="1.0"/>
+								<ScoreDistribution value="3" recordCount="0.0"/>
+								<ScoreDistribution value="4" recordCount="0.0"/>
+								<ScoreDistribution value="5" recordCount="0.0"/>
+							</Node>
+						</Node>
+						<Node score="3" recordCount="16.0">
+							<True/>
+							<ScoreDistribution value="0" recordCount="0.0"/>
+							<ScoreDistribution value="1" recordCount="0.0"/>
+							<ScoreDistribution value="2" recordCount="0.0"/>
+							<ScoreDistribution value="3" recordCount="12.0"/>
+							<ScoreDistribution value="4" recordCount="2.0"/>
+							<ScoreDistribution value="5" recordCount="2.0"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="12">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction" splitCharacteristic="multiSplit">
+					<MiningSchema>
+						<MiningField name="TopOilTemperature"/>
+						<MiningField name="OilVolume"/>
+						<MiningField name="VibrationLevel"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node>
+							<SimplePredicate field="TopOilTemperature" operator="lessOrEqual" value="80.15538566"/>
+							<Node score="0" recordCount="953.0">
+								<SimplePredicate field="OilVolume" operator="lessOrEqual" value="952.8965317"/>
+								<ScoreDistribution value="0" recordCount="953.0"/>
+								<ScoreDistribution value="1" recordCount="0.0"/>
+								<ScoreDistribution value="2" recordCount="0.0"/>
+								<ScoreDistribution value="3" recordCount="0.0"/>
+								<ScoreDistribution value="4" recordCount="0.0"/>
+								<ScoreDistribution value="5" recordCount="0.0"/>
+							</Node>
+							<Node score="0" recordCount="29.0">
+								<True/>
+								<ScoreDistribution value="0" recordCount="28.0"/>
+								<ScoreDistribution value="1" recordCount="1.0"/>
+								<ScoreDistribution value="2" recordCount="0.0"/>
+								<ScoreDistribution value="3" recordCount="0.0"/>
+								<ScoreDistribution value="4" recordCount="0.0"/>
+								<ScoreDistribution value="5" recordCount="0.0"/>
+							</Node>
+						</Node>
+						<Node score="1" recordCount="32.0">
+							<SimplePredicate field="TopOilTemperature" operator="lessOrEqual" value="83.85991517"/>
+							<ScoreDistribution value="0" recordCount="0.0"/>
+							<ScoreDistribution value="1" recordCount="32.0"/>
+							<ScoreDistribution value="2" recordCount="0.0"/>
+							<ScoreDistribution value="3" recordCount="0.0"/>
+							<ScoreDistribution value="4" recordCount="0.0"/>
+							<ScoreDistribution value="5" recordCount="0.0"/>
+						</Node>
+						<Node>
+							<SimplePredicate field="TopOilTemperature" operator="lessOrEqual" value="90.25474132"/>
+							<Node>
+								<SimplePredicate field="VibrationLevel" operator="lessOrEqual" value="3.0"/>
+								<Node score="2" recordCount="14.0">
+									<SimplePredicate field="OilVolume" operator="lessOrEqual" value="893.7275049"/>
+									<ScoreDistribution value="0" recordCount="0.0"/>
+									<ScoreDistribution value="1" recordCount="0.0"/>
+									<ScoreDistribution value="2" recordCount="14.0"/>
+									<ScoreDistribution value="3" recordCount="0.0"/>
+									<ScoreDistribution value="4" recordCount="0.0"/>
+									<ScoreDistribution value="5" recordCount="0.0"/>
+								</Node>
+								<Node score="2" recordCount="10.0">
+									<True/>
+									<ScoreDistribution value="0" recordCount="0.0"/>
+									<ScoreDistribution value="1" recordCount="1.0"/>
+									<ScoreDistribution value="2" recordCount="9.0"/>
+									<ScoreDistribution value="3" recordCount="0.0"/>
+									<ScoreDistribution value="4" recordCount="0.0"/>
+									<ScoreDistribution value="5" recordCount="0.0"/>
+								</Node>
+							</Node>
+							<Node score="3" recordCount="8.0">
+								<SimplePredicate field="OilVolume" operator="lessOrEqual" value="921.2647829"/>
+								<ScoreDistribution value="0" recordCount="0.0"/>
+								<ScoreDistribution value="1" recordCount="2.0"/>
+								<ScoreDistribution value="2" recordCount="1.0"/>
+								<ScoreDistribution value="3" recordCount="5.0"/>
+								<ScoreDistribution value="4" recordCount="0.0"/>
+								<ScoreDistribution value="5" recordCount="0.0"/>
+							</Node>
+							<Node score="2" recordCount="13.0">
+								<True/>
+								<ScoreDistribution value="0" recordCount="0.0"/>
+								<ScoreDistribution value="1" recordCount="6.0"/>
+								<ScoreDistribution value="2" recordCount="7.0"/>
+								<ScoreDistribution value="3" recordCount="0.0"/>
+								<ScoreDistribution value="4" recordCount="0.0"/>
+								<ScoreDistribution value="5" recordCount="0.0"/>
+							</Node>
+						</Node>
+						<Node>
+							<SimplePredicate field="VibrationLevel" operator="lessOrEqual" value="3.0"/>
+							<Node score="4" recordCount="2.0">
+								<SimplePredicate field="OilVolume" operator="lessOrEqual" value="889.8451283"/>
+								<ScoreDistribution value="0" recordCount="0.0"/>
+								<ScoreDistribution value="1" recordCount="0.0"/>
+								<ScoreDistribution value="2" recordCount="0.0"/>
+								<ScoreDistribution value="3" recordCount="0.0"/>
+								<ScoreDistribution value="4" recordCount="2.0"/>
+								<ScoreDistribution value="5" recordCount="0.0"/>
+							</Node>
+							<Node score="3" recordCount="10.0">
+								<True/>
+								<ScoreDistribution value="0" recordCount="0.0"/>
+								<ScoreDistribution value="1" recordCount="0.0"/>
+								<ScoreDistribution value="2" recordCount="0.0"/>
+								<ScoreDistribution value="3" recordCount="7.0"/>
+								<ScoreDistribution value="4" recordCount="3.0"/>
+								<ScoreDistribution value="5" recordCount="0.0"/>
+							</Node>
+						</Node>
+						<Node score="5" recordCount="11.0">
+							<SimplePredicate field="OilVolume" operator="lessOrEqual" value="925.2613626"/>
+							<ScoreDistribution value="0" recordCount="0.0"/>
+							<ScoreDistribution value="1" recordCount="0.0"/>
+							<ScoreDistribution value="2" recordCount="0.0"/>
+							<ScoreDistribution value="3" recordCount="4.0"/>
+							<ScoreDistribution value="4" recordCount="1.0"/>
+							<ScoreDistribution value="5" recordCount="6.0"/>
+						</Node>
+						<Node score="5" recordCount="13.0">
+							<True/>
+							<ScoreDistribution value="0" recordCount="0.0"/>
+							<ScoreDistribution value="1" recordCount="0.0"/>
+							<ScoreDistribution value="2" recordCount="0.0"/>
+							<ScoreDistribution value="3" recordCount="1.0"/>
+							<ScoreDistribution value="4" recordCount="1.0"/>
+							<ScoreDistribution value="5" recordCount="11.0"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="13">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction" splitCharacteristic="multiSplit">
+					<MiningSchema>
+						<MiningField name="TopOilTemperature"/>
+						<MiningField name="OilVolume"/>
+						<MiningField name="VibrationLevel"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node>
+							<SimplePredicate field="TopOilTemperature" operator="lessOrEqual" value="80.15538566"/>
+							<Node>
+								<SimplePredicate field="OilVolume" operator="lessOrEqual" value="952.8965317"/>
+								<Node score="0" recordCount="947.0">
+									<SimplePredicate field="TopOilTemperature" operator="lessOrEqual" value="77.7835393"/>
+									<ScoreDistribution value="0" recordCount="947.0"/>
+									<ScoreDistribution value="1" recordCount="0.0"/>
+									<ScoreDistribution value="2" recordCount="0.0"/>
+									<ScoreDistribution value="3" recordCount="0.0"/>
+									<ScoreDistribution value="4" recordCount="0.0"/>
+									<ScoreDistribution value="5" recordCount="0.0"/>
+								</Node>
+								<Node>
+									<SimplePredicate field="OilVolume" operator="lessOrEqual" value="907.7994454"/>
+									<Node score="0" recordCount="10.0">
+										<SimplePredicate field="OilVolume" operator="lessOrEqual" value="904.628159"/>
+										<ScoreDistribution value="0" recordCount="10.0"/>
+										<ScoreDistribution value="1" recordCount="0.0"/>
+										<ScoreDistribution value="2" recordCount="0.0"/>
+										<ScoreDistribution value="3" recordCount="0.0"/>
+										<ScoreDistribution value="4" recordCount="0.0"/>
+										<ScoreDistribution value="5" recordCount="0.0"/>
+									</Node>
+									<Node score="0" recordCount="2.0">
+										<True/>
+										<ScoreDistribution value="0" recordCount="1.0"/>
+										<ScoreDistribution value="1" recordCount="1.0"/>
+										<ScoreDistribution value="2" recordCount="0.0"/>
+										<ScoreDistribution value="3" recordCount="0.0"/>
+										<ScoreDistribution value="4" recordCount="0.0"/>
+										<ScoreDistribution value="5" recordCount="0.0"/>
+									</Node>
+								</Node>
+								<Node score="0" recordCount="19.0">
+									<True/>
+									<ScoreDistribution value="0" recordCount="19.0"/>
+									<ScoreDistribution value="1" recordCount="0.0"/>
+									<ScoreDistribution value="2" recordCount="0.0"/>
+									<ScoreDistribution value="3" recordCount="0.0"/>
+									<ScoreDistribution value="4" recordCount="0.0"/>
+									<ScoreDistribution value="5" recordCount="0.0"/>
+								</Node>
+							</Node>
+							<Node score="0" recordCount="35.0">
+								<SimplePredicate field="TopOilTemperature" operator="lessOrEqual" value="71.45510342"/>
+								<ScoreDistribution value="0" recordCount="35.0"/>
+								<ScoreDistribution value="1" recordCount="0.0"/>
+								<ScoreDistribution value="2" recordCount="0.0"/>
+								<ScoreDistribution value="3" recordCount="0.0"/>
+								<ScoreDistribution value="4" recordCount="0.0"/>
+								<ScoreDistribution value="5" recordCount="0.0"/>
+							</Node>
+							<Node score="1" recordCount="1.0">
+								<True/>
+								<ScoreDistribution value="0" recordCount="0.0"/>
+								<ScoreDistribution value="1" recordCount="1.0"/>
+								<ScoreDistribution value="2" recordCount="0.0"/>
+								<ScoreDistribution value="3" recordCount="0.0"/>
+								<ScoreDistribution value="4" recordCount="0.0"/>
+								<ScoreDistribution value="5" recordCount="0.0"/>
+							</Node>
+						</Node>
+						<Node score="1" recordCount="25.0">
+							<SimplePredicate field="TopOilTemperature" operator="lessOrEqual" value="83.85991517"/>
+							<ScoreDistribution value="0" recordCount="0.0"/>
+							<ScoreDistribution value="1" recordCount="25.0"/>
+							<ScoreDistribution value="2" recordCount="0.0"/>
+							<ScoreDistribution value="3" recordCount="0.0"/>
+							<ScoreDistribution value="4" recordCount="0.0"/>
+							<ScoreDistribution value="5" recordCount="0.0"/>
+						</Node>
+						<Node>
+							<SimplePredicate field="TopOilTemperature" operator="lessOrEqual" value="90.25474132"/>
+							<Node score="1" recordCount="2.0">
+								<SimplePredicate field="VibrationLevel" operator="lessOrEqual" value="2.0"/>
+								<ScoreDistribution value="0" recordCount="0.0"/>
+								<ScoreDistribution value="1" recordCount="2.0"/>
+								<ScoreDistribution value="2" recordCount="0.0"/>
+								<ScoreDistribution value="3" recordCount="0.0"/>
+								<ScoreDistribution value="4" recordCount="0.0"/>
+								<ScoreDistribution value="5" recordCount="0.0"/>
+							</Node>
+							<Node score="2" recordCount="14.0">
+								<SimplePredicate field="VibrationLevel" operator="lessOrEqual" value="3.0"/>
+								<ScoreDistribution value="0" recordCount="0.0"/>
+								<ScoreDistribution value="1" recordCount="0.0"/>
+								<ScoreDistribution value="2" recordCount="14.0"/>
+								<ScoreDistribution value="3" recordCount="0.0"/>
+								<ScoreDistribution value="4" recordCount="0.0"/>
+								<ScoreDistribution value="5" recordCount="0.0"/>
+							</Node>
+							<Node score="2" recordCount="26.0">
+								<True/>
+								<ScoreDistribution value="0" recordCount="0.0"/>
+								<ScoreDistribution value="1" recordCount="5.0"/>
+								<ScoreDistribution value="2" recordCount="18.0"/>
+								<ScoreDistribution value="3" recordCount="3.0"/>
+								<ScoreDistribution value="4" recordCount="0.0"/>
+								<ScoreDistribution value="5" recordCount="0.0"/>
+							</Node>
+						</Node>
+						<Node>
+							<SimplePredicate field="VibrationLevel" operator="lessOrEqual" value="3.0"/>
+							<Node score="4" recordCount="5.0">
+								<SimplePredicate field="OilVolume" operator="lessOrEqual" value="893.7275049"/>
+								<ScoreDistribution value="0" recordCount="0.0"/>
+								<ScoreDistribution value="1" recordCount="0.0"/>
+								<ScoreDistribution value="2" recordCount="0.0"/>
+								<ScoreDistribution value="3" recordCount="0.0"/>
+								<ScoreDistribution value="4" recordCount="4.0"/>
+								<ScoreDistribution value="5" recordCount="1.0"/>
+							</Node>
+							<Node score="3" recordCount="3.0">
+								<True/>
+								<ScoreDistribution value="0" recordCount="0.0"/>
+								<ScoreDistribution value="1" recordCount="0.0"/>
+								<ScoreDistribution value="2" recordCount="0.0"/>
+								<ScoreDistribution value="3" recordCount="2.0"/>
+								<ScoreDistribution value="4" recordCount="1.0"/>
+								<ScoreDistribution value="5" recordCount="0.0"/>
+							</Node>
+						</Node>
+						<Node score="3" recordCount="21.0">
+							<SimplePredicate field="OilVolume" operator="lessOrEqual" value="925.2613626"/>
+							<ScoreDistribution value="0" recordCount="0.0"/>
+							<ScoreDistribution value="1" recordCount="0.0"/>
+							<ScoreDistribution value="2" recordCount="0.0"/>
+							<ScoreDistribution value="3" recordCount="12.0"/>
+							<ScoreDistribution value="4" recordCount="6.0"/>
+							<ScoreDistribution value="5" recordCount="3.0"/>
+						</Node>
+						<Node score="5" recordCount="10.0">
+							<True/>
+							<ScoreDistribution value="0" recordCount="0.0"/>
+							<ScoreDistribution value="1" recordCount="0.0"/>
+							<ScoreDistribution value="2" recordCount="0.0"/>
+							<ScoreDistribution value="3" recordCount="1.0"/>
+							<ScoreDistribution value="4" recordCount="1.0"/>
+							<ScoreDistribution value="5" recordCount="8.0"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="14">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction" splitCharacteristic="multiSplit">
+					<MiningSchema>
+						<MiningField name="TopOilTemperature"/>
+						<MiningField name="OilVolume"/>
+						<MiningField name="VibrationLevel"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node>
+							<SimplePredicate field="VibrationLevel" operator="lessOrEqual" value="2.0"/>
+							<Node>
+								<SimplePredicate field="OilVolume" operator="lessOrEqual" value="884.339308"/>
+								<Node score="0" recordCount="91.0">
+									<SimplePredicate field="TopOilTemperature" operator="lessOrEqual" value="80.15538566"/>
+									<ScoreDistribution value="0" recordCount="91.0"/>
+									<ScoreDistribution value="1" recordCount="0.0"/>
+									<ScoreDistribution value="2" recordCount="0.0"/>
+									<ScoreDistribution value="3" recordCount="0.0"/>
+									<ScoreDistribution value="4" recordCount="0.0"/>
+									<ScoreDistribution value="5" recordCount="0.0"/>
+								</Node>
+								<Node score="1" recordCount="4.0">
+									<True/>
+									<ScoreDistribution value="0" recordCount="0.0"/>
+									<ScoreDistribution value="1" recordCount="4.0"/>
+									<ScoreDistribution value="2" recordCount="0.0"/>
+									<ScoreDistribution value="3" recordCount="0.0"/>
+									<ScoreDistribution value="4" recordCount="0.0"/>
+									<ScoreDistribution value="5" recordCount="0.0"/>
+								</Node>
+							</Node>
+							<Node score="0" recordCount="308.0">
+								<True/>
+								<ScoreDistribution value="0" recordCount="308.0"/>
+								<ScoreDistribution value="1" recordCount="0.0"/>
+								<ScoreDistribution value="2" recordCount="0.0"/>
+								<ScoreDistribution value="3" recordCount="0.0"/>
+								<ScoreDistribution value="4" recordCount="0.0"/>
+								<ScoreDistribution value="5" recordCount="0.0"/>
+							</Node>
+						</Node>
+						<Node>
+							<SimplePredicate field="TopOilTemperature" operator="lessOrEqual" value="80.15538566"/>
+							<Node score="0" recordCount="549.0">
+								<SimplePredicate field="TopOilTemperature" operator="lessOrEqual" value="77.7835393"/>
+								<ScoreDistribution value="0" recordCount="549.0"/>
+								<ScoreDistribution value="1" recordCount="0.0"/>
+								<ScoreDistribution value="2" recordCount="0.0"/>
+								<ScoreDistribution value="3" recordCount="0.0"/>
+								<ScoreDistribution value="4" recordCount="0.0"/>
+								<ScoreDistribution value="5" recordCount="0.0"/>
+							</Node>
+							<Node score="0" recordCount="20.0">
+								<SimplePredicate field="VibrationLevel" operator="lessOrEqual" value="3.0"/>
+								<ScoreDistribution value="0" recordCount="19.0"/>
+								<ScoreDistribution value="1" recordCount="1.0"/>
+								<ScoreDistribution value="2" recordCount="0.0"/>
+								<ScoreDistribution value="3" recordCount="0.0"/>
+								<ScoreDistribution value="4" recordCount="0.0"/>
+								<ScoreDistribution value="5" recordCount="0.0"/>
+							</Node>
+							<Node score="0" recordCount="5.0">
+								<SimplePredicate field="OilVolume" operator="lessOrEqual" value="944.5162317"/>
+								<ScoreDistribution value="0" recordCount="5.0"/>
+								<ScoreDistribution value="1" recordCount="0.0"/>
+								<ScoreDistribution value="2" recordCount="0.0"/>
+								<ScoreDistribution value="3" recordCount="0.0"/>
+								<ScoreDistribution value="4" recordCount="0.0"/>
+								<ScoreDistribution value="5" recordCount="0.0"/>
+							</Node>
+							<Node score="1" recordCount="1.0">
+								<True/>
+								<ScoreDistribution value="0" recordCount="0.0"/>
+								<ScoreDistribution value="1" recordCount="1.0"/>
+								<ScoreDistribution value="2" recordCount="0.0"/>
+								<ScoreDistribution value="3" recordCount="0.0"/>
+								<ScoreDistribution value="4" recordCount="0.0"/>
+								<ScoreDistribution value="5" recordCount="0.0"/>
+							</Node>
+						</Node>
+						<Node score="1" recordCount="41.0">
+							<SimplePredicate field="TopOilTemperature" operator="lessOrEqual" value="83.85991517"/>
+							<ScoreDistribution value="0" recordCount="0.0"/>
+							<ScoreDistribution value="1" recordCount="41.0"/>
+							<ScoreDistribution value="2" recordCount="0.0"/>
+							<ScoreDistribution value="3" recordCount="0.0"/>
+							<ScoreDistribution value="4" recordCount="0.0"/>
+							<ScoreDistribution value="5" recordCount="0.0"/>
+						</Node>
+						<Node>
+							<SimplePredicate field="OilVolume" operator="lessOrEqual" value="923.2327509"/>
+							<Node score="2" recordCount="24.0">
+								<SimplePredicate field="OilVolume" operator="lessOrEqual" value="902.787005"/>
+								<ScoreDistribution value="0" recordCount="0.0"/>
+								<ScoreDistribution value="1" recordCount="0.0"/>
+								<ScoreDistribution value="2" recordCount="14.0"/>
+								<ScoreDistribution value="3" recordCount="3.0"/>
+								<ScoreDistribution value="4" recordCount="5.0"/>
+								<ScoreDistribution value="5" recordCount="2.0"/>
+							</Node>
+							<Node score="3" recordCount="31.0">
+								<True/>
+								<ScoreDistribution value="0" recordCount="0.0"/>
+								<ScoreDistribution value="1" recordCount="3.0"/>
+								<ScoreDistribution value="2" recordCount="11.0"/>
+								<ScoreDistribution value="3" recordCount="15.0"/>
+								<ScoreDistribution value="4" recordCount="0.0"/>
+								<ScoreDistribution value="5" recordCount="2.0"/>
+							</Node>
+						</Node>
+						<Node score="2" recordCount="11.0">
+							<SimplePredicate field="TopOilTemperature" operator="lessOrEqual" value="90.25474132"/>
+							<ScoreDistribution value="0" recordCount="0.0"/>
+							<ScoreDistribution value="1" recordCount="3.0"/>
+							<ScoreDistribution value="2" recordCount="8.0"/>
+							<ScoreDistribution value="3" recordCount="0.0"/>
+							<ScoreDistribution value="4" recordCount="0.0"/>
+							<ScoreDistribution value="5" recordCount="0.0"/>
+						</Node>
+						<Node score="5" recordCount="9.0">
+							<True/>
+							<ScoreDistribution value="0" recordCount="0.0"/>
+							<ScoreDistribution value="1" recordCount="0.0"/>
+							<ScoreDistribution value="2" recordCount="0.0"/>
+							<ScoreDistribution value="3" recordCount="1.0"/>
+							<ScoreDistribution value="4" recordCount="0.0"/>
+							<ScoreDistribution value="5" recordCount="8.0"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="15">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction" splitCharacteristic="multiSplit">
+					<MiningSchema>
+						<MiningField name="TopOilTemperature"/>
+						<MiningField name="OilVolume"/>
+						<MiningField name="VibrationLevel"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node>
+							<SimplePredicate field="VibrationLevel" operator="lessOrEqual" value="2.0"/>
+							<Node>
+								<SimplePredicate field="OilVolume" operator="lessOrEqual" value="884.339308"/>
+								<Node score="0" recordCount="110.0">
+									<SimplePredicate field="TopOilTemperature" operator="lessOrEqual" value="77.7835393"/>
+									<ScoreDistribution value="0" recordCount="110.0"/>
+									<ScoreDistribution value="1" recordCount="0.0"/>
+									<ScoreDistribution value="2" recordCount="0.0"/>
+									<ScoreDistribution value="3" recordCount="0.0"/>
+									<ScoreDistribution value="4" recordCount="0.0"/>
+									<ScoreDistribution value="5" recordCount="0.0"/>
+								</Node>
+								<Node score="1" recordCount="1.0">
+									<True/>
+									<ScoreDistribution value="0" recordCount="0.0"/>
+									<ScoreDistribution value="1" recordCount="1.0"/>
+									<ScoreDistribution value="2" recordCount="0.0"/>
+									<ScoreDistribution value="3" recordCount="0.0"/>
+									<ScoreDistribution value="4" recordCount="0.0"/>
+									<ScoreDistribution value="5" recordCount="0.0"/>
+								</Node>
+							</Node>
+							<Node score="0" recordCount="318.0">
+								<True/>
+								<ScoreDistribution value="0" recordCount="318.0"/>
+								<ScoreDistribution value="1" recordCount="0.0"/>
+								<ScoreDistribution value="2" recordCount="0.0"/>
+								<ScoreDistribution value="3" recordCount="0.0"/>
+								<ScoreDistribution value="4" recordCount="0.0"/>
+								<ScoreDistribution value="5" recordCount="0.0"/>
+							</Node>
+						</Node>
+						<Node>
+							<SimplePredicate field="TopOilTemperature" operator="lessOrEqual" value="80.15538566"/>
+							<Node score="0" recordCount="609.0">
+								<SimplePredicate field="TopOilTemperature" operator="lessOrEqual" value="77.7835393"/>
+								<ScoreDistribution value="0" recordCount="609.0"/>
+								<ScoreDistribution value="1" recordCount="0.0"/>
+								<ScoreDistribution value="2" recordCount="0.0"/>
+								<ScoreDistribution value="3" recordCount="0.0"/>
+								<ScoreDistribution value="4" recordCount="0.0"/>
+								<ScoreDistribution value="5" recordCount="0.0"/>
+							</Node>
+							<Node>
+								<SimplePredicate field="VibrationLevel" operator="lessOrEqual" value="3.0"/>
+								<Node score="0" recordCount="7.0">
+									<SimplePredicate field="OilVolume" operator="lessOrEqual" value="906.1749935"/>
+									<ScoreDistribution value="0" recordCount="7.0"/>
+									<ScoreDistribution value="1" recordCount="0.0"/>
+									<ScoreDistribution value="2" recordCount="0.0"/>
+									<ScoreDistribution value="3" recordCount="0.0"/>
+									<ScoreDistribution value="4" recordCount="0.0"/>
+									<ScoreDistribution value="5" recordCount="0.0"/>
+								</Node>
+								<Node score="0" recordCount="10.0">
+									<True/>
+									<ScoreDistribution value="0" recordCount="6.0"/>
+									<ScoreDistribution value="1" recordCount="4.0"/>
+									<ScoreDistribution value="2" recordCount="0.0"/>
+									<ScoreDistribution value="3" recordCount="0.0"/>
+									<ScoreDistribution value="4" recordCount="0.0"/>
+									<ScoreDistribution value="5" recordCount="0.0"/>
+								</Node>
+							</Node>
+							<Node score="0" recordCount="17.0">
+								<SimplePredicate field="OilVolume" operator="lessOrEqual" value="944.5162317"/>
+								<ScoreDistribution value="0" recordCount="17.0"/>
+								<ScoreDistribution value="1" recordCount="0.0"/>
+								<ScoreDistribution value="2" recordCount="0.0"/>
+								<ScoreDistribution value="3" recordCount="0.0"/>
+								<ScoreDistribution value="4" recordCount="0.0"/>
+								<ScoreDistribution value="5" recordCount="0.0"/>
+							</Node>
+							<Node score="1" recordCount="2.0">
+								<True/>
+								<ScoreDistribution value="0" recordCount="0.0"/>
+								<ScoreDistribution value="1" recordCount="2.0"/>
+								<ScoreDistribution value="2" recordCount="0.0"/>
+								<ScoreDistribution value="3" recordCount="0.0"/>
+								<ScoreDistribution value="4" recordCount="0.0"/>
+								<ScoreDistribution value="5" recordCount="0.0"/>
+							</Node>
+						</Node>
+						<Node>
+							<SimplePredicate field="OilVolume" operator="lessOrEqual" value="895.7088911"/>
+							<Node>
+								<SimplePredicate field="OilVolume" operator="lessOrEqual" value="887.8660418"/>
+								<Node score="4" recordCount="2.0">
+									<SimplePredicate field="OilVolume" operator="lessOrEqual" value="881.7962106"/>
+									<ScoreDistribution value="0" recordCount="0.0"/>
+									<ScoreDistribution value="1" recordCount="0.0"/>
+									<ScoreDistribution value="2" recordCount="0.0"/>
+									<ScoreDistribution value="3" recordCount="0.0"/>
+									<ScoreDistribution value="4" recordCount="1.0"/>
+									<ScoreDistribution value="5" recordCount="1.0"/>
+								</Node>
+								<Node score="2" recordCount="9.0">
+									<True/>
+									<ScoreDistribution value="0" recordCount="0.0"/>
+									<ScoreDistribution value="1" recordCount="1.0"/>
+									<ScoreDistribution value="2" recordCount="7.0"/>
+									<ScoreDistribution value="3" recordCount="0.0"/>
+									<ScoreDistribution value="4" recordCount="1.0"/>
+									<ScoreDistribution value="5" recordCount="0.0"/>
+								</Node>
+							</Node>
+							<Node score="4" recordCount="9.0">
+								<SimplePredicate field="VibrationLevel" operator="lessOrEqual" value="3.0"/>
+								<ScoreDistribution value="0" recordCount="0.0"/>
+								<ScoreDistribution value="1" recordCount="0.0"/>
+								<ScoreDistribution value="2" recordCount="0.0"/>
+								<ScoreDistribution value="3" recordCount="4.0"/>
+								<ScoreDistribution value="4" recordCount="5.0"/>
+								<ScoreDistribution value="5" recordCount="0.0"/>
+							</Node>
+							<Node score="5" recordCount="1.0">
+								<True/>
+								<ScoreDistribution value="0" recordCount="0.0"/>
+								<ScoreDistribution value="1" recordCount="0.0"/>
+								<ScoreDistribution value="2" recordCount="0.0"/>
+								<ScoreDistribution value="3" recordCount="0.0"/>
+								<ScoreDistribution value="4" recordCount="0.0"/>
+								<ScoreDistribution value="5" recordCount="1.0"/>
+							</Node>
+						</Node>
+						<Node>
+							<SimplePredicate field="TopOilTemperature" operator="lessOrEqual" value="90.25474132"/>
+							<Node score="1" recordCount="32.0">
+								<SimplePredicate field="TopOilTemperature" operator="lessOrEqual" value="83.85991517"/>
+								<ScoreDistribution value="0" recordCount="0.0"/>
+								<ScoreDistribution value="1" recordCount="32.0"/>
+								<ScoreDistribution value="2" recordCount="0.0"/>
+								<ScoreDistribution value="3" recordCount="0.0"/>
+								<ScoreDistribution value="4" recordCount="0.0"/>
+								<ScoreDistribution value="5" recordCount="0.0"/>
+							</Node>
+							<Node score="1" recordCount="26.0">
+								<True/>
+								<ScoreDistribution value="0" recordCount="0.0"/>
+								<ScoreDistribution value="1" recordCount="12.0"/>
+								<ScoreDistribution value="2" recordCount="12.0"/>
+								<ScoreDistribution value="3" recordCount="2.0"/>
+								<ScoreDistribution value="4" recordCount="0.0"/>
+								<ScoreDistribution value="5" recordCount="0.0"/>
+							</Node>
+						</Node>
+						<Node score="3" recordCount="2.0">
+							<SimplePredicate field="VibrationLevel" operator="lessOrEqual" value="3.0"/>
+							<ScoreDistribution value="0" recordCount="0.0"/>
+							<ScoreDistribution value="1" recordCount="0.0"/>
+							<ScoreDistribution value="2" recordCount="0.0"/>
+							<ScoreDistribution value="3" recordCount="2.0"/>
+							<ScoreDistribution value="4" recordCount="0.0"/>
+							<ScoreDistribution value="5" recordCount="0.0"/>
+						</Node>
+						<Node score="5" recordCount="25.0">
+							<True/>
+							<ScoreDistribution value="0" recordCount="0.0"/>
+							<ScoreDistribution value="1" recordCount="0.0"/>
+							<ScoreDistribution value="2" recordCount="0.0"/>
+							<ScoreDistribution value="3" recordCount="9.0"/>
+							<ScoreDistribution value="4" recordCount="5.0"/>
+							<ScoreDistribution value="5" recordCount="11.0"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="16">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction" splitCharacteristic="multiSplit">
+					<MiningSchema>
+						<MiningField name="TopOilTemperature"/>
+						<MiningField name="OilVolume"/>
+						<MiningField name="VibrationLevel"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node score="0" recordCount="975.0">
+							<SimplePredicate field="TopOilTemperature" operator="lessOrEqual" value="80.15538566"/>
+							<ScoreDistribution value="0" recordCount="975.0"/>
+							<ScoreDistribution value="1" recordCount="0.0"/>
+							<ScoreDistribution value="2" recordCount="0.0"/>
+							<ScoreDistribution value="3" recordCount="0.0"/>
+							<ScoreDistribution value="4" recordCount="0.0"/>
+							<ScoreDistribution value="5" recordCount="0.0"/>
+						</Node>
+						<Node>
+							<SimplePredicate field="TopOilTemperature" operator="lessOrEqual" value="90.25474132"/>
+							<Node score="1" recordCount="6.0">
+								<SimplePredicate field="VibrationLevel" operator="lessOrEqual" value="2.0"/>
+								<ScoreDistribution value="0" recordCount="0.0"/>
+								<ScoreDistribution value="1" recordCount="6.0"/>
+								<ScoreDistribution value="2" recordCount="0.0"/>
+								<ScoreDistribution value="3" recordCount="0.0"/>
+								<ScoreDistribution value="4" recordCount="0.0"/>
+								<ScoreDistribution value="5" recordCount="0.0"/>
+							</Node>
+							<Node score="1" recordCount="26.0">
+								<SimplePredicate field="TopOilTemperature" operator="lessOrEqual" value="83.85991517"/>
+								<ScoreDistribution value="0" recordCount="0.0"/>
+								<ScoreDistribution value="1" recordCount="26.0"/>
+								<ScoreDistribution value="2" recordCount="0.0"/>
+								<ScoreDistribution value="3" recordCount="0.0"/>
+								<ScoreDistribution value="4" recordCount="0.0"/>
+								<ScoreDistribution value="5" recordCount="0.0"/>
+							</Node>
+							<Node score="2" recordCount="13.0">
+								<SimplePredicate field="VibrationLevel" operator="lessOrEqual" value="3.0"/>
+								<ScoreDistribution value="0" recordCount="0.0"/>
+								<ScoreDistribution value="1" recordCount="1.0"/>
+								<ScoreDistribution value="2" recordCount="12.0"/>
+								<ScoreDistribution value="3" recordCount="0.0"/>
+								<ScoreDistribution value="4" recordCount="0.0"/>
+								<ScoreDistribution value="5" recordCount="0.0"/>
+							</Node>
+							<Node score="2" recordCount="18.0">
+								<True/>
+								<ScoreDistribution value="0" recordCount="0.0"/>
+								<ScoreDistribution value="1" recordCount="7.0"/>
+								<ScoreDistribution value="2" recordCount="10.0"/>
+								<ScoreDistribution value="3" recordCount="1.0"/>
+								<ScoreDistribution value="4" recordCount="0.0"/>
+								<ScoreDistribution value="5" recordCount="0.0"/>
+							</Node>
+						</Node>
+						<Node>
+							<SimplePredicate field="VibrationLevel" operator="lessOrEqual" value="3.0"/>
+							<Node score="3" recordCount="7.0">
+								<SimplePredicate field="OilVolume" operator="lessOrEqual" value="895.7088911"/>
+								<ScoreDistribution value="0" recordCount="0.0"/>
+								<ScoreDistribution value="1" recordCount="0.0"/>
+								<ScoreDistribution value="2" recordCount="0.0"/>
+								<ScoreDistribution value="3" recordCount="4.0"/>
+								<ScoreDistribution value="4" recordCount="3.0"/>
+								<ScoreDistribution value="5" recordCount="0.0"/>
+							</Node>
+							<Node score="4" recordCount="3.0">
+								<True/>
+								<ScoreDistribution value="0" recordCount="0.0"/>
+								<ScoreDistribution value="1" recordCount="0.0"/>
+								<ScoreDistribution value="2" recordCount="0.0"/>
+								<ScoreDistribution value="3" recordCount="0.0"/>
+								<ScoreDistribution value="4" recordCount="3.0"/>
+								<ScoreDistribution value="5" recordCount="0.0"/>
+							</Node>
+						</Node>
+						<Node score="3" recordCount="26.0">
+							<True/>
+							<ScoreDistribution value="0" recordCount="0.0"/>
+							<ScoreDistribution value="1" recordCount="0.0"/>
+							<ScoreDistribution value="2" recordCount="0.0"/>
+							<ScoreDistribution value="3" recordCount="13.0"/>
+							<ScoreDistribution value="4" recordCount="4.0"/>
+							<ScoreDistribution value="5" recordCount="9.0"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="17">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction" splitCharacteristic="multiSplit">
+					<MiningSchema>
+						<MiningField name="TopOilTemperature"/>
+						<MiningField name="OilVolume"/>
+						<MiningField name="VibrationLevel"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node>
+							<SimplePredicate field="TopOilTemperature" operator="lessOrEqual" value="80.15538566"/>
+							<Node score="0" recordCount="970.0">
+								<SimplePredicate field="OilVolume" operator="lessOrEqual" value="952.8965317"/>
+								<ScoreDistribution value="0" recordCount="970.0"/>
+								<ScoreDistribution value="1" recordCount="0.0"/>
+								<ScoreDistribution value="2" recordCount="0.0"/>
+								<ScoreDistribution value="3" recordCount="0.0"/>
+								<ScoreDistribution value="4" recordCount="0.0"/>
+								<ScoreDistribution value="5" recordCount="0.0"/>
+							</Node>
+							<Node score="0" recordCount="27.0">
+								<SimplePredicate field="TopOilTemperature" operator="lessOrEqual" value="72.18122484"/>
+								<ScoreDistribution value="0" recordCount="27.0"/>
+								<ScoreDistribution value="1" recordCount="0.0"/>
+								<ScoreDistribution value="2" recordCount="0.0"/>
+								<ScoreDistribution value="3" recordCount="0.0"/>
+								<ScoreDistribution value="4" recordCount="0.0"/>
+								<ScoreDistribution value="5" recordCount="0.0"/>
+							</Node>
+							<Node score="1" recordCount="1.0">
+								<True/>
+								<ScoreDistribution value="0" recordCount="0.0"/>
+								<ScoreDistribution value="1" recordCount="1.0"/>
+								<ScoreDistribution value="2" recordCount="0.0"/>
+								<ScoreDistribution value="3" recordCount="0.0"/>
+								<ScoreDistribution value="4" recordCount="0.0"/>
+								<ScoreDistribution value="5" recordCount="0.0"/>
+							</Node>
+						</Node>
+						<Node score="1" recordCount="48.0">
+							<SimplePredicate field="TopOilTemperature" operator="lessOrEqual" value="83.85991517"/>
+							<ScoreDistribution value="0" recordCount="0.0"/>
+							<ScoreDistribution value="1" recordCount="48.0"/>
+							<ScoreDistribution value="2" recordCount="0.0"/>
+							<ScoreDistribution value="3" recordCount="0.0"/>
+							<ScoreDistribution value="4" recordCount="0.0"/>
+							<ScoreDistribution value="5" recordCount="0.0"/>
+						</Node>
+						<Node>
+							<SimplePredicate field="OilVolume" operator="lessOrEqual" value="906.1749935"/>
+							<Node score="2" recordCount="10.0">
+								<SimplePredicate field="TopOilTemperature" operator="lessOrEqual" value="90.25474132"/>
+								<ScoreDistribution value="0" recordCount="0.0"/>
+								<ScoreDistribution value="1" recordCount="0.0"/>
+								<ScoreDistribution value="2" recordCount="10.0"/>
+								<ScoreDistribution value="3" recordCount="0.0"/>
+								<ScoreDistribution value="4" recordCount="0.0"/>
+								<ScoreDistribution value="5" recordCount="0.0"/>
+							</Node>
+							<Node score="4" recordCount="13.0">
+								<SimplePredicate field="VibrationLevel" operator="lessOrEqual" value="3.0"/>
+								<ScoreDistribution value="0" recordCount="0.0"/>
+								<ScoreDistribution value="1" recordCount="0.0"/>
+								<ScoreDistribution value="2" recordCount="0.0"/>
+								<ScoreDistribution value="3" recordCount="3.0"/>
+								<ScoreDistribution value="4" recordCount="9.0"/>
+								<ScoreDistribution value="5" recordCount="1.0"/>
+							</Node>
+							<Node score="4" recordCount="3.0">
+								<True/>
+								<ScoreDistribution value="0" recordCount="0.0"/>
+								<ScoreDistribution value="1" recordCount="0.0"/>
+								<ScoreDistribution value="2" recordCount="0.0"/>
+								<ScoreDistribution value="3" recordCount="0.0"/>
+								<ScoreDistribution value="4" recordCount="3.0"/>
+								<ScoreDistribution value="5" recordCount="0.0"/>
+							</Node>
+						</Node>
+						<Node>
+							<SimplePredicate field="TopOilTemperature" operator="lessOrEqual" value="90.25474132"/>
+							<Node score="1" recordCount="12.0">
+								<SimplePredicate field="OilVolume" operator="lessOrEqual" value="925.2613626"/>
+								<ScoreDistribution value="0" recordCount="0.0"/>
+								<ScoreDistribution value="1" recordCount="5.0"/>
+								<ScoreDistribution value="2" recordCount="4.0"/>
+								<ScoreDistribution value="3" recordCount="3.0"/>
+								<ScoreDistribution value="4" recordCount="0.0"/>
+								<ScoreDistribution value="5" recordCount="0.0"/>
+							</Node>
+							<Node score="2" recordCount="3.0">
+								<True/>
+								<ScoreDistribution value="0" recordCount="0.0"/>
+								<ScoreDistribution value="1" recordCount="0.0"/>
+								<ScoreDistribution value="2" recordCount="3.0"/>
+								<ScoreDistribution value="3" recordCount="0.0"/>
+								<ScoreDistribution value="4" recordCount="0.0"/>
+								<ScoreDistribution value="5" recordCount="0.0"/>
+							</Node>
+						</Node>
+						<Node score="3" recordCount="17.0">
+							<SimplePredicate field="OilVolume" operator="lessOrEqual" value="952.8965317"/>
+							<ScoreDistribution value="0" recordCount="0.0"/>
+							<ScoreDistribution value="1" recordCount="0.0"/>
+							<ScoreDistribution value="2" recordCount="0.0"/>
+							<ScoreDistribution value="3" recordCount="9.0"/>
+							<ScoreDistribution value="4" recordCount="3.0"/>
+							<ScoreDistribution value="5" recordCount="5.0"/>
+						</Node>
+						<Node score="4" recordCount="1.0">
+							<True/>
+							<ScoreDistribution value="0" recordCount="0.0"/>
+							<ScoreDistribution value="1" recordCount="0.0"/>
+							<ScoreDistribution value="2" recordCount="0.0"/>
+							<ScoreDistribution value="3" recordCount="0.0"/>
+							<ScoreDistribution value="4" recordCount="1.0"/>
+							<ScoreDistribution value="5" recordCount="0.0"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="18">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction" splitCharacteristic="multiSplit">
+					<MiningSchema>
+						<MiningField name="TopOilTemperature"/>
+						<MiningField name="OilVolume"/>
+						<MiningField name="VibrationLevel"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node>
+							<SimplePredicate field="TopOilTemperature" operator="lessOrEqual" value="80.15538566"/>
+							<Node score="0" recordCount="1010.0">
+								<SimplePredicate field="TopOilTemperature" operator="lessOrEqual" value="77.7835393"/>
+								<ScoreDistribution value="0" recordCount="1010.0"/>
+								<ScoreDistribution value="1" recordCount="0.0"/>
+								<ScoreDistribution value="2" recordCount="0.0"/>
+								<ScoreDistribution value="3" recordCount="0.0"/>
+								<ScoreDistribution value="4" recordCount="0.0"/>
+								<ScoreDistribution value="5" recordCount="0.0"/>
+							</Node>
+							<Node>
+								<SimplePredicate field="OilVolume" operator="lessOrEqual" value="944.5162317"/>
+								<Node score="0" recordCount="15.0">
+									<SimplePredicate field="OilVolume" operator="lessOrEqual" value="906.1749935"/>
+									<ScoreDistribution value="0" recordCount="15.0"/>
+									<ScoreDistribution value="1" recordCount="0.0"/>
+									<ScoreDistribution value="2" recordCount="0.0"/>
+									<ScoreDistribution value="3" recordCount="0.0"/>
+									<ScoreDistribution value="4" recordCount="0.0"/>
+									<ScoreDistribution value="5" recordCount="0.0"/>
+								</Node>
+								<Node score="0" recordCount="9.0">
+									<SimplePredicate field="VibrationLevel" operator="lessOrEqual" value="3.0"/>
+									<ScoreDistribution value="0" recordCount="6.0"/>
+									<ScoreDistribution value="1" recordCount="3.0"/>
+									<ScoreDistribution value="2" recordCount="0.0"/>
+									<ScoreDistribution value="3" recordCount="0.0"/>
+									<ScoreDistribution value="4" recordCount="0.0"/>
+									<ScoreDistribution value="5" recordCount="0.0"/>
+								</Node>
+								<Node score="0" recordCount="10.0">
+									<True/>
+									<ScoreDistribution value="0" recordCount="10.0"/>
+									<ScoreDistribution value="1" recordCount="0.0"/>
+									<ScoreDistribution value="2" recordCount="0.0"/>
+									<ScoreDistribution value="3" recordCount="0.0"/>
+									<ScoreDistribution value="4" recordCount="0.0"/>
+									<ScoreDistribution value="5" recordCount="0.0"/>
+								</Node>
+							</Node>
+							<Node score="1" recordCount="1.0">
+								<True/>
+								<ScoreDistribution value="0" recordCount="0.0"/>
+								<ScoreDistribution value="1" recordCount="1.0"/>
+								<ScoreDistribution value="2" recordCount="0.0"/>
+								<ScoreDistribution value="3" recordCount="0.0"/>
+								<ScoreDistribution value="4" recordCount="0.0"/>
+								<ScoreDistribution value="5" recordCount="0.0"/>
+							</Node>
+						</Node>
+						<Node>
+							<SimplePredicate field="VibrationLevel" operator="lessOrEqual" value="3.0"/>
+							<Node>
+								<SimplePredicate field="OilVolume" operator="lessOrEqual" value="895.7088911"/>
+								<Node>
+									<SimplePredicate field="TopOilTemperature" operator="lessOrEqual" value="90.25474132"/>
+									<Node score="1" recordCount="5.0">
+										<SimplePredicate field="VibrationLevel" operator="lessOrEqual" value="2.0"/>
+										<ScoreDistribution value="0" recordCount="0.0"/>
+										<ScoreDistribution value="1" recordCount="5.0"/>
+										<ScoreDistribution value="2" recordCount="0.0"/>
+										<ScoreDistribution value="3" recordCount="0.0"/>
+										<ScoreDistribution value="4" recordCount="0.0"/>
+										<ScoreDistribution value="5" recordCount="0.0"/>
+									</Node>
+									<Node score="2" recordCount="8.0">
+										<True/>
+										<ScoreDistribution value="0" recordCount="0.0"/>
+										<ScoreDistribution value="1" recordCount="1.0"/>
+										<ScoreDistribution value="2" recordCount="7.0"/>
+										<ScoreDistribution value="3" recordCount="0.0"/>
+										<ScoreDistribution value="4" recordCount="0.0"/>
+										<ScoreDistribution value="5" recordCount="0.0"/>
+									</Node>
+								</Node>
+								<Node score="4" recordCount="3.0">
+									<SimplePredicate field="OilVolume" operator="lessOrEqual" value="887.8660418"/>
+									<ScoreDistribution value="0" recordCount="0.0"/>
+									<ScoreDistribution value="1" recordCount="0.0"/>
+									<ScoreDistribution value="2" recordCount="0.0"/>
+									<ScoreDistribution value="3" recordCount="0.0"/>
+									<ScoreDistribution value="4" recordCount="3.0"/>
+									<ScoreDistribution value="5" recordCount="0.0"/>
+								</Node>
+								<Node score="4" recordCount="8.0">
+									<True/>
+									<ScoreDistribution value="0" recordCount="0.0"/>
+									<ScoreDistribution value="1" recordCount="0.0"/>
+									<ScoreDistribution value="2" recordCount="0.0"/>
+									<ScoreDistribution value="3" recordCount="3.0"/>
+									<ScoreDistribution value="4" recordCount="5.0"/>
+									<ScoreDistribution value="5" recordCount="0.0"/>
+								</Node>
+							</Node>
+							<Node score="1" recordCount="19.0">
+								<SimplePredicate field="TopOilTemperature" operator="lessOrEqual" value="83.85991517"/>
+								<ScoreDistribution value="0" recordCount="0.0"/>
+								<ScoreDistribution value="1" recordCount="19.0"/>
+								<ScoreDistribution value="2" recordCount="0.0"/>
+								<ScoreDistribution value="3" recordCount="0.0"/>
+								<ScoreDistribution value="4" recordCount="0.0"/>
+								<ScoreDistribution value="5" recordCount="0.0"/>
+							</Node>
+							<Node score="2" recordCount="5.0">
+								<SimplePredicate field="TopOilTemperature" operator="lessOrEqual" value="90.25474132"/>
+								<ScoreDistribution value="0" recordCount="0.0"/>
+								<ScoreDistribution value="1" recordCount="1.0"/>
+								<ScoreDistribution value="2" recordCount="4.0"/>
+								<ScoreDistribution value="3" recordCount="0.0"/>
+								<ScoreDistribution value="4" recordCount="0.0"/>
+								<ScoreDistribution value="5" recordCount="0.0"/>
+							</Node>
+							<Node score="4" recordCount="3.0">
+								<True/>
+								<ScoreDistribution value="0" recordCount="0.0"/>
+								<ScoreDistribution value="1" recordCount="0.0"/>
+								<ScoreDistribution value="2" recordCount="0.0"/>
+								<ScoreDistribution value="3" recordCount="1.0"/>
+								<ScoreDistribution value="4" recordCount="2.0"/>
+								<ScoreDistribution value="5" recordCount="0.0"/>
+							</Node>
+						</Node>
+						<Node>
+							<SimplePredicate field="TopOilTemperature" operator="lessOrEqual" value="90.25474132"/>
+							<Node score="1" recordCount="16.0">
+								<SimplePredicate field="TopOilTemperature" operator="lessOrEqual" value="83.85991517"/>
+								<ScoreDistribution value="0" recordCount="0.0"/>
+								<ScoreDistribution value="1" recordCount="16.0"/>
+								<ScoreDistribution value="2" recordCount="0.0"/>
+								<ScoreDistribution value="3" recordCount="0.0"/>
+								<ScoreDistribution value="4" recordCount="0.0"/>
+								<ScoreDistribution value="5" recordCount="0.0"/>
+							</Node>
+							<Node score="2" recordCount="14.0">
+								<SimplePredicate field="OilVolume" operator="lessOrEqual" value="923.2327509"/>
+								<ScoreDistribution value="0" recordCount="0.0"/>
+								<ScoreDistribution value="1" recordCount="1.0"/>
+								<ScoreDistribution value="2" recordCount="10.0"/>
+								<ScoreDistribution value="3" recordCount="3.0"/>
+								<ScoreDistribution value="4" recordCount="0.0"/>
+								<ScoreDistribution value="5" recordCount="0.0"/>
+							</Node>
+							<Node score="2" recordCount="12.0">
+								<True/>
+								<ScoreDistribution value="0" recordCount="0.0"/>
+								<ScoreDistribution value="1" recordCount="5.0"/>
+								<ScoreDistribution value="2" recordCount="7.0"/>
+								<ScoreDistribution value="3" recordCount="0.0"/>
+								<ScoreDistribution value="4" recordCount="0.0"/>
+								<ScoreDistribution value="5" recordCount="0.0"/>
+							</Node>
+						</Node>
+						<Node>
+							<SimplePredicate field="OilVolume" operator="lessOrEqual" value="901.1225822"/>
+							<Node score="5" recordCount="2.0">
+								<SimplePredicate field="OilVolume" operator="lessOrEqual" value="889.8451283"/>
+								<ScoreDistribution value="0" recordCount="0.0"/>
+								<ScoreDistribution value="1" recordCount="0.0"/>
+								<ScoreDistribution value="2" recordCount="0.0"/>
+								<ScoreDistribution value="3" recordCount="0.0"/>
+								<ScoreDistribution value="4" recordCount="0.0"/>
+								<ScoreDistribution value="5" recordCount="2.0"/>
+							</Node>
+							<Node score="4" recordCount="2.0">
+								<True/>
+								<ScoreDistribution value="0" recordCount="0.0"/>
+								<ScoreDistribution value="1" recordCount="0.0"/>
+								<ScoreDistribution value="2" recordCount="0.0"/>
+								<ScoreDistribution value="3" recordCount="0.0"/>
+								<ScoreDistribution value="4" recordCount="2.0"/>
+								<ScoreDistribution value="5" recordCount="0.0"/>
+							</Node>
+						</Node>
+						<Node score="3" recordCount="5.0">
+							<SimplePredicate field="OilVolume" operator="lessOrEqual" value="907.7994454"/>
+							<ScoreDistribution value="0" recordCount="0.0"/>
+							<ScoreDistribution value="1" recordCount="0.0"/>
+							<ScoreDistribution value="2" recordCount="0.0"/>
+							<ScoreDistribution value="3" recordCount="5.0"/>
+							<ScoreDistribution value="4" recordCount="0.0"/>
+							<ScoreDistribution value="5" recordCount="0.0"/>
+						</Node>
+						<Node score="5" recordCount="18.0">
+							<True/>
+							<ScoreDistribution value="0" recordCount="0.0"/>
+							<ScoreDistribution value="1" recordCount="0.0"/>
+							<ScoreDistribution value="2" recordCount="0.0"/>
+							<ScoreDistribution value="3" recordCount="7.0"/>
+							<ScoreDistribution value="4" recordCount="2.0"/>
+							<ScoreDistribution value="5" recordCount="9.0"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="19">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction" splitCharacteristic="multiSplit">
+					<MiningSchema>
+						<MiningField name="TopOilTemperature"/>
+						<MiningField name="OilVolume"/>
+						<MiningField name="VibrationLevel"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node>
+							<SimplePredicate field="TopOilTemperature" operator="lessOrEqual" value="80.15538566"/>
+							<Node score="0" recordCount="1029.0">
+								<SimplePredicate field="TopOilTemperature" operator="lessOrEqual" value="77.7835393"/>
+								<ScoreDistribution value="0" recordCount="1029.0"/>
+								<ScoreDistribution value="1" recordCount="0.0"/>
+								<ScoreDistribution value="2" recordCount="0.0"/>
+								<ScoreDistribution value="3" recordCount="0.0"/>
+								<ScoreDistribution value="4" recordCount="0.0"/>
+								<ScoreDistribution value="5" recordCount="0.0"/>
+							</Node>
+							<Node score="0" recordCount="32.0">
+								<SimplePredicate field="OilVolume" operator="lessOrEqual" value="944.5162317"/>
+								<ScoreDistribution value="0" recordCount="32.0"/>
+								<ScoreDistribution value="1" recordCount="0.0"/>
+								<ScoreDistribution value="2" recordCount="0.0"/>
+								<ScoreDistribution value="3" recordCount="0.0"/>
+								<ScoreDistribution value="4" recordCount="0.0"/>
+								<ScoreDistribution value="5" recordCount="0.0"/>
+							</Node>
+							<Node score="1" recordCount="3.0">
+								<True/>
+								<ScoreDistribution value="0" recordCount="0.0"/>
+								<ScoreDistribution value="1" recordCount="3.0"/>
+								<ScoreDistribution value="2" recordCount="0.0"/>
+								<ScoreDistribution value="3" recordCount="0.0"/>
+								<ScoreDistribution value="4" recordCount="0.0"/>
+								<ScoreDistribution value="5" recordCount="0.0"/>
+							</Node>
+						</Node>
+						<Node>
+							<SimplePredicate field="OilVolume" operator="lessOrEqual" value="906.1749935"/>
+							<Node score="1" recordCount="7.0">
+								<SimplePredicate field="VibrationLevel" operator="lessOrEqual" value="2.0"/>
+								<ScoreDistribution value="0" recordCount="0.0"/>
+								<ScoreDistribution value="1" recordCount="7.0"/>
+								<ScoreDistribution value="2" recordCount="0.0"/>
+								<ScoreDistribution value="3" recordCount="0.0"/>
+								<ScoreDistribution value="4" recordCount="0.0"/>
+								<ScoreDistribution value="5" recordCount="0.0"/>
+							</Node>
+							<Node>
+								<SimplePredicate field="VibrationLevel" operator="lessOrEqual" value="3.0"/>
+								<Node score="1" recordCount="5.0">
+									<SimplePredicate field="TopOilTemperature" operator="lessOrEqual" value="83.85991517"/>
+									<ScoreDistribution value="0" recordCount="0.0"/>
+									<ScoreDistribution value="1" recordCount="5.0"/>
+									<ScoreDistribution value="2" recordCount="0.0"/>
+									<ScoreDistribution value="3" recordCount="0.0"/>
+									<ScoreDistribution value="4" recordCount="0.0"/>
+									<ScoreDistribution value="5" recordCount="0.0"/>
+								</Node>
+								<Node score="2" recordCount="23.0">
+									<True/>
+									<ScoreDistribution value="0" recordCount="0.0"/>
+									<ScoreDistribution value="1" recordCount="0.0"/>
+									<ScoreDistribution value="2" recordCount="17.0"/>
+									<ScoreDistribution value="3" recordCount="3.0"/>
+									<ScoreDistribution value="4" recordCount="3.0"/>
+									<ScoreDistribution value="5" recordCount="0.0"/>
+								</Node>
+							</Node>
+							<Node score="5" recordCount="2.0">
+								<SimplePredicate field="OilVolume" operator="lessOrEqual" value="889.8451283"/>
+								<ScoreDistribution value="0" recordCount="0.0"/>
+								<ScoreDistribution value="1" recordCount="0.0"/>
+								<ScoreDistribution value="2" recordCount="0.0"/>
+								<ScoreDistribution value="3" recordCount="0.0"/>
+								<ScoreDistribution value="4" recordCount="0.0"/>
+								<ScoreDistribution value="5" recordCount="2.0"/>
+							</Node>
+							<Node score="4" recordCount="4.0">
+								<True/>
+								<ScoreDistribution value="0" recordCount="0.0"/>
+								<ScoreDistribution value="1" recordCount="0.0"/>
+								<ScoreDistribution value="2" recordCount="0.0"/>
+								<ScoreDistribution value="3" recordCount="1.0"/>
+								<ScoreDistribution value="4" recordCount="3.0"/>
+								<ScoreDistribution value="5" recordCount="0.0"/>
+							</Node>
+						</Node>
+						<Node score="1" recordCount="11.0">
+							<SimplePredicate field="VibrationLevel" operator="lessOrEqual" value="3.0"/>
+							<ScoreDistribution value="0" recordCount="0.0"/>
+							<ScoreDistribution value="1" recordCount="11.0"/>
+							<ScoreDistribution value="2" recordCount="0.0"/>
+							<ScoreDistribution value="3" recordCount="0.0"/>
+							<ScoreDistribution value="4" recordCount="0.0"/>
+							<ScoreDistribution value="5" recordCount="0.0"/>
+						</Node>
+						<Node>
+							<SimplePredicate field="OilVolume" operator="lessOrEqual" value="917.023106"/>
+							<Node score="1" recordCount="12.0">
+								<SimplePredicate field="OilVolume" operator="lessOrEqual" value="915.3322402"/>
+								<ScoreDistribution value="0" recordCount="0.0"/>
+								<ScoreDistribution value="1" recordCount="5.0"/>
+								<ScoreDistribution value="2" recordCount="3.0"/>
+								<ScoreDistribution value="3" recordCount="3.0"/>
+								<ScoreDistribution value="4" recordCount="0.0"/>
+								<ScoreDistribution value="5" recordCount="1.0"/>
+							</Node>
+							<Node score="3" recordCount="3.0">
+								<True/>
+								<ScoreDistribution value="0" recordCount="0.0"/>
+								<ScoreDistribution value="1" recordCount="0.0"/>
+								<ScoreDistribution value="2" recordCount="0.0"/>
+								<ScoreDistribution value="3" recordCount="3.0"/>
+								<ScoreDistribution value="4" recordCount="0.0"/>
+								<ScoreDistribution value="5" recordCount="0.0"/>
+							</Node>
+						</Node>
+						<Node score="1" recordCount="20.0">
+							<SimplePredicate field="TopOilTemperature" operator="lessOrEqual" value="83.85991517"/>
+							<ScoreDistribution value="0" recordCount="0.0"/>
+							<ScoreDistribution value="1" recordCount="20.0"/>
+							<ScoreDistribution value="2" recordCount="0.0"/>
+							<ScoreDistribution value="3" recordCount="0.0"/>
+							<ScoreDistribution value="4" recordCount="0.0"/>
+							<ScoreDistribution value="5" recordCount="0.0"/>
+						</Node>
+						<Node score="2" recordCount="18.0">
+							<True/>
+							<ScoreDistribution value="0" recordCount="0.0"/>
+							<ScoreDistribution value="1" recordCount="4.0"/>
+							<ScoreDistribution value="2" recordCount="6.0"/>
+							<ScoreDistribution value="3" recordCount="2.0"/>
+							<ScoreDistribution value="4" recordCount="2.0"/>
+							<ScoreDistribution value="5" recordCount="4.0"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="20">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction" splitCharacteristic="multiSplit">
+					<MiningSchema>
+						<MiningField name="TopOilTemperature"/>
+						<MiningField name="OilVolume"/>
+						<MiningField name="VibrationLevel"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node>
+							<SimplePredicate field="TopOilTemperature" operator="lessOrEqual" value="80.15538566"/>
+							<Node score="0" recordCount="1009.0">
+								<SimplePredicate field="OilVolume" operator="lessOrEqual" value="952.8965317"/>
+								<ScoreDistribution value="0" recordCount="1009.0"/>
+								<ScoreDistribution value="1" recordCount="0.0"/>
+								<ScoreDistribution value="2" recordCount="0.0"/>
+								<ScoreDistribution value="3" recordCount="0.0"/>
+								<ScoreDistribution value="4" recordCount="0.0"/>
+								<ScoreDistribution value="5" recordCount="0.0"/>
+							</Node>
+							<Node score="0" recordCount="38.0">
+								<SimplePredicate field="TopOilTemperature" operator="lessOrEqual" value="71.45510342"/>
+								<ScoreDistribution value="0" recordCount="38.0"/>
+								<ScoreDistribution value="1" recordCount="0.0"/>
+								<ScoreDistribution value="2" recordCount="0.0"/>
+								<ScoreDistribution value="3" recordCount="0.0"/>
+								<ScoreDistribution value="4" recordCount="0.0"/>
+								<ScoreDistribution value="5" recordCount="0.0"/>
+							</Node>
+							<Node score="1" recordCount="1.0">
+								<True/>
+								<ScoreDistribution value="0" recordCount="0.0"/>
+								<ScoreDistribution value="1" recordCount="1.0"/>
+								<ScoreDistribution value="2" recordCount="0.0"/>
+								<ScoreDistribution value="3" recordCount="0.0"/>
+								<ScoreDistribution value="4" recordCount="0.0"/>
+								<ScoreDistribution value="5" recordCount="0.0"/>
+							</Node>
+						</Node>
+						<Node>
+							<SimplePredicate field="OilVolume" operator="lessOrEqual" value="906.1749935"/>
+							<Node score="1" recordCount="11.0">
+								<SimplePredicate field="TopOilTemperature" operator="lessOrEqual" value="83.85991517"/>
+								<ScoreDistribution value="0" recordCount="0.0"/>
+								<ScoreDistribution value="1" recordCount="11.0"/>
+								<ScoreDistribution value="2" recordCount="0.0"/>
+								<ScoreDistribution value="3" recordCount="0.0"/>
+								<ScoreDistribution value="4" recordCount="0.0"/>
+								<ScoreDistribution value="5" recordCount="0.0"/>
+							</Node>
+							<Node>
+								<SimplePredicate field="VibrationLevel" operator="lessOrEqual" value="3.0"/>
+								<Node score="2" recordCount="17.0">
+									<SimplePredicate field="TopOilTemperature" operator="lessOrEqual" value="90.25474132"/>
+									<ScoreDistribution value="0" recordCount="0.0"/>
+									<ScoreDistribution value="1" recordCount="0.0"/>
+									<ScoreDistribution value="2" recordCount="17.0"/>
+									<ScoreDistribution value="3" recordCount="0.0"/>
+									<ScoreDistribution value="4" recordCount="0.0"/>
+									<ScoreDistribution value="5" recordCount="0.0"/>
+								</Node>
+								<Node score="4" recordCount="12.0">
+									<True/>
+									<ScoreDistribution value="0" recordCount="0.0"/>
+									<ScoreDistribution value="1" recordCount="0.0"/>
+									<ScoreDistribution value="2" recordCount="0.0"/>
+									<ScoreDistribution value="3" recordCount="5.0"/>
+									<ScoreDistribution value="4" recordCount="6.0"/>
+									<ScoreDistribution value="5" recordCount="1.0"/>
+								</Node>
+							</Node>
+							<Node score="5" recordCount="1.0">
+								<SimplePredicate field="OilVolume" operator="lessOrEqual" value="889.8451283"/>
+								<ScoreDistribution value="0" recordCount="0.0"/>
+								<ScoreDistribution value="1" recordCount="0.0"/>
+								<ScoreDistribution value="2" recordCount="0.0"/>
+								<ScoreDistribution value="3" recordCount="0.0"/>
+								<ScoreDistribution value="4" recordCount="0.0"/>
+								<ScoreDistribution value="5" recordCount="1.0"/>
+							</Node>
+							<Node score="4" recordCount="3.0">
+								<True/>
+								<ScoreDistribution value="0" recordCount="0.0"/>
+								<ScoreDistribution value="1" recordCount="0.0"/>
+								<ScoreDistribution value="2" recordCount="0.0"/>
+								<ScoreDistribution value="3" recordCount="0.0"/>
+								<ScoreDistribution value="4" recordCount="3.0"/>
+								<ScoreDistribution value="5" recordCount="0.0"/>
+							</Node>
+						</Node>
+						<Node score="1" recordCount="27.0">
+							<SimplePredicate field="TopOilTemperature" operator="lessOrEqual" value="83.85991517"/>
+							<ScoreDistribution value="0" recordCount="0.0"/>
+							<ScoreDistribution value="1" recordCount="27.0"/>
+							<ScoreDistribution value="2" recordCount="0.0"/>
+							<ScoreDistribution value="3" recordCount="0.0"/>
+							<ScoreDistribution value="4" recordCount="0.0"/>
+							<ScoreDistribution value="5" recordCount="0.0"/>
+						</Node>
+						<Node>
+							<SimplePredicate field="TopOilTemperature" operator="lessOrEqual" value="90.25474132"/>
+							<Node score="2" recordCount="9.0">
+								<SimplePredicate field="OilVolume" operator="lessOrEqual" value="921.2647829"/>
+								<ScoreDistribution value="0" recordCount="0.0"/>
+								<ScoreDistribution value="1" recordCount="2.0"/>
+								<ScoreDistribution value="2" recordCount="4.0"/>
+								<ScoreDistribution value="3" recordCount="3.0"/>
+								<ScoreDistribution value="4" recordCount="0.0"/>
+								<ScoreDistribution value="5" recordCount="0.0"/>
+							</Node>
+							<Node score="2" recordCount="10.0">
+								<True/>
+								<ScoreDistribution value="0" recordCount="0.0"/>
+								<ScoreDistribution value="1" recordCount="2.0"/>
+								<ScoreDistribution value="2" recordCount="8.0"/>
+								<ScoreDistribution value="3" recordCount="0.0"/>
+								<ScoreDistribution value="4" recordCount="0.0"/>
+								<ScoreDistribution value="5" recordCount="0.0"/>
+							</Node>
+						</Node>
+						<Node score="5" recordCount="15.0">
+							<True/>
+							<ScoreDistribution value="0" recordCount="0.0"/>
+							<ScoreDistribution value="1" recordCount="0.0"/>
+							<ScoreDistribution value="2" recordCount="0.0"/>
+							<ScoreDistribution value="3" recordCount="5.0"/>
+							<ScoreDistribution value="4" recordCount="3.0"/>
+							<ScoreDistribution value="5" recordCount="7.0"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+		</Segmentation>
+	</MiningModel>
+</PMML>

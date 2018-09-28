@@ -149,6 +149,69 @@ Class IRISConfig.InstallerBase [ Abstract ]
 		Quit tSC
 	}
 	
+	ClassMethod AddWFRole(pNamespace As %String, pRoleName As %String) As %Status
+	{
+		Set tSC = $System.Status.OK()
+		Try
+		{
+			Set tNS = $Namespace
+			Set $Namespace = pNamespace
+			
+			Set tSC = ##class(EnsLib.Workflow.RoleDefinition).CreateRole(pRoleName)
+		}
+		Catch (oException)
+		{
+			Set tSC = oException.AsStatus()
+		}
+		
+		ZN tNS
+		
+		Quit tSC
+	}
+	
+	ClassMethod AddWFUser(pNamespace As %String, pUserName As %String, pFullName As %String, pRoleName As %String) As %Status
+	{
+		Set tSC = $System.Status.OK()
+		Try
+		{
+			Set tNS = $Namespace
+			Set $Namespace = pNamespace
+			
+			Set tSC = ##class(EnsLib.Workflow.UserDefinition).CreateUser(pUserName,pFullName)
+			Quit:$System.Status.IsError(tSC)
+			
+			Set tSC = ##class(EnsLib.Workflow.RoleDefinition).AddUserToRole(pRoleName,pUserName,1,"")
+		}
+		Catch (oException)
+		{
+			Set tSC = oException.AsStatus()
+		}
+		
+		ZN tNS
+		
+		Quit tSC
+	}
+	
+	ClassMethod AddUserToWFRole(pNamespace As %String, pUserName As %String, pRoleName As %String) As %Status
+	{
+		Set tSC = $System.Status.OK()
+		Try
+		{
+			Set tNS = $Namespace
+			Set $Namespace = pNamespace
+			
+			Set tSC = ##class(EnsLib.Workflow.RoleDefinition).AddUserToRole(pRoleName,pUserName,0,"")
+		}
+		Catch (oException)
+		{
+			Set tSC = oException.AsStatus()
+		}
+		
+		ZN tNS
+		
+		Quit tSC
+	}
+	
 	XData Install [ XMLNamespace = INSTALLER ]
 	{
 	<Manifest>

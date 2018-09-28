@@ -1,18 +1,26 @@
-Class IRISDemo.BO.PMML.Operation extends Ens.BusinessOperation {
+Class IRISDemo.BO.PMML.Operation Extends Ens.BusinessOperation
+{
 
-	Parameter INVOCATION = "Queue";
+Parameter INVOCATION = "Queue";
 
-	Property PMML As %String(MAXLEN="");
-	
-	Parameter SETTINGS = "PMML::selector?multiSelect=0&context={IRISDemo.Util.ContextSearch/PMMLModels?targets=1&productionName=@productionId}";
+/// This setting is required only if you are using the simple Execute() method. 
+Property PMML As %String(MAXLEN = "") [ InitialExpression = "[Based on Request]" ];
 
-	Method Execute(pInput As IRISDemo.BO.PMML.ExecuteModelReq, Output pOutput As IRISDemo.BO.PMML.ExecuteModelResp) As %Status
-	{
+Parameter SETTINGS = "PMML::selector?multiSelect=0&context={IRISDemo.Util.ContextSearch/PMMLModels?targets=1&productionName=@productionId}";
+
+Method Execute(pInput As IRISDemo.BO.PMML.ExecuteModelReq, Output pOutput As IRISDemo.BO.PMML.ExecuteModelResp) As %Status
+{
 		#Dim oModel As %DeepSee.PMML.Model.AbstractModel
 		
 		Set tSC = $System.Status.OK()
 		Try
 		{
+			If ..PMML="[Based on Request]"
+			{
+				Set tSC = $System.Status.DisplayError(5001, "Specify the PMML parameter or use ExecuteParamModelReq instead of ExecuteModelReq.")
+				Quit
+			}
+			
 			//Oddily enough, %GetModelInstance will give me not an instance of the model
 			//but the type of model (i.e: TreeModel)
 			Set tSC = $classmethod(..PMML, "%GetModelInstance", .tModelType)
@@ -39,8 +47,25 @@ Class IRISDemo.BO.PMML.Operation extends Ens.BusinessOperation {
 				
 				Set tValue = pInput.ModelData.GetAt(tKey)
 				
-				$$$TRACE("Setting oModelInputData."_tKey_"="_tValue)
-				Set $property(oModelInputData, tKey) = tValue
+				Try
+				{
+					Set $property(oModelInputData, tKey) = tValue
+					$$$TRACE("Set oModelInputData."_tKey_"="_tValue)
+				}
+				Catch 
+				{
+					/*
+					 That's ok if this sproperty doesn't exist
+					 
+					 When we use ChiSqSelector or any other feature selector, a model may end up
+					 with more or less features, depending on the data. The production code may be
+					 sending more data than a newer version of the model needs. Or, we may be dealing
+					 with a model/entity scenario (IoT with Transformers). With slightly different models
+					 for each entity (transformer), we may receive all features but only use the ones that
+					 the each model requires.
+					*/
+				}   
+				
 			}
 			
 			//Now, let's execute the model...
@@ -70,15 +95,21 @@ Class IRISDemo.BO.PMML.Operation extends Ens.BusinessOperation {
 		}
 		
 		Quit tSC
-	}
-	
-	XData MessageMap 
+}
+
+	Method ExecuteParam(pInput As IRISDemo.BO.PMML.ExecuteParamModelReq, Output pOutput As IRISDemo.BO.PMML.ExecuteModelResp) As %Status
 	{
-		<MapItems>
-		    <MapItem MessageType="IRISDemo.BO.PMML.ExecuteModelReq">
-		        <Method>Execute</Method>
-		    </MapItem>
-		</MapItems>
+		Set ..PMML = pInput.ModelClassName
+		Quit ..Execute(pInput, .pOutput)
 	}
+
+XData MessageMap
+{
+<MapItems>
+	<MapItem MessageType="IRISDemo.BO.PMML.ExecuteParamModelReq">
+		<Method>ExecuteParam</Method>
+	</MapItem>
+</MapItems>
+}
 
 }

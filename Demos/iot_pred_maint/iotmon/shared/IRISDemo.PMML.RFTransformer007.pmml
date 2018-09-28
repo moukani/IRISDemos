@@ -1,0 +1,556 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<PMML xmlns="http://www.dmg.org/PMML-4_3" xmlns:data="http://jpmml.org/jpmml-model/InlineTable" version="4.3">
+	<Header>
+		<Application name="JPMML-SparkML" version="1.2.12"/>
+		<Timestamp>2018-09-27T16:47:04Z</Timestamp>
+	</Header>
+	<DataDictionary>
+		<DataField name="MoistureInOil" optype="continuous" dataType="double"/>
+		<DataField name="Vibration" optype="continuous" dataType="double"/>
+		<DataField name="VibrationLevel" optype="continuous" dataType="integer"/>
+		<DataField name="Threat" optype="categorical" dataType="integer">
+			<Value value="0"/>
+			<Value value="1"/>
+		</DataField>
+	</DataDictionary>
+	<MiningModel functionName="classification">
+		<MiningSchema>
+			<MiningField name="Threat" usageType="target"/>
+			<MiningField name="Vibration"/>
+			<MiningField name="VibrationLevel"/>
+			<MiningField name="MoistureInOil"/>
+		</MiningSchema>
+		<Output>
+			<OutputField name="pmml(prediction)" optype="categorical" dataType="integer" feature="predictedValue"/>
+			<OutputField name="prediction" optype="categorical" dataType="double" feature="transformedValue">
+				<MapValues outputColumn="data:output">
+					<FieldColumnPair field="pmml(prediction)" column="data:input"/>
+					<InlineTable>
+						<row>
+							<data:input>0</data:input>
+							<data:output>0</data:output>
+						</row>
+						<row>
+							<data:input>1</data:input>
+							<data:output>1</data:output>
+						</row>
+					</InlineTable>
+				</MapValues>
+			</OutputField>
+			<OutputField name="probability(0)" optype="continuous" dataType="double" feature="probability" value="0"/>
+			<OutputField name="probability(1)" optype="continuous" dataType="double" feature="probability" value="1"/>
+		</Output>
+		<Segmentation multipleModelMethod="average">
+			<Segment id="1">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction" splitCharacteristic="multiSplit">
+					<MiningSchema>
+						<MiningField name="MoistureInOil"/>
+						<MiningField name="Vibration"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node score="0" recordCount="1112.0">
+							<SimplePredicate field="Vibration" operator="lessOrEqual" value="57.99936803"/>
+							<ScoreDistribution value="0" recordCount="1112.0"/>
+							<ScoreDistribution value="1" recordCount="0.0"/>
+						</Node>
+						<Node score="0" recordCount="22.0">
+							<SimplePredicate field="MoistureInOil" operator="lessOrEqual" value="0.038681234"/>
+							<ScoreDistribution value="0" recordCount="22.0"/>
+							<ScoreDistribution value="1" recordCount="0.0"/>
+						</Node>
+						<Node score="0" recordCount="25.0">
+							<True/>
+							<ScoreDistribution value="0" recordCount="19.0"/>
+							<ScoreDistribution value="1" recordCount="6.0"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="2">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction" splitCharacteristic="multiSplit">
+					<MiningSchema>
+						<MiningField name="Vibration"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node score="0" recordCount="1156.0">
+							<SimplePredicate field="Vibration" operator="lessOrEqual" value="57.99936803"/>
+							<ScoreDistribution value="0" recordCount="1156.0"/>
+							<ScoreDistribution value="1" recordCount="0.0"/>
+						</Node>
+						<Node score="0" recordCount="38.0">
+							<True/>
+							<ScoreDistribution value="0" recordCount="32.0"/>
+							<ScoreDistribution value="1" recordCount="6.0"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="3">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction" splitCharacteristic="multiSplit">
+					<MiningSchema>
+						<MiningField name="MoistureInOil"/>
+						<MiningField name="Vibration"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node score="0" recordCount="1067.0">
+							<SimplePredicate field="Vibration" operator="lessOrEqual" value="57.99936803"/>
+							<ScoreDistribution value="0" recordCount="1067.0"/>
+							<ScoreDistribution value="1" recordCount="0.0"/>
+						</Node>
+						<Node score="0" recordCount="15.0">
+							<SimplePredicate field="MoistureInOil" operator="lessOrEqual" value="0.038681234"/>
+							<ScoreDistribution value="0" recordCount="15.0"/>
+							<ScoreDistribution value="1" recordCount="0.0"/>
+						</Node>
+						<Node score="0" recordCount="23.0">
+							<True/>
+							<ScoreDistribution value="0" recordCount="19.0"/>
+							<ScoreDistribution value="1" recordCount="4.0"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="4">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction" splitCharacteristic="multiSplit">
+					<MiningSchema>
+						<MiningField name="MoistureInOil"/>
+						<MiningField name="Vibration"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node score="0" recordCount="1031.0">
+							<SimplePredicate field="Vibration" operator="lessOrEqual" value="57.99936803"/>
+							<ScoreDistribution value="0" recordCount="1031.0"/>
+							<ScoreDistribution value="1" recordCount="0.0"/>
+						</Node>
+						<Node score="0" recordCount="16.0">
+							<SimplePredicate field="MoistureInOil" operator="lessOrEqual" value="0.038681234"/>
+							<ScoreDistribution value="0" recordCount="16.0"/>
+							<ScoreDistribution value="1" recordCount="0.0"/>
+						</Node>
+						<Node score="0" recordCount="19.0">
+							<True/>
+							<ScoreDistribution value="0" recordCount="16.0"/>
+							<ScoreDistribution value="1" recordCount="3.0"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="5">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction" splitCharacteristic="multiSplit">
+					<MiningSchema>
+						<MiningField name="MoistureInOil"/>
+						<MiningField name="Vibration"/>
+						<MiningField name="VibrationLevel"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node score="0" recordCount="1119.0">
+							<SimplePredicate field="MoistureInOil" operator="lessOrEqual" value="1.085299298"/>
+							<ScoreDistribution value="0" recordCount="1119.0"/>
+							<ScoreDistribution value="1" recordCount="0.0"/>
+						</Node>
+						<Node score="0" recordCount="13.0">
+							<SimplePredicate field="VibrationLevel" operator="lessOrEqual" value="3.0"/>
+							<ScoreDistribution value="0" recordCount="13.0"/>
+							<ScoreDistribution value="1" recordCount="0.0"/>
+						</Node>
+						<Node score="0" recordCount="11.0">
+							<SimplePredicate field="Vibration" operator="lessOrEqual" value="57.99936803"/>
+							<ScoreDistribution value="0" recordCount="11.0"/>
+							<ScoreDistribution value="1" recordCount="0.0"/>
+						</Node>
+						<Node score="0" recordCount="21.0">
+							<True/>
+							<ScoreDistribution value="0" recordCount="16.0"/>
+							<ScoreDistribution value="1" recordCount="5.0"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="6">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction" splitCharacteristic="multiSplit">
+					<MiningSchema>
+						<MiningField name="Vibration"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node score="0" recordCount="1070.0">
+							<SimplePredicate field="Vibration" operator="lessOrEqual" value="57.99936803"/>
+							<ScoreDistribution value="0" recordCount="1070.0"/>
+							<ScoreDistribution value="1" recordCount="0.0"/>
+						</Node>
+						<Node score="0" recordCount="31.0">
+							<True/>
+							<ScoreDistribution value="0" recordCount="30.0"/>
+							<ScoreDistribution value="1" recordCount="1.0"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="7">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction" splitCharacteristic="multiSplit">
+					<MiningSchema>
+						<MiningField name="MoistureInOil"/>
+						<MiningField name="Vibration"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node score="0" recordCount="1105.0">
+							<SimplePredicate field="MoistureInOil" operator="lessOrEqual" value="1.085299298"/>
+							<ScoreDistribution value="0" recordCount="1105.0"/>
+							<ScoreDistribution value="1" recordCount="0.0"/>
+						</Node>
+						<Node score="0" recordCount="16.0">
+							<SimplePredicate field="Vibration" operator="lessOrEqual" value="57.99936803"/>
+							<ScoreDistribution value="0" recordCount="16.0"/>
+							<ScoreDistribution value="1" recordCount="0.0"/>
+						</Node>
+						<Node score="0" recordCount="20.0">
+							<True/>
+							<ScoreDistribution value="0" recordCount="13.0"/>
+							<ScoreDistribution value="1" recordCount="7.0"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="8">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction" splitCharacteristic="multiSplit">
+					<MiningSchema>
+						<MiningField name="MoistureInOil"/>
+						<MiningField name="Vibration"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node score="0" recordCount="1145.0">
+							<SimplePredicate field="MoistureInOil" operator="lessOrEqual" value="1.085299298"/>
+							<ScoreDistribution value="0" recordCount="1145.0"/>
+							<ScoreDistribution value="1" recordCount="0.0"/>
+						</Node>
+						<Node score="0" recordCount="12.0">
+							<SimplePredicate field="Vibration" operator="lessOrEqual" value="57.99936803"/>
+							<ScoreDistribution value="0" recordCount="12.0"/>
+							<ScoreDistribution value="1" recordCount="0.0"/>
+						</Node>
+						<Node score="0" recordCount="17.0">
+							<True/>
+							<ScoreDistribution value="0" recordCount="15.0"/>
+							<ScoreDistribution value="1" recordCount="2.0"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="9">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction" splitCharacteristic="multiSplit">
+					<MiningSchema>
+						<MiningField name="Vibration"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node score="0" recordCount="1059.0">
+							<SimplePredicate field="Vibration" operator="lessOrEqual" value="57.99936803"/>
+							<ScoreDistribution value="0" recordCount="1059.0"/>
+							<ScoreDistribution value="1" recordCount="0.0"/>
+						</Node>
+						<Node score="0" recordCount="45.0">
+							<True/>
+							<ScoreDistribution value="0" recordCount="41.0"/>
+							<ScoreDistribution value="1" recordCount="4.0"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="10">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction" splitCharacteristic="multiSplit">
+					<MiningSchema>
+						<MiningField name="MoistureInOil"/>
+						<MiningField name="VibrationLevel"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node score="0" recordCount="1068.0">
+							<SimplePredicate field="MoistureInOil" operator="lessOrEqual" value="1.085299298"/>
+							<ScoreDistribution value="0" recordCount="1068.0"/>
+							<ScoreDistribution value="1" recordCount="0.0"/>
+						</Node>
+						<Node score="0" recordCount="4.0">
+							<SimplePredicate field="VibrationLevel" operator="lessOrEqual" value="3.0"/>
+							<ScoreDistribution value="0" recordCount="4.0"/>
+							<ScoreDistribution value="1" recordCount="0.0"/>
+						</Node>
+						<Node score="0" recordCount="24.0">
+							<True/>
+							<ScoreDistribution value="0" recordCount="22.0"/>
+							<ScoreDistribution value="1" recordCount="2.0"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="11">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction" splitCharacteristic="multiSplit">
+					<MiningSchema>
+						<MiningField name="MoistureInOil"/>
+						<MiningField name="Vibration"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node score="0" recordCount="1116.0">
+							<SimplePredicate field="MoistureInOil" operator="lessOrEqual" value="1.085299298"/>
+							<ScoreDistribution value="0" recordCount="1116.0"/>
+							<ScoreDistribution value="1" recordCount="0.0"/>
+						</Node>
+						<Node score="0" recordCount="15.0">
+							<SimplePredicate field="Vibration" operator="lessOrEqual" value="57.99936803"/>
+							<ScoreDistribution value="0" recordCount="15.0"/>
+							<ScoreDistribution value="1" recordCount="0.0"/>
+						</Node>
+						<Node score="0" recordCount="11.0">
+							<True/>
+							<ScoreDistribution value="0" recordCount="10.0"/>
+							<ScoreDistribution value="1" recordCount="1.0"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="12">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction" splitCharacteristic="multiSplit">
+					<MiningSchema>
+						<MiningField name="MoistureInOil"/>
+						<MiningField name="Vibration"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node score="0" recordCount="1075.0">
+							<SimplePredicate field="MoistureInOil" operator="lessOrEqual" value="1.085299298"/>
+							<ScoreDistribution value="0" recordCount="1075.0"/>
+							<ScoreDistribution value="1" recordCount="0.0"/>
+						</Node>
+						<Node score="0" recordCount="11.0">
+							<SimplePredicate field="Vibration" operator="lessOrEqual" value="57.99936803"/>
+							<ScoreDistribution value="0" recordCount="11.0"/>
+							<ScoreDistribution value="1" recordCount="0.0"/>
+						</Node>
+						<Node score="0" recordCount="9.0">
+							<True/>
+							<ScoreDistribution value="0" recordCount="5.0"/>
+							<ScoreDistribution value="1" recordCount="4.0"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="13">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction" splitCharacteristic="multiSplit">
+					<MiningSchema>
+						<MiningField name="MoistureInOil"/>
+						<MiningField name="Vibration"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node score="0" recordCount="1086.0">
+							<SimplePredicate field="MoistureInOil" operator="lessOrEqual" value="1.085299298"/>
+							<ScoreDistribution value="0" recordCount="1086.0"/>
+							<ScoreDistribution value="1" recordCount="0.0"/>
+						</Node>
+						<Node score="0" recordCount="16.0">
+							<SimplePredicate field="Vibration" operator="lessOrEqual" value="57.99936803"/>
+							<ScoreDistribution value="0" recordCount="16.0"/>
+							<ScoreDistribution value="1" recordCount="0.0"/>
+						</Node>
+						<Node score="0" recordCount="18.0">
+							<True/>
+							<ScoreDistribution value="0" recordCount="14.0"/>
+							<ScoreDistribution value="1" recordCount="4.0"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="14">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction" splitCharacteristic="multiSplit">
+					<MiningSchema>
+						<MiningField name="Vibration"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node score="0" recordCount="1072.0">
+							<SimplePredicate field="Vibration" operator="lessOrEqual" value="57.99936803"/>
+							<ScoreDistribution value="0" recordCount="1072.0"/>
+							<ScoreDistribution value="1" recordCount="0.0"/>
+						</Node>
+						<Node score="0" recordCount="22.0">
+							<True/>
+							<ScoreDistribution value="0" recordCount="19.0"/>
+							<ScoreDistribution value="1" recordCount="3.0"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="15">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction" splitCharacteristic="multiSplit">
+					<MiningSchema>
+						<MiningField name="MoistureInOil"/>
+						<MiningField name="Vibration"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node score="0" recordCount="1134.0">
+							<SimplePredicate field="Vibration" operator="lessOrEqual" value="57.99936803"/>
+							<ScoreDistribution value="0" recordCount="1134.0"/>
+							<ScoreDistribution value="1" recordCount="0.0"/>
+						</Node>
+						<Node score="0" recordCount="24.0">
+							<SimplePredicate field="MoistureInOil" operator="lessOrEqual" value="0.038681234"/>
+							<ScoreDistribution value="0" recordCount="24.0"/>
+							<ScoreDistribution value="1" recordCount="0.0"/>
+						</Node>
+						<Node score="0" recordCount="22.0">
+							<True/>
+							<ScoreDistribution value="0" recordCount="17.0"/>
+							<ScoreDistribution value="1" recordCount="5.0"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="16">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction" splitCharacteristic="multiSplit">
+					<MiningSchema>
+						<MiningField name="MoistureInOil"/>
+						<MiningField name="VibrationLevel"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node score="0" recordCount="1036.0">
+							<SimplePredicate field="MoistureInOil" operator="lessOrEqual" value="1.085299298"/>
+							<ScoreDistribution value="0" recordCount="1036.0"/>
+							<ScoreDistribution value="1" recordCount="0.0"/>
+						</Node>
+						<Node score="0" recordCount="8.0">
+							<SimplePredicate field="VibrationLevel" operator="lessOrEqual" value="3.0"/>
+							<ScoreDistribution value="0" recordCount="8.0"/>
+							<ScoreDistribution value="1" recordCount="0.0"/>
+						</Node>
+						<Node score="0" recordCount="30.0">
+							<True/>
+							<ScoreDistribution value="0" recordCount="23.0"/>
+							<ScoreDistribution value="1" recordCount="7.0"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="17">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction" splitCharacteristic="multiSplit">
+					<MiningSchema>
+						<MiningField name="Vibration"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node score="0" recordCount="1076.0">
+							<SimplePredicate field="Vibration" operator="lessOrEqual" value="57.99936803"/>
+							<ScoreDistribution value="0" recordCount="1076.0"/>
+							<ScoreDistribution value="1" recordCount="0.0"/>
+						</Node>
+						<Node score="0" recordCount="29.0">
+							<True/>
+							<ScoreDistribution value="0" recordCount="26.0"/>
+							<ScoreDistribution value="1" recordCount="3.0"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="18">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction" splitCharacteristic="multiSplit">
+					<MiningSchema>
+						<MiningField name="Vibration"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node score="0" recordCount="1131.0">
+							<SimplePredicate field="Vibration" operator="lessOrEqual" value="57.99936803"/>
+							<ScoreDistribution value="0" recordCount="1131.0"/>
+							<ScoreDistribution value="1" recordCount="0.0"/>
+						</Node>
+						<Node score="0" recordCount="34.0">
+							<True/>
+							<ScoreDistribution value="0" recordCount="31.0"/>
+							<ScoreDistribution value="1" recordCount="3.0"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="19">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction" splitCharacteristic="multiSplit">
+					<MiningSchema>
+						<MiningField name="MoistureInOil"/>
+						<MiningField name="Vibration"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node score="0" recordCount="1136.0">
+							<SimplePredicate field="MoistureInOil" operator="lessOrEqual" value="1.085299298"/>
+							<ScoreDistribution value="0" recordCount="1136.0"/>
+							<ScoreDistribution value="1" recordCount="0.0"/>
+						</Node>
+						<Node score="0" recordCount="13.0">
+							<SimplePredicate field="Vibration" operator="lessOrEqual" value="57.99936803"/>
+							<ScoreDistribution value="0" recordCount="13.0"/>
+							<ScoreDistribution value="1" recordCount="0.0"/>
+						</Node>
+						<Node score="0" recordCount="20.0">
+							<True/>
+							<ScoreDistribution value="0" recordCount="13.0"/>
+							<ScoreDistribution value="1" recordCount="7.0"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="20">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction" splitCharacteristic="multiSplit">
+					<MiningSchema>
+						<MiningField name="MoistureInOil"/>
+						<MiningField name="Vibration"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node score="0" recordCount="1115.0">
+							<SimplePredicate field="MoistureInOil" operator="lessOrEqual" value="1.085299298"/>
+							<ScoreDistribution value="0" recordCount="1115.0"/>
+							<ScoreDistribution value="1" recordCount="0.0"/>
+						</Node>
+						<Node score="0" recordCount="16.0">
+							<SimplePredicate field="Vibration" operator="lessOrEqual" value="57.99936803"/>
+							<ScoreDistribution value="0" recordCount="16.0"/>
+							<ScoreDistribution value="1" recordCount="0.0"/>
+						</Node>
+						<Node score="0" recordCount="22.0">
+							<True/>
+							<ScoreDistribution value="0" recordCount="17.0"/>
+							<ScoreDistribution value="1" recordCount="5.0"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+		</Segmentation>
+	</MiningModel>
+</PMML>

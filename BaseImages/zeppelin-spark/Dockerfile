@@ -95,6 +95,9 @@ RUN cd /usr/local && ln -s spark-${APACHE_SPARK_VERSION}-bin-hadoop${HADOOP_VERS
 RUN cd /custom/lib && \
     wget -q https://github.com/jpmml/jpmml-sparkml/releases/download/1.2.12/jpmml-sparkml-executable-1.2.12.jar
 
+# RUN cd /custom/lib && \
+#     wget -q https://github.com/jpmml/jpmml-sparkml/releases/download/1.4.5/jpmml-sparkml-executable-1.4.5.jar
+
 RUN pip install --upgrade pip && \
     pip install pandas && \
     pip install seaborn && \
@@ -135,6 +138,9 @@ RUN chmod +x /custom/sbin/startservices.sh
 
 ENV PATH "${SPARK_HOME}/bin:${PATH}"
 
+RUN rm $SPARK_HOME/jars/pmml-model-1.2.15.jar && \
+    rm $SPARK_HOME/jars/pmml-schema-1.2.15.jar
+    
 WORKDIR ${Z_HOME}
 
 ENTRYPOINT [ "/usr/bin/tini", "-s", "--", "/custom/sbin/startservices.sh" ]

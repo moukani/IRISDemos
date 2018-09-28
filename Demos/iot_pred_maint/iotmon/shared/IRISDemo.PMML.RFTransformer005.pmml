@@ -1,0 +1,654 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<PMML xmlns="http://www.dmg.org/PMML-4_3" xmlns:data="http://jpmml.org/jpmml-model/InlineTable" version="4.3">
+	<Header>
+		<Application name="JPMML-SparkML" version="1.2.12"/>
+		<Timestamp>2018-09-27T16:47:03Z</Timestamp>
+	</Header>
+	<DataDictionary>
+		<DataField name="TopOilTemperature" optype="continuous" dataType="double"/>
+		<DataField name="OilVolume" optype="continuous" dataType="double"/>
+		<DataField name="VibrationLevel" optype="continuous" dataType="integer"/>
+		<DataField name="Threat" optype="categorical" dataType="integer">
+			<Value value="0"/>
+			<Value value="1"/>
+		</DataField>
+	</DataDictionary>
+	<MiningModel functionName="classification">
+		<MiningSchema>
+			<MiningField name="Threat" usageType="target"/>
+			<MiningField name="TopOilTemperature"/>
+			<MiningField name="OilVolume"/>
+			<MiningField name="VibrationLevel"/>
+		</MiningSchema>
+		<Output>
+			<OutputField name="pmml(prediction)" optype="categorical" dataType="integer" feature="predictedValue"/>
+			<OutputField name="prediction" optype="categorical" dataType="double" feature="transformedValue">
+				<MapValues outputColumn="data:output">
+					<FieldColumnPair field="pmml(prediction)" column="data:input"/>
+					<InlineTable>
+						<row>
+							<data:input>0</data:input>
+							<data:output>0</data:output>
+						</row>
+						<row>
+							<data:input>1</data:input>
+							<data:output>1</data:output>
+						</row>
+					</InlineTable>
+				</MapValues>
+			</OutputField>
+			<OutputField name="probability(0)" optype="continuous" dataType="double" feature="probability" value="0"/>
+			<OutputField name="probability(1)" optype="continuous" dataType="double" feature="probability" value="1"/>
+		</Output>
+		<Segmentation multipleModelMethod="average">
+			<Segment id="1">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction" splitCharacteristic="multiSplit">
+					<MiningSchema>
+						<MiningField name="TopOilTemperature"/>
+						<MiningField name="OilVolume"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node>
+							<SimplePredicate field="OilVolume" operator="lessOrEqual" value="881.2362232"/>
+							<Node score="0" recordCount="45.0">
+								<SimplePredicate field="TopOilTemperature" operator="lessOrEqual" value="806.1324104"/>
+								<ScoreDistribution value="0" recordCount="45.0"/>
+								<ScoreDistribution value="1" recordCount="0.0"/>
+							</Node>
+							<Node score="0" recordCount="38.0">
+								<True/>
+								<ScoreDistribution value="0" recordCount="25.0"/>
+								<ScoreDistribution value="1" recordCount="13.0"/>
+							</Node>
+						</Node>
+						<Node score="0" recordCount="1076.0">
+							<True/>
+							<ScoreDistribution value="0" recordCount="1076.0"/>
+							<ScoreDistribution value="1" recordCount="0.0"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="2">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction" splitCharacteristic="multiSplit">
+					<MiningSchema>
+						<MiningField name="TopOilTemperature"/>
+						<MiningField name="OilVolume"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node>
+							<SimplePredicate field="OilVolume" operator="lessOrEqual" value="881.2362232"/>
+							<Node>
+								<SimplePredicate field="OilVolume" operator="lessOrEqual" value="879.2179436"/>
+								<Node score="0" recordCount="20.0">
+									<SimplePredicate field="TopOilTemperature" operator="lessOrEqual" value="806.1324104"/>
+									<ScoreDistribution value="0" recordCount="20.0"/>
+									<ScoreDistribution value="1" recordCount="0.0"/>
+								</Node>
+								<Node score="0" recordCount="18.0">
+									<True/>
+									<ScoreDistribution value="0" recordCount="15.0"/>
+									<ScoreDistribution value="1" recordCount="3.0"/>
+								</Node>
+							</Node>
+							<Node score="0" recordCount="10.0">
+								<SimplePredicate field="TopOilTemperature" operator="lessOrEqual" value="806.1324104"/>
+								<ScoreDistribution value="0" recordCount="10.0"/>
+								<ScoreDistribution value="1" recordCount="0.0"/>
+							</Node>
+							<Node score="1" recordCount="17.0">
+								<True/>
+								<ScoreDistribution value="0" recordCount="6.0"/>
+								<ScoreDistribution value="1" recordCount="11.0"/>
+							</Node>
+						</Node>
+						<Node score="0" recordCount="1129.0">
+							<True/>
+							<ScoreDistribution value="0" recordCount="1129.0"/>
+							<ScoreDistribution value="1" recordCount="0.0"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="3">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction" splitCharacteristic="multiSplit">
+					<MiningSchema>
+						<MiningField name="TopOilTemperature"/>
+						<MiningField name="OilVolume"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node>
+							<SimplePredicate field="OilVolume" operator="lessOrEqual" value="881.2362232"/>
+							<Node score="0" recordCount="38.0">
+								<SimplePredicate field="TopOilTemperature" operator="lessOrEqual" value="806.1324104"/>
+								<ScoreDistribution value="0" recordCount="38.0"/>
+								<ScoreDistribution value="1" recordCount="0.0"/>
+							</Node>
+							<Node score="0" recordCount="20.0">
+								<SimplePredicate field="OilVolume" operator="lessOrEqual" value="879.2179436"/>
+								<ScoreDistribution value="0" recordCount="14.0"/>
+								<ScoreDistribution value="1" recordCount="6.0"/>
+							</Node>
+							<Node score="0" recordCount="13.0">
+								<True/>
+								<ScoreDistribution value="0" recordCount="8.0"/>
+								<ScoreDistribution value="1" recordCount="5.0"/>
+							</Node>
+						</Node>
+						<Node score="0" recordCount="1034.0">
+							<True/>
+							<ScoreDistribution value="0" recordCount="1034.0"/>
+							<ScoreDistribution value="1" recordCount="0.0"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="4">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction" splitCharacteristic="multiSplit">
+					<MiningSchema>
+						<MiningField name="TopOilTemperature"/>
+						<MiningField name="OilVolume"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node score="0" recordCount="1037.0">
+							<SimplePredicate field="TopOilTemperature" operator="lessOrEqual" value="806.1324104"/>
+							<ScoreDistribution value="0" recordCount="1037.0"/>
+							<ScoreDistribution value="1" recordCount="0.0"/>
+						</Node>
+						<Node score="0" recordCount="18.0">
+							<SimplePredicate field="OilVolume" operator="lessOrEqual" value="879.2179436"/>
+							<ScoreDistribution value="0" recordCount="13.0"/>
+							<ScoreDistribution value="1" recordCount="5.0"/>
+						</Node>
+						<Node score="1" recordCount="11.0">
+							<True/>
+							<ScoreDistribution value="0" recordCount="5.0"/>
+							<ScoreDistribution value="1" recordCount="6.0"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="5">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction" splitCharacteristic="multiSplit">
+					<MiningSchema>
+						<MiningField name="TopOilTemperature"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node score="0" recordCount="1123.0">
+							<SimplePredicate field="TopOilTemperature" operator="lessOrEqual" value="806.1324104"/>
+							<ScoreDistribution value="0" recordCount="1123.0"/>
+							<ScoreDistribution value="1" recordCount="0.0"/>
+						</Node>
+						<Node score="0" recordCount="41.0">
+							<True/>
+							<ScoreDistribution value="0" recordCount="26.0"/>
+							<ScoreDistribution value="1" recordCount="15.0"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="6">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction" splitCharacteristic="multiSplit">
+					<MiningSchema>
+						<MiningField name="TopOilTemperature"/>
+						<MiningField name="OilVolume"/>
+						<MiningField name="VibrationLevel"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node>
+							<SimplePredicate field="OilVolume" operator="lessOrEqual" value="881.2362232"/>
+							<Node score="0" recordCount="14.0">
+								<SimplePredicate field="VibrationLevel" operator="lessOrEqual" value="3.0"/>
+								<ScoreDistribution value="0" recordCount="14.0"/>
+								<ScoreDistribution value="1" recordCount="0.0"/>
+							</Node>
+							<Node>
+								<SimplePredicate field="OilVolume" operator="lessOrEqual" value="879.2179436"/>
+								<Node score="0" recordCount="11.0">
+									<SimplePredicate field="TopOilTemperature" operator="lessOrEqual" value="806.1324104"/>
+									<ScoreDistribution value="0" recordCount="11.0"/>
+									<ScoreDistribution value="1" recordCount="0.0"/>
+								</Node>
+								<Node score="0" recordCount="16.0">
+									<True/>
+									<ScoreDistribution value="0" recordCount="9.0"/>
+									<ScoreDistribution value="1" recordCount="7.0"/>
+								</Node>
+							</Node>
+							<Node score="0" recordCount="32.0">
+								<True/>
+								<ScoreDistribution value="0" recordCount="23.0"/>
+								<ScoreDistribution value="1" recordCount="9.0"/>
+							</Node>
+						</Node>
+						<Node score="0" recordCount="1028.0">
+							<True/>
+							<ScoreDistribution value="0" recordCount="1028.0"/>
+							<ScoreDistribution value="1" recordCount="0.0"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="7">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction" splitCharacteristic="multiSplit">
+					<MiningSchema>
+						<MiningField name="TopOilTemperature"/>
+						<MiningField name="OilVolume"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node score="0" recordCount="1104.0">
+							<SimplePredicate field="TopOilTemperature" operator="lessOrEqual" value="806.1324104"/>
+							<ScoreDistribution value="0" recordCount="1104.0"/>
+							<ScoreDistribution value="1" recordCount="0.0"/>
+						</Node>
+						<Node score="0" recordCount="21.0">
+							<SimplePredicate field="OilVolume" operator="lessOrEqual" value="879.2179436"/>
+							<ScoreDistribution value="0" recordCount="20.0"/>
+							<ScoreDistribution value="1" recordCount="1.0"/>
+						</Node>
+						<Node score="0" recordCount="16.0">
+							<True/>
+							<ScoreDistribution value="0" recordCount="10.0"/>
+							<ScoreDistribution value="1" recordCount="6.0"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="8">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction" splitCharacteristic="multiSplit">
+					<MiningSchema>
+						<MiningField name="TopOilTemperature"/>
+						<MiningField name="OilVolume"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node score="0" recordCount="1144.0">
+							<SimplePredicate field="TopOilTemperature" operator="lessOrEqual" value="806.1324104"/>
+							<ScoreDistribution value="0" recordCount="1144.0"/>
+							<ScoreDistribution value="1" recordCount="0.0"/>
+						</Node>
+						<Node score="0" recordCount="14.0">
+							<SimplePredicate field="OilVolume" operator="lessOrEqual" value="879.2179436"/>
+							<ScoreDistribution value="0" recordCount="12.0"/>
+							<ScoreDistribution value="1" recordCount="2.0"/>
+						</Node>
+						<Node score="0" recordCount="16.0">
+							<True/>
+							<ScoreDistribution value="0" recordCount="9.0"/>
+							<ScoreDistribution value="1" recordCount="7.0"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="9">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction" splitCharacteristic="multiSplit">
+					<MiningSchema>
+						<MiningField name="TopOilTemperature"/>
+						<MiningField name="OilVolume"/>
+						<MiningField name="VibrationLevel"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node>
+							<SimplePredicate field="OilVolume" operator="lessOrEqual" value="881.2362232"/>
+							<Node>
+								<SimplePredicate field="OilVolume" operator="lessOrEqual" value="879.2179436"/>
+								<Node score="0" recordCount="2.0">
+									<SimplePredicate field="VibrationLevel" operator="lessOrEqual" value="3.0"/>
+									<ScoreDistribution value="0" recordCount="2.0"/>
+									<ScoreDistribution value="1" recordCount="0.0"/>
+								</Node>
+								<Node score="0" recordCount="30.0">
+									<SimplePredicate field="TopOilTemperature" operator="lessOrEqual" value="806.1324104"/>
+									<ScoreDistribution value="0" recordCount="30.0"/>
+									<ScoreDistribution value="1" recordCount="0.0"/>
+								</Node>
+								<Node score="0" recordCount="13.0">
+									<True/>
+									<ScoreDistribution value="0" recordCount="12.0"/>
+									<ScoreDistribution value="1" recordCount="1.0"/>
+								</Node>
+							</Node>
+							<Node score="0" recordCount="22.0">
+								<SimplePredicate field="TopOilTemperature" operator="lessOrEqual" value="806.1324104"/>
+								<ScoreDistribution value="0" recordCount="22.0"/>
+								<ScoreDistribution value="1" recordCount="0.0"/>
+							</Node>
+							<Node score="0" recordCount="22.0">
+								<True/>
+								<ScoreDistribution value="0" recordCount="13.0"/>
+								<ScoreDistribution value="1" recordCount="9.0"/>
+							</Node>
+						</Node>
+						<Node score="0" recordCount="1015.0">
+							<True/>
+							<ScoreDistribution value="0" recordCount="1015.0"/>
+							<ScoreDistribution value="1" recordCount="0.0"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="10">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction" splitCharacteristic="multiSplit">
+					<MiningSchema>
+						<MiningField name="TopOilTemperature"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node score="0" recordCount="1057.0">
+							<SimplePredicate field="TopOilTemperature" operator="lessOrEqual" value="806.1324104"/>
+							<ScoreDistribution value="0" recordCount="1057.0"/>
+							<ScoreDistribution value="1" recordCount="0.0"/>
+						</Node>
+						<Node score="0" recordCount="39.0">
+							<True/>
+							<ScoreDistribution value="0" recordCount="28.0"/>
+							<ScoreDistribution value="1" recordCount="11.0"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="11">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction" splitCharacteristic="multiSplit">
+					<MiningSchema>
+						<MiningField name="TopOilTemperature"/>
+						<MiningField name="OilVolume"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node score="0" recordCount="1107.0">
+							<SimplePredicate field="TopOilTemperature" operator="lessOrEqual" value="806.1324104"/>
+							<ScoreDistribution value="0" recordCount="1107.0"/>
+							<ScoreDistribution value="1" recordCount="0.0"/>
+						</Node>
+						<Node score="0" recordCount="16.0">
+							<SimplePredicate field="OilVolume" operator="lessOrEqual" value="879.2179436"/>
+							<ScoreDistribution value="0" recordCount="12.0"/>
+							<ScoreDistribution value="1" recordCount="4.0"/>
+						</Node>
+						<Node score="0" recordCount="19.0">
+							<True/>
+							<ScoreDistribution value="0" recordCount="11.0"/>
+							<ScoreDistribution value="1" recordCount="8.0"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="12">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction" splitCharacteristic="multiSplit">
+					<MiningSchema>
+						<MiningField name="TopOilTemperature"/>
+						<MiningField name="OilVolume"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node score="0" recordCount="1069.0">
+							<SimplePredicate field="TopOilTemperature" operator="lessOrEqual" value="806.1324104"/>
+							<ScoreDistribution value="0" recordCount="1069.0"/>
+							<ScoreDistribution value="1" recordCount="0.0"/>
+						</Node>
+						<Node score="0" recordCount="5.0">
+							<SimplePredicate field="OilVolume" operator="lessOrEqual" value="879.2179436"/>
+							<ScoreDistribution value="0" recordCount="5.0"/>
+							<ScoreDistribution value="1" recordCount="0.0"/>
+						</Node>
+						<Node score="0" recordCount="21.0">
+							<True/>
+							<ScoreDistribution value="0" recordCount="13.0"/>
+							<ScoreDistribution value="1" recordCount="8.0"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="13">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction" splitCharacteristic="multiSplit">
+					<MiningSchema>
+						<MiningField name="TopOilTemperature"/>
+						<MiningField name="OilVolume"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node score="0" recordCount="1080.0">
+							<SimplePredicate field="TopOilTemperature" operator="lessOrEqual" value="806.1324104"/>
+							<ScoreDistribution value="0" recordCount="1080.0"/>
+							<ScoreDistribution value="1" recordCount="0.0"/>
+						</Node>
+						<Node score="0" recordCount="17.0">
+							<SimplePredicate field="OilVolume" operator="lessOrEqual" value="879.2179436"/>
+							<ScoreDistribution value="0" recordCount="15.0"/>
+							<ScoreDistribution value="1" recordCount="2.0"/>
+						</Node>
+						<Node score="0" recordCount="23.0">
+							<True/>
+							<ScoreDistribution value="0" recordCount="18.0"/>
+							<ScoreDistribution value="1" recordCount="5.0"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="14">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction" splitCharacteristic="multiSplit">
+					<MiningSchema>
+						<MiningField name="TopOilTemperature"/>
+						<MiningField name="OilVolume"/>
+						<MiningField name="VibrationLevel"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node>
+							<SimplePredicate field="OilVolume" operator="lessOrEqual" value="881.2362232"/>
+							<Node>
+								<SimplePredicate field="OilVolume" operator="lessOrEqual" value="879.2179436"/>
+								<Node score="0" recordCount="4.0">
+									<SimplePredicate field="VibrationLevel" operator="lessOrEqual" value="3.0"/>
+									<ScoreDistribution value="0" recordCount="4.0"/>
+									<ScoreDistribution value="1" recordCount="0.0"/>
+								</Node>
+								<Node score="0" recordCount="28.0">
+									<True/>
+									<ScoreDistribution value="0" recordCount="27.0"/>
+									<ScoreDistribution value="1" recordCount="1.0"/>
+								</Node>
+							</Node>
+							<Node score="0" recordCount="10.0">
+								<SimplePredicate field="TopOilTemperature" operator="lessOrEqual" value="806.1324104"/>
+								<ScoreDistribution value="0" recordCount="10.0"/>
+								<ScoreDistribution value="1" recordCount="0.0"/>
+							</Node>
+							<Node score="0" recordCount="20.0">
+								<True/>
+								<ScoreDistribution value="0" recordCount="12.0"/>
+								<ScoreDistribution value="1" recordCount="8.0"/>
+							</Node>
+						</Node>
+						<Node score="0" recordCount="1032.0">
+							<True/>
+							<ScoreDistribution value="0" recordCount="1032.0"/>
+							<ScoreDistribution value="1" recordCount="0.0"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="15">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction" splitCharacteristic="multiSplit">
+					<MiningSchema>
+						<MiningField name="TopOilTemperature"/>
+						<MiningField name="OilVolume"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node>
+							<SimplePredicate field="OilVolume" operator="lessOrEqual" value="881.2362232"/>
+							<Node score="0" recordCount="36.0">
+								<SimplePredicate field="TopOilTemperature" operator="lessOrEqual" value="806.1324104"/>
+								<ScoreDistribution value="0" recordCount="36.0"/>
+								<ScoreDistribution value="1" recordCount="0.0"/>
+							</Node>
+							<Node score="0" recordCount="39.0">
+								<True/>
+								<ScoreDistribution value="0" recordCount="30.0"/>
+								<ScoreDistribution value="1" recordCount="9.0"/>
+							</Node>
+						</Node>
+						<Node score="0" recordCount="1105.0">
+							<True/>
+							<ScoreDistribution value="0" recordCount="1105.0"/>
+							<ScoreDistribution value="1" recordCount="0.0"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="16">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction" splitCharacteristic="multiSplit">
+					<MiningSchema>
+						<MiningField name="TopOilTemperature"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node score="0" recordCount="1048.0">
+							<SimplePredicate field="TopOilTemperature" operator="lessOrEqual" value="806.1324104"/>
+							<ScoreDistribution value="0" recordCount="1048.0"/>
+							<ScoreDistribution value="1" recordCount="0.0"/>
+						</Node>
+						<Node score="0" recordCount="26.0">
+							<True/>
+							<ScoreDistribution value="0" recordCount="24.0"/>
+							<ScoreDistribution value="1" recordCount="2.0"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="17">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction" splitCharacteristic="multiSplit">
+					<MiningSchema>
+						<MiningField name="TopOilTemperature"/>
+						<MiningField name="OilVolume"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node score="0" recordCount="1072.0">
+							<SimplePredicate field="TopOilTemperature" operator="lessOrEqual" value="806.1324104"/>
+							<ScoreDistribution value="0" recordCount="1072.0"/>
+							<ScoreDistribution value="1" recordCount="0.0"/>
+						</Node>
+						<Node score="0" recordCount="16.0">
+							<SimplePredicate field="OilVolume" operator="lessOrEqual" value="879.2179436"/>
+							<ScoreDistribution value="0" recordCount="15.0"/>
+							<ScoreDistribution value="1" recordCount="1.0"/>
+						</Node>
+						<Node score="0" recordCount="17.0">
+							<True/>
+							<ScoreDistribution value="0" recordCount="9.0"/>
+							<ScoreDistribution value="1" recordCount="8.0"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="18">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction" splitCharacteristic="multiSplit">
+					<MiningSchema>
+						<MiningField name="TopOilTemperature"/>
+						<MiningField name="OilVolume"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node score="0" recordCount="1122.0">
+							<SimplePredicate field="TopOilTemperature" operator="lessOrEqual" value="806.1324104"/>
+							<ScoreDistribution value="0" recordCount="1122.0"/>
+							<ScoreDistribution value="1" recordCount="0.0"/>
+						</Node>
+						<Node score="0" recordCount="22.0">
+							<SimplePredicate field="OilVolume" operator="lessOrEqual" value="879.2179436"/>
+							<ScoreDistribution value="0" recordCount="21.0"/>
+							<ScoreDistribution value="1" recordCount="1.0"/>
+						</Node>
+						<Node score="0" recordCount="21.0">
+							<True/>
+							<ScoreDistribution value="0" recordCount="14.0"/>
+							<ScoreDistribution value="1" recordCount="7.0"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="19">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction" splitCharacteristic="multiSplit">
+					<MiningSchema>
+						<MiningField name="TopOilTemperature"/>
+						<MiningField name="OilVolume"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node score="0" recordCount="1138.0">
+							<SimplePredicate field="TopOilTemperature" operator="lessOrEqual" value="806.1324104"/>
+							<ScoreDistribution value="0" recordCount="1138.0"/>
+							<ScoreDistribution value="1" recordCount="0.0"/>
+						</Node>
+						<Node score="0" recordCount="13.0">
+							<SimplePredicate field="OilVolume" operator="lessOrEqual" value="879.2179436"/>
+							<ScoreDistribution value="0" recordCount="9.0"/>
+							<ScoreDistribution value="1" recordCount="4.0"/>
+						</Node>
+						<Node score="0" recordCount="18.0">
+							<True/>
+							<ScoreDistribution value="0" recordCount="12.0"/>
+							<ScoreDistribution value="1" recordCount="6.0"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="20">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction" splitCharacteristic="multiSplit">
+					<MiningSchema>
+						<MiningField name="TopOilTemperature"/>
+						<MiningField name="OilVolume"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node score="0" recordCount="1121.0">
+							<SimplePredicate field="TopOilTemperature" operator="lessOrEqual" value="806.1324104"/>
+							<ScoreDistribution value="0" recordCount="1121.0"/>
+							<ScoreDistribution value="1" recordCount="0.0"/>
+						</Node>
+						<Node score="0" recordCount="15.0">
+							<SimplePredicate field="OilVolume" operator="lessOrEqual" value="879.2179436"/>
+							<ScoreDistribution value="0" recordCount="13.0"/>
+							<ScoreDistribution value="1" recordCount="2.0"/>
+						</Node>
+						<Node score="1" recordCount="17.0">
+							<True/>
+							<ScoreDistribution value="0" recordCount="8.0"/>
+							<ScoreDistribution value="1" recordCount="9.0"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+		</Segmentation>
+	</MiningModel>
+</PMML>

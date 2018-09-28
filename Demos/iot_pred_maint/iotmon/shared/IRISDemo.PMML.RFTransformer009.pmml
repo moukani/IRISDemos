@@ -1,0 +1,1418 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<PMML xmlns="http://www.dmg.org/PMML-4_3" xmlns:data="http://jpmml.org/jpmml-model/InlineTable" version="4.3">
+	<Header>
+		<Application name="JPMML-SparkML" version="1.2.12"/>
+		<Timestamp>2018-09-27T16:47:05Z</Timestamp>
+	</Header>
+	<DataDictionary>
+		<DataField name="TransformerLoad" optype="continuous" dataType="double"/>
+		<DataField name="OilVolume" optype="continuous" dataType="double"/>
+		<DataField name="VibrationLevel" optype="continuous" dataType="integer"/>
+		<DataField name="Threat" optype="categorical" dataType="integer">
+			<Value value="0"/>
+			<Value value="1"/>
+		</DataField>
+	</DataDictionary>
+	<MiningModel functionName="classification">
+		<MiningSchema>
+			<MiningField name="Threat" usageType="target"/>
+			<MiningField name="TransformerLoad"/>
+			<MiningField name="VibrationLevel"/>
+			<MiningField name="OilVolume"/>
+		</MiningSchema>
+		<Output>
+			<OutputField name="pmml(prediction)" optype="categorical" dataType="integer" feature="predictedValue"/>
+			<OutputField name="prediction" optype="categorical" dataType="double" feature="transformedValue">
+				<MapValues outputColumn="data:output">
+					<FieldColumnPair field="pmml(prediction)" column="data:input"/>
+					<InlineTable>
+						<row>
+							<data:input>0</data:input>
+							<data:output>0</data:output>
+						</row>
+						<row>
+							<data:input>1</data:input>
+							<data:output>1</data:output>
+						</row>
+					</InlineTable>
+				</MapValues>
+			</OutputField>
+			<OutputField name="probability(0)" optype="continuous" dataType="double" feature="probability" value="0"/>
+			<OutputField name="probability(1)" optype="continuous" dataType="double" feature="probability" value="1"/>
+		</Output>
+		<Segmentation multipleModelMethod="average">
+			<Segment id="1">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction" splitCharacteristic="multiSplit">
+					<MiningSchema>
+						<MiningField name="TransformerLoad"/>
+						<MiningField name="OilVolume"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node>
+							<SimplePredicate field="OilVolume" operator="lessOrEqual" value="882.1244957"/>
+							<Node>
+								<SimplePredicate field="TransformerLoad" operator="lessOrEqual" value="3.286419331"/>
+								<Node>
+									<SimplePredicate field="TransformerLoad" operator="lessOrEqual" value="2.217449508"/>
+									<Node>
+										<SimplePredicate field="TransformerLoad" operator="lessOrEqual" value="0.934152723"/>
+										<Node score="0" recordCount="19.0">
+											<SimplePredicate field="TransformerLoad" operator="lessOrEqual" value="0.82822467"/>
+											<ScoreDistribution value="0" recordCount="18.0"/>
+											<ScoreDistribution value="1" recordCount="1.0"/>
+										</Node>
+										<Node score="0" recordCount="2.0">
+											<True/>
+											<ScoreDistribution value="0" recordCount="1.0"/>
+											<ScoreDistribution value="1" recordCount="1.0"/>
+										</Node>
+									</Node>
+									<Node score="0" recordCount="35.0">
+										<True/>
+										<ScoreDistribution value="0" recordCount="35.0"/>
+										<ScoreDistribution value="1" recordCount="0.0"/>
+									</Node>
+								</Node>
+								<Node>
+									<SimplePredicate field="TransformerLoad" operator="lessOrEqual" value="2.881266122"/>
+									<Node score="0" recordCount="6.0">
+										<SimplePredicate field="TransformerLoad" operator="lessOrEqual" value="2.697909468"/>
+										<ScoreDistribution value="0" recordCount="5.0"/>
+										<ScoreDistribution value="1" recordCount="1.0"/>
+									</Node>
+									<Node score="1" recordCount="3.0">
+										<True/>
+										<ScoreDistribution value="0" recordCount="1.0"/>
+										<ScoreDistribution value="1" recordCount="2.0"/>
+									</Node>
+								</Node>
+								<Node score="0" recordCount="7.0">
+									<True/>
+									<ScoreDistribution value="0" recordCount="7.0"/>
+									<ScoreDistribution value="1" recordCount="0.0"/>
+								</Node>
+							</Node>
+							<Node score="1" recordCount="5.0">
+								<SimplePredicate field="TransformerLoad" operator="lessOrEqual" value="5.502671702"/>
+								<ScoreDistribution value="0" recordCount="0.0"/>
+								<ScoreDistribution value="1" recordCount="5.0"/>
+							</Node>
+							<Node score="0" recordCount="6.0">
+								<True/>
+								<ScoreDistribution value="0" recordCount="6.0"/>
+								<ScoreDistribution value="1" recordCount="0.0"/>
+							</Node>
+						</Node>
+						<Node score="0" recordCount="1076.0">
+							<True/>
+							<ScoreDistribution value="0" recordCount="1076.0"/>
+							<ScoreDistribution value="1" recordCount="0.0"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="2">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction" splitCharacteristic="multiSplit">
+					<MiningSchema>
+						<MiningField name="TransformerLoad"/>
+						<MiningField name="OilVolume"/>
+						<MiningField name="VibrationLevel"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node>
+							<SimplePredicate field="OilVolume" operator="lessOrEqual" value="879.8515119"/>
+							<Node score="0" recordCount="1.0">
+								<SimplePredicate field="VibrationLevel" operator="lessOrEqual" value="3.0"/>
+								<ScoreDistribution value="0" recordCount="1.0"/>
+								<ScoreDistribution value="1" recordCount="0.0"/>
+							</Node>
+							<Node>
+								<SimplePredicate field="TransformerLoad" operator="lessOrEqual" value="2.697909468"/>
+								<Node>
+									<SimplePredicate field="TransformerLoad" operator="lessOrEqual" value="1.70010491"/>
+									<Node score="0" recordCount="16.0">
+										<SimplePredicate field="TransformerLoad" operator="lessOrEqual" value="1.374749693"/>
+										<ScoreDistribution value="0" recordCount="14.0"/>
+										<ScoreDistribution value="1" recordCount="2.0"/>
+									</Node>
+									<Node score="1" recordCount="5.0">
+										<True/>
+										<ScoreDistribution value="0" recordCount="0.0"/>
+										<ScoreDistribution value="1" recordCount="5.0"/>
+									</Node>
+								</Node>
+								<Node score="0" recordCount="8.0">
+									<True/>
+									<ScoreDistribution value="0" recordCount="8.0"/>
+									<ScoreDistribution value="1" recordCount="0.0"/>
+								</Node>
+							</Node>
+							<Node score="1" recordCount="7.0">
+								<SimplePredicate field="TransformerLoad" operator="lessOrEqual" value="5.502671702"/>
+								<ScoreDistribution value="0" recordCount="0.0"/>
+								<ScoreDistribution value="1" recordCount="7.0"/>
+							</Node>
+							<Node score="0" recordCount="1.0">
+								<True/>
+								<ScoreDistribution value="0" recordCount="1.0"/>
+								<ScoreDistribution value="1" recordCount="0.0"/>
+							</Node>
+						</Node>
+						<Node score="0" recordCount="1088.0">
+							<SimplePredicate field="VibrationLevel" operator="lessOrEqual" value="3.0"/>
+							<ScoreDistribution value="0" recordCount="1088.0"/>
+							<ScoreDistribution value="1" recordCount="0.0"/>
+						</Node>
+						<Node>
+							<SimplePredicate field="TransformerLoad" operator="lessOrEqual" value="0.934152723"/>
+							<Node>
+								<SimplePredicate field="OilVolume" operator="lessOrEqual" value="882.1244957"/>
+								<Node score="0" recordCount="1.0">
+									<SimplePredicate field="TransformerLoad" operator="lessOrEqual" value="0.226359576"/>
+									<ScoreDistribution value="0" recordCount="1.0"/>
+									<ScoreDistribution value="1" recordCount="0.0"/>
+								</Node>
+								<Node score="0" recordCount="2.0">
+									<True/>
+									<ScoreDistribution value="0" recordCount="1.0"/>
+									<ScoreDistribution value="1" recordCount="1.0"/>
+								</Node>
+							</Node>
+							<Node score="0" recordCount="10.0">
+								<True/>
+								<ScoreDistribution value="0" recordCount="10.0"/>
+								<ScoreDistribution value="1" recordCount="0.0"/>
+							</Node>
+						</Node>
+						<Node>
+							<SimplePredicate field="OilVolume" operator="lessOrEqual" value="882.1244957"/>
+							<Node score="0" recordCount="10.0">
+								<SimplePredicate field="TransformerLoad" operator="lessOrEqual" value="2.374767875"/>
+								<ScoreDistribution value="0" recordCount="10.0"/>
+								<ScoreDistribution value="1" recordCount="0.0"/>
+							</Node>
+							<Node score="0" recordCount="8.0">
+								<True/>
+								<ScoreDistribution value="0" recordCount="7.0"/>
+								<ScoreDistribution value="1" recordCount="1.0"/>
+							</Node>
+						</Node>
+						<Node score="0" recordCount="37.0">
+							<True/>
+							<ScoreDistribution value="0" recordCount="37.0"/>
+							<ScoreDistribution value="1" recordCount="0.0"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="3">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction" splitCharacteristic="multiSplit">
+					<MiningSchema>
+						<MiningField name="TransformerLoad"/>
+						<MiningField name="OilVolume"/>
+						<MiningField name="VibrationLevel"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node>
+							<SimplePredicate field="OilVolume" operator="lessOrEqual" value="879.8515119"/>
+							<Node score="0" recordCount="2.0">
+								<SimplePredicate field="VibrationLevel" operator="lessOrEqual" value="3.0"/>
+								<ScoreDistribution value="0" recordCount="2.0"/>
+								<ScoreDistribution value="1" recordCount="0.0"/>
+							</Node>
+							<Node score="0" recordCount="27.0">
+								<SimplePredicate field="TransformerLoad" operator="lessOrEqual" value="2.092105443"/>
+								<ScoreDistribution value="0" recordCount="22.0"/>
+								<ScoreDistribution value="1" recordCount="5.0"/>
+							</Node>
+							<Node score="1" recordCount="3.0">
+								<SimplePredicate field="TransformerLoad" operator="lessOrEqual" value="2.541063017"/>
+								<ScoreDistribution value="0" recordCount="0.0"/>
+								<ScoreDistribution value="1" recordCount="3.0"/>
+							</Node>
+							<Node score="0" recordCount="2.0">
+								<SimplePredicate field="TransformerLoad" operator="lessOrEqual" value="2.697909468"/>
+								<ScoreDistribution value="0" recordCount="2.0"/>
+								<ScoreDistribution value="1" recordCount="0.0"/>
+							</Node>
+							<Node score="0" recordCount="7.0">
+								<True/>
+								<ScoreDistribution value="0" recordCount="4.0"/>
+								<ScoreDistribution value="1" recordCount="3.0"/>
+							</Node>
+						</Node>
+						<Node score="0" recordCount="1006.0">
+							<SimplePredicate field="VibrationLevel" operator="lessOrEqual" value="3.0"/>
+							<ScoreDistribution value="0" recordCount="1006.0"/>
+							<ScoreDistribution value="1" recordCount="0.0"/>
+						</Node>
+						<Node>
+							<SimplePredicate field="OilVolume" operator="lessOrEqual" value="882.1244957"/>
+							<Node score="0" recordCount="11.0">
+								<SimplePredicate field="TransformerLoad" operator="lessOrEqual" value="2.374767875"/>
+								<ScoreDistribution value="0" recordCount="11.0"/>
+								<ScoreDistribution value="1" recordCount="0.0"/>
+							</Node>
+							<Node score="0" recordCount="4.0">
+								<SimplePredicate field="TransformerLoad" operator="lessOrEqual" value="2.881266122"/>
+								<ScoreDistribution value="0" recordCount="3.0"/>
+								<ScoreDistribution value="1" recordCount="1.0"/>
+							</Node>
+							<Node score="0" recordCount="4.0">
+								<True/>
+								<ScoreDistribution value="0" recordCount="4.0"/>
+								<ScoreDistribution value="1" recordCount="0.0"/>
+							</Node>
+						</Node>
+						<Node score="0" recordCount="39.0">
+							<True/>
+							<ScoreDistribution value="0" recordCount="39.0"/>
+							<ScoreDistribution value="1" recordCount="0.0"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="4">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction" splitCharacteristic="multiSplit">
+					<MiningSchema>
+						<MiningField name="TransformerLoad"/>
+						<MiningField name="OilVolume"/>
+						<MiningField name="VibrationLevel"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node>
+							<SimplePredicate field="OilVolume" operator="lessOrEqual" value="879.8515119"/>
+							<Node score="0" recordCount="3.0">
+								<SimplePredicate field="VibrationLevel" operator="lessOrEqual" value="3.0"/>
+								<ScoreDistribution value="0" recordCount="3.0"/>
+								<ScoreDistribution value="1" recordCount="0.0"/>
+							</Node>
+							<Node score="0" recordCount="13.0">
+								<SimplePredicate field="TransformerLoad" operator="lessOrEqual" value="1.374749693"/>
+								<ScoreDistribution value="0" recordCount="13.0"/>
+								<ScoreDistribution value="1" recordCount="0.0"/>
+							</Node>
+							<Node score="1" recordCount="23.0">
+								<True/>
+								<ScoreDistribution value="0" recordCount="10.0"/>
+								<ScoreDistribution value="1" recordCount="13.0"/>
+							</Node>
+						</Node>
+						<Node>
+							<SimplePredicate field="OilVolume" operator="lessOrEqual" value="882.1244957"/>
+							<Node score="0" recordCount="12.0">
+								<SimplePredicate field="VibrationLevel" operator="lessOrEqual" value="3.0"/>
+								<ScoreDistribution value="0" recordCount="12.0"/>
+								<ScoreDistribution value="1" recordCount="0.0"/>
+							</Node>
+							<Node>
+								<SimplePredicate field="TransformerLoad" operator="lessOrEqual" value="3.042271446"/>
+								<Node score="0" recordCount="5.0">
+									<SimplePredicate field="TransformerLoad" operator="lessOrEqual" value="0.934152723"/>
+									<ScoreDistribution value="0" recordCount="4.0"/>
+									<ScoreDistribution value="1" recordCount="1.0"/>
+								</Node>
+								<Node score="0" recordCount="11.0">
+									<True/>
+									<ScoreDistribution value="0" recordCount="11.0"/>
+									<ScoreDistribution value="1" recordCount="0.0"/>
+								</Node>
+							</Node>
+							<Node score="1" recordCount="2.0">
+								<SimplePredicate field="TransformerLoad" operator="lessOrEqual" value="3.849426139"/>
+								<ScoreDistribution value="0" recordCount="0.0"/>
+								<ScoreDistribution value="1" recordCount="2.0"/>
+							</Node>
+							<Node score="0" recordCount="3.0">
+								<True/>
+								<ScoreDistribution value="0" recordCount="3.0"/>
+								<ScoreDistribution value="1" recordCount="0.0"/>
+							</Node>
+						</Node>
+						<Node score="0" recordCount="994.0">
+							<True/>
+							<ScoreDistribution value="0" recordCount="994.0"/>
+							<ScoreDistribution value="1" recordCount="0.0"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="5">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction" splitCharacteristic="multiSplit">
+					<MiningSchema>
+						<MiningField name="TransformerLoad"/>
+						<MiningField name="OilVolume"/>
+						<MiningField name="VibrationLevel"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node score="0" recordCount="1043.0">
+							<SimplePredicate field="VibrationLevel" operator="lessOrEqual" value="3.0"/>
+							<ScoreDistribution value="0" recordCount="1043.0"/>
+							<ScoreDistribution value="1" recordCount="0.0"/>
+						</Node>
+						<Node>
+							<SimplePredicate field="TransformerLoad" operator="lessOrEqual" value="2.217449508"/>
+							<Node>
+								<SimplePredicate field="TransformerLoad" operator="lessOrEqual" value="0.333329096"/>
+								<Node score="0" recordCount="4.0">
+									<SimplePredicate field="TransformerLoad" operator="lessOrEqual" value="0.226359576"/>
+									<ScoreDistribution value="0" recordCount="4.0"/>
+									<ScoreDistribution value="1" recordCount="0.0"/>
+								</Node>
+								<Node score="1" recordCount="5.0">
+									<True/>
+									<ScoreDistribution value="0" recordCount="2.0"/>
+									<ScoreDistribution value="1" recordCount="3.0"/>
+								</Node>
+							</Node>
+							<Node>
+								<SimplePredicate field="OilVolume" operator="lessOrEqual" value="879.8515119"/>
+								<Node score="0" recordCount="10.0">
+									<SimplePredicate field="TransformerLoad" operator="lessOrEqual" value="1.374749693"/>
+									<ScoreDistribution value="0" recordCount="10.0"/>
+									<ScoreDistribution value="1" recordCount="0.0"/>
+								</Node>
+								<Node score="0" recordCount="11.0">
+									<True/>
+									<ScoreDistribution value="0" recordCount="7.0"/>
+									<ScoreDistribution value="1" recordCount="4.0"/>
+								</Node>
+							</Node>
+							<Node score="0" recordCount="15.0">
+								<SimplePredicate field="TransformerLoad" operator="lessOrEqual" value="0.934152723"/>
+								<ScoreDistribution value="0" recordCount="14.0"/>
+								<ScoreDistribution value="1" recordCount="1.0"/>
+							</Node>
+							<Node score="0" recordCount="41.0">
+								<True/>
+								<ScoreDistribution value="0" recordCount="41.0"/>
+								<ScoreDistribution value="1" recordCount="0.0"/>
+							</Node>
+						</Node>
+						<Node>
+							<SimplePredicate field="OilVolume" operator="lessOrEqual" value="879.8515119"/>
+							<Node score="1" recordCount="11.0">
+								<SimplePredicate field="TransformerLoad" operator="lessOrEqual" value="5.502671702"/>
+								<ScoreDistribution value="0" recordCount="3.0"/>
+								<ScoreDistribution value="1" recordCount="8.0"/>
+							</Node>
+							<Node score="0" recordCount="2.0">
+								<True/>
+								<ScoreDistribution value="0" recordCount="2.0"/>
+								<ScoreDistribution value="1" recordCount="0.0"/>
+							</Node>
+						</Node>
+						<Node score="0" recordCount="22.0">
+							<True/>
+							<ScoreDistribution value="0" recordCount="22.0"/>
+							<ScoreDistribution value="1" recordCount="0.0"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="6">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction" splitCharacteristic="multiSplit">
+					<MiningSchema>
+						<MiningField name="TransformerLoad"/>
+						<MiningField name="OilVolume"/>
+						<MiningField name="VibrationLevel"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node>
+							<SimplePredicate field="OilVolume" operator="lessOrEqual" value="879.8515119"/>
+							<Node>
+								<SimplePredicate field="TransformerLoad" operator="lessOrEqual" value="4.584225548"/>
+								<Node>
+									<SimplePredicate field="TransformerLoad" operator="lessOrEqual" value="3.286419331"/>
+									<Node score="0" recordCount="4.0">
+										<SimplePredicate field="VibrationLevel" operator="lessOrEqual" value="3.0"/>
+										<ScoreDistribution value="0" recordCount="4.0"/>
+										<ScoreDistribution value="1" recordCount="0.0"/>
+									</Node>
+									<Node score="0" recordCount="17.0">
+										<SimplePredicate field="TransformerLoad" operator="lessOrEqual" value="2.541063017"/>
+										<ScoreDistribution value="0" recordCount="9.0"/>
+										<ScoreDistribution value="1" recordCount="8.0"/>
+									</Node>
+									<Node score="0" recordCount="6.0">
+										<True/>
+										<ScoreDistribution value="0" recordCount="5.0"/>
+										<ScoreDistribution value="1" recordCount="1.0"/>
+									</Node>
+								</Node>
+								<Node score="1" recordCount="4.0">
+									<True/>
+									<ScoreDistribution value="0" recordCount="0.0"/>
+									<ScoreDistribution value="1" recordCount="4.0"/>
+								</Node>
+							</Node>
+							<Node score="0" recordCount="3.0">
+								<True/>
+								<ScoreDistribution value="0" recordCount="3.0"/>
+								<ScoreDistribution value="1" recordCount="0.0"/>
+							</Node>
+						</Node>
+						<Node>
+							<SimplePredicate field="OilVolume" operator="lessOrEqual" value="882.1244957"/>
+							<Node>
+								<SimplePredicate field="TransformerLoad" operator="lessOrEqual" value="2.541063017"/>
+								<Node>
+									<SimplePredicate field="TransformerLoad" operator="lessOrEqual" value="0.934152723"/>
+									<Node score="0" recordCount="11.0">
+										<SimplePredicate field="TransformerLoad" operator="lessOrEqual" value="0.82822467"/>
+										<ScoreDistribution value="0" recordCount="11.0"/>
+										<ScoreDistribution value="1" recordCount="0.0"/>
+									</Node>
+									<Node score="0" recordCount="3.0">
+										<True/>
+										<ScoreDistribution value="0" recordCount="2.0"/>
+										<ScoreDistribution value="1" recordCount="1.0"/>
+									</Node>
+								</Node>
+								<Node score="0" recordCount="17.0">
+									<True/>
+									<ScoreDistribution value="0" recordCount="17.0"/>
+									<ScoreDistribution value="1" recordCount="0.0"/>
+								</Node>
+							</Node>
+							<Node score="0" recordCount="3.0">
+								<SimplePredicate field="VibrationLevel" operator="lessOrEqual" value="3.0"/>
+								<ScoreDistribution value="0" recordCount="3.0"/>
+								<ScoreDistribution value="1" recordCount="0.0"/>
+							</Node>
+							<Node score="1" recordCount="2.0">
+								<SimplePredicate field="TransformerLoad" operator="lessOrEqual" value="3.849426139"/>
+								<ScoreDistribution value="0" recordCount="0.0"/>
+								<ScoreDistribution value="1" recordCount="2.0"/>
+							</Node>
+							<Node score="0" recordCount="3.0">
+								<True/>
+								<ScoreDistribution value="0" recordCount="3.0"/>
+								<ScoreDistribution value="1" recordCount="0.0"/>
+							</Node>
+						</Node>
+						<Node score="0" recordCount="1028.0">
+							<True/>
+							<ScoreDistribution value="0" recordCount="1028.0"/>
+							<ScoreDistribution value="1" recordCount="0.0"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="7">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction" splitCharacteristic="multiSplit">
+					<MiningSchema>
+						<MiningField name="TransformerLoad"/>
+						<MiningField name="OilVolume"/>
+						<MiningField name="VibrationLevel"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node score="0" recordCount="1050.0">
+							<SimplePredicate field="VibrationLevel" operator="lessOrEqual" value="3.0"/>
+							<ScoreDistribution value="0" recordCount="1050.0"/>
+							<ScoreDistribution value="1" recordCount="0.0"/>
+						</Node>
+						<Node>
+							<SimplePredicate field="OilVolume" operator="lessOrEqual" value="882.1244957"/>
+							<Node>
+								<SimplePredicate field="TransformerLoad" operator="lessOrEqual" value="2.374767875"/>
+								<Node score="0" recordCount="24.0">
+									<SimplePredicate field="OilVolume" operator="lessOrEqual" value="879.8515119"/>
+									<ScoreDistribution value="0" recordCount="22.0"/>
+									<ScoreDistribution value="1" recordCount="2.0"/>
+								</Node>
+								<Node score="0" recordCount="10.0">
+									<True/>
+									<ScoreDistribution value="0" recordCount="9.0"/>
+									<ScoreDistribution value="1" recordCount="1.0"/>
+								</Node>
+							</Node>
+							<Node score="1" recordCount="2.0">
+								<SimplePredicate field="TransformerLoad" operator="lessOrEqual" value="2.541063017"/>
+								<ScoreDistribution value="0" recordCount="0.0"/>
+								<ScoreDistribution value="1" recordCount="2.0"/>
+							</Node>
+							<Node score="0" recordCount="4.0">
+								<SimplePredicate field="TransformerLoad" operator="lessOrEqual" value="2.697909468"/>
+								<ScoreDistribution value="0" recordCount="4.0"/>
+								<ScoreDistribution value="1" recordCount="0.0"/>
+							</Node>
+							<Node score="0" recordCount="10.0">
+								<True/>
+								<ScoreDistribution value="0" recordCount="6.0"/>
+								<ScoreDistribution value="1" recordCount="4.0"/>
+							</Node>
+						</Node>
+						<Node score="0" recordCount="41.0">
+							<True/>
+							<ScoreDistribution value="0" recordCount="41.0"/>
+							<ScoreDistribution value="1" recordCount="0.0"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="8">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction" splitCharacteristic="multiSplit">
+					<MiningSchema>
+						<MiningField name="TransformerLoad"/>
+						<MiningField name="OilVolume"/>
+						<MiningField name="VibrationLevel"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node>
+							<SimplePredicate field="OilVolume" operator="lessOrEqual" value="879.8515119"/>
+							<Node>
+								<SimplePredicate field="TransformerLoad" operator="lessOrEqual" value="2.217449508"/>
+								<Node score="0" recordCount="3.0">
+									<SimplePredicate field="VibrationLevel" operator="lessOrEqual" value="3.0"/>
+									<ScoreDistribution value="0" recordCount="3.0"/>
+									<ScoreDistribution value="1" recordCount="0.0"/>
+								</Node>
+								<Node score="0" recordCount="13.0">
+									<True/>
+									<ScoreDistribution value="0" recordCount="12.0"/>
+									<ScoreDistribution value="1" recordCount="1.0"/>
+								</Node>
+							</Node>
+							<Node score="1" recordCount="11.0">
+								<SimplePredicate field="TransformerLoad" operator="lessOrEqual" value="4.584225548"/>
+								<ScoreDistribution value="0" recordCount="4.0"/>
+								<ScoreDistribution value="1" recordCount="7.0"/>
+							</Node>
+							<Node score="0" recordCount="3.0">
+								<True/>
+								<ScoreDistribution value="0" recordCount="3.0"/>
+								<ScoreDistribution value="1" recordCount="0.0"/>
+							</Node>
+						</Node>
+						<Node>
+							<SimplePredicate field="OilVolume" operator="lessOrEqual" value="882.1244957"/>
+							<Node score="0" recordCount="8.0">
+								<SimplePredicate field="VibrationLevel" operator="lessOrEqual" value="3.0"/>
+								<ScoreDistribution value="0" recordCount="8.0"/>
+								<ScoreDistribution value="1" recordCount="0.0"/>
+							</Node>
+							<Node score="0" recordCount="23.0">
+								<True/>
+								<ScoreDistribution value="0" recordCount="20.0"/>
+								<ScoreDistribution value="1" recordCount="3.0"/>
+							</Node>
+						</Node>
+						<Node score="0" recordCount="1113.0">
+							<True/>
+							<ScoreDistribution value="0" recordCount="1113.0"/>
+							<ScoreDistribution value="1" recordCount="0.0"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="9">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction" splitCharacteristic="multiSplit">
+					<MiningSchema>
+						<MiningField name="TransformerLoad"/>
+						<MiningField name="OilVolume"/>
+						<MiningField name="VibrationLevel"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node>
+							<SimplePredicate field="OilVolume" operator="lessOrEqual" value="879.8515119"/>
+							<Node score="0" recordCount="5.0">
+								<SimplePredicate field="VibrationLevel" operator="lessOrEqual" value="3.0"/>
+								<ScoreDistribution value="0" recordCount="5.0"/>
+								<ScoreDistribution value="1" recordCount="0.0"/>
+							</Node>
+							<Node score="0" recordCount="40.0">
+								<True/>
+								<ScoreDistribution value="0" recordCount="32.0"/>
+								<ScoreDistribution value="1" recordCount="8.0"/>
+							</Node>
+						</Node>
+						<Node>
+							<SimplePredicate field="OilVolume" operator="lessOrEqual" value="882.1244957"/>
+							<Node score="0" recordCount="33.0">
+								<SimplePredicate field="TransformerLoad" operator="lessOrEqual" value="2.541063017"/>
+								<ScoreDistribution value="0" recordCount="33.0"/>
+								<ScoreDistribution value="1" recordCount="0.0"/>
+							</Node>
+							<Node score="1" recordCount="2.0">
+								<SimplePredicate field="TransformerLoad" operator="lessOrEqual" value="2.881266122"/>
+								<ScoreDistribution value="0" recordCount="0.0"/>
+								<ScoreDistribution value="1" recordCount="2.0"/>
+							</Node>
+							<Node score="0" recordCount="9.0">
+								<True/>
+								<ScoreDistribution value="0" recordCount="9.0"/>
+								<ScoreDistribution value="1" recordCount="0.0"/>
+							</Node>
+						</Node>
+						<Node score="0" recordCount="1015.0">
+							<True/>
+							<ScoreDistribution value="0" recordCount="1015.0"/>
+							<ScoreDistribution value="1" recordCount="0.0"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="10">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction" splitCharacteristic="multiSplit">
+					<MiningSchema>
+						<MiningField name="TransformerLoad"/>
+						<MiningField name="OilVolume"/>
+						<MiningField name="VibrationLevel"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node score="0" recordCount="996.0">
+							<SimplePredicate field="VibrationLevel" operator="lessOrEqual" value="3.0"/>
+							<ScoreDistribution value="0" recordCount="996.0"/>
+							<ScoreDistribution value="1" recordCount="0.0"/>
+						</Node>
+						<Node score="0" recordCount="16.0">
+							<SimplePredicate field="TransformerLoad" operator="lessOrEqual" value="0.82822467"/>
+							<ScoreDistribution value="0" recordCount="16.0"/>
+							<ScoreDistribution value="1" recordCount="0.0"/>
+						</Node>
+						<Node>
+							<SimplePredicate field="TransformerLoad" operator="lessOrEqual" value="0.934152723"/>
+							<Node score="0" recordCount="2.0">
+								<SimplePredicate field="OilVolume" operator="lessOrEqual" value="879.8515119"/>
+								<ScoreDistribution value="0" recordCount="2.0"/>
+								<ScoreDistribution value="1" recordCount="0.0"/>
+							</Node>
+							<Node score="1" recordCount="2.0">
+								<True/>
+								<ScoreDistribution value="0" recordCount="0.0"/>
+								<ScoreDistribution value="1" recordCount="2.0"/>
+							</Node>
+						</Node>
+						<Node>
+							<SimplePredicate field="OilVolume" operator="lessOrEqual" value="882.1244957"/>
+							<Node score="0" recordCount="26.0">
+								<SimplePredicate field="TransformerLoad" operator="lessOrEqual" value="2.697909468"/>
+								<ScoreDistribution value="0" recordCount="24.0"/>
+								<ScoreDistribution value="1" recordCount="2.0"/>
+							</Node>
+							<Node score="0" recordCount="12.0">
+								<True/>
+								<ScoreDistribution value="0" recordCount="9.0"/>
+								<ScoreDistribution value="1" recordCount="3.0"/>
+							</Node>
+						</Node>
+						<Node score="0" recordCount="42.0">
+							<True/>
+							<ScoreDistribution value="0" recordCount="42.0"/>
+							<ScoreDistribution value="1" recordCount="0.0"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="11">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction" splitCharacteristic="multiSplit">
+					<MiningSchema>
+						<MiningField name="TransformerLoad"/>
+						<MiningField name="OilVolume"/>
+						<MiningField name="VibrationLevel"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node score="0" recordCount="1045.0">
+							<SimplePredicate field="VibrationLevel" operator="lessOrEqual" value="3.0"/>
+							<ScoreDistribution value="0" recordCount="1045.0"/>
+							<ScoreDistribution value="1" recordCount="0.0"/>
+						</Node>
+						<Node score="0" recordCount="27.0">
+							<SimplePredicate field="OilVolume" operator="lessOrEqual" value="879.8515119"/>
+							<ScoreDistribution value="0" recordCount="20.0"/>
+							<ScoreDistribution value="1" recordCount="7.0"/>
+						</Node>
+						<Node score="0" recordCount="49.0">
+							<SimplePredicate field="TransformerLoad" operator="lessOrEqual" value="2.697909468"/>
+							<ScoreDistribution value="0" recordCount="49.0"/>
+							<ScoreDistribution value="1" recordCount="0.0"/>
+						</Node>
+						<Node>
+							<SimplePredicate field="TransformerLoad" operator="lessOrEqual" value="3.849426139"/>
+							<Node score="0" recordCount="8.0">
+								<SimplePredicate field="OilVolume" operator="lessOrEqual" value="882.1244957"/>
+								<ScoreDistribution value="0" recordCount="5.0"/>
+								<ScoreDistribution value="1" recordCount="3.0"/>
+							</Node>
+							<Node score="0" recordCount="3.0">
+								<True/>
+								<ScoreDistribution value="0" recordCount="3.0"/>
+								<ScoreDistribution value="1" recordCount="0.0"/>
+							</Node>
+						</Node>
+						<Node score="0" recordCount="10.0">
+							<True/>
+							<ScoreDistribution value="0" recordCount="10.0"/>
+							<ScoreDistribution value="1" recordCount="0.0"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="12">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction" splitCharacteristic="multiSplit">
+					<MiningSchema>
+						<MiningField name="TransformerLoad"/>
+						<MiningField name="OilVolume"/>
+						<MiningField name="VibrationLevel"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node score="0" recordCount="1007.0">
+							<SimplePredicate field="VibrationLevel" operator="lessOrEqual" value="3.0"/>
+							<ScoreDistribution value="0" recordCount="1007.0"/>
+							<ScoreDistribution value="1" recordCount="0.0"/>
+						</Node>
+						<Node score="0" recordCount="18.0">
+							<SimplePredicate field="OilVolume" operator="lessOrEqual" value="879.8515119"/>
+							<ScoreDistribution value="0" recordCount="13.0"/>
+							<ScoreDistribution value="1" recordCount="5.0"/>
+						</Node>
+						<Node score="0" recordCount="54.0">
+							<SimplePredicate field="TransformerLoad" operator="lessOrEqual" value="3.286419331"/>
+							<ScoreDistribution value="0" recordCount="54.0"/>
+							<ScoreDistribution value="1" recordCount="0.0"/>
+						</Node>
+						<Node score="1" recordCount="3.0">
+							<SimplePredicate field="OilVolume" operator="lessOrEqual" value="882.1244957"/>
+							<ScoreDistribution value="0" recordCount="0.0"/>
+							<ScoreDistribution value="1" recordCount="3.0"/>
+						</Node>
+						<Node score="0" recordCount="13.0">
+							<True/>
+							<ScoreDistribution value="0" recordCount="13.0"/>
+							<ScoreDistribution value="1" recordCount="0.0"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="13">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction" splitCharacteristic="multiSplit">
+					<MiningSchema>
+						<MiningField name="TransformerLoad"/>
+						<MiningField name="OilVolume"/>
+						<MiningField name="VibrationLevel"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node>
+							<SimplePredicate field="OilVolume" operator="lessOrEqual" value="879.8515119"/>
+							<Node>
+								<SimplePredicate field="TransformerLoad" operator="lessOrEqual" value="2.217449508"/>
+								<Node score="0" recordCount="3.0">
+									<SimplePredicate field="VibrationLevel" operator="lessOrEqual" value="3.0"/>
+									<ScoreDistribution value="0" recordCount="3.0"/>
+									<ScoreDistribution value="1" recordCount="0.0"/>
+								</Node>
+								<Node>
+									<SimplePredicate field="TransformerLoad" operator="lessOrEqual" value="0.333329096"/>
+									<Node score="0" recordCount="2.0">
+										<SimplePredicate field="TransformerLoad" operator="lessOrEqual" value="0.226359576"/>
+										<ScoreDistribution value="0" recordCount="2.0"/>
+										<ScoreDistribution value="1" recordCount="0.0"/>
+									</Node>
+									<Node score="1" recordCount="4.0">
+										<True/>
+										<ScoreDistribution value="0" recordCount="1.0"/>
+										<ScoreDistribution value="1" recordCount="3.0"/>
+									</Node>
+								</Node>
+								<Node score="0" recordCount="11.0">
+									<SimplePredicate field="TransformerLoad" operator="lessOrEqual" value="1.374749693"/>
+									<ScoreDistribution value="0" recordCount="11.0"/>
+									<ScoreDistribution value="1" recordCount="0.0"/>
+								</Node>
+								<Node score="0" recordCount="7.0">
+									<True/>
+									<ScoreDistribution value="0" recordCount="5.0"/>
+									<ScoreDistribution value="1" recordCount="2.0"/>
+								</Node>
+							</Node>
+							<Node>
+								<SimplePredicate field="TransformerLoad" operator="lessOrEqual" value="5.502671702"/>
+								<Node>
+									<SimplePredicate field="TransformerLoad" operator="lessOrEqual" value="3.286419331"/>
+									<Node score="1" recordCount="4.0">
+										<SimplePredicate field="TransformerLoad" operator="lessOrEqual" value="2.881266122"/>
+										<ScoreDistribution value="0" recordCount="1.0"/>
+										<ScoreDistribution value="1" recordCount="3.0"/>
+									</Node>
+									<Node score="0" recordCount="1.0">
+										<True/>
+										<ScoreDistribution value="0" recordCount="1.0"/>
+										<ScoreDistribution value="1" recordCount="0.0"/>
+									</Node>
+								</Node>
+								<Node score="1" recordCount="2.0">
+									<True/>
+									<ScoreDistribution value="0" recordCount="0.0"/>
+									<ScoreDistribution value="1" recordCount="2.0"/>
+								</Node>
+							</Node>
+							<Node score="0" recordCount="1.0">
+								<True/>
+								<ScoreDistribution value="0" recordCount="1.0"/>
+								<ScoreDistribution value="1" recordCount="0.0"/>
+							</Node>
+						</Node>
+						<Node>
+							<SimplePredicate field="OilVolume" operator="lessOrEqual" value="882.1244957"/>
+							<Node score="0" recordCount="6.0">
+								<SimplePredicate field="VibrationLevel" operator="lessOrEqual" value="3.0"/>
+								<ScoreDistribution value="0" recordCount="6.0"/>
+								<ScoreDistribution value="1" recordCount="0.0"/>
+							</Node>
+							<Node score="0" recordCount="7.0">
+								<SimplePredicate field="TransformerLoad" operator="lessOrEqual" value="0.934152723"/>
+								<ScoreDistribution value="0" recordCount="5.0"/>
+								<ScoreDistribution value="1" recordCount="2.0"/>
+							</Node>
+							<Node score="0" recordCount="16.0">
+								<True/>
+								<ScoreDistribution value="0" recordCount="15.0"/>
+								<ScoreDistribution value="1" recordCount="1.0"/>
+							</Node>
+						</Node>
+						<Node score="0" recordCount="1056.0">
+							<True/>
+							<ScoreDistribution value="0" recordCount="1056.0"/>
+							<ScoreDistribution value="1" recordCount="0.0"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="14">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction" splitCharacteristic="multiSplit">
+					<MiningSchema>
+						<MiningField name="TransformerLoad"/>
+						<MiningField name="OilVolume"/>
+						<MiningField name="VibrationLevel"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node>
+							<SimplePredicate field="OilVolume" operator="lessOrEqual" value="879.8515119"/>
+							<Node>
+								<SimplePredicate field="TransformerLoad" operator="lessOrEqual" value="2.217449508"/>
+								<Node score="0" recordCount="3.0">
+									<SimplePredicate field="VibrationLevel" operator="lessOrEqual" value="3.0"/>
+									<ScoreDistribution value="0" recordCount="3.0"/>
+									<ScoreDistribution value="1" recordCount="0.0"/>
+								</Node>
+								<Node>
+									<SimplePredicate field="TransformerLoad" operator="lessOrEqual" value="0.333329096"/>
+									<Node score="0" recordCount="5.0">
+										<SimplePredicate field="TransformerLoad" operator="lessOrEqual" value="0.226359576"/>
+										<ScoreDistribution value="0" recordCount="5.0"/>
+										<ScoreDistribution value="1" recordCount="0.0"/>
+									</Node>
+									<Node score="1" recordCount="2.0">
+										<True/>
+										<ScoreDistribution value="0" recordCount="0.0"/>
+										<ScoreDistribution value="1" recordCount="2.0"/>
+									</Node>
+								</Node>
+								<Node score="0" recordCount="10.0">
+									<True/>
+									<ScoreDistribution value="0" recordCount="10.0"/>
+									<ScoreDistribution value="1" recordCount="0.0"/>
+								</Node>
+							</Node>
+							<Node score="1" recordCount="3.0">
+								<SimplePredicate field="TransformerLoad" operator="lessOrEqual" value="2.541063017"/>
+								<ScoreDistribution value="0" recordCount="0.0"/>
+								<ScoreDistribution value="1" recordCount="3.0"/>
+							</Node>
+							<Node score="0" recordCount="9.0">
+								<True/>
+								<ScoreDistribution value="0" recordCount="6.0"/>
+								<ScoreDistribution value="1" recordCount="3.0"/>
+							</Node>
+						</Node>
+						<Node>
+							<SimplePredicate field="OilVolume" operator="lessOrEqual" value="882.1244957"/>
+							<Node score="0" recordCount="18.0">
+								<SimplePredicate field="TransformerLoad" operator="lessOrEqual" value="2.541063017"/>
+								<ScoreDistribution value="0" recordCount="18.0"/>
+								<ScoreDistribution value="1" recordCount="0.0"/>
+							</Node>
+							<Node>
+								<SimplePredicate field="TransformerLoad" operator="lessOrEqual" value="3.849426139"/>
+								<Node score="0" recordCount="5.0">
+									<SimplePredicate field="TransformerLoad" operator="lessOrEqual" value="3.55784185"/>
+									<ScoreDistribution value="0" recordCount="4.0"/>
+									<ScoreDistribution value="1" recordCount="1.0"/>
+								</Node>
+								<Node score="1" recordCount="1.0">
+									<True/>
+									<ScoreDistribution value="0" recordCount="0.0"/>
+									<ScoreDistribution value="1" recordCount="1.0"/>
+								</Node>
+							</Node>
+							<Node score="0" recordCount="6.0">
+								<True/>
+								<ScoreDistribution value="0" recordCount="6.0"/>
+								<ScoreDistribution value="1" recordCount="0.0"/>
+							</Node>
+						</Node>
+						<Node score="0" recordCount="1032.0">
+							<True/>
+							<ScoreDistribution value="0" recordCount="1032.0"/>
+							<ScoreDistribution value="1" recordCount="0.0"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="15">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction" splitCharacteristic="multiSplit">
+					<MiningSchema>
+						<MiningField name="TransformerLoad"/>
+						<MiningField name="OilVolume"/>
+						<MiningField name="VibrationLevel"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node>
+							<SimplePredicate field="OilVolume" operator="lessOrEqual" value="879.8515119"/>
+							<Node>
+								<SimplePredicate field="TransformerLoad" operator="lessOrEqual" value="2.697909468"/>
+								<Node>
+									<SimplePredicate field="TransformerLoad" operator="lessOrEqual" value="1.566855626"/>
+									<Node score="0" recordCount="1.0">
+										<SimplePredicate field="VibrationLevel" operator="lessOrEqual" value="3.0"/>
+										<ScoreDistribution value="0" recordCount="1.0"/>
+										<ScoreDistribution value="1" recordCount="0.0"/>
+									</Node>
+									<Node score="0" recordCount="18.0">
+										<SimplePredicate field="TransformerLoad" operator="lessOrEqual" value="1.374749693"/>
+										<ScoreDistribution value="0" recordCount="16.0"/>
+										<ScoreDistribution value="1" recordCount="2.0"/>
+									</Node>
+									<Node score="1" recordCount="2.0">
+										<True/>
+										<ScoreDistribution value="0" recordCount="0.0"/>
+										<ScoreDistribution value="1" recordCount="2.0"/>
+									</Node>
+								</Node>
+								<Node score="0" recordCount="13.0">
+									<True/>
+									<ScoreDistribution value="0" recordCount="13.0"/>
+									<ScoreDistribution value="1" recordCount="0.0"/>
+								</Node>
+							</Node>
+							<Node>
+								<SimplePredicate field="TransformerLoad" operator="lessOrEqual" value="3.849426139"/>
+								<Node score="0" recordCount="2.0">
+									<SimplePredicate field="TransformerLoad" operator="lessOrEqual" value="2.881266122"/>
+									<ScoreDistribution value="0" recordCount="1.0"/>
+									<ScoreDistribution value="1" recordCount="1.0"/>
+								</Node>
+								<Node score="1" recordCount="5.0">
+									<True/>
+									<ScoreDistribution value="0" recordCount="0.0"/>
+									<ScoreDistribution value="1" recordCount="5.0"/>
+								</Node>
+							</Node>
+							<Node score="0" recordCount="2.0">
+								<True/>
+								<ScoreDistribution value="0" recordCount="2.0"/>
+								<ScoreDistribution value="1" recordCount="0.0"/>
+							</Node>
+						</Node>
+						<Node score="0" recordCount="1071.0">
+							<SimplePredicate field="VibrationLevel" operator="lessOrEqual" value="3.0"/>
+							<ScoreDistribution value="0" recordCount="1071.0"/>
+							<ScoreDistribution value="1" recordCount="0.0"/>
+						</Node>
+						<Node score="0" recordCount="19.0">
+							<SimplePredicate field="OilVolume" operator="lessOrEqual" value="882.1244957"/>
+							<ScoreDistribution value="0" recordCount="18.0"/>
+							<ScoreDistribution value="1" recordCount="1.0"/>
+						</Node>
+						<Node score="0" recordCount="47.0">
+							<True/>
+							<ScoreDistribution value="0" recordCount="47.0"/>
+							<ScoreDistribution value="1" recordCount="0.0"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="16">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction" splitCharacteristic="multiSplit">
+					<MiningSchema>
+						<MiningField name="TransformerLoad"/>
+						<MiningField name="OilVolume"/>
+						<MiningField name="VibrationLevel"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node score="0" recordCount="989.0">
+							<SimplePredicate field="VibrationLevel" operator="lessOrEqual" value="3.0"/>
+							<ScoreDistribution value="0" recordCount="989.0"/>
+							<ScoreDistribution value="1" recordCount="0.0"/>
+						</Node>
+						<Node>
+							<SimplePredicate field="TransformerLoad" operator="lessOrEqual" value="2.374767875"/>
+							<Node>
+								<SimplePredicate field="OilVolume" operator="lessOrEqual" value="882.1244957"/>
+								<Node>
+									<SimplePredicate field="TransformerLoad" operator="lessOrEqual" value="0.934152723"/>
+									<Node score="0" recordCount="14.0">
+										<SimplePredicate field="TransformerLoad" operator="lessOrEqual" value="0.720377067"/>
+										<ScoreDistribution value="0" recordCount="13.0"/>
+										<ScoreDistribution value="1" recordCount="1.0"/>
+									</Node>
+									<Node score="0" recordCount="4.0">
+										<True/>
+										<ScoreDistribution value="0" recordCount="3.0"/>
+										<ScoreDistribution value="1" recordCount="1.0"/>
+									</Node>
+								</Node>
+								<Node score="0" recordCount="14.0">
+									<True/>
+									<ScoreDistribution value="0" recordCount="14.0"/>
+									<ScoreDistribution value="1" recordCount="0.0"/>
+								</Node>
+							</Node>
+							<Node score="0" recordCount="19.0">
+								<True/>
+								<ScoreDistribution value="0" recordCount="19.0"/>
+								<ScoreDistribution value="1" recordCount="0.0"/>
+							</Node>
+						</Node>
+						<Node>
+							<SimplePredicate field="OilVolume" operator="lessOrEqual" value="882.1244957"/>
+							<Node>
+								<SimplePredicate field="TransformerLoad" operator="lessOrEqual" value="5.502671702"/>
+								<Node score="0" recordCount="9.0">
+									<SimplePredicate field="TransformerLoad" operator="lessOrEqual" value="3.042271446"/>
+									<ScoreDistribution value="0" recordCount="6.0"/>
+									<ScoreDistribution value="1" recordCount="3.0"/>
+								</Node>
+								<Node score="1" recordCount="7.0">
+									<True/>
+									<ScoreDistribution value="0" recordCount="0.0"/>
+									<ScoreDistribution value="1" recordCount="7.0"/>
+								</Node>
+							</Node>
+							<Node score="0" recordCount="3.0">
+								<True/>
+								<ScoreDistribution value="0" recordCount="3.0"/>
+								<ScoreDistribution value="1" recordCount="0.0"/>
+							</Node>
+						</Node>
+						<Node score="0" recordCount="15.0">
+							<True/>
+							<ScoreDistribution value="0" recordCount="15.0"/>
+							<ScoreDistribution value="1" recordCount="0.0"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="17">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction" splitCharacteristic="multiSplit">
+					<MiningSchema>
+						<MiningField name="TransformerLoad"/>
+						<MiningField name="OilVolume"/>
+						<MiningField name="VibrationLevel"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node>
+							<SimplePredicate field="OilVolume" operator="lessOrEqual" value="882.1244957"/>
+							<Node>
+								<SimplePredicate field="TransformerLoad" operator="lessOrEqual" value="3.55784185"/>
+								<Node>
+									<SimplePredicate field="TransformerLoad" operator="lessOrEqual" value="1.70010491"/>
+									<Node>
+										<SimplePredicate field="TransformerLoad" operator="lessOrEqual" value="1.566855626"/>
+										<Node score="0" recordCount="9.0">
+											<SimplePredicate field="OilVolume" operator="lessOrEqual" value="879.8515119"/>
+											<ScoreDistribution value="0" recordCount="9.0"/>
+											<ScoreDistribution value="1" recordCount="0.0"/>
+										</Node>
+										<Node score="0" recordCount="12.0">
+											<True/>
+											<ScoreDistribution value="0" recordCount="11.0"/>
+											<ScoreDistribution value="1" recordCount="1.0"/>
+										</Node>
+									</Node>
+									<Node score="0" recordCount="4.0">
+										<SimplePredicate field="OilVolume" operator="lessOrEqual" value="879.8515119"/>
+										<ScoreDistribution value="0" recordCount="2.0"/>
+										<ScoreDistribution value="1" recordCount="2.0"/>
+									</Node>
+									<Node score="0" recordCount="4.0">
+										<True/>
+										<ScoreDistribution value="0" recordCount="4.0"/>
+										<ScoreDistribution value="1" recordCount="0.0"/>
+									</Node>
+								</Node>
+								<Node score="0" recordCount="15.0">
+									<SimplePredicate field="TransformerLoad" operator="lessOrEqual" value="2.697909468"/>
+									<ScoreDistribution value="0" recordCount="15.0"/>
+									<ScoreDistribution value="1" recordCount="0.0"/>
+								</Node>
+								<Node score="0" recordCount="2.0">
+									<SimplePredicate field="TransformerLoad" operator="lessOrEqual" value="2.881266122"/>
+									<ScoreDistribution value="0" recordCount="1.0"/>
+									<ScoreDistribution value="1" recordCount="1.0"/>
+								</Node>
+								<Node score="0" recordCount="6.0">
+									<True/>
+									<ScoreDistribution value="0" recordCount="6.0"/>
+									<ScoreDistribution value="1" recordCount="0.0"/>
+								</Node>
+							</Node>
+							<Node>
+								<SimplePredicate field="TransformerLoad" operator="lessOrEqual" value="5.502671702"/>
+								<Node score="0" recordCount="1.0">
+									<SimplePredicate field="VibrationLevel" operator="lessOrEqual" value="3.0"/>
+									<ScoreDistribution value="0" recordCount="1.0"/>
+									<ScoreDistribution value="1" recordCount="0.0"/>
+								</Node>
+								<Node score="1" recordCount="7.0">
+									<True/>
+									<ScoreDistribution value="0" recordCount="0.0"/>
+									<ScoreDistribution value="1" recordCount="7.0"/>
+								</Node>
+							</Node>
+							<Node score="0" recordCount="3.0">
+								<True/>
+								<ScoreDistribution value="0" recordCount="3.0"/>
+								<ScoreDistribution value="1" recordCount="0.0"/>
+							</Node>
+						</Node>
+						<Node score="0" recordCount="1042.0">
+							<True/>
+							<ScoreDistribution value="0" recordCount="1042.0"/>
+							<ScoreDistribution value="1" recordCount="0.0"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="18">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction" splitCharacteristic="multiSplit">
+					<MiningSchema>
+						<MiningField name="TransformerLoad"/>
+						<MiningField name="OilVolume"/>
+						<MiningField name="VibrationLevel"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node>
+							<SimplePredicate field="OilVolume" operator="lessOrEqual" value="879.8515119"/>
+							<Node score="0" recordCount="3.0">
+								<SimplePredicate field="VibrationLevel" operator="lessOrEqual" value="3.0"/>
+								<ScoreDistribution value="0" recordCount="3.0"/>
+								<ScoreDistribution value="1" recordCount="0.0"/>
+							</Node>
+							<Node score="0" recordCount="38.0">
+								<True/>
+								<ScoreDistribution value="0" recordCount="24.0"/>
+								<ScoreDistribution value="1" recordCount="14.0"/>
+							</Node>
+						</Node>
+						<Node>
+							<SimplePredicate field="OilVolume" operator="lessOrEqual" value="882.1244957"/>
+							<Node score="0" recordCount="13.0">
+								<SimplePredicate field="VibrationLevel" operator="lessOrEqual" value="3.0"/>
+								<ScoreDistribution value="0" recordCount="13.0"/>
+								<ScoreDistribution value="1" recordCount="0.0"/>
+							</Node>
+							<Node>
+								<SimplePredicate field="TransformerLoad" operator="lessOrEqual" value="3.042271446"/>
+								<Node score="0" recordCount="6.0">
+									<SimplePredicate field="TransformerLoad" operator="lessOrEqual" value="0.934152723"/>
+									<ScoreDistribution value="0" recordCount="5.0"/>
+									<ScoreDistribution value="1" recordCount="1.0"/>
+								</Node>
+								<Node score="0" recordCount="11.0">
+									<True/>
+									<ScoreDistribution value="0" recordCount="11.0"/>
+									<ScoreDistribution value="1" recordCount="0.0"/>
+								</Node>
+							</Node>
+							<Node score="0" recordCount="4.0">
+								<True/>
+								<ScoreDistribution value="0" recordCount="3.0"/>
+								<ScoreDistribution value="1" recordCount="1.0"/>
+							</Node>
+						</Node>
+						<Node score="0" recordCount="1090.0">
+							<True/>
+							<ScoreDistribution value="0" recordCount="1090.0"/>
+							<ScoreDistribution value="1" recordCount="0.0"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="19">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction" splitCharacteristic="multiSplit">
+					<MiningSchema>
+						<MiningField name="TransformerLoad"/>
+						<MiningField name="OilVolume"/>
+						<MiningField name="VibrationLevel"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node>
+							<SimplePredicate field="OilVolume" operator="lessOrEqual" value="882.1244957"/>
+							<Node>
+								<SimplePredicate field="TransformerLoad" operator="lessOrEqual" value="2.217449508"/>
+								<Node>
+									<SimplePredicate field="TransformerLoad" operator="lessOrEqual" value="0.934152723"/>
+									<Node score="0" recordCount="13.0">
+										<SimplePredicate field="OilVolume" operator="lessOrEqual" value="879.8515119"/>
+										<ScoreDistribution value="0" recordCount="13.0"/>
+										<ScoreDistribution value="1" recordCount="0.0"/>
+									</Node>
+									<Node score="0" recordCount="7.0">
+										<SimplePredicate field="TransformerLoad" operator="lessOrEqual" value="0.82822467"/>
+										<ScoreDistribution value="0" recordCount="7.0"/>
+										<ScoreDistribution value="1" recordCount="0.0"/>
+									</Node>
+									<Node score="1" recordCount="5.0">
+										<True/>
+										<ScoreDistribution value="0" recordCount="2.0"/>
+										<ScoreDistribution value="1" recordCount="3.0"/>
+									</Node>
+								</Node>
+								<Node score="0" recordCount="20.0">
+									<True/>
+									<ScoreDistribution value="0" recordCount="20.0"/>
+									<ScoreDistribution value="1" recordCount="0.0"/>
+								</Node>
+							</Node>
+							<Node score="0" recordCount="4.0">
+								<SimplePredicate field="VibrationLevel" operator="lessOrEqual" value="3.0"/>
+								<ScoreDistribution value="0" recordCount="4.0"/>
+								<ScoreDistribution value="1" recordCount="0.0"/>
+							</Node>
+							<Node>
+								<SimplePredicate field="TransformerLoad" operator="lessOrEqual" value="3.849426139"/>
+								<Node score="1" recordCount="10.0">
+									<SimplePredicate field="OilVolume" operator="lessOrEqual" value="879.8515119"/>
+									<ScoreDistribution value="0" recordCount="4.0"/>
+									<ScoreDistribution value="1" recordCount="6.0"/>
+								</Node>
+								<Node score="1" recordCount="3.0">
+									<True/>
+									<ScoreDistribution value="0" recordCount="0.0"/>
+									<ScoreDistribution value="1" recordCount="3.0"/>
+								</Node>
+							</Node>
+							<Node score="0" recordCount="2.0">
+								<SimplePredicate field="OilVolume" operator="lessOrEqual" value="879.8515119"/>
+								<ScoreDistribution value="0" recordCount="1.0"/>
+								<ScoreDistribution value="1" recordCount="1.0"/>
+							</Node>
+							<Node score="0" recordCount="3.0">
+								<True/>
+								<ScoreDistribution value="0" recordCount="3.0"/>
+								<ScoreDistribution value="1" recordCount="0.0"/>
+							</Node>
+						</Node>
+						<Node score="0" recordCount="1102.0">
+							<True/>
+							<ScoreDistribution value="0" recordCount="1102.0"/>
+							<ScoreDistribution value="1" recordCount="0.0"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="20">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction" splitCharacteristic="multiSplit">
+					<MiningSchema>
+						<MiningField name="TransformerLoad"/>
+						<MiningField name="OilVolume"/>
+						<MiningField name="VibrationLevel"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node score="0" recordCount="1040.0">
+							<SimplePredicate field="VibrationLevel" operator="lessOrEqual" value="3.0"/>
+							<ScoreDistribution value="0" recordCount="1040.0"/>
+							<ScoreDistribution value="1" recordCount="0.0"/>
+						</Node>
+						<Node>
+							<SimplePredicate field="OilVolume" operator="lessOrEqual" value="879.8515119"/>
+							<Node score="1" recordCount="5.0">
+								<SimplePredicate field="TransformerLoad" operator="lessOrEqual" value="0.333329096"/>
+								<ScoreDistribution value="0" recordCount="1.0"/>
+								<ScoreDistribution value="1" recordCount="4.0"/>
+							</Node>
+							<Node>
+								<SimplePredicate field="TransformerLoad" operator="lessOrEqual" value="2.092105443"/>
+								<Node score="0" recordCount="10.0">
+									<SimplePredicate field="TransformerLoad" operator="lessOrEqual" value="1.70010491"/>
+									<ScoreDistribution value="0" recordCount="7.0"/>
+									<ScoreDistribution value="1" recordCount="3.0"/>
+								</Node>
+								<Node score="0" recordCount="9.0">
+									<True/>
+									<ScoreDistribution value="0" recordCount="9.0"/>
+									<ScoreDistribution value="1" recordCount="0.0"/>
+								</Node>
+							</Node>
+							<Node score="0" recordCount="12.0">
+								<True/>
+								<ScoreDistribution value="0" recordCount="6.0"/>
+								<ScoreDistribution value="1" recordCount="6.0"/>
+							</Node>
+						</Node>
+						<Node>
+							<SimplePredicate field="TransformerLoad" operator="lessOrEqual" value="0.934152723"/>
+							<Node score="0" recordCount="17.0">
+								<SimplePredicate field="TransformerLoad" operator="lessOrEqual" value="0.82822467"/>
+								<ScoreDistribution value="0" recordCount="17.0"/>
+								<ScoreDistribution value="1" recordCount="0.0"/>
+							</Node>
+							<Node score="1" recordCount="5.0">
+								<True/>
+								<ScoreDistribution value="0" recordCount="2.0"/>
+								<ScoreDistribution value="1" recordCount="3.0"/>
+							</Node>
+						</Node>
+						<Node score="0" recordCount="55.0">
+							<True/>
+							<ScoreDistribution value="0" recordCount="55.0"/>
+							<ScoreDistribution value="1" recordCount="0.0"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+		</Segmentation>
+	</MiningModel>
+</PMML>

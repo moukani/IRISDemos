@@ -1,0 +1,60 @@
+version: '3.6'
+services:
+
+  archivedb:
+    build: 
+      context: ./archivedb
+      args:
+      - IRIS_PROJECT_FOLDER_NAME=archivedb-atelier-project
+    image: amirsamary/irisdemo:iotpredmaint_archivedb
+    command: --key /shared/iris.key
+    hostname: archivedb
+    ports:
+    # 51773 is the superserver default port
+    - "9091:51773"
+    # 52773 is the webserver/management portal port
+    - "9090:52773"
+    volumes:
+    - ${PWD}/archivedb/shared/:/shared
+    - ${PWD}/common_shared/:/common_shared # We will use this to pass new events from the overflow files,
+                                           # at every minute, to the iotmon production.
+
+  iotmon:
+    build: 
+      context: ./iotmon
+      args:
+      - IRIS_PROJECT_FOLDER_NAME=iotmon-atelier-project
+    image: amirsamary/irisdemo:iotpredmaint_iotmon
+    command: --key /shared/iris.key
+    hostname: iotmon
+    ports:
+    # 51773 is the superserver default port
+    - "9093:51773"
+    # 52773 is the webserver/management portal port
+    - "9092:52773"
+    volumes:
+    - ${PWD}/iotmon/shared/:/shared
+    - ${PWD}/common_shared/:/common_shared  # The production will be looking into this folder for new files
+                                            # that will be sent by the archivedb service. Of course we would
+                                            # never receive files from archivedb on the real world. But on this
+                                            # demo, we are.
+                                            #
+                                            # Also, we will be loading PMML files from this folder too
+
+  advancedanalytics:
+    build: ./advanced_analytics
+    image: amirsamary/irisdemo:iotpredmaint_advancedanalytics
+    ports:
+    - "9096:9090"   # Zeppelin
+    - "9097:8080"   # Spark Master Portal
+    - "9098:8081"   # Spark Worker Portal
+    volumes:
+    - $PWD/advanced_analytics/shared/:/shared
+    - ${PWD}/common_shared/:/common_shared  # That is where we will be leaving our generated PMML files
+                                            # so that iotmon can grab them
+    environment:
+    - IRIS_MASTER_HOST=archivedb # DNS based on the name of the service!
+    - IRIS_MASTER_PORT=51773 
+    - IRIS_MASTER_USERNAME=SuperUser 
+    - IRIS_MASTER_PASSWORD=sys 
+    - IRIS_MASTER_NAMESPACE=APP
