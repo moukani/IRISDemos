@@ -53,8 +53,10 @@ printf "%s\n%s\n%s\n%s\n%s\n%s\n" "$IRIS_USERNAME" "$IRIS_PASSWORD" "zn \"%SYS\"
 
 iris stop iris quietly
 
-rm $ISC_PACKAGE_INSTALLDIR/mgr/IRIS.WIJ
+rm -f $ISC_PACKAGE_INSTALLDIR/mgr/IRIS.WIJ
 rm -f $ISC_PACKAGE_INSTALLDIR/mgr/iris.ids
-rm $ISC_PACKAGE_INSTALLDIR/mgr/journal/*
+rm -f $ISC_PACKAGE_INSTALLDIR/mgr/alerts.log
+rm -f $ISC_PACKAGE_INSTALLDIR/mgr/journal/*
+rm -f $ISC_PACKAGE_INSTALLDIR/mgr/messages.log
 
 rm -rf /tmp/iris_project
