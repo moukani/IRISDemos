@@ -212,6 +212,41 @@ Class IRISConfig.InstallerBase [ Abstract ]
 		Quit tSC
 	}
 	
+	ClassMethod FixPMML() As %Status
+	{
+		Set tSC = $System.Status.OK()
+		Try
+		{
+			Set tNS=$Namespace
+			ZN "%SYS"
+			
+			Set oDBSYS = ##class(SYS.Database).%OpenId("/usr/irissys/mgr/irislib")
+			Set oDBSYS.ReadOnly=0
+
+			Set tSC = oDBSYS.%Save()
+			Quit:$System.Status.IsError(tSC)
+						
+			Set tSC = $System.OBJ.Load("/tmp/PMML.xml", "ck")
+			Quit:$System.Status.IsError(tSC)
+
+		}
+		Catch (oException)
+		{
+			Set tSC = oException.AsStatus()
+		}
+		
+		If $IsObject(oDBSYS)
+		{
+			Set oDBSYS.ReadOnly=1
+	
+			Do oDBSYS.%Save()
+		}
+		
+		ZN tNS
+		
+		Quit tSC
+	}
+	
 	XData Install [ XMLNamespace = INSTALLER ]
 	{
 	<Manifest>

@@ -51,6 +51,11 @@ XData Install [ XMLNamespace = INSTALLER ]
 	<Invoke Class="IRISConfig.Installer" Method="ConfigureAutoStart" CheckStatus="true">
 		<Arg name="pNamespace" Value="${Namespace}"/>
 	</Invoke>
+	
+	<Log Text="Fixing PMML" Level="0"/>
+	<Invoke Class="IRISConfig.Installer" Method="FixPMML" CheckStatus="true">
+	</Invoke>
+	
 </Manifest>
 }
 }

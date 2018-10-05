@@ -4,7 +4,7 @@
       "title": "Merchant Categories",
       "text": "%md\n\nThe merchant category is an important feature for a fraud prediction model because people tend to follow the same expenditure pattern on each category.\n\nFor instance, it is perfectly common to spend US$10 or even US$200 on Food. But it is uncommon to spend US$1000 (to be very explicit). On the other hand,\nit is very common for people to spend a lot on healthcare or hotel services.\n\nCategories are stored on the *IRISDemo.BC_MERCH_CATEGORY* table. The column *BC_MERCH_CAT_CODE* is an integer that is used as a feature of our model. \n\nLet\u0027s see what are the categories we have:",
       "user": "anonymous",
-      "dateUpdated": "Sep 13, 2018 8:07:31 PM",
+      "dateUpdated": "Oct 3, 2018 4:26:34 PM",
       "config": {
         "tableHide": false,
         "editorSetting": {
@@ -35,16 +35,16 @@
       "jobName": "paragraph_1536869149553_-1653856292",
       "id": "20180913-194145_1724792194",
       "dateCreated": "Sep 13, 2018 8:05:49 PM",
-      "dateStarted": "Sep 13, 2018 8:07:31 PM",
-      "dateFinished": "Sep 13, 2018 8:07:31 PM",
+      "dateStarted": "Oct 3, 2018 4:26:34 PM",
+      "dateFinished": "Oct 3, 2018 4:26:37 PM",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
     {
       "title": "Merchant Categories",
-      "text": "%irisjdbc\n\nselect * from IRISDemo.BC_MERCH_CATEGORY",
+      "text": "%irisjdbc\n\nselect * from \nIRISDemo.BC_MERCH_CATEGORY",
       "user": "anonymous",
-      "dateUpdated": "Sep 24, 2018 1:02:25 PM",
+      "dateUpdated": "Oct 3, 2018 4:26:52 PM",
       "config": {
         "editorSetting": {
           "language": "text",
@@ -58,7 +58,7 @@
             "graph": {
               "mode": "multiBarChart",
               "height": 300.0,
-              "optionOpen": false
+              "optionOpen": true
             },
             "helium": {}
           }

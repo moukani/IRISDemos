@@ -1,0 +1,182 @@
+{
+  "paragraphs": [
+    {
+      "text": "%irisjdbc \n\nselect t.BC_TRANS_SRC_ACC, AVG(t.BC_TRANS_AMOUNT) AMOUNT_AVG, STDDEV(t.BC_TRANS_AMOUNT) AMOUNT_STDDEV\n from IRISDemo.BC_TRANSACTIONS t, \n IRISDemo.CS_FRAUD_COMPLAINT c\n where t.ID*\u003dc.CS_FRAUD_COMP_TRANSACTION AND \nt.BC_TRANS_TYPE\u003d\u0027PAYMENT\u0027 AND\n (c.CS_FRAUD_COMP_CONFIRMED is null OR c.CS_FRAUD_COMP_CONFIRMED\u003c\u003e\u0027Y\u0027)\n group by t.BC_TRANS_SRC_ACC \n having STDDEV(t.BC_TRANS_AMOUNT)\u003e0",
+      "dateUpdated": "Oct 1, 2018 7:46:49 PM",
+      "config": {
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/text",
+        "results": {},
+        "enabled": true,
+        "editorSetting": {
+          "language": "text",
+          "editOnDblClick": false
+        }
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TABLE",
+            "data": "BC_TRANS_SRC_ACC\tAMOUNT_AVG\tAMOUNT_STDDEV\n53\t48.475\t5.734635995422907\n78\t110.18\t95.33213623957032\n176\t25.935000000000002\t34.78258256656627\n267\t17.225\t7.997377695219843\n450\t54.03999999999999\t27.662017280017746\n635\t7.5649999999999995\t0.10606601717806788\n905\t49.265\t7.4316922702705615\n1007\t23.72\t20.336391026925114\n1020\t27.865000000000002\t23.904339215576176\n1142\t34.724999999999994\t30.313667709467293\n1188\t38.27333333333333\t18.939929602121914\n1203\t36.730000000000004\t17.493821766555165\n1228\t15.259999999999998\t6.689230150024742\n1395\t39.480000000000004\t2.969848480983374\n1424\t21.05\t3.3799704140717033\n1437\t35.08\t15.216937931134511\n1647\t94.035\t87.29233213747926\n1889\t19.64\t15.69777054234135\n2077\t24.1\t6.6609458787772695\n2540\t6.105\t6.045762979144981\n2552\t17.475\t21.60211216524902\n2627\t27.13\t19.926269093836908\n2645\t27.75\t12.006673144547587\n2738\t81.2\t32.99360241016429\n2857\t23.54\t3.0264170234784324\n2878\t35.15\t23.787072119115457\n3932\t23.425\t21.60211216524903\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1538423209327_70142132",
+      "id": "20180716-213454_1979348073",
+      "dateCreated": "Oct 1, 2018 7:46:49 PM",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%irisjdbc\n\nselect distinct TransType from IRISDemo.Trans",
+      "dateUpdated": "Oct 1, 2018 7:46:49 PM",
+      "config": {
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/text",
+        "results": {},
+        "enabled": true,
+        "editorSetting": {
+          "language": "text",
+          "editOnDblClick": false
+        }
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TABLE",
+            "data": "TransType\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1538423209328_80530352",
+      "id": "20180716-213503_1522096454",
+      "dateCreated": "Oct 1, 2018 7:46:49 PM",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%irisjdbc\n\nselect * from IRISDemo.Trans where (TransType\u003d\u0027CASH_OUT\u0027 or TransType\u003d\u0027CASH_IN\u0027) and (FromAccount-\u003eAccountType\u003d\u0027M\u0027 or ToAccount-\u003eAccountType\u003d\u0027M\u0027)",
+      "dateUpdated": "Oct 1, 2018 7:46:49 PM",
+      "config": {
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/sql",
+        "results": {},
+        "enabled": true,
+        "editorSetting": {
+          "language": "sql",
+          "editOnDblClick": false
+        }
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TABLE",
+            "data": "ID\tTransType\tAmount\tFromAccount\tFromAccountNewBalance\tFromAccountOldBalance\tIsFraud\tToAccount\tToAccountNewBalance\tToAccountOldBalance\tTransDateTime\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1538423209328_80530352",
+      "id": "20180725-215133_653898527",
+      "dateCreated": "Oct 1, 2018 7:46:49 PM",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%irisjdbc\nSelect * from IRISDemo.Account",
+      "dateUpdated": "Oct 1, 2018 7:46:49 PM",
+      "config": {
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/sql",
+        "results": {},
+        "enabled": true,
+        "editorSetting": {
+          "language": "sql",
+          "editOnDblClick": false
+        }
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TABLE",
+            "data": "ID\tAccountNumber\tAccountType\tBalance\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1538423209328_80530352",
+      "id": "20180725-221514_60948579",
+      "dateCreated": "Oct 1, 2018 7:46:49 PM",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%irisjdbc\n",
+      "dateUpdated": "Oct 1, 2018 7:46:49 PM",
+      "config": {},
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1538423209328_80530352",
+      "id": "20180725-223508_1849704555",
+      "dateCreated": "Oct 1, 2018 7:46:49 PM",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    }
+  ],
+  "name": "~Trash/Untitled Note 1",
+  "id": "2DSGKZX89",
+  "angularObjects": {
+    "2DHWQ7A7V:shared_process": [],
+    "2DGTFGFBC:shared_process": [],
+    "2DHATZD9M:shared_process": [],
+    "2DKDARDPF:shared_process": [],
+    "2DG8A819A:shared_process": [],
+    "2DJVV28U3:shared_process": [],
+    "2DKCAA3TS:shared_process": [],
+    "2DHEPV9M3:shared_process": [],
+    "2DKW8P766:shared_process": [],
+    "2DGHX224C:shared_process": [],
+    "2DGRSNE7G:shared_process": [],
+    "2DGUG4SEP:shared_process": [],
+    "2DHM86BYR:shared_process": [],
+    "2DHYW1ZN6:shared_process": [],
+    "2DJ16C4UE:shared_process": [],
+    "2DJ4VH5DW:shared_process": [],
+    "2DJBEDGYM:shared_process": [],
+    "2DM19CFTF:shared_process": [],
+    "2DHHCF91E:shared_process": [],
+    "2DKCPR9P1:shared_process": []
+  },
+  "config": {},
+  "info": {}
+}

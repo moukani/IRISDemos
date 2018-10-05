@@ -1,8 +1,74 @@
 version: '3.6'
+
 services:
+  sparkmaster:
+    image: amirsamary/irisdemo:spark-iris
+    hostname: sparkmaster # Must be always sparkmaster
+    environment:
+      SPARK_NODE_TYPE: Master
+      SPARK_PUBLIC_DNS: localhost
+      IRIS_MASTER_HOST: archivedb # DNS based on the name of the service!
+      IRIS_MASTER_PORT: 51773 
+      IRIS_MASTER_USERNAME: SuperUser 
+      IRIS_MASTER_PASSWORD: sys 
+      IRIS_MASTER_NAMESPACE: APP 
+    ports:
+      - 4040:4040
+      - 6066:6066
+      - 7077:7077
+      - 8080:8080
+    volumes:
+      - ./data:/tmp/data    # Shared between all spark nodes. Good place to place a file we are working with.
+      - ${PWD}/common_shared/:/common_shared # Here is where we are going to leave the new PMML files
+
+  worker1:
+    image: amirsamary/irisdemo:spark-iris
+    hostname: worker1
+    environment:
+      IRIS_MASTER_HOST: archivedb # DNS based on the name of the service!
+      IRIS_MASTER_PORT: 51773 
+      IRIS_MASTER_USERNAME: SuperUser 
+      IRIS_MASTER_PASSWORD: sys 
+      IRIS_MASTER_NAMESPACE: APP 
+
+      SPARK_NODE_TYPE: Worker
+      SPARK_WORKER_CORES: 1
+      SPARK_WORKER_MEMORY: 1g
+      SPARK_WORKER_PORT: 8881
+      SPARK_WORKER_WEBUI_PORT: 8081
+      SPARK_PUBLIC_DNS: localhost
+    links:
+      - sparkmaster
+    ports:
+      - 8081:8081
+    volumes:
+      - ./data:/tmp/data # Shared between all spark nodes. Good place to place a file we are working with.
+
+  worker2:
+    image: amirsamary/irisdemo:spark-iris
+    hostname: worker2
+    environment:
+      IRIS_MASTER_HOST: archivedb # DNS based on the name of the service!
+      IRIS_MASTER_PORT: 51773 
+      IRIS_MASTER_USERNAME: SuperUser 
+      IRIS_MASTER_PASSWORD: sys 
+      IRIS_MASTER_NAMESPACE: APP 
+
+      SPARK_NODE_TYPE: Worker
+      SPARK_WORKER_CORES: 1
+      SPARK_WORKER_MEMORY: 1g
+      SPARK_WORKER_PORT: 8881
+      SPARK_WORKER_WEBUI_PORT: 8081
+      SPARK_PUBLIC_DNS: localhost
+    links:
+      - sparkmaster
+    ports:
+      - 8082:8081
+    volumes:
+      - ./data:/tmp/data # Shared between all spark nodes. Good place to place a file we are working with.
 
   archivedb:
-    build: 
+    build:
       context: ./archivedb
       args:
       - IRIS_PROJECT_FOLDER_NAME=archivedb-atelier-project
@@ -11,14 +77,30 @@ services:
     hostname: archivedb
     ports:
     # 51773 is the superserver default port
-    - "9091:51773"
+    - "9093:51773"
     # 52773 is the webserver/management portal port
-    - "9090:52773"
+    - "9092:52773"
     volumes:
     - ${PWD}/archivedb/shared/:/shared
     - ${PWD}/common_shared/:/common_shared # We will use this to pass new events from the overflow files,
-                                           # at every minute, to the iotmon production.
+                                            # at every minute, to the iotmon production.
 
+  advancedanalytics:
+    image: amirsamary/irisdemo:zeppelin
+    ports:
+    - "9096:9090"   # Zeppelin
+    volumes:
+    - $PWD/advanced_analytics/shared/:/shared
+    - ${PWD}/common_shared/:/common_shared  # That is where we will be leaving our generated PMML files
+                                            # so that iotmon can grab them
+
+    environment:
+    - IRIS_MASTER_HOST=archivedb # DNS based on the name of the service!
+    - IRIS_MASTER_PORT=51773 
+    - IRIS_MASTER_USERNAME=SuperUser 
+    - IRIS_MASTER_PASSWORD=sys 
+    - IRIS_MASTER_NAMESPACE=APP 
+  
   iotmon:
     build: 
       context: ./iotmon
@@ -29,9 +111,9 @@ services:
     hostname: iotmon
     ports:
     # 51773 is the superserver default port
-    - "9093:51773"
+    - "9095:51773"
     # 52773 is the webserver/management portal port
-    - "9092:52773"
+    - "9094:52773"
     volumes:
     - ${PWD}/iotmon/shared/:/shared
     - ${PWD}/common_shared/:/common_shared  # The production will be looking into this folder for new files
@@ -40,21 +122,3 @@ services:
                                             # demo, we are.
                                             #
                                             # Also, we will be loading PMML files from this folder too
-
-  advancedanalytics:
-    build: ./advanced_analytics
-    image: amirsamary/irisdemo:iotpredmaint_advancedanalytics
-    ports:
-    - "9096:9090"   # Zeppelin
-    - "9097:8080"   # Spark Master Portal
-    - "9098:8081"   # Spark Worker Portal
-    volumes:
-    - $PWD/advanced_analytics/shared/:/shared
-    - ${PWD}/common_shared/:/common_shared  # That is where we will be leaving our generated PMML files
-                                            # so that iotmon can grab them
-    environment:
-    - IRIS_MASTER_HOST=archivedb # DNS based on the name of the service!
-    - IRIS_MASTER_PORT=51773 
-    - IRIS_MASTER_USERNAME=SuperUser 
-    - IRIS_MASTER_PASSWORD=sys 
-    - IRIS_MASTER_NAMESPACE=APP

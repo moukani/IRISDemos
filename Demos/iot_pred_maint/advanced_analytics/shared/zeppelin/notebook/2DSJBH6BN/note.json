@@ -1,0 +1,172 @@
+{
+  "paragraphs": [
+    {
+      "text": "%spark.pyspark\nimport numpy as np\nimport pandas as pd\nimport seaborn as sns\nfrom scipy.stats import skewnorm\nimport matplotlib.pyplot as plt\nfrom sklearn.cross_validation import train_test_split\nfrom sklearn.ensemble import RandomForestClassifier\nfrom sklearn import metrics\nfrom sklearn.metrics import classification_report\nfrom sklearn.metrics import confusion_matrix\nimport cPickle\nimport warnings\nwarnings.filterwarnings(\"ignore\")\n",
+      "dateUpdated": "Oct 1, 2018 7:46:24 PM",
+      "config": {
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "results": {},
+        "enabled": true,
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false
+        }
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "jobName": "paragraph_1538423184687_2070220156",
+      "id": "20180920-080723_2147307255",
+      "dateCreated": "Oct 1, 2018 7:46:24 PM",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\ndef data_prep(): \n    a \u003d 4\n    mean, var, skew, kurt \u003d skewnorm.stats(a, moments\u003d\u0027mvsk\u0027)\n    x \u003d np.linspace(skewnorm.ppf(0.01, a),\n                    skewnorm.ppf(0.99, a), 100)\n    x\u003dabs(x)\n    rv \u003d skewnorm(a)\n    r \u003d skewnorm.rvs(a, size\u003d2000)\n    load\u003dabs(r)\n    amin, amax \u003d min(load), max(load)\n    for i, val in enumerate(load):\n        load[i] \u003d (val-amin) / (amax-amin)\n    data_final \u003d pd.DataFrame({\u0027load\u0027:load})\n    \n    \n    \n    #############################################################################################################\n    #TOT########\n    tot \u003d sorted(load, key\u003dint)\n    def multiply(list):\n        return [i *4 for i in list]\n\n    def square(list):\n        return [i ** 2 for i in list]\n\n    def add45(list):\n        return [i+65 for i in list]\n\n    tot \u003d multiply(tot)\n    tot\u003dsquare(tot)\n    tot\u003dmultiply(tot)\n    tot\u003dadd45(tot)\n    len(tot)\n    data_final[\u0027tot\u0027] \u003d tot\n    \n    \n    ############################################################################################################3\n    #BOT\n    \n    random \u003d np.random.randint(low\u003d2, high\u003d5, size\u003d2000)\n    bot \u003d tot+random\n    data_final[\u0027bot\u0027] \u003d bot\n    \n    #########################################\n    #OV\n    mu, sigma \u003d 900, 27 # mean and standard deviation\n    rand_ov \u003d np.random.normal(mu, sigma, 2000)\n    ov\u003d-np.sort(-rand_ov)\n    data_final[\u0027ov\u0027] \u003d ov\n    \n    ###########################################################################################33\n    #mio\n    mu, sigma \u003d 0.7, 0.5 # mean and standard deviation\n    rand_mio \u003d np.random.normal(mu, sigma, 2000)\n    rand_mio\u003dabs(rand_mio)\n    mio\u003d-np.sort(-rand_mio)\n    #sns.distplot(mio)\n    data_final[\u0027mio\u0027] \u003d mio\n    \n    ####################################################################################################################\n    #vibration\n    data_final[\u0027vibration\u0027] \u003d ((data_final.bot * data_final.mio)/data_final.ov)*100\n    \n    \n    \n    ########################################################################################################3\n    #vibration_level\n    conditions \u003d [\n        (data_final[\u0027vibration\u0027] \u003e\u003d data_final.vibration.min()) \u0026 \n        (data_final[\u0027vibration\u0027] \u003c data_final.vibration.quantile(0.25)),\n\n        (data_final[\u0027vibration\u0027] \u003e data_final.vibration.quantile(0.25)) \u0026 \n        (data_final[\u0027vibration\u0027] \u003c data_final.vibration.quantile(0.50)),\n\n        (data_final[\u0027vibration\u0027] \u003e data_final.vibration.quantile(0.50)) \u0026\n        (data_final[\u0027vibration\u0027] \u003c data_final.vibration.quantile(0.75)),\n\n        (data_final[\u0027vibration\u0027] \u003e data_final.vibration.quantile(0.75)) \u0026\n        (data_final[\u0027vibration\u0027] \u003c\u003d data_final.vibration.max()),\n    ]\n\n    print(\"data_final.vibration.quantile(0.25):\" + str(data_final.vibration.quantile(0.25)))\n    print(\"data_final.vibration.quantile(0.50):\" + str(data_final.vibration.quantile(0.50)))\n    print(\"data_final.vibration.quantile(0.75):\" + str(data_final.vibration.quantile(0.75)))\n    #data_final.vibration.quantile(0.25):3.30541403915\n    #data_final.vibration.quantile(0.50):5.68043071494\n    #data_final.vibration.quantile(0.75):8.18428831676\n\n    choices \u003d [\u00271\u0027,\u00272\u0027,\u00273\u0027,\u00274\u0027]\n    data_final[\u0027vib_level\u0027] \u003d np.select(conditions, choices, default\u003d\u00270\u0027)\n    \n    ################################################################################################################\n    #bulging\n    data_final[\u0027bulging\u0027] \u003d np.where((data_final[\u0027load\u0027] \u003e 0.7) \u0026  (data_final[\u0027bot\u0027] \u003e 100), \u00271\u0027, \u00270\u0027)\n    \n    \n    ######################################################################################################\n    #threat\n    conditions \u003d [\n        (data_final[\u0027tot\u0027] \u003e\u003d 80) \u0026 (data_final[\u0027tot\u0027] \u003c 85),\n\n        (data_final[\u0027tot\u0027] \u003e\u003d85) \u0026 (data_final[\u0027tot\u0027] \u003c 90), \n\n        (data_final[\u0027tot\u0027] \u003e\u003d 90) \u0026 (data_final[\u0027tot\u0027] \u003c 95),\n\n        (data_final[\u0027tot\u0027] \u003e\u003d 95) \u0026 (data_final[\u0027tot\u0027] \u003c 100),\n\n        (data_final[\u0027tot\u0027] \u003e\u003d 100),\n    ]\n\n\n\n    choices \u003d [\u00271\u0027,\u00272\u0027,\u00273\u0027,\u00274\u0027,\u00275\u0027]\n    data_final[\u0027threat\u0027] \u003d np.select(conditions, choices, default\u003d\u00270\u0027)\n    ##############################################################################################3\n    \n    return data_final\n\n\ndef data_cleaning(data_final):\n    categoricalFeatureNames \u003d [\"vib_level\",\"bulging\"]\n    numericalFeatureNames \u003d [\"load\",\"tot\",\"bot\",\"ov\",\"mio\",\"vibration\"]\n\n    for var in categoricalFeatureNames:\n        data_final[var] \u003d data_final[var].astype(\"category\")\n\n    for var in numericalFeatureNames:\n        data_final[var] \u003d data_final[var].astype(\"int\")\n\n    y \u003ddata_final.threat\n    data_final \u003d data_final.drop(\u0027threat\u0027,1)\n    return(data_final,y)\n\n\ndef random_forest(data_final, y,rf):\n    X_train, X_test, y_train, y_test \u003d train_test_split(data_final, y, random_state\u003d1)\n    rf_model \u003d RandomForestClassifier(n_estimators\u003d200)\n    rf_model.fit(X_train, y_train)\n    y_rf_pred_test \u003d rf_model.predict(X_test)\n    confusion_matrix_test \u003d confusion_matrix(y_test, y_rf_pred_test)\n    with open(\u0027/shared/{}\u0027.format(rf),\u0027wb\u0027) as f:\n                cPickle.dump(rf_model, f)    \n    print(\"Confusion matrix of 5-class classification\")\n    print(confusion_matrix_test)\n    print(\"Accuracy of the model:\",metrics.accuracy_score(y_test, y_rf_pred_test))",
+      "dateUpdated": "Oct 1, 2018 7:46:24 PM",
+      "config": {
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "results": {},
+        "enabled": true,
+        "editorSetting": {
+          "language": "python"
+        }
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "jobName": "paragraph_1538423184688_2080608376",
+      "id": "20180920-081348_2567372",
+      "dateCreated": "Oct 1, 2018 7:46:24 PM",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\ndef main():\n    device_ids\u003d[\"Transformer001\",\"Transformer003\",\"Transformer005\",\"Transformer007\",\"Transformer009\"]\n    data_x\u003d[]\n    y\u003d[]\n    for i in range(10):\n        if i%2 !\u003d 0:\n            data_x.append(\"Transformer00{}\".format(i))\n\n    for i in range(10):\n        if i%2 !\u003d 0:\n            y.append(\"Transformer00{}\".format(i))\n            \n    df_names\u003d[]\n    for i in range(10):\n        if i%2 !\u003d 0:\n            df_names.append(\"Transformer00{}\".format(i))\n    \n    file_names\u003d[]\n    for i in range(10):\n        if i%2 !\u003d 0:\n            file_names.append(\"/shared/Transformer00{}.csv\".format(i))\n            \n    j\u003d0\n    for i in file_names:\n        df_names[j] \u003d pd.read_csv(i)\n        j\u003dj+1\n\n    rf_models \u003d [\u0027RF\u0027 + x for x in device_ids]\n    for i in range(len(device_ids)):\n        data_x[i],y[i] \u003d data_cleaning(df_names[i])\n        random_forest(data_x[i],y[i],rf_models[i])",
+      "dateUpdated": "Oct 1, 2018 7:46:24 PM",
+      "config": {
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "results": {},
+        "enabled": true,
+        "editorSetting": {
+          "language": "python"
+        }
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "jobName": "paragraph_1538423184688_2080608376",
+      "id": "20180920-081425_833355913",
+      "dateCreated": "Oct 1, 2018 7:46:24 PM",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\ndata_prep()\n#main()\n",
+      "dateUpdated": "Oct 1, 2018 7:46:24 PM",
+      "config": {
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "results": {},
+        "enabled": true,
+        "editorSetting": {
+          "language": "python"
+        }
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "data_final.vibration.quantile(0.25):3.30541403915\ndata_final.vibration.quantile(0.50):5.68043071494\ndata_final.vibration.quantile(0.75):8.18428831676\n          load         tot         bot   ...    vib_level  bulging  threat\n0     0.481153   79.816515   81.816515   ...            4        0       0\n1     0.000575   65.000021   69.000021   ...            4        0       0\n2     0.022983   65.033805   68.033805   ...            4        0       0\n3     0.209740   67.815417   71.815417   ...            4        0       0\n4     0.474092   79.384859   82.384859   ...            4        0       0\n5     0.613489   89.087617   91.087617   ...            4        0       2\n6     0.091927   65.540835   69.540835   ...            4        0       0\n7     0.365043   73.528399   75.528399   ...            4        0       0\n8     0.036964   65.087444   68.087444   ...            4        0       0\n9     0.101749   65.662578   68.662578   ...            4        0       0\n10    0.046946   65.141052   69.141052   ...            4        0       0\n11    0.501185   81.075920   84.075920   ...            4        0       1\n12    0.167282   66.790927   69.790927   ...            4        0       0\n13    0.253083   69.099254   71.099254   ...            4        0       0\n14    0.236580   68.582094   71.582094   ...            4        0       0\n15    0.152631   66.490959   69.490959   ...            4        0       0\n16    0.583306   86.775772   90.775772   ...            4        0       2\n17    0.363843   73.472447   76.472447   ...            4        0       0\n18    0.036197   65.083855   69.083855   ...            4        0       0\n19    0.254423   69.142789   72.142789   ...            4        0       0\n20    0.247635   68.924681   72.924681   ...            4        0       0\n21    0.443373   77.581117   79.581117   ...            4        0       0\n22    0.130323   66.086975   69.086975   ...            4        0       0\n23    0.322779   71.667936   74.667936   ...            4        0       0\n24    0.161268   66.664467   70.664467   ...            4        0       0\n25    0.066535   65.283321   68.283321   ...            4        0       0\n26    0.209121   67.798834   71.798834   ...            4        0       0\n27    0.031904   65.065144   67.065144   ...            4        0       0\n28    0.317638   71.457227   73.457227   ...            4        0       0\n29    0.142806   66.305189   69.305189   ...            4        0       0\n...        ...         ...         ...   ...          ...      ...     ...\n1970  0.561916   65.216138   69.216138   ...            1        0       0\n1971  0.058113   67.309471   69.309471   ...            1        0       0\n1972  0.189962  112.697296  114.697296   ...            1        0       5\n1973  0.863290   69.614938   72.614938   ...            1        0       0\n1974  0.268530   84.936037   86.936037   ...            1        0       1\n1975  0.558122   70.772351   74.772351   ...            1        0       0\n1976  0.300321   68.189191   71.189191   ...            1        0       0\n1977  0.223229   67.232348   70.232348   ...            1        0       0\n1978  0.186763   68.065277   71.065277   ...            1        0       0\n1979  0.218849   73.022605   77.022605   ...            1        0       0\n1980  0.354053   67.599623   69.599623   ...            1        0       0\n1981  0.201542   72.688658   75.688658   ...            1        0       0\n1982  0.346605   66.145309   70.145309   ...            1        0       0\n1983  0.133774   67.480910   70.480910   ...            1        0       0\n1984  0.196886   73.431218   77.431218   ...            1        0       0\n1985  0.362957   80.619735   83.619735   ...            1        0       1\n1986  0.494023   66.696684   70.696684   ...            1        0       0\n1987  0.162821   65.013292   68.013292   ...            1        0       0\n1988  0.014411   69.487088   71.487088   ...            1        0       0\n1989  0.264784   67.352466   71.352466   ...            1        0       0\n1990  0.191722   65.706550   69.706550   ...            1        0       0\n1991  0.105071   65.094657   67.094657   ...            1        0       0\n1992  0.038458   73.139451   75.139451   ...            1        0       0\n1993  0.356622   65.010278   68.010278   ...            1        0       0\n1994  0.012673   65.318974   69.318974   ...            1        0       0\n1995  0.070597   71.340372   74.340372   ...            1        0       0\n1996  0.314751   66.479248   69.479248   ...            1        0       0\n1997  0.152030   66.064910   70.064910   ...            1        0       0\n1998  0.128993   69.498908   72.498908   ...            1        0       0\n1999  0.265133  129.000000  133.000000   ...            1        0       5\n\n[2000 rows x 9 columns]\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1538423184688_2080608376",
+      "id": "20180920-081459_1696657014",
+      "dateCreated": "Oct 1, 2018 7:46:24 PM",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\n",
+      "dateUpdated": "Oct 1, 2018 7:46:24 PM",
+      "config": {
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "results": {},
+        "enabled": true,
+        "editorSetting": {
+          "language": "python"
+        }
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1538423184691_2080993125",
+      "id": "20180920-081506_1389857630",
+      "dateCreated": "Oct 1, 2018 7:46:24 PM",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    }
+  ],
+  "name": "IOT Demo",
+  "id": "2DSJBH6BN",
+  "angularObjects": {
+    "2DHWQ7A7V:shared_process": [],
+    "2DGTFGFBC:shared_process": [],
+    "2DHATZD9M:shared_process": [],
+    "2DKDARDPF:shared_process": [],
+    "2DG8A819A:shared_process": [],
+    "2DJVV28U3:shared_process": [],
+    "2DKCAA3TS:shared_process": [],
+    "2DHEPV9M3:shared_process": [],
+    "2DKW8P766:shared_process": [],
+    "2DGHX224C:shared_process": [],
+    "2DGRSNE7G:shared_process": [],
+    "2DGUG4SEP:shared_process": [],
+    "2DHM86BYR:shared_process": [],
+    "2DHYW1ZN6:shared_process": [],
+    "2DJ16C4UE:shared_process": [],
+    "2DJ4VH5DW:shared_process": [],
+    "2DJBEDGYM:shared_process": [],
+    "2DM19CFTF:shared_process": [],
+    "2DHHCF91E:shared_process": [],
+    "2DKCPR9P1:shared_process": []
+  },
+  "config": {},
+  "info": {}
+}

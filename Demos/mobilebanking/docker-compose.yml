@@ -58,6 +58,8 @@ services:
     - "9092:52773"
     volumes:
     - ${PWD}/banking_trn_srv/shared/:/shared
+    - ${PWD}/common_shared/:/common_shared  # The production will be looking into this folder for new PMML files
+                                            # that will be sent by the advancedanalytics service. 
     networks:
     - bankingtrnsrv-tier
     - bankingcore-tier
@@ -71,6 +73,9 @@ services:
     - "9098:8081"   # Spark Worker Portal
     volumes:
     - $PWD/advanced_analytics/shared/:/shared
+    - ${PWD}/common_shared/:/common_shared  # That is where we will be leaving our generated PMML files
+                                            # so that iotmon can grab them
+
     environment:
     - IRIS_MASTER_HOST=datalake # DNS based on the name of the service!
     - IRIS_MASTER_PORT=51773 

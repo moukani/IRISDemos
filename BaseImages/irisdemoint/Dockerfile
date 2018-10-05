@@ -43,6 +43,9 @@ ENV IRIS_ROUTINE_BUFFERS=64
 # Adding source code that will be loaded by the installer
 ADD ./${IRIS_PROJECT_FOLDER_NAME}/ $IRIS_APP_SOURCEDIR
 
+# Adding PMML.xml to fix a problem with our PMML parser
+ADD ./PMML.xml /tmp/PMML.xml
+
 # Running the installer.
 ADD ./irisdemoinstaller.sh /usr/irissys/demo/irisdemoinstaller.sh
 RUN /usr/irissys/demo/irisdemoinstaller.sh

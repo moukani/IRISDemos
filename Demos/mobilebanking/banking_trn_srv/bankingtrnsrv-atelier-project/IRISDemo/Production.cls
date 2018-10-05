@@ -59,6 +59,10 @@ Merchant_Feature, IRISDemo.BC_MERCH_ACCOUNT, BC_ACC_NUMBER, BC_MERCH_CODE]]></Se
   <Item Name="Fraud Prediction ML Model" Category="" ClassName="IRISDemo.BO.PMML.Operation" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="true" Schedule="">
     <Setting Target="Host" Name="PMML">BankingSrv.PMML.FraudPrevModel</Setting>
   </Item>
+  <Item Name="PMML File Loader" Category="" ClassName="IRISDemo.BS.PMML.File.PMMLLoader" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="true" Schedule="">
+    <Setting Target="Adapter" Name="FilePath">/common_shared/pmml/</Setting>
+    <Setting Target="Adapter" Name="FileSpec">*.pmml</Setting>
+  </Item>
 </Production>
 }
 
