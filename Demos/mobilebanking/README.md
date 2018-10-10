@@ -10,10 +10,6 @@ data model that can be kept on-line with the business. This opens many possibili
 
 The demo simulates a Bank that is receiveing money transfers transactinos from its Internet Banking application and some of the processes and workflows inside the bank to process these transactions with the required traceability, connecting with the back end systems while detecting frauds with Artificial Intelligente (Intelligent Interoperability). The demo shows how to train the AI model with Spark and Zeppelin notebook, how to export the model as PMML and put it to use on a Business Process. How to use REST, SOAP and JDBC connectors, and many other things.
 
-The data used on the demo comes from an academic work from Edgar Alonzo Lopez-Rojas and Stephan Axelsson. If you are doing this demo, their [paper](BankSim) is an interesting read since it will explain why the simulated data they have produced is valid and useful. It can also be found on [Kaggle](Kaggle). 
+The data used on the demo comes from an academic work from Edgar Alonzo Lopez-Rojas and Stephan Axelsson. If you are doing this demo, their [paper](https://www.researchgate.net/publication/265736405_BankSim_A_Bank_Payment_Simulation_for_Fraud_Detection_Research) is an interesting read since it will explain why the simulated data they have produced is valid and useful. It can also be found on [Kaggle](https://www.kaggle.com/ntnu-testimon/banksim1). 
 
 Details on how this demo was built can be found [here](Building_the_Demo.md).
-
-[BankSim]: https://www.researchgate.net/publication/265736405_BankSim_A_Bank_Payment_Simulation_for_Fraud_Detection_Research
-
-[Kaggle]: https://www.kaggle.com/ntnu-testimon/banksim1
