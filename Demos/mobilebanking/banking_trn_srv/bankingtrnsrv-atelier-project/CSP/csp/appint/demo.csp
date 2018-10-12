@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
+		
 		<meta charset="UTF-8">
 		<meta http-equiv="cache-control" content="no-cache" />
 		<meta http-equiv="expires" content="0" />
@@ -72,6 +73,15 @@
 				window.open('pmml.xml','_blank')
 			}
 
+			function openSparkMaster()
+			{
+				window.open('http://localhost:8080','_blank')
+			}
+
+			function openZeppelin()
+			{
+				window.open('http://localhost:9096/#/notebook/2DSRX14XE','_blank')
+			}
 		</script>
 	</head>
 	
@@ -83,38 +93,32 @@
 		</center>
 		
 		<map name="image-map">
-		    <area target="_blank" alt="Point of Sale" title="Point of Sale" href="http://localhost:9099" coords="56,259,257,479" shape="rect">
-		    <area target="_blank" alt="IRIS Interoperability" title="IRIS Interoperability" href="EnsPortal.ProductionConfig.zen?$NAMESPACE=APPINT" coords="436,249,655,482" shape="rect">
+		    <area target="_blank" alt="Point of Sale" title="Point of Sale" href="javascript:openPOS()" coords="56,259,257,479" shape="rect">
+		    <area target="_blank" alt="IRIS Interoperability" title="IRIS Interoperability" href="javascript:openProduction()" coords="436,249,655,482" shape="rect">
 		    <area target="_blank" alt="IRIS Data Lake" title="IRIS Data Lake" href="http://localhost:9094/csp/sys/exp/%25CSP.UI.Portal.SQL.Home.zen?$NAMESPACE=APP" coords="1056,261,1315,578" shape="rect">
-		    <area target="_blank" alt="Zeppelin Notebook" title="Zeppelin Notebook" href="http://localhost:9096" coords="1543,225,1781,416" shape="rect">
-		    <area target="_blank" alt="Spark Portal" title="Spark Portal" href="http://localhost:9097" coords="1546,454,1772,584" shape="rect">
+		    <area target="_blank" alt="Zeppelin Notebook" title="Zeppelin Notebook" href="javascript:openZeppelin()" coords="1543,225,1781,416" shape="rect">
+		    <area target="_blank" alt="Spark Master" title="Spark Master" href="javascript:openSparkMaster()" coords="1546,454,1772,584" shape="rect">
 		</map>
 		
-		<table width="100%">
+		<table width="100%" style="text-align: center; background-color: #b7c8e2;">
 		<tr>
 			<td>
-				<input type="button" value="Open All Windows" onclick="openWindows()"/>
+				<input type="button" class="button" value="Open All Windows" onclick="openWindows()"/>
 			</td>
 			<td>
-				<input type="button" value="1 - Open Production" onclick="openProduction()"/>
+				<input type="button" class="button" value="1 - Open Production" onclick="openProduction()"/>
 			</td>
 			<td>
-				<input type="button" value="2 - Open Business Process" onclick="openBusinessProcess()"/>
+				<input type="button" class="button" value="2 - Open Business Process" onclick="openBusinessProcess()"/>
 			</td>
 			<td>
-				<input type="button" value="3 - Open Data Transformation" onclick="openDataTransformation()"/>
+				<input type="button" class="button" value="3 - Open Data Transformation" onclick="openDataTransformation()"/>
 			</td>
 			<td>
-				<input type="button" value="4 - Open Data Lookup" onclick="openDataLookup()"/>
+				<input type="button" class="button" value="4 - Open Data Lookup" onclick="openDataLookup()"/>
 			</td>
 			<td>
-				<input type="button" value="5 - Open Business Rule" onclick="openBusinessRule()"/>
-			</td>
-			<td>
-				<input type="button" value="6 - Open POS Simulator" onclick="openPOS()"/>
-			</td>
-			<td>
-				<input type="button" value="7 - Open Message Trace" onclick="openMessageTrace()"/>
+				<input type="button" class="button" value="5 - Open Business Rule" onclick="openBusinessRule()"/>
 			</td>
 
 		</tr>
@@ -122,14 +126,25 @@
 			<td>&nbsp;</td>
 		</tr>
 		<tr>
-			<td style="text-align: right">
-				Optional:
+			<td>
+				<input type="button" class="button" value="6 - Open POS Simulator" onclick="openPOS()"/>
+			</td>
+
+			<td>
+				<input type="button" class="button" value="7 - Open Message Trace" onclick="openMessageTrace()"/>
+			</td>
+
+			<td>
+				<input type="button" class="button" value="8 - Open Zeppelin" onclick="openZeppelin()"/>
 			</td>
 			<td>
-				<input type="button" value="8 - Open PMML Test Page" onclick="openPMMLTestPage()"/>
+				<input type="button" class="button" value="9 - Open Spark Master" onclick="openSparkMaster()"/>
 			</td>
 			<td>
-				<input type="button" value="9 - Open PMML" onclick="openPMML()"/>
+				<input type="button" class="button" value="10 - Open PMML Test Page" onclick="openPMMLTestPage()"/>
+			</td>
+			<td>
+				<input type="button" class="button" value="11 - Open PMML" onclick="openPMML()"/>
 			</td>
 
 		</tr>
