@@ -7,7 +7,7 @@
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
-    "proxy": "ng serve --host 0.0.0.0 --proxy-config proxy.config.json",
+    "proxy": "ng serve --host 0.0.0.0 --proxy-config proxy.config.json --disable-host-check",
     "e2e": "ng e2e"
   },
   "private": true,
