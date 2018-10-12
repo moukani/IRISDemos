@@ -76,6 +76,6 @@ docker run $EPHEMERALFLAG -it  \
     -v $PWD/shared:/shared \
     --name $CONTAINER_NAME \
     $IMAGE_NAME \
-    --key /shared/license.key
+    --key /shared/iris.key
 
 printfY "\nExited container\n"
