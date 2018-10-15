@@ -1,19 +1,26 @@
 FROM amirsamary/irisdemo:iris.2018.2.0-stable
 LABEL maintainer="Amir Samary <amir.samary@intersystems.com>"
 
-# Install Java.
-RUN \
-  apt-get update && \
-  apt-get install -y software-properties-common && \
-  echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | debconf-set-selections && \
-  add-apt-repository -y ppa:webupd8team/java && \
-  apt-get update && \
-  apt-get install -y oracle-java8-installer && \
-  rm -rf /var/lib/apt/lists/* && \
-  rm -rf /var/cache/oracle-jdk8-installer
+# If you want to use Java from Oracle for JDBC and/or Java Gateway
+# RUN \
+#   apt-get update && \
+#   apt-get install -y software-properties-common && \
+#   echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | debconf-set-selections && \
+#   add-apt-repository -y ppa:webupd8team/java && \
+#   apt-get update && \
+#   apt-get install -y oracle-java8-installer && \
+#   rm -rf /var/lib/apt/lists/* && \
+#   rm -rf /var/cache/oracle-jdk8-installer
 
-# Define commonly used JAVA_HOME variable
-ENV JAVA_HOME /usr/lib/jvm/java-8-oracle
+# ENV JAVA_HOME /usr/lib/jvm/java-8-oracle
+
+# If you want to use Java OpenJDK for JDBC and/or Java Gateway
+RUN apt-get -y update && \
+    apt-get install --no-install-recommends -y openjdk-8-jre-headless ca-certificates-java && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
+ENV JAVA_HOME /usr/lib/jvm/java-8-openjdk-amd64
 
 # Name of the project folder ex.: irisdemodb-atelier-project
 ARG IRIS_PROJECT_FOLDER_NAME

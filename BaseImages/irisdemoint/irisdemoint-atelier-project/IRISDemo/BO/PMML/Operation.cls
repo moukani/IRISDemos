@@ -1,15 +1,15 @@
 Class IRISDemo.BO.PMML.Operation Extends Ens.BusinessOperation
 {
 
-Parameter INVOCATION = "Queue";
+	Parameter INVOCATION = "Queue";
+	
+	/// This setting is required only if you are using the simple Execute() method. 
+	Property PMML As %String(MAXLEN = "") [ InitialExpression = "[Based on Request]" ];
+	
+	Parameter SETTINGS = "PMML::selector?multiSelect=0&context={IRISDemo.Util.ContextSearch/PMMLModels?targets=1&productionName=@productionId}";
 
-/// This setting is required only if you are using the simple Execute() method. 
-Property PMML As %String(MAXLEN = "") [ InitialExpression = "[Based on Request]" ];
-
-Parameter SETTINGS = "PMML::selector?multiSelect=0&context={IRISDemo.Util.ContextSearch/PMMLModels?targets=1&productionName=@productionId}";
-
-Method Execute(pInput As IRISDemo.BO.PMML.ExecuteModelReq, Output pOutput As IRISDemo.BO.PMML.ExecuteModelResp) As %Status
-{
+	Method Execute(pInput As IRISDemo.BO.PMML.ExecuteModelReq, Output pOutput As IRISDemo.BO.PMML.ExecuteModelResp) As %Status
+	{
 		#Dim oModel As %DeepSee.PMML.Model.AbstractModel
 		
 		Set tSC = $System.Status.OK()
@@ -95,7 +95,7 @@ Method Execute(pInput As IRISDemo.BO.PMML.ExecuteModelReq, Output pOutput As IRI
 		}
 		
 		Quit tSC
-}
+	}
 
 	Method ExecuteParam(pInput As IRISDemo.BO.PMML.ExecuteParamModelReq, Output pOutput As IRISDemo.BO.PMML.ExecuteModelResp) As %Status
 	{
