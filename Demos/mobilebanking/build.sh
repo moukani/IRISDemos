@@ -5,6 +5,9 @@ source ../../ShellScriptUtils/buildandpush.sh
 
 set -e
 
+printfY "\nUpdating sub modules...\n"
+git submodule update --remote
+
 printfY "\nBUILDING...\n"
 docker-compose build --force-rm --no-cache
 
