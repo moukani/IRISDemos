@@ -12,16 +12,19 @@
 		<script language="javascript">
 			function openWindows()
 			{
+				openSparkMaster();
+				
+				openZeppelin();
 				
 				openMessageTrace();
 				
-				openPOS()
+				openPOS();
 				
 				openBusinessRule();
 				
-				openDataLookup()
+				openDataLookup();
 				
-				openDataTransformation()
+				openDataTransformation();
 				
 				openBusinessProcess();
 				
@@ -96,8 +99,8 @@
 		    <area target="_blank" alt="Point of Sale" title="Point of Sale" href="javascript:openPOS()" coords="56,259,257,479" shape="rect">
 		    <area target="_blank" alt="IRIS Interoperability" title="IRIS Interoperability" href="javascript:openProduction()" coords="436,249,655,482" shape="rect">
 		    <area target="_blank" alt="IRIS Data Lake" title="IRIS Data Lake" href="http://localhost:9094/csp/sys/exp/%25CSP.UI.Portal.SQL.Home.zen?$NAMESPACE=APP" coords="1056,261,1315,578" shape="rect">
-		    <area target="_blank" alt="Zeppelin Notebook" title="Zeppelin Notebook" href="javascript:openZeppelin()" coords="1543,225,1781,416" shape="rect">
-		    <area target="_blank" alt="Spark Master" title="Spark Master" href="javascript:openSparkMaster()" coords="1546,454,1772,584" shape="rect">
+		    <area target="_blank" alt="Zeppelin Notebook" title="Zeppelin Notebook" href="http://localhost:9096/#/notebook/2DSRX14XE" coords="1543,225,1781,416" shape="rect">
+		    <area target="_blank" alt="Spark Master" title="Spark Master" href="http://localhost:8080" coords="1546,454,1772,584" shape="rect">
 		</map>
 		
 		<table width="100%" style="text-align: center; background-color: #b7c8e2;">
