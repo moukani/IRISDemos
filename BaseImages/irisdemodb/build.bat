@@ -1,5 +1,8 @@
 @ECHO OFF
 
-IRIS_PROJECT_FOLDER_NAME=irisdemodb-atelier-project
+set IRIS_PROJECT_FOLDER_NAME=irisdemodb-atelier-project
 
-docker build --build-arg IRIS_PROJECT_FOLDER_NAME=$IRIS_PROJECT_FOLDER_NAME --force-rm -t $IMAGE_NAME .
+for %%I in (.) do set CurrDirName=%%~nxI
+set IMAGE_NAME=%CurrDirName%
+
+docker build --force-rm --build-arg IRIS_PROJECT_FOLDER_NAME=%IRIS_PROJECT_FOLDER_NAME% -t %IMAGE_NAME% .
