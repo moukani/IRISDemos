@@ -11,6 +11,8 @@ Class IRISDemo.Account Extends %Persistent [ SqlTableName = BC_ACCOUNT ]
 	
 	Index AccountNumberIndex On AccountNumber [ Unique ];
 	
+	Property City As %String;
+	
 	ClassMethod OpenOrCreateByNumber(pAccountNumber As %String, Output pObject As %Persistent) As %Status
 	{
 		Set tSC = $$$OK

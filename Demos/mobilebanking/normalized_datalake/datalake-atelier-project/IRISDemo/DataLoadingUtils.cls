@@ -32,6 +32,8 @@ Class IRISDemo.DataLoadingUtils
 				
 				// I should use SQL instead of objects here since SQL will allow me 
 				// to insert with flags such as %NOINDEX and build the indices later
+				#Dim oTrans As IRISDemo.CheckingTrans
+				
 				Set oTrans = ##class(CheckingTrans).%New()
 				Set oTrans.TransactionNumber=iLine
 				
@@ -55,6 +57,7 @@ Class IRISDemo.DataLoadingUtils
 					$$$ThrowStatusExceptionIfError(tSC, "CreateCategoryException")
 					
 					Set oTrans.ToAccount.Category=oCategory
+					Set oTrans.ToAccount.City = ##class(%PopulateUtils).City()
 				}
 				
 				Set tSC = ##class(Account).OpenOrCreateByNumber(oRSTransactions.Get("customer"), .oFromAccount)
@@ -65,6 +68,8 @@ Class IRISDemo.DataLoadingUtils
 				{
 					Set oTrans.FromAccount.Gender=$Case(oRSTransactions.Get("gender"),"M":1, "F":2, :3)
 					Set oTrans.FromAccount.DateOfBirth=..DateOfBirthForAgeGroup(oRSTransactions.Get("age"))
+					
+					Set oTrans.FromAccount.City = ##class(%PopulateUtils).City()
 				}
 				
 				Set oTrans.TransType="PAYMENT"
