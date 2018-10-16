@@ -11,7 +11,9 @@ Class IRISDemo.Account Extends %Persistent [ SqlTableName = BC_ACCOUNT ]
 	
 	Index AccountNumberIndex On AccountNumber [ Unique ];
 	
-	Property City As %String;
+	Property City As %String [ SqlFieldName = BC_CITY ];
+
+	Property AccountAge As %String [ Required, SqlFieldName = BC_ACC_AGE ];
 	
 	ClassMethod OpenOrCreateByNumber(pAccountNumber As %String, Output pObject As %Persistent) As %Status
 	{
