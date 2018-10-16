@@ -35,8 +35,8 @@ do
     value=$(eval echo "\$$variable")
     if [ ! -z "$value" ]
     then
-        printf "\n\nConfiguring $SPARK_HOME/conf/spark-defaults.conf with $variable=\$value..."
-        sed -i.bak "s/$variable/\$value/g" $SPARK_HOME/conf/spark-defaults.conf
+        printf "\n\nConfiguring $SPARK_HOME/conf/spark-defaults.conf with $variable=$value..."
+        sed -i.bak "s/$variable/$value/g" $SPARK_HOME/conf/spark-defaults.conf
     fi
 done
 
