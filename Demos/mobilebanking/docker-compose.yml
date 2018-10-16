@@ -37,7 +37,7 @@ services:
     # 52773 is the webserver/management portal port
     - "9090:52773"
     volumes:
-    - ${PWD}/banking_core/shared/:/shared
+    - ./banking_core/shared/:/shared
     networks:
     - bankingcore-tier
 
