@@ -33,8 +33,14 @@ fi
 for variable in MASTER SPARK_MASTER_PORT IRIS_MASTER_HOST IRIS_MASTER_PORT IRIS_MASTER_NAMESPACE IRIS_MASTER_USERNAME IRIS_MASTER_PASSWORD;
 do
     value=$(eval echo "\$$variable")
-    sed -i.bak "s/$variable/$value/g" $SPARK_HOME/conf/spark-defaults.conf
+    if [ ! -z "$value" ]
+    then
+        printf "\n\nConfiguring $SPARK_HOME/conf/spark-defaults.conf with $variable=\$value..."
+        sed -i.bak "s/$variable/\$value/g" $SPARK_HOME/conf/spark-defaults.conf
+    fi
 done
+
+printf "\n\n"
 
 if [ "$SPARK_NODE_TYPE" == "Worker" ]
 then
