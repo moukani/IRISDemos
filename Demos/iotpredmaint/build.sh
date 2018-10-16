@@ -6,10 +6,11 @@ source ../../ShellScriptUtils/buildandpush.sh
 set -e
 
 printfY "\nUpdating sub modules...\n"
-git submodule update --remote
+git submodule init
+git submodule update
 
 printfY "\nBUILDING...\n"
-docker-compose build --force-rm --no-cache
+docker-compose build
 
 printfY "\n\nRUNNING...\n"
 docker-compose up
