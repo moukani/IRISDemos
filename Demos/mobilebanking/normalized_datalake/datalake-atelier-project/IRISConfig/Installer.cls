@@ -37,6 +37,11 @@ XData Install [ XMLNamespace = INSTALLER ]
 	<Invoke Class="IRISConfig.Installer" Method="LoadTransactionalData" CheckStatus="true">
 		<Arg name="pNamespace" Value="${Namespace}"/>
 	</Invoke>
+	
+	<Log Text="Building cube..." Level="0"/>	
+	<Invoke Class="%DeepSee.Utils" Method="%BuildCube" CheckStatus="true">
+		<Arg name="pCubeName" Value="Transactions"/>
+	</Invoke>
 </Manifest>
 }
 }
