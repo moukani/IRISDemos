@@ -22,10 +22,21 @@ XData BPL [ XMLNamespace = "http://www.intersystems.com/bpl" ]
 <property name='LooksLikeFraud' type='%Library.Boolean' instantiate='0' />
 <property name='LooksLikeFraudReason' type='%Library.String' instantiate='0' />
 </context>
-<sequence xend='200' yend='2100' >
+<!--
 <transform name='Prepare Model Features' class='BankingSrv.DTL.BuildFeatures' source='request' target='context.ExecuteModelReq' xpos='200' ypos='250' >
 <annotation><![CDATA[Translate transactional data into features to call the ML model]]></annotation>
-</transform>
+</transform>-->
+
+<call name='Enrich request data' target='Data Enrichment Operation' async='0' >
+<annotation><![CDATA[Call backend system to get more data for ML model]]></annotation>
+<request type='IRISDemo.BO.PMML.ExecuteModelReq' >
+<assign property="callrequest" value="request" action="set" />
+</request>
+<response type='IRISDemo.BO.PMML.ExecuteModelReq' >
+<assign property="context.ExecuteModelReq" value="callresponse" action="set" />
+</response>
+</call>
+
 <call name='Execute ML Model' target='Fraud Prediction ML Model' async='0' xpos='200' ypos='350' >
 <annotation><![CDATA[Call the ML model to determine if this is a fraudulent transaction]]></annotation>
 <request type='IRISDemo.BO.PMML.ExecuteModelReq' >

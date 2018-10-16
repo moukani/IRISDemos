@@ -50,7 +50,7 @@ Method Execute(pInput As IRISDemo.BO.PMML.ExecuteModelReq, Output pOutput As IRI
 				Try
 				{
 					Set $property(oModelInputData, tKey) = tValue
-					$$$TRACE("Set oModelInputData."_tKey_"="_tValue)
+					//$$$TRACE("Set oModelInputData."_tKey_"="_tValue)
 				}
 				Catch 
 				{

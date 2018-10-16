@@ -64,6 +64,12 @@ Merchant_Feature, IRISDemo.BC_MERCH_ACCOUNT, BC_ACC_NUMBER, BC_MERCH_CODE]]></Se
     <Setting Target="Adapter" Name="FileSpec">*.pmml</Setting>
     <Setting Target="Adapter" Name="ArchivePath">/common_shared/pmml/imported</Setting>
   </Item>
+  <Item Name="Data Enrichment Operation" Category="Datalake" ClassName="Datalake.BO.Data.Operation" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+    <Setting Target="Adapter" Name="HTTPServer">datalake</Setting>
+    <Setting Target="Adapter" Name="URL">/csp/app/rest/Info/GetInfo</Setting>
+    <Setting Target="Adapter" Name="Credentials">Datalake</Setting>
+    <Setting Target="Adapter" Name="HTTPPort">52773</Setting>
+  </Item>
 </Production>
 }
 
