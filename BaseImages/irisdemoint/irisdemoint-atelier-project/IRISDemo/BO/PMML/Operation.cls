@@ -1,3 +1,5 @@
+Include %PMML
+
 Class IRISDemo.BO.PMML.Operation Extends Ens.BusinessOperation
 {
 
@@ -6,7 +8,7 @@ Class IRISDemo.BO.PMML.Operation Extends Ens.BusinessOperation
 	/// This setting is required only if you are using the simple Execute() method. 
 	Property PMML As %String(MAXLEN = "") [ InitialExpression = "[Based on Request]" ];
 	
-	Parameter SETTINGS = "PMML::selector?multiSelect=0&context={IRISDemo.Util.ContextSearch/PMMLModels?targets=1&productionName=@productionId}";
+	Parameter SETTINGS = "PMML::selector?context={IRISDemo.Util.ContextSearch/PMMLModels?targets=1&productionName=@productionId}";
 
 	Method Execute(pInput As IRISDemo.BO.PMML.ExecuteModelReq, Output pOutput As IRISDemo.BO.PMML.ExecuteModelResp) As %Status
 	{
@@ -21,70 +23,37 @@ Class IRISDemo.BO.PMML.Operation Extends Ens.BusinessOperation
 				Quit
 			}
 			
-			//Oddily enough, %GetModelInstance will give me not an instance of the model
-			//but the type of model (i.e: TreeModel)
-			Set tSC = $classmethod(..PMML, "%GetModelInstance", .tModelType)
+			// Obtain an instance of the requested model
+			Set tSC = ..GetModelInstance(pInput.ModelName, .oModel)
+			Quit:$$$ISERR(tSC)
 			
-			Set tModelClass = ..PMML_"."_tModelType
-			
-			//Now we can create that model
-			Set oModel = $classmethod(tModelClass, "%New")
-			
-			//Let's take the name of the class used as input data...
-			Set tDataClassName = oModel.%GetDataClassName()
-			
-			//Let's create the input data instance...
-			Set oModelInputData = $classmethod(tDataClassName, "%New")
-			
-			//Assuming that every key on pInput.ModelData represents the name of an 
-			//existing property on the input data model, let's set all the properties
-			//on the model with the received pInput values: 
-			Set tKey=""
-			For
-			{
-				Set tKey = pInput.ModelData.Next(tKey)
+			// Provide ModelData as an array
+			Kill aModelData
+			Set tKey = ""
+			While 1 {
+				Set tValue = pInput.ModelData.GetNext(.tKey)
 				Quit:tKey=""
-				
-				Set tValue = pInput.ModelData.GetAt(tKey)
-				
-				Try
-				{
-					Set $property(oModelInputData, tKey) = tValue
-					$$$TRACE("Set oModelInputData."_tKey_"="_tValue)
-				}
-				Catch 
-				{
-					/*
-					 That's ok if this sproperty doesn't exist
-					 
-					 When we use ChiSqSelector or any other feature selector, a model may end up
-					 with more or less features, depending on the data. The production code may be
-					 sending more data than a newer version of the model needs. Or, we may be dealing
-					 with a model/entity scenario (IoT with Transformers). With slightly different models
-					 for each entity (transformer), we may receive all features but only use the ones that
-					 the each model requires.
-					*/
-				}   
-				
+				Set aModelData(tKey) = tValue
 			}
 			
-			//Now, let's execute the model...
-			Set tSC = oModel.%ExecuteModel(oModelInputData, .oModelDataOutput)
+			// Now, let's execute the model...
+			Set tSC = oModel.%ExecuteModel(.aModelData, .oModelDataOutput)
 			Quit:$System.Status.IsError(tSC)
 			
 			
 			//Now we have to convert the data output into an array so we can then copy the values into pOutput.ModelOutput
-			//Unfortunately, the DataOutput model has no %GetAsArray to help us with. We will have to use class
-			//dictionary for that:
-			
-			Set tOutputModelClass=oModelDataOutput.%ClassName(1)
-			Set oOutputModelClassDef = ##class(%Dictionary.ClassDefinition).%OpenId(tOutputModelClass)
+			//Unfortunately, the DataOutput model has no %GetAsArray to help us with. 
 			
 			Set pOutput = ##class(IRISDemo.BO.PMML.ExecuteModelResp).%New()
 			
-			For iProp=1:1:oOutputModelClassDef.Properties.Count()
+			Do oModelDataOutput.GetFields(.aFields)
+			set tFieldName = ""
+			For 
 			{
-				Set tPropName = oOutputModelClassDef.Properties.GetAt(iProp).Name
+				Set tFieldName = $order(aFields(tFieldName))
+				Quit:tFieldName=""
+				
+				Set tPropName = $$$PROPERTYNAME(tFieldName)
 				
 				Do pOutput.ModelOutput.SetAt($property(oModelDataOutput, tPropName), tPropName)
 			}
@@ -102,17 +71,42 @@ Class IRISDemo.BO.PMML.Operation Extends Ens.BusinessOperation
 		Set ..PMML = pInput.ModelClassName
 		Quit ..Execute(pInput, .pOutput)
 	}
+	
+	
+	/// Internal array of model instances to (re)use
+	Property ModelInstances as array of %DeepSee.PMML.Model.AbstractModel [ Private, Internal ];
+	
+	Method GetModelInstance(pModelName As %String = "", pModel As %DeepSee.PMML.Model.AbstractModel) As %Status [ Private ]
+	{
+		set pModel = ..ModelInstances.GetAt(pModelName)
+		quit:$isobject(pModel) $$$OK
+		
+		// if the model hadn't been cached yet, create a fresh instance
+		set tSC = $classmethod(..PMML, "%GetModelInstance", pModelName, .pModel)
+		quit:$$$ISERR(tSC) tSC
+		do ..ModelInstances.SetAt(pModel, pModelName)
+		quit $$$OK
+	}
+	
+	/// Override Set method to ensure model instances are cleaned up
+	Method PMMLSet(pPMML As %String) As %Status [ ServerOnly = 1, Internal ]
+	{
+		set i%PMML = pPMML
+		do ..ModelInstances.Clear()
+		quit $$$OK
+	}
 
-XData MessageMap
-{
-<MapItems>
-	<MapItem MessageType="IRISDemo.BO.PMML.ExecuteParamModelReq">
-		<Method>ExecuteParam</Method>
-	</MapItem>
-	<MapItem MessageType="IRISDemo.BO.PMML.ExecuteModelReq">
-		<Method>Execute</Method>
-	</MapItem>
-</MapItems>
-}
+
+	XData MessageMap
+	{
+	<MapItems>
+		<MapItem MessageType="IRISDemo.BO.PMML.ExecuteParamModelReq">
+			<Method>ExecuteParam</Method>
+		</MapItem>
+		<MapItem MessageType="IRISDemo.BO.PMML.ExecuteModelReq">
+			<Method>Execute</Method>
+		</MapItem>
+	</MapItems>
+	}
 
 }

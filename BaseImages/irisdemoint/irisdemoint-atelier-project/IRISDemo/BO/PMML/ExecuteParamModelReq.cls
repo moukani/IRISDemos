@@ -1,5 +1,6 @@
 Class IRISDemo.BO.PMML.ExecuteParamModelReq Extends (%Persistent,IRISDemo.BO.PMML.ExecuteModelReq)
 {
+	/// PMML Definition class name (should inherit from %DeepSee.PMML.Definition)
 	Property ModelClassName As %String [ Required ];
 
 
@@ -12,6 +13,9 @@ Storage Default
 </Value>
 <Value name="2">
 <Value>ModelClassName</Value>
+</Value>
+<Value name="3">
+<Value>ModelName</Value>
 </Value>
 </Data>
 <Data name="ModelData">
