@@ -3,7 +3,7 @@
     {
       "text": "%md\n# 1- Getting the data from InterSystems IRIS",
       "user": "anonymous",
-      "dateUpdated": "Oct 12, 2018 9:59:33 PM",
+      "dateUpdated": "Oct 16, 2018 9:13:38 PM",
       "config": {
         "tableHide": false,
         "editorSetting": {
@@ -42,7 +42,7 @@
       "title": "Introduction",
       "text": "%md \n\nThis notebook has been created having Scala as the standard programming language. \n\nBut we still need to use %spark magic to have a spark context automatically created for us.\n\nOn the first notebook of this series, we took a look at the data model and we saw that there was a \ntransactions table named *IRISDemo.BC_TRANSACTIONS* with two columns: *BC_TRANS_SRC_ACC* and *BC_TRANS_DEST_ACC*.\n\nThese columns point to tables *IRISDemo.BC_MERCH_ACCOUNT* and *IRISDemo.BC_CUST_ACCOUNT*. Let\u0027s try to build a\nsingle data set with all this data joined so we can give a good look at the quality of our data:",
       "user": "anonymous",
-      "dateUpdated": "Oct 12, 2018 9:59:34 PM",
+      "dateUpdated": "Oct 16, 2018 9:13:39 PM",
       "config": {
         "tableHide": false,
         "editorSetting": {
@@ -82,7 +82,7 @@
       "title": "Importing required libraries",
       "text": "%spark\n\n// So we can access IRIS!\nimport com.intersystems.spark._\n\nimport spark.implicits._\n\nimport org.apache.spark.sql.DataFrame\n\nimport org.apache.spark.sql.functions._\n\n// For calculating Chi2 - Should try to convert this to pure Spark ML instead of using mllib\nimport org.apache.spark.mllib.linalg._\nimport org.apache.spark.mllib.stat._\n\n// Transformers to prepare the features for training\nimport org.apache.spark.ml.feature.VectorAssembler\nimport org.apache.spark.ml.feature.VectorIndexer\n\n// This will help us to pick the best features on our pipeline accordingly to Chi2\nimport org.apache.spark.ml.feature.ChiSqSelector\n\n// Parameter grid and cross validators to allow us to automatically run estimators with \n// different parameters and validate which configuration is best for our data\nimport org.apache.spark.ml.tuning.ParamGridBuilder\nimport org.apache.spark.ml.tuning.CrossValidator\n\n// Algorithms (Estimators) to train our models (Transformers)\nimport org.apache.spark.ml.classification.RandomForestClassifier\nimport org.apache.spark.ml.classification.DecisionTreeClassifier\n\n// To Evaluate the model against the test data\nimport org.apache.spark.ml.evaluation.MulticlassClassificationEvaluator\nimport org.apache.spark.ml.evaluation.BinaryClassificationEvaluator\n\n// Models\nimport org.apache.spark.ml.PipelineModel\nimport org.apache.spark.ml.classification.RandomForestClassificationModel\nimport org.apache.spark.ml.classification.DecisionTreeClassificationModel\n\n// Pipepeline to connect transformers and estimators \nimport org.apache.spark.ml.Pipeline\n\n// So we can export our final model to PMML\nimport com.intersystems.spark.ml._\nimport org.jpmml.sparkml._\nimport java.io.File\n",
       "user": "anonymous",
-      "dateUpdated": "Oct 12, 2018 9:59:34 PM",
+      "dateUpdated": "Oct 16, 2018 9:13:39 PM",
       "config": {
         "editorSetting": {
           "language": "scala",
@@ -111,8 +111,8 @@
       "jobName": "paragraph_1537296780459_-820006323",
       "id": "20180918-013102_236592080",
       "dateCreated": "Sep 18, 2018 6:53:00 PM",
-      "dateStarted": "Oct 12, 2018 9:59:34 PM",
-      "dateFinished": "Oct 12, 2018 10:00:04 PM",
+      "dateStarted": "Oct 16, 2018 9:13:40 PM",
+      "dateFinished": "Oct 16, 2018 9:14:16 PM",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
@@ -120,7 +120,7 @@
       "title": "Reading the data from IRIS",
       "text": "%spark\n\nval df \u003d spark.read.iris(\"\"\"select \n    c.BC_ACC_CUST_AGE as age,\n    c.BC_ACC_CUST_GENDER as gender,\n    t.BC_TRANS_AMOUNT as amount,\n    t.BC_TRANS_IS_FRAUD as fraud,\n    m.ID as merchant,\n    m.BC_MERCH_CATEGORY as category\nfrom \n    IRISDemo.BC_TRANSACTIONS t, \n    IRISDemo.BC_MERCH_ACCOUNT m, \n    IRISDemo.BC_CUST_ACCOUNT c \nwhere \n    t.BC_TRANS_DEST_ACC\u003dm.ID and \n    t.BC_TRANS_SRC_ACC\u003dc.ID and \n    t.BC_TRANS_TYPE\u003d\u0027PAYMENT\u0027\"\"\")\n    \ndf.cache()\ndf.count()\n\n",
       "user": "anonymous",
-      "dateUpdated": "Oct 12, 2018 9:59:34 PM",
+      "dateUpdated": "Oct 16, 2018 9:13:40 PM",
       "config": {
         "editorSetting": {
           "language": "scala",
@@ -141,7 +141,7 @@
         "msg": [
           {
             "type": "TEXT",
-            "data": "df: org.apache.spark.sql.DataFrame \u003d [age: int, gender: string ... 4 more fields]\nres24: df.type \u003d [age: int, gender: string ... 4 more fields]\nres25: Long \u003d 500002\n"
+            "data": "df: org.apache.spark.sql.DataFrame \u003d [age: int, gender: string ... 4 more fields]\nres24: df.type \u003d [age: int, gender: string ... 4 more fields]\nres25: Long \u003d 500000\n"
           }
         ]
       },
@@ -149,8 +149,8 @@
       "jobName": "paragraph_1537296780459_-820006323",
       "id": "20180913-200917_773871114",
       "dateCreated": "Sep 18, 2018 6:53:00 PM",
-      "dateStarted": "Oct 12, 2018 9:59:36 PM",
-      "dateFinished": "Oct 12, 2018 10:00:15 PM",
+      "dateStarted": "Oct 16, 2018 9:13:44 PM",
+      "dateFinished": "Oct 16, 2018 9:14:31 PM",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
@@ -158,7 +158,7 @@
       "title": "Did we have any null fields?",
       "text": "%spark\n\ndf.na.drop(\"any\")\ndf.count()\n",
       "user": "anonymous",
-      "dateUpdated": "Oct 12, 2018 9:59:36 PM",
+      "dateUpdated": "Oct 16, 2018 9:13:43 PM",
       "config": {
         "editorSetting": {
           "language": "scala",
@@ -179,7 +179,7 @@
         "msg": [
           {
             "type": "TEXT",
-            "data": "res26: org.apache.spark.sql.DataFrame \u003d [age: int, gender: string ... 4 more fields]\nres27: Long \u003d 500002\n"
+            "data": "res26: org.apache.spark.sql.DataFrame \u003d [age: int, gender: string ... 4 more fields]\nres27: Long \u003d 500000\n"
           }
         ]
       },
@@ -187,15 +187,15 @@
       "jobName": "paragraph_1537296780460_-821930067",
       "id": "20180914-175124_1973597318",
       "dateCreated": "Sep 18, 2018 6:53:00 PM",
-      "dateStarted": "Oct 12, 2018 10:00:05 PM",
-      "dateFinished": "Oct 12, 2018 10:00:16 PM",
+      "dateStarted": "Oct 16, 2018 9:14:17 PM",
+      "dateFinished": "Oct 16, 2018 9:14:33 PM",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
     {
       "text": "%md\n\nSo, there are no rows with null cells. Good. Let\u0027s take a look at the data.",
       "user": "anonymous",
-      "dateUpdated": "Oct 12, 2018 9:59:36 PM",
+      "dateUpdated": "Oct 16, 2018 9:13:44 PM",
       "config": {
         "tableHide": false,
         "editorSetting": {
@@ -233,7 +233,7 @@
     {
       "text": "%spark\n\nz.show(df)",
       "user": "anonymous",
-      "dateUpdated": "Oct 12, 2018 9:59:36 PM",
+      "dateUpdated": "Oct 16, 2018 9:13:44 PM",
       "config": {
         "tableHide": false,
         "editorSetting": {
@@ -264,7 +264,7 @@
         "msg": [
           {
             "type": "TABLE",
-            "data": "age\tgender\tamount\tfraud\tmerchant\tcategory\n48\t1\t4.55\tfalse\t2\t1\n30\t1\t39.68\tfalse\t2\t1\n47\t2\t26.89\tfalse\t4\t1\n40\t1\t17.25\tfalse\t2\t1\n64\t1\t35.72\tfalse\t2\t1\n42\t2\t25.81\tfalse\t2\t1\n19\t2\t9.1\tfalse\t2\t1\n48\t2\t21.17\tfalse\t2\t1\n37\t1\t32.4\tfalse\t2\t1\n61\t2\t35.4\tfalse\t2\t1\n51\t2\t14.95\tfalse\t2\t1\n24\t1\t1.51\tfalse\t4\t1\n36\t1\t68.79\tfalse\t16\t2\n63\t1\t20.32\tfalse\t4\t1\n42\t1\t13.56\tfalse\t2\t1\n38\t2\t30.19\tfalse\t2\t1\n50\t1\t17.54\tfalse\t4\t1\n63\t2\t40.69\tfalse\t2\t1\n30\t1\t21.21\tfalse\t2\t1\n28\t2\t10.09\tfalse\t2\t1\n30\t2\t19.31\tfalse\t2\t1\n29\t1\t44.22\tfalse\t2\t1\n58\t2\t44.39\tfalse\t2\t1\n61\t2\t30.72\tfalse\t2\t1\n27\t1\t29.84\tfalse\t2\t1\n41\t1\t12.1\tfalse\t2\t1\n51\t1\t24.84\tfalse\t2\t1\n32\t1\t16.42\tfalse\t2\t1\n59\t1\t2.19\tfalse\t2\t1\n62\t2\t32.27\tfalse\t2\t1\n47\t1\t28.09\tfalse\t2\t1\n62\t1\t16.13\tfalse\t4\t1\n29\t2\t32.7\tfalse\t2\t1\n28\t2\t25.53\tfalse\t2\t1\n53\t2\t39.22\tfalse\t2\t1\n58\t2\t46.14\tfalse\t2\t1\n34\t1\t29.55\tfalse\t2\t1\n32\t2\t36.88\tfalse\t4\t1\n28\t2\t36.15\tfalse\t2\t1\n60\t2\t2.81\tfalse\t2\t1\n31\t1\t87.67\tfalse\t45\t3\n28\t2\t11.17\tfalse\t4\t1\n54\t2\t105.59\tfalse\t48\t2\n44\t1\t15.25\tfalse\t2\t1\n31\t1\t33.36\tfalse\t2\t1\n49\t2\t32.96\tfalse\t2\t1\n30\t2\t16.96\tfalse\t2\t1\n44\t2\t49.91\tfalse\t4\t1\n32\t1\t0.93\tfalse\t2\t1\n31\t1\t37.71\tfalse\t2\t1\n27\t2\t12.53\tfalse\t4\t1\n29\t2\t56.97\tfalse\t2\t1\n32\t1\t31.32\tfalse\t2\t1\n63\t2\t21.15\tfalse\t2\t1\n20\t2\t3.12\tfalse\t2\t1\n42\t2\t33.41\tfalse\t2\t1\n46\t2\t45.92\tfalse\t4\t1\n43\t1\t36.82\tfalse\t2\t1\n36\t2\t20.05\tfalse\t4\t1\n27\t1\t43.75\tfalse\t2\t1\n50\t1\t44.88\tfalse\t2\t1\n20\t2\t18.45\tfalse\t2\t1\n33\t2\t29.66\tfalse\t2\t1\n33\t1\t28.38\tfalse\t2\t1\n57\t2\t62.76\tfalse\t2\t1\n70\t1\t21.6\tfalse\t2\t1\n26\t2\t30.74\tfalse\t2\t1\n64\t2\t58.33\tfalse\t2\t1\n51\t1\t44.07\tfalse\t2\t1\n59\t2\t6.52\tfalse\t2\t1\n51\t1\t2.96\tfalse\t4\t1\n34\t2\t44.69\tfalse\t2\t1\n30\t2\t5.01\tfalse\t4\t1\n31\t1\t9.74\tfalse\t2\t1\n32\t1\t10.1\tfalse\t2\t1\n46\t2\t58.64\tfalse\t2\t1\n29\t2\t29.2\tfalse\t2\t1\n26\t2\t32.6\tfalse\t84\t4\n27\t1\t52.35\tfalse\t2\t1\n29\t1\t159.92\tfalse\t48\t2\n39\t1\t26.37\tfalse\t2\t1\n28\t1\t49.07\tfalse\t2\t1\n26\t2\t35.74\tfalse\t2\t1\n63\t2\t47.53\tfalse\t4\t1\n58\t1\t29.87\tfalse\t2\t1\n30\t1\t20.31\tfalse\t2\t1\n41\t2\t10.59\tfalse\t2\t1\n31\t2\t21.92\tfalse\t2\t1\n36\t1\t44.26\ttrue\t95\t2\n37\t1\t324.5\ttrue\t95\t2\n22\t1\t26.07\tfalse\t4\t1\n27\t2\t10.88\tfalse\t2\t1\n48\t1\t8.05\tfalse\t2\t1\n38\t2\t25.59\tfalse\t2\t1\n58\t2\t15.26\tfalse\t2\t1\n42\t1\t20.73\tfalse\t2\t1\n20\t2\t68.17\tfalse\t2\t1\n37\t2\t34.75\tfalse\t2\t1\n30\t2\t171.07\tfalse\t107\t2\n62\t2\t50.31\tfalse\t2\t1\n37\t1\t17.87\tfalse\t2\t1\n31\t2\t5.96\tfalse\t2\t1\n39\t2\t13.08\tfalse\t4\t1\n77\t2\t51.99\tfalse\t2\t1\n34\t2\t9.54\tfalse\t2\t1\n30\t1\t61.33\tfalse\t4\t1\n44\t1\t47.72\tfalse\t2\t1\n40\t1\t1.72\tfalse\t2\t1\n34\t1\t8.14\tfalse\t2\t1\n39\t1\t43.76\tfalse\t2\t1\n32\t1\t52.36\tfalse\t2\t1\n21\t1\t14.2\tfalse\t4\t1\n54\t2\t2.06\tfalse\t4\t1\n50\t1\t45.32\tfalse\t2\t1\n44\t1\t10.38\tfalse\t2\t1\n43\t2\t2.46\tfalse\t2\t1\n32\t2\t40.15\tfalse\t2\t1\n48\t1\t4.96\tfalse\t2\t1\n31\t1\t43.55\tfalse\t2\t1\n36\t1\t8.56\tfalse\t2\t1\n57\t2\t28.06\tfalse\t2\t1\n61\t1\t7.89\tfalse\t2\t1\n58\t2\t44.59\tfalse\t2\t1\n48\t1\t10.84\tfalse\t2\t1\n44\t2\t13.35\tfalse\t2\t1\n27\t2\t10.49\tfalse\t2\t1\n61\t2\t6.19\tfalse\t2\t1\n20\t2\t114.54\tfalse\t137\t5\n22\t1\t23.97\tfalse\t2\t1\n19\t2\t7.75\tfalse\t2\t1\n33\t1\t36.41\tfalse\t141\t6\n54\t2\t11.83\tfalse\t48\t2\n38\t1\t4.23\tfalse\t4\t1\n29\t1\t11.23\tfalse\t2\t1\n47\t1\t20.55\tfalse\t2\t1\n32\t2\t43.78\tfalse\t2\t1\n52\t2\t10.96\tfalse\t2\t1\n43\t1\t33.27\tfalse\t2\t1\n62\t1\t109.26\tfalse\t107\t2\n62\t2\t38.38\tfalse\t2\t1\n34\t2\t1.01\tfalse\t2\t1\n43\t1\t31.73\tfalse\t2\t1\n31\t1\t13.33\tfalse\t2\t1\n27\t1\t68.39\tfalse\t2\t1\n27\t1\t2.46\tfalse\t2\t1\n36\t1\t33.71\tfalse\t4\t1\n39\t2\t39.96\tfalse\t2\t1\n23\t1\t17.56\tfalse\t2\t1\n54\t2\t163.56\tfalse\t160\t7\n43\t2\t23.24\tfalse\t2\t1\n38\t2\t26.46\tfalse\t2\t1\n41\t2\t13.56\tfalse\t2\t1\n29\t1\t25.53\tfalse\t2\t1\n24\t2\t11.83\tfalse\t166\t8\n24\t1\t24.15\tfalse\t2\t1\n32\t2\t2.63\tfalse\t2\t1\n27\t1\t31.2\tfalse\t2\t1\n32\t2\t4.15\tfalse\t2\t1\n32\t1\t29.95\tfalse\t2\t1\n40\t2\t58.95\tfalse\t2\t1\n21\t1\t7.94\tfalse\t48\t2\n26\t2\t37.8\tfalse\t2\t1\n36\t2\t55.19\tfalse\t2\t1\n61\t1\t32.95\tfalse\t2\t1\n48\t1\t50.9\tfalse\t4\t1\n44\t1\t15.69\tfalse\t2\t1\n47\t2\t14.36\tfalse\t2\t1\n29\t1\t50.57\tfalse\t4\t1\n37\t1\t37.73\tfalse\t2\t1\n33\t1\t30.98\tfalse\t2\t1\n30\t2\t10.37\tfalse\t2\t1\n40\t2\t64.69\tfalse\t2\t1\n40\t1\t44.5\tfalse\t4\t1\n22\t1\t5.5\tfalse\t2\t1\n43\t1\t30.86\tfalse\t2\t1\n29\t1\t61.83\tfalse\t2\t1\n38\t1\t55.55\tfalse\t2\t1\n47\t1\t73.36\tfalse\t2\t1\n33\t2\t47.14\tfalse\t2\t1\n28\t1\t14.55\tfalse\t2\t1\n25\t1\t44.22\tfalse\t2\t1\n36\t2\t38.2\tfalse\t2\t1\n34\t2\t12.55\tfalse\t2\t1\n40\t2\t0.1\tfalse\t2\t1\n36\t2\t36.55\tfalse\t84\t4\n43\t2\t15.04\tfalse\t2\t1\n59\t1\t54.45\tfalse\t4\t1\n61\t1\t66.57\tfalse\t2\t1\n51\t2\t56.93\tfalse\t2\t1\n47\t2\t3.5\tfalse\t2\t1\n51\t2\t11.78\tfalse\t2\t1\n40\t1\t52.38\tfalse\t205\t9\n40\t2\t31.98\tfalse\t2\t1\n42\t1\t27.98\tfalse\t2\t1\n31\t2\t187.62\tfalse\t107\t2\n40\t1\t19.23\tfalse\t4\t1\n62\t1\t47.82\tfalse\t4\t1\n61\t1\t28.6\tfalse\t2\t1\n21\t2\t7.06\tfalse\t2\t1\n48\t1\t49.59\tfalse\t84\t4\n41\t1\t12.16\tfalse\t4\t1\n20\t2\t20.96\tfalse\t2\t1\n19\t2\t36.9\tfalse\t84\t4\n27\t1\t11.06\tfalse\t2\t1\n42\t1\t9.59\tfalse\t4\t1\n52\t1\t41.33\tfalse\t2\t1\n19\t2\t25.23\tfalse\t2\t1\n39\t1\t2.09\tfalse\t222\t10\n23\t2\t3.62\tfalse\t2\t1\n32\t2\t24.29\tfalse\t2\t1\n22\t1\t22.84\tfalse\t4\t1\n41\t2\t40.69\tfalse\t84\t4\n49\t1\t5.31\tfalse\t2\t1\n47\t1\t41.67\tfalse\t2\t1\n47\t1\t30.57\tfalse\t2\t1\n19\t1\t8.71\tfalse\t4\t1\n19\t2\t3.03\tfalse\t2\t1\n24\t2\t13.72\tfalse\t2\t1\n31\t1\t22.65\tfalse\t222\t10\n21\t2\t19.73\tfalse\t2\t1\n47\t2\t33.12\tfalse\t2\t1\n27\t1\t6.09\tfalse\t2\t1\n58\t2\t37.25\tfalse\t2\t1\n34\t1\t19.97\tfalse\t2\t1\n29\t2\t15.31\tfalse\t240\t11\n48\t2\t19.19\tfalse\t2\t1\n38\t2\t48.26\tfalse\t2\t1\n36\t2\t79.71\tfalse\t240\t11\n36\t1\t16.47\tfalse\t2\t1\n40\t2\t54.54\tfalse\t2\t1\n36\t2\t44.5\tfalse\t2\t1\n28\t1\t35.39\tfalse\t2\t1\n53\t2\t22.42\tfalse\t84\t4\n44\t2\t67.88\tfalse\t2\t1\n27\t2\t4.02\tfalse\t2\t1\n40\t2\t11.95\tfalse\t4\t1\n33\t2\t16.6\tfalse\t2\t1\n34\t2\t61.9\tfalse\t2\t1\n31\t1\t48.24\tfalse\t2\t1\n30\t2\t41.98\tfalse\t2\t1\n54\t1\t5.67\tfalse\t2\t1\n28\t2\t17.37\tfalse\t4\t1\n53\t2\t14.87\tfalse\t4\t1\n29\t1\t46.88\tfalse\t84\t4\n52\t1\t2.81\tfalse\t2\t1\n41\t1\t18.25\tfalse\t2\t1\n26\t1\t8.6\tfalse\t2\t1\n40\t2\t20.37\tfalse\t2\t1\n33\t2\t25.95\tfalse\t2\t1\n38\t2\t62.76\tfalse\t2\t1\n54\t2\t17.36\tfalse\t2\t1\n26\t1\t71.65\tfalse\t4\t1\n27\t2\t6.34\tfalse\t2\t1\n49\t1\t86.09\tfalse\t269\t9\n29\t2\t28.82\tfalse\t2\t1\n48\t1\t19.55\tfalse\t2\t1\n34\t1\t98.19\tfalse\t274\t12\n63\t1\t10.41\tfalse\t2\t1\n32\t1\t30.92\tfalse\t84\t4\n48\t2\t22.68\tfalse\t2\t1\n33\t1\t50.9\tfalse\t2\t1\n38\t1\t49.54\tfalse\t4\t1\n44\t2\t38.58\tfalse\t4\t1\n36\t2\t1.95\tfalse\t2\t1\n31\t2\t16.4\tfalse\t4\t1\n27\t1\t4.19\tfalse\t2\t1\n27\t2\t62.11\tfalse\t4\t1\n34\t2\t15.84\tfalse\t2\t1\n41\t1\t31.45\tfalse\t2\t1\n23\t1\t26.7\tfalse\t2\t1\n36\t1\t51.36\tfalse\t2\t1\n41\t2\t21.61\tfalse\t2\t1\n50\t1\t17.76\tfalse\t2\t1\n39\t1\t23.56\tfalse\t141\t6\n30\t2\t15.87\tfalse\t2\t1\n44\t2\t1.21\tfalse\t4\t1\n49\t1\t46.29\tfalse\t2\t1\n47\t2\t21.5\tfalse\t2\t1\n21\t1\t31.51\tfalse\t4\t1\n30\t2\t44.31\tfalse\t2\t1\n54\t1\t38.26\tfalse\t2\t1\n32\t2\t15.49\tfalse\t4\t1\n42\t1\t71.76\tfalse\t300\t5\n32\t1\t194.59\tfalse\t302\t5\n50\t2\t44.57\tfalse\t2\t1\n46\t2\t21.21\tfalse\t2\t1\n37\t1\t24.87\tfalse\t2\t1\n20\t2\t19.38\tfalse\t2\t1\n28\t2\t55.7\tfalse\t2\t1\n68\t2\t16.78\tfalse\t2\t1\n53\t1\t31.9\tfalse\t2\t1\n27\t2\t31.59\tfalse\t4\t1\n32\t1\t8.66\tfalse\t2\t1\n33\t1\t6.21\tfalse\t2\t1\n34\t1\t57.17\tfalse\t2\t1\n51\t1\t24.57\tfalse\t4\t1\n51\t1\t4.2\tfalse\t2\t1\n30\t2\t26.52\tfalse\t2\t1\n61\t1\t31.93\tfalse\t2\t1\n21\t2\t55.3\tfalse\t205\t9\n58\t1\t31.14\tfalse\t2\t1\n22\t1\t14.36\tfalse\t4\t1\n36\t2\t26.93\tfalse\t4\t1\n43\t2\t19.42\tfalse\t2\t1\n31\t2\t36.62\tfalse\t2\t1\n28\t2\t1.18\tfalse\t2\t1\n50\t2\t11.41\tfalse\t2\t1\n32\t2\t16.1\tfalse\t2\t1\n29\t2\t35.61\tfalse\t4\t1\n34\t2\t27.32\tfalse\t2\t1\n50\t1\t3.3\tfalse\t2\t1\n29\t1\t28.13\tfalse\t2\t1\n58\t1\t49.0\tfalse\t332\t5\n36\t1\t79.35\tfalse\t2\t1\n27\t2\t122.26\tfalse\t335\t9\n60\t2\t17.51\tfalse\t2\t1\n59\t1\t15.72\tfalse\t2\t1\n31\t2\t61.93\tfalse\t2\t1\n32\t1\t18.81\tfalse\t4\t1\n42\t2\t38.88\tfalse\t2\t1\n64\t1\t33.02\tfalse\t4\t1\n34\t2\t51.86\tfalse\t2\t1\n19\t2\t45.19\tfalse\t344\t9\n23\t1\t60.71\tfalse\t269\t9\n36\t2\t38.78\tfalse\t2\t1\n26\t1\t38.92\tfalse\t2\t1\n49\t1\t11.73\tfalse\t2\t1\n54\t1\t47.16\tfalse\t2\t1\n41\t2\t40.66\tfalse\t2\t1\n44\t2\t33.62\tfalse\t2\t1\n50\t2\t6.58\tfalse\t4\t1\n29\t1\t26.27\tfalse\t4\t1\n42\t1\t44.36\tfalse\t2\t1\n54\t2\t23.72\tfalse\t2\t1\n23\t1\t59.78\tfalse\t2\t1\n67\t1\t36.68\tfalse\t2\t1\n32\t2\t29.92\tfalse\t2\t1\n23\t2\t31.64\tfalse\t2\t1\n37\t2\t20.33\tfalse\t2\t1\n59\t2\t29.03\tfalse\t2\t1\n41\t1\t2.66\tfalse\t2\t1\n50\t2\t266.59\tfalse\t95\t2\n37\t1\t20.5\tfalse\t2\t1\n31\t2\t47.86\tfalse\t2\t1\n35\t1\t37.43\tfalse\t205\t9\n34\t1\t26.79\tfalse\t2\t1\n34\t2\t88.2\tfalse\t369\t8\n52\t1\t42.58\tfalse\t2\t1\n64\t2\t18.48\tfalse\t2\t1\n38\t1\t35.89\tfalse\t4\t1\n39\t2\t46.19\tfalse\t2\t1\n58\t2\t60.05\tfalse\t2\t1\n37\t2\t29.1\tfalse\t4\t1\n29\t2\t44.51\tfalse\t2\t1\n36\t2\t12.53\tfalse\t2\t1\n31\t1\t35.23\tfalse\t84\t4\n51\t2\t3.92\tfalse\t2\t1\n28\t2\t23.03\tfalse\t2\t1\n31\t2\t28.91\tfalse\t2\t1\n51\t2\t48.62\tfalse\t2\t1\n51\t1\t24.31\tfalse\t4\t1\n40\t2\t30.78\tfalse\t2\t1\n42\t2\t14.35\tfalse\t2\t1\n28\t2\t22.14\tfalse\t2\t1\n39\t1\t28.63\tfalse\t2\t1\n53\t2\t88.54\tfalse\t2\t1\n50\t1\t18.53\tfalse\t2\t1\n48\t2\t98.35\tfalse\t2\t1\n39\t1\t16.1\tfalse\t2\t1\n53\t1\t37.95\tfalse\t2\t1\n24\t1\t25.28\tfalse\t2\t1\n53\t2\t12.27\tfalse\t2\t1\n54\t2\t55.1\tfalse\t2\t1\n24\t1\t0.61\tfalse\t2\t1\n30\t2\t4.39\tfalse\t2\t1\n30\t1\t20.93\tfalse\t2\t1\n26\t2\t49.65\tfalse\t141\t6\n60\t1\t71.0\tfalse\t402\t5\n40\t2\t42.8\tfalse\t2\t1\n61\t2\t5.35\tfalse\t2\t1\n37\t2\t32.86\tfalse\t4\t1\n37\t1\t46.0\tfalse\t4\t1\n24\t2\t31.74\tfalse\t2\t1\n60\t2\t25.88\tfalse\t2\t1\n77\t2\t6.28\tfalse\t2\t1\n62\t2\t61.75\tfalse\t222\t10\n47\t2\t52.47\tfalse\t4\t1\n29\t1\t16.91\tfalse\t2\t1\n31\t1\t2.53\tfalse\t2\t1\n26\t2\t50.36\tfalse\t2\t1\n39\t1\t8.02\tfalse\t2\t1\n53\t2\t19.46\tfalse\t4\t1\n28\t2\t15.97\tfalse\t2\t1\n30\t2\t32.55\tfalse\t2\t1\n48\t2\t35.56\tfalse\t2\t1\n43\t2\t9.17\tfalse\t4\t1\n21\t1\t10.42\tfalse\t2\t1\n38\t1\t49.3\tfalse\t222\t10\n30\t1\t29.36\tfalse\t2\t1\n64\t1\t36.9\tfalse\t2\t1\n37\t1\t26.78\tfalse\t2\t1\n57\t2\t23.05\tfalse\t2\t1\n27\t1\t31.42\tfalse\t2\t1\n44\t1\t16.17\tfalse\t4\t1\n40\t1\t15.26\tfalse\t222\t10\n19\t2\t13.96\tfalse\t2\t1\n33\t2\t17.37\tfalse\t2\t1\n58\t1\t2.04\tfalse\t2\t1\n38\t2\t6.43\tfalse\t2\t1\n41\t2\t12.85\tfalse\t4\t1\n23\t1\t10.28\tfalse\t2\t1\n41\t2\t23.67\tfalse\t2\t1\n32\t2\t11.44\tfalse\t2\t1\n20\t1\t11.76\tfalse\t2\t1\n47\t1\t23.93\tfalse\t2\t1\n29\t2\t2.1\tfalse\t4\t1\n22\t1\t9.25\tfalse\t2\t1\n44\t2\t21.04\tfalse\t2\t1\n41\t1\t12.82\tfalse\t2\t1\n24\t1\t19.05\tfalse\t84\t4\n36\t1\t10.88\tfalse\t2\t1\n36\t2\t25.22\tfalse\t2\t1\n26\t1\t13.44\tfalse\t2\t1\n42\t2\t42.69\tfalse\t2\t1\n37\t2\t55.84\tfalse\t4\t1\n33\t1\t41.79\tfalse\t2\t1\n60\t2\t69.65\tfalse\t222\t10\n28\t1\t0.3\tfalse\t2\t1\n40\t2\t12.61\tfalse\t2\t1\n31\t1\t6.18\tfalse\t4\t1\n42\t1\t27.67\tfalse\t2\t1\n44\t2\t44.8\tfalse\t2\t1\n40\t1\t27.85\tfalse\t2\t1\n38\t2\t34.31\tfalse\t2\t1\n38\t1\t176.32\ttrue\t332\t5\n43\t1\t337.41\ttrue\t332\t5\n46\t2\t15.99\tfalse\t2\t1\n26\t1\t19.39\tfalse\t2\t1\n42\t2\t28.32\tfalse\t2\t1\n57\t2\t11.03\tfalse\t2\t1\n47\t1\t4.88\tfalse\t4\t1\n49\t2\t29.93\tfalse\t2\t1\n48\t1\t54.17\tfalse\t2\t1\n50\t2\t18.54\tfalse\t2\t1\n26\t2\t24.44\tfalse\t2\t1\n43\t1\t25.85\tfalse\t2\t1\n28\t1\t8.06\tfalse\t2\t1\n27\t1\t6.35\tfalse\t2\t1\n31\t2\t47.44\tfalse\t84\t4\n47\t1\t38.32\tfalse\t2\t1\n44\t1\t13.79\tfalse\t4\t1\n19\t1\t1.51\tfalse\t2\t1\n19\t1\t44.14\tfalse\t95\t2\n56\t1\t37.67\tfalse\t2\t1\n38\t2\t25.3\tfalse\t2\t1\n26\t2\t57.26\tfalse\t2\t1\n26\t2\t54.22\tfalse\t2\t1\n40\t1\t16.42\tfalse\t2\t1\n51\t1\t16.47\tfalse\t2\t1\n41\t1\t40.31\tfalse\t335\t9\n49\t2\t57.28\tfalse\t222\t10\n31\t1\t6.01\tfalse\t4\t1\n47\t2\t6.63\tfalse\t2\t1\n31\t2\t44.27\tfalse\t2\t1\n28\t1\t2.93\tfalse\t4\t1\n42\t1\t6.92\tfalse\t84\t4\n33\t2\t106.29\tfalse\t369\t8\n44\t3\t21.25\tfalse\t4\t1\n54\t1\t33.28\tfalse\t2\t1\n27\t1\t19.21\tfalse\t222\t10\n47\t2\t15.34\tfalse\t2\t1\n63\t1\t27.81\tfalse\t2\t1\n62\t2\t57.79\tfalse\t2\t1\n52\t1\t11.34\tfalse\t2\t1\n40\t2\t54.83\tfalse\t2\t1\n39\t1\t44.77\tfalse\t84\t4\n26\t2\t29.94\tfalse\t2\t1\n32\t2\t1.6\tfalse\t84\t4\n70\t2\t17.74\tfalse\t2\t1\n32\t2\t50.91\tfalse\t2\t1\n28\t2\t31.34\tfalse\t2\t1\n37\t1\t13.09\tfalse\t2\t1\n53\t1\t13.85\tfalse\t84\t4\n32\t2\t7.11\tfalse\t2\t1\n47\t2\t54.59\tfalse\t274\t12\n26\t2\t10.09\tfalse\t2\t1\n41\t1\t41.78\tfalse\t2\t1\n31\t1\t22.11\tfalse\t2\t1\n28\t1\t7.44\tfalse\t84\t4\n21\t2\t13.16\tfalse\t2\t1\n39\t2\t66.22\tfalse\t2\t1\n43\t2\t27.57\tfalse\t2\t1\n28\t2\t22.75\tfalse\t2\t1\n32\t2\t2.55\tfalse\t2\t1\n23\t1\t48.41\tfalse\t2\t1\n43\t1\t90.3\tfalse\t402\t5\n44\t2\t37.58\tfalse\t2\t1\n48\t1\t5.18\tfalse\t2\t1\n34\t2\t18.19\tfalse\t222\t10\n44\t2\t2.74\tfalse\t2\t1\n54\t2\t32.71\tfalse\t2\t1\n27\t1\t37.73\tfalse\t2\t1\n40\t1\t16.1\tfalse\t2\t1\n20\t2\t30.86\tfalse\t2\t1\n43\t2\t2.49\tfalse\t2\t1\n60\t2\t46.01\tfalse\t4\t1\n52\t2\t16.44\tfalse\t4\t1\n33\t2\t10.99\tfalse\t2\t1\n34\t1\t1.47\tfalse\t2\t1\n47\t1\t14.89\tfalse\t2\t1\n51\t2\t25.36\tfalse\t2\t1\n29\t1\t47.45\tfalse\t2\t1\n43\t1\t9.57\tfalse\t2\t1\n37\t2\t43.42\tfalse\t2\t1\n39\t2\t38.48\tfalse\t335\t9\n36\t1\t5.18\tfalse\t2\t1\n39\t2\t23.75\tfalse\t2\t1\n40\t1\t98.44\tfalse\t141\t6\n42\t2\t39.67\tfalse\t4\t1\n37\t2\t53.78\tfalse\t2\t1\n51\t1\t87.51\tfalse\t545\t12\n57\t1\t12.03\tfalse\t2\t1\n28\t1\t23.14\tfalse\t2\t1\n26\t1\t26.04\tfalse\t2\t1\n42\t2\t30.35\tfalse\t2\t1\n34\t2\t28.69\tfalse\t2\t1\n63\t1\t14.13\tfalse\t2\t1\n38\t1\t2.07\tfalse\t2\t1\n50\t2\t26.77\tfalse\t2\t1\n62\t2\t9.7\tfalse\t4\t1\n41\t2\t34.28\tfalse\t2\t1\n58\t2\t63.22\tfalse\t84\t4\n48\t1\t26.95\tfalse\t4\t1\n29\t2\t247.76\tfalse\t160\t7\n61\t1\t57.23\tfalse\t2\t1\n41\t2\t37.29\tfalse\t2\t1\n52\t1\t33.78\tfalse\t205\t9\n64\t2\t40.93\tfalse\t2\t1\n51\t1\t39.26\tfalse\t2\t1\n51\t2\t17.19\tfalse\t2\t1\n27\t1\t16.05\tfalse\t2\t1\n50\t1\t39.06\tfalse\t4\t1\n43\t2\t34.43\tfalse\t2\t1\n31\t2\t39.74\tfalse\t4\t1\n27\t2\t37.12\tfalse\t4\t1\n29\t2\t49.05\tfalse\t2\t1\n32\t2\t47.71\tfalse\t2\t1\n56\t2\t43.65\tfalse\t2\t1\n48\t2\t9.54\tfalse\t2\t1\n41\t2\t55.17\tfalse\t2\t1\n34\t2\t105.54\tfalse\t48\t2\n46\t2\t1.74\tfalse\t2\t1\n40\t2\t4.0\tfalse\t2\t1\n47\t2\t220.11\ttrue\t335\t9\n33\t2\t4.32\ttrue\t335\t9\n58\t2\t12.43\tfalse\t2\t1\n61\t1\t9.96\tfalse\t2\t1\n36\t2\t25.62\tfalse\t4\t1\n60\t2\t21.7\tfalse\t2\t1\n39\t2\t65.69\tfalse\t141\t6\n23\t2\t60.42\tfalse\t4\t1\n42\t2\t39.78\tfalse\t2\t1\n23\t2\t29.18\tfalse\t2\t1\n17\t2\t22.82\tfalse\t2\t1\n33\t1\t3.17\tfalse\t2\t1\n32\t2\t26.57\tfalse\t4\t1\n40\t1\t17.37\tfalse\t2\t1\n47\t2\t10.2\tfalse\t2\t1\n44\t2\t37.29\tfalse\t2\t1\n22\t1\t4.14\tfalse\t2\t1\n46\t1\t23.07\tfalse\t4\t1\n46\t1\t64.01\tfalse\t2\t1\n37\t1\t22.81\tfalse\t2\t1\n42\t2\t33.33\tfalse\t2\t1\n43\t2\t14.7\tfalse\t4\t1\n26\t2\t0.88\tfalse\t2\t1\n27\t2\t8.59\tfalse\t2\t1\n57\t2\t36.18\tfalse\t2\t1\n48\t2\t6.21\tfalse\t240\t11\n24\t2\t43.33\tfalse\t2\t1\n33\t2\t12.92\tfalse\t4\t1\n52\t2\t19.45\tfalse\t2\t1\n58\t2\t20.56\tfalse\t2\t1\n32\t1\t3.84\tfalse\t2\t1\n22\t2\t1.22\tfalse\t166\t8\n28\t2\t33.94\tfalse\t2\t1\n24\t3\t28.57\tfalse\t2\t1\n26\t2\t10.75\tfalse\t2\t1\n53\t1\t0.34\tfalse\t2\t1\n40\t2\t3.8\tfalse\t2\t1\n26\t1\t31.02\tfalse\t2\t1\n28\t2\t7.56\tfalse\t4\t1\n33\t1\t20.49\tfalse\t2\t1\n48\t2\t37.84\tfalse\t4\t1\n54\t1\t15.35\tfalse\t2\t1\n61\t1\t29.82\tfalse\t2\t1\n33\t2\t65.41\tfalse\t4\t1\n41\t1\t16.47\tfalse\t2\t1\n53\t1\t69.95\tfalse\t2\t1\n43\t1\t64.03\tfalse\t2\t1\n54\t2\t54.21\tfalse\t4\t1\n56\t2\t49.89\tfalse\t4\t1\n54\t2\t16.66\tfalse\t2\t1\n51\t2\t46.45\tfalse\t629\t11\n29\t2\t278.02\ttrue\t369\t8\n62\t2\t69.53\ttrue\t369\t8\n34\t1\t2.11\tfalse\t2\t1\n76\t1\t25.74\tfalse\t2\t1\n40\t1\t9.17\tfalse\t2\t1\n47\t2\t34.73\tfalse\t2\t1\n32\t2\t5.37\tfalse\t2\t1\n31\t2\t0.14\tfalse\t2\t1\n51\t2\t15.8\tfalse\t2\t1\n39\t2\t5.11\tfalse\t2\t1\n33\t1\t42.9\tfalse\t2\t1\n24\t2\t14.29\tfalse\t2\t1\n43\t1\t25.15\tfalse\t2\t1\n43\t1\t5.47\tfalse\t2\t1\n40\t2\t6.83\tfalse\t2\t1\n27\t1\t31.16\tfalse\t4\t1\n20\t2\t13.04\tfalse\t4\t1\n51\t1\t35.85\tfalse\t160\t7\n38\t2\t11.68\tfalse\t2\t1\n59\t2\t17.19\tfalse\t141\t6\n62\t2\t15.79\tfalse\t2\t1\n21\t1\t32.62\tfalse\t2\t1\n46\t1\t11.99\tfalse\t4\t1\n36\t2\t32.96\tfalse\t2\t1\n32\t1\t21.39\tfalse\t4\t1\n24\t1\t27.16\tfalse\t2\t1\n62\t2\t30.33\tfalse\t2\t1\n30\t1\t19.66\tfalse\t2\t1\n42\t2\t7.45\tfalse\t2\t1\n19\t2\t21.23\tfalse\t2\t1\n53\t2\t13.21\tfalse\t2\t1\n59\t2\t19.36\tfalse\t4\t1\n27\t2\t39.11\tfalse\t4\t1\n19\t1\t7.67\tfalse\t2\t1\n33\t2\t6.17\tfalse\t4\t1\n31\t2\t38.69\tfalse\t2\t1\n39\t1\t58.61\tfalse\t2\t1\n34\t2\t0.79\tfalse\t4\t1\n24\t2\t28.97\tfalse\t2\t1\n46\t2\t33.3\tfalse\t2\t1\n34\t1\t0.18\tfalse\t4\t1\n38\t2\t45.0\tfalse\t84\t4\n41\t1\t73.77\tfalse\t2\t1\n32\t1\t23.79\tfalse\t4\t1\n34\t2\t44.47\tfalse\t2\t1\n64\t2\t3.26\tfalse\t2\t1\n34\t2\t33.18\tfalse\t2\t1\n40\t1\t10.64\tfalse\t678\t8\n42\t2\t248.42\tfalse\t95\t2\n29\t2\t17.73\tfalse\t2\t1\n36\t2\t20.18\tfalse\t2\t1\n29\t2\t27.57\tfalse\t2\t1\n45\t2\t4.46\tfalse\t2\t1\n30\t2\t3.69\tfalse\t2\t1\n28\t2\t54.02\tfalse\t4\t1\n39\t2\t24.35\tfalse\t2\t1\n23\t2\t5.28\tfalse\t2\t1\n46\t2\t33.27\tfalse\t2\t1\n39\t1\t63.23\tfalse\t2\t1\n58\t2\t2.56\tfalse\t2\t1\n29\t2\t44.88\tfalse\t2\t1\n29\t2\t7.23\tfalse\t4\t1\n38\t2\t32.63\tfalse\t2\t1\n43\t1\t11.42\tfalse\t4\t1\n43\t1\t51.96\tfalse\t84\t4\n29\t2\t11.69\tfalse\t2\t1\n29\t2\t237.48\tfalse\t107\t2\n62\t1\t37.16\tfalse\t2\t1\n59\t1\t1.96\tfalse\t2\t1\n29\t1\t12.83\tfalse\t2\t1\n27\t2\t38.2\tfalse\t4\t1\n47\t1\t20.92\tfalse\t2\t1\n20\t1\t37.59\tfalse\t2\t1\n34\t1\t13.43\tfalse\t2\t1\n39\t2\t38.89\tfalse\t4\t1\n22\t1\t26.68\tfalse\t2\t1\n42\t2\t18.4\tfalse\t2\t1\n56\t2\t21.56\tfalse\t369\t8\n57\t1\t58.18\tfalse\t141\t6\n29\t1\t31.59\tfalse\t84\t4\n28\t2\t40.67\tfalse\t4\t1\n38\t1\t11.88\tfalse\t713\t8\n27\t1\t39.46\tfalse\t2\t1\n33\t2\t73.59\tfalse\t2\t1\n26\t2\t11.5\tfalse\t2\t1\n58\t2\t2.03\tfalse\t2\t1\n23\t1\t1.89\tfalse\t402\t5\n36\t1\t30.88\tfalse\t4\t1\n21\t2\t19.86\tfalse\t222\t10\n19\t1\t30.07\tfalse\t2\t1\n26\t2\t36.11\tfalse\t2\t1\n33\t1\t25.73\tfalse\t2\t1\n29\t1\t52.75\tfalse\t4\t1\n54\t2\t30.15\tfalse\t2\t1\n40\t2\t35.74\tfalse\t84\t4\n39\t1\t12.14\tfalse\t2\t1\n56\t1\t54.3\tfalse\t2\t1\n23\t2\t46.22\tfalse\t2\t1\n24\t2\t47.02\tfalse\t2\t1\n42\t1\t25.86\tfalse\t4\t1\n54\t2\t140.48\tfalse\t205\t9\n32\t2\t19.18\tfalse\t2\t1\n27\t1\t0.23\tfalse\t222\t10\n30\t2\t18.47\tfalse\t2\t1\n34\t2\t56.78\tfalse\t2\t1\n39\t1\t23.73\tfalse\t2\t1\n34\t1\t38.51\tfalse\t2\t1\n61\t2\t54.33\tfalse\t222\t10\n49\t2\t16.07\tfalse\t2\t1\n51\t1\t23.59\tfalse\t4\t1\n30\t1\t10.13\tfalse\t2\t1\n46\t2\t39.28\tfalse\t2\t1\n37\t1\t33.96\tfalse\t745\t9\n36\t1\t36.52\tfalse\t4\t1\n49\t2\t36.92\tfalse\t2\t1\n51\t2\t2.99\tfalse\t2\t1\n51\t2\t8.48\tfalse\t2\t1\n23\t1\t28.44\tfalse\t2\t1\n42\t1\t31.44\tfalse\t4\t1\n19\t1\t0.78\tfalse\t2\t1\n29\t1\t39.42\tfalse\t2\t1\n32\t2\t10.43\tfalse\t141\t6\n41\t1\t61.08\tfalse\t222\t10\n38\t2\t113.52\tfalse\t48\t2\n59\t2\t61.32\tfalse\t141\t6\n46\t2\t34.95\tfalse\t2\t1\n34\t2\t34.07\tfalse\t2\t1\n18\t1\t18.07\tfalse\t2\t1\n47\t1\t5.15\tfalse\t2\t1\n60\t2\t40.48\tfalse\t2\t1\n43\t1\t27.42\tfalse\t2\t1\n33\t1\t16.91\tfalse\t2\t1\n54\t2\t33.84\tfalse\t2\t1\n32\t1\t44.32\tfalse\t84\t4\n31\t2\t27.65\tfalse\t2\t1\n42\t1\t33.26\tfalse\t2\t1\n24\t2\t14.41\tfalse\t2\t1\n53\t1\t17.87\tfalse\t2\t1\n64\t2\t73.55\tfalse\t2\t1\n39\t2\t69.89\tfalse\t4\t1\n33\t1\t56.13\tfalse\t2\t1\n64\t2\t48.51\tfalse\t2\t1\n20\t2\t31.19\tfalse\t4\t1\n58\t1\t24.49\tfalse\t2\t1\n26\t1\t17.74\tfalse\t2\t1\n34\t2\t47.72\tfalse\t205\t9\n43\t1\t13.0\tfalse\t2\t1\n58\t1\t26.77\tfalse\t2\t1\n53\t2\t24.47\tfalse\t84\t4\n26\t1\t60.06\tfalse\t4\t1\n62\t2\t42.83\tfalse\t2\t1\n53\t2\t104.03\tfalse\t335\t9\n27\t2\t67.52\tfalse\t205\t9\n38\t2\t22.31\tfalse\t2\t1\n49\t2\t31.61\tfalse\t2\t1\n20\t1\t9.68\tfalse\t2\t1\n50\t1\t2.65\tfalse\t4\t1\n39\t2\t40.13\tfalse\t4\t1\n28\t2\t23.71\tfalse\t4\t1\n32\t1\t3.76\tfalse\t2\t1\n33\t2\t10.82\tfalse\t2\t1\n24\t1\t30.37\tfalse\t2\t1\n31\t2\t195.44\tfalse\t107\t2\n62\t1\t47.11\tfalse\t2\t1\n54\t2\t9.85\tfalse\t2\t1\n34\t1\t0.82\tfalse\t2\t1\n32\t2\t9.09\tfalse\t4\t1\n57\t1\t43.16\tfalse\t2\t1\n29\t1\t13.02\tfalse\t2\t1\n34\t2\t70.9\tfalse\t2\t1\n22\t1\t24.57\tfalse\t2\t1\n38\t2\t20.77\tfalse\t2\t1\n43\t1\t64.29\tfalse\t2\t1\n30\t2\t31.94\tfalse\t4\t1\n24\t2\t12.83\tfalse\t2\t1\n32\t1\t11.51\tfalse\t2\t1\n33\t1\t20.83\tfalse\t2\t1\n42\t1\t1.23\tfalse\t2\t1\n52\t2\t21.42\tfalse\t84\t4\n38\t2\t37.16\tfalse\t4\t1\n50\t2\t26.11\tfalse\t2\t1\n51\t1\t30.82\tfalse\t2\t1\n39\t2\t0.83\tfalse\t2\t1\n67\t1\t24.95\tfalse\t2\t1\n41\t2\t26.15\tfalse\t2\t1\n43\t2\t4.12\tfalse\t2\t1\n33\t1\t23.74\tfalse\t2\t1\n24\t1\t64.29\tfalse\t2\t1\n33\t2\t0.55\tfalse\t2\t1\n19\t2\t46.43\tfalse\t2\t1\n29\t2\t16.94\tfalse\t4\t1\n53\t2\t31.75\tfalse\t2\t1\n48\t1\t40.57\tfalse\t4\t1\n54\t2\t33.28\tfalse\t2\t1\n19\t1\t9.65\tfalse\t2\t1\n64\t1\t71.06\tfalse\t2\t1\n66\t2\t8.19\tfalse\t2\t1\n54\t2\t70.15\ttrue\t166\t8\n41\t2\t238.82\ttrue\t166\t8\n42\t1\t142.49\tfalse\t48\t2\n36\t2\t128.99\tfalse\t48\t2\n54\t2\t6.76\tfalse\t2\t1\n53\t2\t9.23\tfalse\t2\t1\n31\t1\t56.91\tfalse\t222\t10\n30\t1\t13.68\tfalse\t2\t1\n44\t2\t28.33\tfalse\t2\t1\n40\t1\t20.74\tfalse\t141\t6\n34\t1\t35.95\tfalse\t2\t1\n51\t1\t34.69\tfalse\t222\t10\n60\t1\t22.03\tfalse\t2\t1\n49\t2\t59.51\tfalse\t16\t2\n32\t2\t21.03\tfalse\t205\t9\n31\t1\t72.45\tfalse\t2\t1\n34\t2\t69.21\tfalse\t141\t6\n19\t2\t63.95\tfalse\t4\t1\n43\t1\t22.84\tfalse\t2\t1\n50\t2\t26.87\tfalse\t4\t1\n34\t1\t34.69\tfalse\t2\t1\n44\t1\t17.08\tfalse\t2\t1\n49\t1\t38.74\tfalse\t4\t1\n47\t2\t59.78\tfalse\t2\t1\n43\t2\t17.86\tfalse\t2\t1\n32\t1\t34.84\tfalse\t2\t1\n36\t2\t28.72\tfalse\t2\t1\n42\t3\t33.12\tfalse\t4\t1\n46\t2\t42.82\tfalse\t2\t1\n31\t2\t28.41\tfalse\t2\t1\n63\t2\t47.07\tfalse\t2\t1\n53\t2\t71.53\tfalse\t2\t1\n54\t2\t16.76\tfalse\t2\t1\n63\t1\t24.16\tfalse\t2\t1\n44\t2\t10.84\tfalse\t2\t1\n46\t2\t17.49\tfalse\t2\t1\n37\t2\t38.36\tfalse\t4\t1\n49\t2\t38.73\tfalse\t2\t1\n46\t2\t55.82\tfalse\t95\t2\n24\t2\t22.46\tfalse\t2\t1\n28\t2\t36.46\tfalse\t2\t1\n51\t2\t0.85\tfalse\t4\t1\n32\t1\t35.8\tfalse\t2\t1\n53\t1\t7.09\tfalse\t2\t1\n44\t2\t22.12\tfalse\t2\t1\n37\t1\t26.92\tfalse\t4\t1\n28\t2\t21.89\tfalse\t4\t1\n29\t1\t13.72\tfalse\t2\t1\n23\t2\t71.85\tfalse\t84\t4\n34\t2\t11.22\tfalse\t2\t1\n62\t1\t18.72\tfalse\t2\t1\n34\t2\t53.57\tfalse\t2\t1\n36\t1\t667.09\ttrue\t95\t2\n24\t2\t520.5\ttrue\t95\t2\n27\t2\t7.1\tfalse\t2\t1\n40\t2\t80.35\tfalse\t2\t1\n20\t2\t46.1\tfalse\t886\t9\n26\t2\t59.67\tfalse\t4\t1\n26\t1\t8.65\tfalse\t2\t1\n42\t2\t8.83\tfalse\t2\t1\n27\t1\t65.26\tfalse\t2\t1\n51\t2\t43.59\tfalse\t2\t1\n41\t2\t10.61\tfalse\t2\t1\n33\t1\t45.1\tfalse\t2\t1\n54\t1\t16.84\tfalse\t369\t8\n28\t2\t46.94\tfalse\t2\t1\n28\t2\t38.25\tfalse\t2\t1\n54\t1\t34.66\tfalse\t2\t1\n44\t2\t7.26\tfalse\t2\t1\n41\t2\t24.61\tfalse\t2\t1\n52\t2\t40.91\tfalse\t2\t1\n44\t1\t23.08\tfalse\t2\t1\n63\t2\t12.53\tfalse\t4\t1\n39\t1\t37.86\tfalse\t2\t1\n59\t2\t19.0\tfalse\t4\t1\n27\t2\t25.7\tfalse\t4\t1\n59\t2\t52.39\tfalse\t141\t6\n76\t1\t102.34\tfalse\t4\t1\n21\t1\t4.54\tfalse\t2\t1\n50\t2\t11.17\tfalse\t4\t1\n29\t2\t1.42\tfalse\t2\t1\n47\t2\t28.02\tfalse\t2\t1\n41\t1\t7.57\tfalse\t2\t1\n43\t1\t19.88\tfalse\t2\t1\n28\t2\t9.73\tfalse\t2\t1\n29\t2\t22.93\tfalse\t205\t9\n31\t1\t75.21\tfalse\t629\t11\n27\t1\t6.15\tfalse\t2\t1\n30\t2\t27.86\tfalse\t2\t1\n28\t1\t20.72\tfalse\t222\t10\n43\t1\t10.31\tfalse\t84\t4\n23\t1\t25.04\tfalse\t4\t1\n37\t2\t22.22\tfalse\t4\t1\n42\t1\t49.02\tfalse\t2\t1\n42\t1\t4.22\tfalse\t2\t1\n32\t1\t16.06\tfalse\t2\t1\n54\t2\t13.95\tfalse\t2\t1\n61\t2\t15.57\tfalse\t2\t1\n39\t1\t24.8\tfalse\t929\t12\n28\t2\t33.41\tfalse\t2\t1\n33\t1\t24.97\tfalse\t2\t1\n27\t2\t32.78\tfalse\t2\t1\n34\t2\t8.81\tfalse\t269\t9\n36\t1\t58.88\tfalse\t2\t1\n38\t2\t20.89\tfalse\t2\t1\n22\t1\t25.03\tfalse\t2\t1\n64\t1\t10.73\tfalse\t4\t1\n57\t2\t24.7\tfalse\t4\t1\n32\t2\t21.69\tfalse\t2\t1\n39\t1\t5.6\tfalse\t2\t1\n41\t1\t54.36\tfalse\t4\t1\n19\t2\t21.94\tfalse\t160\t7\n61\t2\t55.14\tfalse\t2\t1\n47\t2\t53.77\tfalse\t2\t1\n37\t2\t4.98\tfalse\t2\t1\n29\t1\t39.34\tfalse\t2\t1\n53\t2\t87.08\tfalse\t84\t4\n43\t1\t28.39\tfalse\t4\t1\n54\t2\t85.88\tfalse\t84\t4\n31\t2\t190.53\ttrue\t205\t9\n31\t2\t451.92\ttrue\t205\t9\n30\t1\t25.23\tfalse\t2\t1\n38\t1\t33.16\tfalse\t2\t1\n29\t2\t38.71\tfalse\t2\t1\n28\t2\t17.18\tfalse\t2\t1\n32\t1\t34.69\tfalse\t2\t1\n47\t1\t53.92\tfalse\t4\t1\n62\t2\t52.11\tfalse\t2\t1\n31\t2\t29.17\tfalse\t4\t1\n50\t2\t29.01\tfalse\t2\t1\n24\t2\t4.29\tfalse\t2\t1\n53\t1\t35.13\tfalse\t2\t1\n38\t1\t17.79\tfalse\t222\t10\n33\t2\t16.6\tfalse\t2\t1\n33\t1\t50.19\tfalse\t4\t1\n31\t2\t21.45\tfalse\t2\t1\n57\t1\t31.49\tfalse\t2\t1\n54\t2\t17.81\tfalse\t2\t1\n43\t1\t109.8\tfalse\t745\t9\n32\t1\t130.55\tfalse\t929\t12\n22\t2\t45.94\tfalse\t2\t1\n40\t2\t18.79\tfalse\t2\t1\n34\t1\t42.78\tfalse\t2\t1\n62\t1\t39.2\tfalse\t2\t1\n63\t1\t45.95\tfalse\t2\t1\n34\t2\t25.72\tfalse\t2\t1\n28\t1\t42.4\tfalse\t2\t1\n40\t2\t28.42\tfalse\t2\t1\n44\t2\t11.48\tfalse\t2\t1\n41\t1\t70.93\tfalse\t205\t9\n24\t2\t23.93\tfalse\t2\t1\n30\t2\t12.96\tfalse\t2\t1\n24\t2\t17.68\tfalse\t4\t1\n58\t1\t44.68\tfalse\t2\t1\n48\t2\t32.77\tfalse\t2\t1\n34\t2\t15.87\tfalse\t2\t1\n63\t2\t48.61\tfalse\t2\t1\n22\t2\t26.27\tfalse\t2\t1\n53\t2\t17.32\tfalse\t4\t1\n31\t2\t62.0\tfalse\t205\t9\n37\t1\t142.75\tfalse\t205\t9\n50\t2\t13.42\tfalse\t2\t1\n39\t1\t34.01\tfalse\t2\t1\n36\t2\t16.12\tfalse\t2\t1\n22\t2\t5.48\tfalse\t2\t1\n54\t2\t42.0\tfalse\t84\t4\n40\t2\t45.9\tfalse\t4\t1\n36\t2\t63.81\tfalse\t335\t9\n64\t1\t1.91\tfalse\t4\t1\n38\t2\t49.03\tfalse\t2\t1\n21\t1\t20.27\tfalse\t2\t1\n30\t2\t31.57\tfalse\t2\t1\n19\t1\t44.1\tfalse\t222\t10\n52\t1\t54.8\tfalse\t2\t1\n24\t2\t14.34\tfalse\t2\t1\n24\t2\t0.64\tfalse\t2\t1\n64\t2\t93.13\tfalse\t141\t6\n44\t1\t46.5\tfalse\t222\t10\n57\t2\t39.41\tfalse\t2\t1\n26\t1\t153.11\tfalse\t1010\t5\n43\t2\t105.99\tfalse\t205\t9\n22\t2\t5.64\tfalse\t2\t1\n39\t1\t20.57\tfalse\t2\t1\n61\t2\t30.0\tfalse\t2\t1\n34\t2\t5.67\tfalse\t2\t1\n29\t1\t0.91\tfalse\t4\t1\n23\t2\t28.32\tfalse\t2\t1\n41\t2\t50.88\tfalse\t95\t2\n31\t2\t13.6\tfalse\t2\t1\n49\t2\t6.22\tfalse\t4\t1\n36\t2\t11.09\tfalse\t4\t1\n34\t1\t7.88\tfalse\t4\t1\n46\t1\t46.82\tfalse\t4\t1\n33\t2\t15.6\tfalse\t2\t1\n26\t2\t33.32\tfalse\t2\t1\n60\t2\t43.23\tfalse\t2\t1\n27\t1\t24.44\tfalse\t2\t1\n38\t2\t74.25\tfalse\t48\t2\n33\t2\t30.92\tfalse\t2\t1\n\u003c!--TABLE_COMMENT--\u003e\n\u003cfont color\u003dred\u003eResults are limited by 1000.\u003c/font\u003e"
+            "data": "age\tgender\tamount\tfraud\tmerchant\tcategory\n50\t1\t4.55\tfalse\t2\t1\n30\t1\t39.68\tfalse\t2\t1\n52\t2\t26.89\tfalse\t4\t1\n41\t1\t17.25\tfalse\t2\t1\n58\t1\t35.72\tfalse\t2\t1\n41\t2\t25.81\tfalse\t2\t1\n22\t2\t9.1\tfalse\t2\t1\n47\t2\t21.17\tfalse\t2\t1\n36\t1\t32.4\tfalse\t2\t1\n57\t2\t35.4\tfalse\t2\t1\n54\t2\t14.95\tfalse\t2\t1\n20\t1\t1.51\tfalse\t4\t1\n38\t1\t68.79\tfalse\t16\t2\n64\t1\t20.32\tfalse\t4\t1\n43\t1\t13.56\tfalse\t2\t1\n42\t2\t30.19\tfalse\t2\t1\n52\t1\t17.54\tfalse\t4\t1\n63\t2\t40.69\tfalse\t2\t1\n30\t1\t21.21\tfalse\t2\t1\n34\t2\t10.09\tfalse\t2\t1\n29\t2\t19.31\tfalse\t2\t1\n28\t1\t44.22\tfalse\t2\t1\n57\t2\t44.39\tfalse\t2\t1\n56\t2\t30.72\tfalse\t2\t1\n30\t1\t29.84\tfalse\t2\t1\n44\t1\t12.1\tfalse\t2\t1\n48\t1\t24.84\tfalse\t2\t1\n29\t1\t16.42\tfalse\t2\t1\n59\t1\t2.19\tfalse\t2\t1\n59\t2\t32.27\tfalse\t2\t1\n52\t1\t28.09\tfalse\t2\t1\n59\t1\t16.13\tfalse\t4\t1\n30\t2\t32.7\tfalse\t2\t1\n30\t2\t25.53\tfalse\t2\t1\n48\t2\t39.22\tfalse\t2\t1\n58\t2\t46.14\tfalse\t2\t1\n28\t1\t29.55\tfalse\t2\t1\n33\t2\t36.88\tfalse\t4\t1\n34\t2\t36.15\tfalse\t2\t1\n64\t2\t2.81\tfalse\t2\t1\n31\t1\t87.67\tfalse\t45\t3\n31\t2\t11.17\tfalse\t4\t1\n53\t2\t105.59\tfalse\t48\t2\n44\t1\t15.25\tfalse\t2\t1\n26\t1\t33.36\tfalse\t2\t1\n50\t2\t32.96\tfalse\t2\t1\n32\t2\t16.96\tfalse\t2\t1\n43\t2\t49.91\tfalse\t4\t1\n30\t1\t0.93\tfalse\t2\t1\n27\t1\t37.71\tfalse\t2\t1\n33\t2\t12.53\tfalse\t4\t1\n27\t2\t56.97\tfalse\t2\t1\n32\t1\t31.32\tfalse\t2\t1\n60\t2\t21.15\tfalse\t2\t1\n21\t2\t3.12\tfalse\t2\t1\n37\t2\t33.41\tfalse\t2\t1\n55\t2\t45.92\tfalse\t4\t1\n39\t1\t36.82\tfalse\t2\t1\n36\t2\t20.05\tfalse\t4\t1\n28\t1\t43.75\tfalse\t2\t1\n51\t1\t44.88\tfalse\t2\t1\n23\t2\t18.45\tfalse\t2\t1\n28\t2\t29.66\tfalse\t2\t1\n30\t1\t28.38\tfalse\t2\t1\n59\t2\t62.76\tfalse\t2\t1\n54\t1\t21.6\tfalse\t2\t1\n34\t2\t30.74\tfalse\t2\t1\n56\t2\t58.33\tfalse\t2\t1\n48\t1\t44.07\tfalse\t2\t1\n61\t2\t6.52\tfalse\t2\t1\n50\t1\t2.96\tfalse\t4\t1\n28\t2\t44.69\tfalse\t2\t1\n26\t2\t5.01\tfalse\t4\t1\n33\t1\t9.74\tfalse\t2\t1\n34\t1\t10.1\tfalse\t2\t1\n53\t2\t58.64\tfalse\t2\t1\n31\t2\t29.2\tfalse\t2\t1\n28\t2\t32.6\tfalse\t84\t4\n26\t1\t52.35\tfalse\t2\t1\n33\t1\t159.92\tfalse\t48\t2\n38\t1\t26.37\tfalse\t2\t1\n34\t1\t49.07\tfalse\t2\t1\n33\t2\t35.74\tfalse\t2\t1\n64\t2\t47.53\tfalse\t4\t1\n62\t1\t29.87\tfalse\t2\t1\n26\t1\t20.31\tfalse\t2\t1\n37\t2\t10.59\tfalse\t2\t1\n26\t2\t21.92\tfalse\t2\t1\n41\t1\t44.26\ttrue\t95\t2\n39\t1\t324.5\ttrue\t95\t2\n22\t1\t26.07\tfalse\t4\t1\n28\t2\t10.88\tfalse\t2\t1\n47\t1\t8.05\tfalse\t2\t1\n37\t2\t25.59\tfalse\t2\t1\n61\t2\t15.26\tfalse\t2\t1\n37\t1\t20.73\tfalse\t2\t1\n19\t2\t68.17\tfalse\t2\t1\n41\t2\t34.75\tfalse\t2\t1\n32\t2\t171.07\tfalse\t107\t2\n24\t2\t50.31\tfalse\t2\t1\n43\t1\t17.87\tfalse\t2\t1\n33\t2\t5.96\tfalse\t2\t1\n40\t2\t13.08\tfalse\t4\t1\n69\t2\t51.99\tfalse\t2\t1\n34\t2\t9.54\tfalse\t2\t1\n34\t1\t61.33\tfalse\t4\t1\n38\t1\t47.72\tfalse\t2\t1\n39\t1\t1.72\tfalse\t2\t1\n72\t1\t8.14\tfalse\t2\t1\n43\t1\t43.76\tfalse\t2\t1\n30\t1\t52.36\tfalse\t2\t1\n57\t1\t14.2\tfalse\t4\t1\n58\t2\t2.06\tfalse\t4\t1\n47\t1\t45.32\tfalse\t2\t1\n42\t1\t10.38\tfalse\t2\t1\n42\t2\t2.46\tfalse\t2\t1\n31\t2\t40.15\tfalse\t2\t1\n52\t1\t4.96\tfalse\t2\t1\n29\t1\t43.55\tfalse\t2\t1\n41\t1\t8.56\tfalse\t2\t1\n57\t2\t28.06\tfalse\t2\t1\n58\t1\t7.89\tfalse\t2\t1\n60\t2\t44.59\tfalse\t2\t1\n50\t1\t10.84\tfalse\t2\t1\n36\t2\t13.35\tfalse\t2\t1\n31\t2\t10.49\tfalse\t2\t1\n63\t2\t6.19\tfalse\t2\t1\n21\t2\t114.54\tfalse\t137\t5\n21\t1\t23.97\tfalse\t2\t1\n19\t2\t7.75\tfalse\t2\t1\n26\t1\t36.41\tfalse\t141\t6\n46\t2\t11.83\tfalse\t48\t2\n40\t1\t4.23\tfalse\t4\t1\n33\t1\t11.23\tfalse\t2\t1\n46\t1\t20.55\tfalse\t2\t1\n26\t2\t43.78\tfalse\t2\t1\n47\t2\t10.96\tfalse\t2\t1\n40\t1\t33.27\tfalse\t2\t1\n62\t1\t109.26\tfalse\t107\t2\n57\t2\t38.38\tfalse\t2\t1\n26\t2\t1.01\tfalse\t2\t1\n41\t1\t31.73\tfalse\t2\t1\n33\t1\t13.33\tfalse\t2\t1\n27\t1\t68.39\tfalse\t2\t1\n30\t1\t2.46\tfalse\t2\t1\n38\t1\t33.71\tfalse\t4\t1\n43\t2\t39.96\tfalse\t2\t1\n23\t1\t17.56\tfalse\t2\t1\n62\t2\t163.56\tfalse\t160\t7\n36\t2\t23.24\tfalse\t2\t1\n42\t2\t26.46\tfalse\t2\t1\n39\t2\t13.56\tfalse\t2\t1\n33\t1\t25.53\tfalse\t2\t1\n22\t2\t11.83\tfalse\t166\t8\n24\t1\t24.15\tfalse\t2\t1\n29\t2\t2.63\tfalse\t2\t1\n26\t1\t31.2\tfalse\t2\t1\n32\t2\t4.15\tfalse\t2\t1\n26\t1\t29.95\tfalse\t2\t1\n40\t2\t58.95\tfalse\t2\t1\n19\t1\t7.94\tfalse\t48\t2\n28\t2\t37.8\tfalse\t2\t1\n36\t2\t55.19\tfalse\t2\t1\n57\t1\t32.95\tfalse\t2\t1\n46\t1\t50.9\tfalse\t4\t1\n36\t1\t15.69\tfalse\t2\t1\n48\t2\t14.36\tfalse\t2\t1\n29\t1\t50.57\tfalse\t4\t1\n39\t1\t37.73\tfalse\t2\t1\n31\t1\t30.98\tfalse\t2\t1\n31\t2\t10.37\tfalse\t2\t1\n41\t2\t64.69\tfalse\t2\t1\n39\t1\t44.5\tfalse\t4\t1\n23\t1\t5.5\tfalse\t2\t1\n42\t1\t30.86\tfalse\t2\t1\n30\t1\t61.83\tfalse\t2\t1\n40\t1\t55.55\tfalse\t2\t1\n49\t1\t73.36\tfalse\t2\t1\n28\t2\t47.14\tfalse\t2\t1\n31\t1\t14.55\tfalse\t2\t1\n46\t1\t44.22\tfalse\t2\t1\n39\t2\t38.2\tfalse\t2\t1\n31\t2\t12.55\tfalse\t2\t1\n38\t2\t0.1\tfalse\t2\t1\n38\t2\t36.55\tfalse\t84\t4\n42\t2\t15.04\tfalse\t2\t1\n58\t1\t54.45\tfalse\t4\t1\n59\t1\t66.57\tfalse\t2\t1\n47\t2\t56.93\tfalse\t2\t1\n50\t2\t3.5\tfalse\t2\t1\n51\t2\t11.78\tfalse\t2\t1\n40\t1\t52.38\tfalse\t205\t9\n36\t2\t31.98\tfalse\t2\t1\n41\t1\t27.98\tfalse\t2\t1\n30\t2\t187.62\tfalse\t107\t2\n37\t1\t19.23\tfalse\t4\t1\n61\t1\t47.82\tfalse\t4\t1\n58\t1\t28.6\tfalse\t2\t1\n21\t2\t7.06\tfalse\t2\t1\n49\t1\t49.59\tfalse\t84\t4\n36\t1\t12.16\tfalse\t4\t1\n21\t2\t20.96\tfalse\t2\t1\n22\t2\t36.9\tfalse\t84\t4\n33\t1\t11.06\tfalse\t2\t1\n43\t1\t9.59\tfalse\t4\t1\n49\t1\t41.33\tfalse\t2\t1\n22\t2\t25.23\tfalse\t2\t1\n36\t1\t2.09\tfalse\t222\t10\n20\t2\t3.62\tfalse\t2\t1\n29\t2\t24.29\tfalse\t2\t1\n24\t1\t22.84\tfalse\t4\t1\n42\t2\t40.69\tfalse\t84\t4\n50\t1\t5.31\tfalse\t2\t1\n49\t1\t41.67\tfalse\t2\t1\n51\t1\t30.57\tfalse\t2\t1\n19\t1\t8.71\tfalse\t4\t1\n23\t2\t3.03\tfalse\t2\t1\n21\t2\t13.72\tfalse\t2\t1\n34\t1\t22.65\tfalse\t222\t10\n22\t2\t19.73\tfalse\t2\t1\n50\t2\t33.12\tfalse\t2\t1\n28\t1\t6.09\tfalse\t2\t1\n57\t2\t37.25\tfalse\t2\t1\n32\t1\t19.97\tfalse\t2\t1\n29\t2\t15.31\tfalse\t240\t11\n48\t2\t19.19\tfalse\t2\t1\n40\t2\t48.26\tfalse\t2\t1\n39\t2\t79.71\tfalse\t240\t11\n39\t1\t16.47\tfalse\t2\t1\n38\t2\t54.54\tfalse\t2\t1\n42\t2\t44.5\tfalse\t2\t1\n26\t1\t35.39\tfalse\t2\t1\n53\t2\t22.42\tfalse\t84\t4\n44\t2\t67.88\tfalse\t2\t1\n26\t2\t4.02\tfalse\t2\t1\n39\t2\t11.95\tfalse\t4\t1\n31\t2\t16.6\tfalse\t2\t1\n27\t2\t61.9\tfalse\t2\t1\n28\t1\t48.24\tfalse\t2\t1\n34\t2\t41.98\tfalse\t2\t1\n47\t1\t5.67\tfalse\t2\t1\n30\t2\t17.37\tfalse\t4\t1\n53\t2\t14.87\tfalse\t4\t1\n28\t1\t46.88\tfalse\t84\t4\n54\t1\t2.81\tfalse\t2\t1\n37\t1\t18.25\tfalse\t2\t1\n18\t1\t8.6\tfalse\t2\t1\n41\t2\t20.37\tfalse\t2\t1\n28\t2\t25.95\tfalse\t2\t1\n37\t2\t62.76\tfalse\t2\t1\n51\t2\t17.36\tfalse\t2\t1\n26\t1\t71.65\tfalse\t4\t1\n29\t2\t6.34\tfalse\t2\t1\n50\t1\t86.09\tfalse\t269\t9\n29\t2\t28.82\tfalse\t2\t1\n50\t1\t19.55\tfalse\t2\t1\n34\t1\t98.19\tfalse\t274\t12\n59\t1\t10.41\tfalse\t2\t1\n34\t1\t30.92\tfalse\t84\t4\n51\t2\t22.68\tfalse\t2\t1\n34\t1\t50.9\tfalse\t2\t1\n37\t1\t49.54\tfalse\t4\t1\n37\t2\t38.58\tfalse\t4\t1\n44\t2\t1.95\tfalse\t2\t1\n33\t2\t16.4\tfalse\t4\t1\n34\t1\t4.19\tfalse\t2\t1\n28\t2\t62.11\tfalse\t4\t1\n28\t2\t15.84\tfalse\t2\t1\n36\t1\t31.45\tfalse\t2\t1\n20\t1\t26.7\tfalse\t2\t1\n39\t1\t51.36\tfalse\t2\t1\n41\t2\t21.61\tfalse\t2\t1\n53\t1\t17.76\tfalse\t2\t1\n38\t1\t23.56\tfalse\t141\t6\n27\t2\t15.87\tfalse\t2\t1\n43\t2\t1.21\tfalse\t4\t1\n48\t1\t46.29\tfalse\t2\t1\n47\t2\t21.5\tfalse\t2\t1\n20\t1\t31.51\tfalse\t4\t1\n27\t2\t44.31\tfalse\t2\t1\n51\t1\t38.26\tfalse\t2\t1\n34\t2\t15.49\tfalse\t4\t1\n38\t1\t71.76\tfalse\t300\t5\n27\t1\t194.59\tfalse\t302\t5\n46\t2\t44.57\tfalse\t2\t1\n53\t2\t21.21\tfalse\t2\t1\n38\t1\t24.87\tfalse\t2\t1\n19\t2\t19.38\tfalse\t2\t1\n32\t2\t55.7\tfalse\t2\t1\n19\t2\t16.78\tfalse\t2\t1\n46\t1\t31.9\tfalse\t2\t1\n28\t2\t31.59\tfalse\t4\t1\n32\t1\t8.66\tfalse\t2\t1\n27\t1\t6.21\tfalse\t2\t1\n27\t1\t57.17\tfalse\t2\t1\n48\t1\t24.57\tfalse\t4\t1\n53\t1\t4.2\tfalse\t2\t1\n26\t2\t26.52\tfalse\t2\t1\n62\t1\t31.93\tfalse\t2\t1\n19\t2\t55.3\tfalse\t205\t9\n62\t1\t31.14\tfalse\t2\t1\n22\t1\t14.36\tfalse\t4\t1\n43\t2\t26.93\tfalse\t4\t1\n37\t2\t19.42\tfalse\t2\t1\n31\t2\t36.62\tfalse\t2\t1\n28\t2\t1.18\tfalse\t2\t1\n52\t2\t11.41\tfalse\t2\t1\n27\t2\t16.1\tfalse\t2\t1\n32\t2\t35.61\tfalse\t4\t1\n30\t2\t27.32\tfalse\t2\t1\n46\t1\t3.3\tfalse\t2\t1\n27\t1\t28.13\tfalse\t2\t1\n63\t1\t49.0\tfalse\t332\t5\n38\t1\t79.35\tfalse\t2\t1\n29\t2\t122.26\tfalse\t335\t9\n56\t2\t17.51\tfalse\t2\t1\n56\t1\t15.72\tfalse\t2\t1\n32\t2\t61.93\tfalse\t2\t1\n32\t1\t18.81\tfalse\t4\t1\n43\t2\t38.88\tfalse\t2\t1\n64\t1\t33.02\tfalse\t4\t1\n32\t2\t51.86\tfalse\t2\t1\n22\t2\t45.19\tfalse\t344\t9\n23\t1\t60.71\tfalse\t269\t9\n44\t2\t38.78\tfalse\t2\t1\n28\t1\t38.92\tfalse\t2\t1\n48\t1\t11.73\tfalse\t2\t1\n50\t1\t47.16\tfalse\t2\t1\n38\t2\t40.66\tfalse\t2\t1\n42\t2\t33.62\tfalse\t2\t1\n52\t2\t6.58\tfalse\t4\t1\n27\t1\t26.27\tfalse\t4\t1\n36\t1\t44.36\tfalse\t2\t1\n54\t2\t23.72\tfalse\t2\t1\n23\t1\t59.78\tfalse\t2\t1\n69\t1\t36.68\tfalse\t2\t1\n30\t2\t29.92\tfalse\t2\t1\n23\t2\t31.64\tfalse\t2\t1\n43\t2\t20.33\tfalse\t2\t1\n62\t2\t29.03\tfalse\t2\t1\n37\t1\t2.66\tfalse\t2\t1\n51\t2\t266.59\tfalse\t95\t2\n40\t1\t20.5\tfalse\t2\t1\n33\t2\t47.86\tfalse\t2\t1\n64\t1\t37.43\tfalse\t205\t9\n32\t1\t26.79\tfalse\t2\t1\n33\t2\t88.2\tfalse\t369\t8\n47\t1\t42.58\tfalse\t2\t1\n61\t2\t18.48\tfalse\t2\t1\n42\t1\t35.89\tfalse\t4\t1\n76\t2\t46.19\tfalse\t2\t1\n56\t2\t60.05\tfalse\t2\t1\n44\t2\t29.1\tfalse\t4\t1\n76\t2\t44.51\tfalse\t2\t1\n38\t2\t12.53\tfalse\t2\t1\n33\t1\t35.23\tfalse\t84\t4\n47\t2\t3.92\tfalse\t2\t1\n32\t2\t23.03\tfalse\t2\t1\n29\t2\t28.91\tfalse\t2\t1\n48\t2\t48.62\tfalse\t2\t1\n53\t1\t24.31\tfalse\t4\t1\n40\t2\t30.78\tfalse\t2\t1\n42\t2\t14.35\tfalse\t2\t1\n27\t2\t22.14\tfalse\t2\t1\n37\t1\t28.63\tfalse\t2\t1\n49\t2\t88.54\tfalse\t2\t1\n66\t1\t18.53\tfalse\t2\t1\n49\t2\t98.35\tfalse\t2\t1\n38\t1\t16.1\tfalse\t2\t1\n48\t1\t37.95\tfalse\t2\t1\n24\t1\t25.28\tfalse\t2\t1\n48\t2\t12.27\tfalse\t2\t1\n46\t2\t55.1\tfalse\t2\t1\n22\t1\t0.61\tfalse\t2\t1\n32\t2\t4.39\tfalse\t2\t1\n28\t1\t20.93\tfalse\t2\t1\n30\t2\t49.65\tfalse\t141\t6\n56\t1\t71.0\tfalse\t402\t5\n38\t2\t42.8\tfalse\t2\t1\n62\t2\t5.35\tfalse\t2\t1\n39\t2\t32.86\tfalse\t4\t1\n42\t1\t46.0\tfalse\t4\t1\n19\t2\t31.74\tfalse\t2\t1\n63\t2\t25.88\tfalse\t2\t1\n21\t2\t6.28\tfalse\t2\t1\n60\t2\t61.75\tfalse\t222\t10\n53\t2\t52.47\tfalse\t4\t1\n26\t1\t16.91\tfalse\t2\t1\n18\t1\t2.53\tfalse\t2\t1\n27\t2\t50.36\tfalse\t2\t1\n42\t1\t8.02\tfalse\t2\t1\n48\t2\t19.46\tfalse\t4\t1\n34\t2\t15.97\tfalse\t2\t1\n31\t2\t32.55\tfalse\t2\t1\n49\t2\t35.56\tfalse\t2\t1\n40\t2\t9.17\tfalse\t4\t1\n20\t1\t10.42\tfalse\t2\t1\n44\t1\t49.3\tfalse\t222\t10\n29\t1\t29.36\tfalse\t2\t1\n59\t1\t36.9\tfalse\t2\t1\n38\t1\t26.78\tfalse\t2\t1\n58\t2\t23.05\tfalse\t2\t1\n34\t1\t31.42\tfalse\t2\t1\n43\t1\t16.17\tfalse\t4\t1\n40\t1\t15.26\tfalse\t222\t10\n24\t2\t13.96\tfalse\t2\t1\n32\t2\t17.37\tfalse\t2\t1\n59\t1\t2.04\tfalse\t2\t1\n40\t2\t6.43\tfalse\t2\t1\n36\t2\t12.85\tfalse\t4\t1\n19\t1\t10.28\tfalse\t2\t1\n36\t2\t23.67\tfalse\t2\t1\n30\t2\t11.44\tfalse\t2\t1\n74\t1\t11.76\tfalse\t2\t1\n54\t1\t23.93\tfalse\t2\t1\n32\t2\t2.1\tfalse\t4\t1\n20\t1\t9.25\tfalse\t2\t1\n43\t2\t21.04\tfalse\t2\t1\n38\t1\t12.82\tfalse\t2\t1\n67\t1\t19.05\tfalse\t84\t4\n37\t1\t10.88\tfalse\t2\t1\n42\t2\t25.22\tfalse\t2\t1\n26\t1\t13.44\tfalse\t2\t1\n39\t2\t42.69\tfalse\t2\t1\n41\t2\t55.84\tfalse\t4\t1\n33\t1\t41.79\tfalse\t2\t1\n64\t2\t69.65\tfalse\t222\t10\n28\t1\t0.3\tfalse\t2\t1\n42\t2\t12.61\tfalse\t2\t1\n31\t1\t6.18\tfalse\t4\t1\n43\t1\t27.67\tfalse\t2\t1\n43\t2\t44.8\tfalse\t2\t1\n42\t1\t27.85\tfalse\t2\t1\n42\t2\t34.31\tfalse\t2\t1\n37\t1\t176.32\ttrue\t332\t5\n39\t1\t337.41\ttrue\t332\t5\n30\t2\t15.99\tfalse\t2\t1\n27\t1\t19.39\tfalse\t2\t1\n43\t2\t28.32\tfalse\t2\t1\n60\t2\t11.03\tfalse\t2\t1\n48\t1\t4.88\tfalse\t4\t1\n46\t2\t29.93\tfalse\t2\t1\n52\t1\t54.17\tfalse\t2\t1\n48\t2\t18.54\tfalse\t2\t1\n30\t2\t24.44\tfalse\t2\t1\n44\t1\t25.85\tfalse\t2\t1\n34\t1\t8.06\tfalse\t2\t1\n32\t1\t6.35\tfalse\t2\t1\n28\t2\t47.44\tfalse\t84\t4\n49\t1\t38.32\tfalse\t2\t1\n41\t1\t13.79\tfalse\t4\t1\n19\t1\t1.51\tfalse\t2\t1\n23\t1\t44.14\tfalse\t95\t2\n59\t1\t37.67\tfalse\t2\t1\n40\t2\t25.3\tfalse\t2\t1\n27\t2\t57.26\tfalse\t2\t1\n29\t2\t54.22\tfalse\t2\t1\n41\t1\t16.42\tfalse\t2\t1\n52\t1\t16.47\tfalse\t2\t1\n44\t1\t40.31\tfalse\t335\t9\n53\t2\t57.28\tfalse\t222\t10\n30\t1\t6.01\tfalse\t4\t1\n46\t2\t6.63\tfalse\t2\t1\n26\t2\t44.27\tfalse\t2\t1\n29\t1\t2.93\tfalse\t4\t1\n37\t1\t6.92\tfalse\t84\t4\n30\t2\t106.29\tfalse\t369\t8\n45\t3\t21.25\tfalse\t4\t1\n47\t1\t33.28\tfalse\t2\t1\n28\t1\t19.21\tfalse\t222\t10\n49\t2\t15.34\tfalse\t2\t1\n64\t1\t27.81\tfalse\t2\t1\n58\t2\t57.79\tfalse\t2\t1\n46\t1\t11.34\tfalse\t2\t1\n44\t2\t54.83\tfalse\t2\t1\n42\t1\t44.77\tfalse\t84\t4\n29\t2\t29.94\tfalse\t2\t1\n27\t2\t1.6\tfalse\t84\t4\n74\t2\t17.74\tfalse\t2\t1\n26\t2\t50.91\tfalse\t2\t1\n34\t2\t31.34\tfalse\t2\t1\n39\t1\t13.09\tfalse\t2\t1\n49\t1\t13.85\tfalse\t84\t4\n26\t2\t7.11\tfalse\t2\t1\n54\t2\t54.59\tfalse\t274\t12\n31\t2\t10.09\tfalse\t2\t1\n38\t1\t41.78\tfalse\t2\t1\n31\t1\t22.11\tfalse\t2\t1\n31\t1\t7.44\tfalse\t84\t4\n20\t2\t13.16\tfalse\t2\t1\n39\t2\t66.22\tfalse\t2\t1\n42\t2\t27.57\tfalse\t2\t1\n32\t2\t22.75\tfalse\t2\t1\n28\t2\t2.55\tfalse\t2\t1\n23\t1\t48.41\tfalse\t2\t1\n40\t1\t90.3\tfalse\t402\t5\n40\t2\t37.58\tfalse\t2\t1\n46\t1\t5.18\tfalse\t2\t1\n26\t2\t18.19\tfalse\t222\t10\n41\t2\t2.74\tfalse\t2\t1\n49\t2\t32.71\tfalse\t2\t1\n32\t1\t37.73\tfalse\t2\t1\n42\t1\t16.1\tfalse\t2\t1\n21\t2\t30.86\tfalse\t2\t1\n40\t2\t2.49\tfalse\t2\t1\n58\t2\t46.01\tfalse\t4\t1\n46\t2\t16.44\tfalse\t4\t1\n29\t2\t10.99\tfalse\t2\t1\n26\t1\t1.47\tfalse\t2\t1\n46\t1\t14.89\tfalse\t2\t1\n47\t2\t25.36\tfalse\t2\t1\n31\t1\t47.45\tfalse\t2\t1\n36\t1\t9.57\tfalse\t2\t1\n42\t2\t43.42\tfalse\t2\t1\n41\t2\t38.48\tfalse\t335\t9\n37\t1\t5.18\tfalse\t2\t1\n43\t2\t23.75\tfalse\t2\t1\n36\t1\t98.44\tfalse\t141\t6\n38\t2\t39.67\tfalse\t4\t1\n37\t2\t53.78\tfalse\t2\t1\n53\t1\t87.51\tfalse\t545\t12\n57\t1\t12.03\tfalse\t2\t1\n29\t1\t23.14\tfalse\t2\t1\n28\t1\t26.04\tfalse\t2\t1\n38\t2\t30.35\tfalse\t2\t1\n26\t2\t28.69\tfalse\t2\t1\n61\t1\t14.13\tfalse\t2\t1\n44\t1\t2.07\tfalse\t2\t1\n48\t2\t26.77\tfalse\t2\t1\n62\t2\t9.7\tfalse\t4\t1\n44\t2\t34.28\tfalse\t2\t1\n64\t2\t63.22\tfalse\t84\t4\n48\t1\t26.95\tfalse\t4\t1\n32\t2\t247.76\tfalse\t160\t7\n62\t1\t57.23\tfalse\t2\t1\n39\t2\t37.29\tfalse\t2\t1\n52\t1\t33.78\tfalse\t205\t9\n64\t2\t40.93\tfalse\t2\t1\n51\t1\t39.26\tfalse\t2\t1\n52\t2\t17.19\tfalse\t2\t1\n30\t1\t16.05\tfalse\t2\t1\n49\t1\t39.06\tfalse\t4\t1\n43\t2\t34.43\tfalse\t2\t1\n34\t2\t39.74\tfalse\t4\t1\n29\t2\t37.12\tfalse\t4\t1\n29\t2\t49.05\tfalse\t2\t1\n28\t2\t47.71\tfalse\t2\t1\n57\t2\t43.65\tfalse\t2\t1\n47\t2\t9.54\tfalse\t2\t1\n43\t2\t55.17\tfalse\t2\t1\n31\t2\t105.54\tfalse\t48\t2\n52\t2\t1.74\tfalse\t2\t1\n37\t2\t4.0\tfalse\t2\t1\n50\t2\t220.11\ttrue\t335\t9\n27\t2\t4.32\ttrue\t335\t9\n63\t2\t12.43\tfalse\t2\t1\n63\t1\t9.96\tfalse\t2\t1\n38\t2\t25.62\tfalse\t4\t1\n59\t2\t21.7\tfalse\t2\t1\n38\t2\t65.69\tfalse\t141\t6\n21\t2\t60.42\tfalse\t4\t1\n41\t2\t39.78\tfalse\t2\t1\n19\t2\t29.18\tfalse\t2\t1\n16\t2\t22.82\tfalse\t2\t1\n27\t1\t3.17\tfalse\t2\t1\n28\t2\t26.57\tfalse\t4\t1\n43\t1\t17.37\tfalse\t2\t1\n47\t2\t10.2\tfalse\t2\t1\n41\t2\t37.29\tfalse\t2\t1\n23\t1\t4.14\tfalse\t2\t1\n46\t1\t23.07\tfalse\t4\t1\n49\t1\t64.01\tfalse\t2\t1\n44\t1\t22.81\tfalse\t2\t1\n38\t2\t33.33\tfalse\t2\t1\n41\t2\t14.7\tfalse\t4\t1\n32\t2\t0.88\tfalse\t2\t1\n53\t2\t8.59\tfalse\t2\t1\n60\t2\t36.18\tfalse\t2\t1\n49\t2\t6.21\tfalse\t240\t11\n21\t2\t43.33\tfalse\t2\t1\n31\t2\t12.92\tfalse\t4\t1\n47\t2\t19.45\tfalse\t2\t1\n56\t2\t20.56\tfalse\t2\t1\n30\t1\t3.84\tfalse\t2\t1\n21\t2\t1.22\tfalse\t166\t8\n33\t2\t33.94\tfalse\t2\t1\n20\t3\t28.57\tfalse\t2\t1\n30\t2\t10.75\tfalse\t2\t1\n52\t1\t0.34\tfalse\t2\t1\n39\t2\t3.8\tfalse\t2\t1\n30\t1\t31.02\tfalse\t2\t1\n28\t2\t7.56\tfalse\t4\t1\n28\t1\t20.49\tfalse\t2\t1\n54\t2\t37.84\tfalse\t4\t1\n56\t1\t15.35\tfalse\t2\t1\n58\t1\t29.82\tfalse\t2\t1\n26\t2\t65.41\tfalse\t4\t1\n40\t1\t16.47\tfalse\t2\t1\n52\t1\t69.95\tfalse\t2\t1\n39\t1\t64.03\tfalse\t2\t1\n50\t2\t54.21\tfalse\t4\t1\n60\t2\t49.89\tfalse\t4\t1\n50\t2\t16.66\tfalse\t2\t1\n50\t2\t46.45\tfalse\t629\t11\n30\t2\t278.02\ttrue\t369\t8\n61\t2\t69.53\ttrue\t369\t8\n27\t1\t2.11\tfalse\t2\t1\n70\t1\t25.74\tfalse\t2\t1\n39\t1\t9.17\tfalse\t2\t1\n53\t2\t34.73\tfalse\t2\t1\n28\t2\t5.37\tfalse\t2\t1\n26\t2\t0.14\tfalse\t2\t1\n50\t2\t15.8\tfalse\t2\t1\n38\t2\t5.11\tfalse\t2\t1\n30\t1\t42.9\tfalse\t2\t1\n19\t2\t14.29\tfalse\t2\t1\n41\t1\t25.15\tfalse\t2\t1\n41\t1\t5.47\tfalse\t2\t1\n43\t2\t6.83\tfalse\t2\t1\n28\t1\t31.16\tfalse\t4\t1\n21\t2\t13.04\tfalse\t4\t1\n52\t1\t35.85\tfalse\t160\t7\n40\t2\t11.68\tfalse\t2\t1\n61\t2\t17.19\tfalse\t141\t6\n61\t2\t15.79\tfalse\t2\t1\n24\t1\t32.62\tfalse\t2\t1\n50\t1\t11.99\tfalse\t4\t1\n44\t2\t32.96\tfalse\t2\t1\n34\t1\t21.39\tfalse\t4\t1\n20\t1\t27.16\tfalse\t2\t1\n58\t2\t30.33\tfalse\t2\t1\n33\t1\t19.66\tfalse\t2\t1\n37\t2\t7.45\tfalse\t2\t1\n20\t2\t21.23\tfalse\t2\t1\n48\t2\t13.21\tfalse\t2\t1\n63\t2\t19.36\tfalse\t4\t1\n34\t2\t39.11\tfalse\t4\t1\n19\t1\t7.67\tfalse\t2\t1\n30\t2\t6.17\tfalse\t4\t1\n26\t2\t38.69\tfalse\t2\t1\n40\t1\t58.61\tfalse\t2\t1\n26\t2\t0.79\tfalse\t4\t1\n19\t2\t28.97\tfalse\t2\t1\n52\t2\t33.3\tfalse\t2\t1\n29\t1\t0.18\tfalse\t4\t1\n38\t2\t45.0\tfalse\t84\t4\n42\t1\t73.77\tfalse\t2\t1\n26\t1\t23.79\tfalse\t4\t1\n26\t2\t44.47\tfalse\t2\t1\n58\t2\t3.26\tfalse\t2\t1\n27\t2\t33.18\tfalse\t2\t1\n38\t1\t10.64\tfalse\t678\t8\n42\t2\t248.42\tfalse\t95\t2\n30\t2\t17.73\tfalse\t2\t1\n37\t2\t20.18\tfalse\t2\t1\n26\t2\t27.57\tfalse\t2\t1\n44\t2\t4.46\tfalse\t2\t1\n28\t2\t3.69\tfalse\t2\t1\n32\t2\t54.02\tfalse\t4\t1\n37\t2\t24.35\tfalse\t2\t1\n19\t2\t5.28\tfalse\t2\t1\n51\t2\t33.27\tfalse\t2\t1\n40\t1\t63.23\tfalse\t2\t1\n62\t2\t2.56\tfalse\t2\t1\n30\t2\t44.88\tfalse\t2\t1\n27\t2\t7.23\tfalse\t4\t1\n40\t2\t32.63\tfalse\t2\t1\n43\t1\t11.42\tfalse\t4\t1\n38\t1\t51.96\tfalse\t84\t4\n33\t2\t11.69\tfalse\t2\t1\n28\t2\t237.48\tfalse\t107\t2\n61\t1\t37.16\tfalse\t2\t1\n56\t1\t1.96\tfalse\t2\t1\n26\t1\t12.83\tfalse\t2\t1\n34\t2\t38.2\tfalse\t4\t1\n54\t1\t20.92\tfalse\t2\t1\n23\t1\t37.59\tfalse\t2\t1\n34\t1\t13.43\tfalse\t2\t1\n41\t2\t38.89\tfalse\t4\t1\n21\t1\t26.68\tfalse\t2\t1\n36\t2\t18.4\tfalse\t2\t1\n61\t2\t21.56\tfalse\t369\t8\n60\t1\t58.18\tfalse\t141\t6\n29\t1\t31.59\tfalse\t84\t4\n34\t2\t40.67\tfalse\t4\t1\n37\t1\t11.88\tfalse\t713\t8\n32\t1\t39.46\tfalse\t2\t1\n29\t2\t73.59\tfalse\t2\t1\n31\t2\t11.5\tfalse\t2\t1\n61\t2\t2.03\tfalse\t2\t1\n20\t1\t1.89\tfalse\t402\t5\n43\t1\t30.88\tfalse\t4\t1\n22\t2\t19.86\tfalse\t222\t10\n22\t1\t30.07\tfalse\t2\t1\n27\t2\t36.11\tfalse\t2\t1\n32\t1\t25.73\tfalse\t2\t1\n28\t1\t52.75\tfalse\t4\t1\n49\t2\t30.15\tfalse\t2\t1\n41\t2\t35.74\tfalse\t84\t4\n38\t1\t12.14\tfalse\t2\t1\n58\t1\t54.3\tfalse\t2\t1\n20\t2\t46.22\tfalse\t2\t1\n21\t2\t47.02\tfalse\t2\t1\n41\t1\t25.86\tfalse\t4\t1\n54\t2\t140.48\tfalse\t205\t9\n30\t2\t19.18\tfalse\t2\t1\n33\t1\t0.23\tfalse\t222\t10\n30\t2\t18.47\tfalse\t2\t1\n34\t2\t56.78\tfalse\t2\t1\n44\t1\t23.73\tfalse\t2\t1\n34\t1\t38.51\tfalse\t2\t1\n62\t2\t54.33\tfalse\t222\t10\n49\t2\t16.07\tfalse\t2\t1\n50\t1\t23.59\tfalse\t4\t1\n31\t1\t10.13\tfalse\t2\t1\n51\t2\t39.28\tfalse\t2\t1\n42\t1\t33.96\tfalse\t745\t9\n36\t1\t36.52\tfalse\t4\t1\n73\t2\t36.92\tfalse\t2\t1\n50\t2\t2.99\tfalse\t2\t1\n46\t2\t8.48\tfalse\t2\t1\n22\t1\t28.44\tfalse\t2\t1\n37\t1\t31.44\tfalse\t4\t1\n21\t1\t0.78\tfalse\t2\t1\n27\t1\t39.42\tfalse\t2\t1\n34\t2\t10.43\tfalse\t141\t6\n39\t1\t61.08\tfalse\t222\t10\n71\t2\t113.52\tfalse\t48\t2\n62\t2\t61.32\tfalse\t141\t6\n46\t2\t34.95\tfalse\t2\t1\n31\t2\t34.07\tfalse\t2\t1\n58\t1\t18.07\tfalse\t2\t1\n51\t1\t5.15\tfalse\t2\t1\n64\t2\t40.48\tfalse\t2\t1\n44\t1\t27.42\tfalse\t2\t1\n26\t1\t16.91\tfalse\t2\t1\n49\t2\t33.84\tfalse\t2\t1\n31\t1\t44.32\tfalse\t84\t4\n26\t2\t27.65\tfalse\t2\t1\n36\t1\t33.26\tfalse\t2\t1\n22\t2\t14.41\tfalse\t2\t1\n46\t1\t17.87\tfalse\t2\t1\n59\t2\t73.55\tfalse\t2\t1\n42\t2\t69.89\tfalse\t4\t1\n30\t1\t56.13\tfalse\t2\t1\n63\t2\t48.51\tfalse\t2\t1\n19\t2\t31.19\tfalse\t4\t1\n56\t1\t24.49\tfalse\t2\t1\n29\t1\t17.74\tfalse\t2\t1\n28\t2\t47.72\tfalse\t205\t9\n37\t1\t13.0\tfalse\t2\t1\n59\t1\t26.77\tfalse\t2\t1\n50\t2\t24.47\tfalse\t84\t4\n33\t1\t60.06\tfalse\t4\t1\n56\t2\t42.83\tfalse\t2\t1\n53\t2\t104.03\tfalse\t335\t9\n27\t2\t67.52\tfalse\t205\t9\n43\t2\t22.31\tfalse\t2\t1\n46\t2\t31.61\tfalse\t2\t1\n24\t1\t9.68\tfalse\t2\t1\n51\t1\t2.65\tfalse\t4\t1\n41\t2\t40.13\tfalse\t4\t1\n31\t2\t23.71\tfalse\t4\t1\n28\t1\t3.76\tfalse\t2\t1\n34\t2\t10.82\tfalse\t2\t1\n23\t1\t30.37\tfalse\t2\t1\n28\t2\t195.44\tfalse\t107\t2\n61\t1\t47.11\tfalse\t2\t1\n53\t2\t9.85\tfalse\t2\t1\n27\t1\t0.82\tfalse\t2\t1\n33\t2\t9.09\tfalse\t4\t1\n61\t1\t43.16\tfalse\t2\t1\n31\t1\t13.02\tfalse\t2\t1\n33\t2\t70.9\tfalse\t2\t1\n23\t1\t24.57\tfalse\t2\t1\n40\t2\t20.77\tfalse\t2\t1\n38\t1\t64.29\tfalse\t2\t1\n33\t2\t31.94\tfalse\t4\t1\n21\t2\t12.83\tfalse\t2\t1\n34\t1\t11.51\tfalse\t2\t1\n32\t1\t20.83\tfalse\t2\t1\n40\t1\t1.23\tfalse\t2\t1\n47\t2\t21.42\tfalse\t84\t4\n43\t2\t37.16\tfalse\t4\t1\n49\t2\t26.11\tfalse\t2\t1\n54\t1\t30.82\tfalse\t2\t1\n40\t2\t0.83\tfalse\t2\t1\n27\t1\t24.95\tfalse\t2\t1\n42\t2\t26.15\tfalse\t2\t1\n43\t2\t4.12\tfalse\t2\t1\n32\t1\t23.74\tfalse\t2\t1\n24\t1\t64.29\tfalse\t2\t1\n33\t2\t0.55\tfalse\t2\t1\n23\t2\t46.43\tfalse\t2\t1\n26\t2\t16.94\tfalse\t4\t1\n54\t2\t31.75\tfalse\t2\t1\n52\t1\t40.57\tfalse\t4\t1\n48\t2\t33.28\tfalse\t2\t1\n19\t1\t9.65\tfalse\t2\t1\n45\t1\t71.06\tfalse\t2\t1\n28\t2\t8.19\tfalse\t2\t1\n50\t2\t70.15\ttrue\t166\t8\n36\t2\t238.82\ttrue\t166\t8\n44\t1\t142.49\tfalse\t48\t2\n38\t2\t128.99\tfalse\t48\t2\n48\t2\t6.76\tfalse\t2\t1\n47\t2\t9.23\tfalse\t2\t1\n31\t1\t56.91\tfalse\t222\t10\n32\t1\t13.68\tfalse\t2\t1\n44\t2\t28.33\tfalse\t2\t1\n38\t1\t20.74\tfalse\t141\t6\n29\t1\t35.95\tfalse\t2\t1\n51\t1\t34.69\tfalse\t222\t10\n58\t1\t22.03\tfalse\t2\t1\n54\t2\t59.51\tfalse\t16\t2\n34\t2\t21.03\tfalse\t205\t9\n26\t1\t72.45\tfalse\t2\t1\n28\t2\t69.21\tfalse\t141\t6\n20\t2\t63.95\tfalse\t4\t1\n44\t1\t22.84\tfalse\t2\t1\n76\t2\t26.87\tfalse\t4\t1\n34\t1\t34.69\tfalse\t2\t1\n41\t1\t17.08\tfalse\t2\t1\n49\t1\t38.74\tfalse\t4\t1\n49\t2\t59.78\tfalse\t2\t1\n44\t2\t17.86\tfalse\t2\t1\n33\t1\t34.84\tfalse\t2\t1\n39\t2\t28.72\tfalse\t2\t1\n44\t3\t33.12\tfalse\t4\t1\n52\t2\t42.82\tfalse\t2\t1\n31\t2\t28.41\tfalse\t2\t1\n60\t2\t47.07\tfalse\t2\t1\n50\t2\t71.53\tfalse\t2\t1\n46\t2\t16.76\tfalse\t2\t1\n63\t1\t24.16\tfalse\t2\t1\n42\t2\t10.84\tfalse\t2\t1\n48\t2\t17.49\tfalse\t2\t1\n36\t2\t38.36\tfalse\t4\t1\n46\t2\t38.73\tfalse\t2\t1\n51\t2\t55.82\tfalse\t95\t2\n23\t2\t22.46\tfalse\t2\t1\n29\t2\t36.46\tfalse\t2\t1\n50\t2\t0.85\tfalse\t4\t1\n27\t1\t35.8\tfalse\t2\t1\n51\t1\t7.09\tfalse\t2\t1\n39\t2\t22.12\tfalse\t2\t1\n41\t1\t26.92\tfalse\t4\t1\n31\t2\t21.89\tfalse\t4\t1\n32\t1\t13.72\tfalse\t2\t1\n24\t2\t71.85\tfalse\t84\t4\n28\t2\t11.22\tfalse\t2\t1\n58\t1\t18.72\tfalse\t2\t1\n29\t2\t53.57\tfalse\t2\t1\n41\t1\t667.09\ttrue\t95\t2\n20\t2\t520.5\ttrue\t95\t2\n34\t2\t7.1\tfalse\t2\t1\n40\t2\t80.35\tfalse\t2\t1\n24\t2\t46.1\tfalse\t886\t9\n31\t2\t59.67\tfalse\t4\t1\n31\t1\t8.65\tfalse\t2\t1\n43\t2\t8.83\tfalse\t2\t1\n27\t1\t65.26\tfalse\t2\t1\n46\t2\t43.59\tfalse\t2\t1\n36\t2\t10.61\tfalse\t2\t1\n34\t1\t45.1\tfalse\t2\t1\n46\t1\t16.84\tfalse\t369\t8\n28\t2\t46.94\tfalse\t2\t1\n34\t2\t38.25\tfalse\t2\t1\n47\t1\t34.66\tfalse\t2\t1\n38\t2\t7.26\tfalse\t2\t1\n42\t2\t24.61\tfalse\t2\t1\n54\t2\t40.91\tfalse\t2\t1\n40\t1\t23.08\tfalse\t2\t1\n59\t2\t12.53\tfalse\t4\t1\n38\t1\t37.86\tfalse\t2\t1\n59\t2\t19.0\tfalse\t4\t1\n32\t2\t25.7\tfalse\t4\t1\n58\t2\t52.39\tfalse\t141\t6\n34\t1\t102.34\tfalse\t4\t1\n24\t1\t4.54\tfalse\t2\t1\n47\t2\t11.17\tfalse\t4\t1\n31\t2\t1.42\tfalse\t2\t1\n49\t2\t28.02\tfalse\t2\t1\n38\t1\t7.57\tfalse\t2\t1\n40\t1\t19.88\tfalse\t2\t1\n26\t2\t9.73\tfalse\t2\t1\n32\t2\t22.93\tfalse\t205\t9\n27\t1\t75.21\tfalse\t629\t11\n29\t1\t6.15\tfalse\t2\t1\n30\t2\t27.86\tfalse\t2\t1\n32\t1\t20.72\tfalse\t222\t10\n43\t1\t10.31\tfalse\t84\t4\n20\t1\t25.04\tfalse\t4\t1\n41\t2\t22.22\tfalse\t4\t1\n43\t1\t49.02\tfalse\t2\t1\n36\t1\t4.22\tfalse\t2\t1\n31\t1\t16.06\tfalse\t2\t1\n50\t2\t13.95\tfalse\t2\t1\n56\t2\t15.57\tfalse\t2\t1\n37\t1\t24.8\tfalse\t929\t12\n27\t2\t33.41\tfalse\t2\t1\n32\t1\t24.97\tfalse\t2\t1\n32\t2\t32.78\tfalse\t2\t1\n27\t2\t8.81\tfalse\t269\t9\n36\t1\t58.88\tfalse\t2\t1\n37\t2\t20.89\tfalse\t2\t1\n23\t1\t25.03\tfalse\t2\t1\n58\t1\t10.73\tfalse\t4\t1\n60\t2\t24.7\tfalse\t4\t1\n29\t2\t21.69\tfalse\t2\t1\n39\t1\t5.6\tfalse\t2\t1\n39\t1\t54.36\tfalse\t4\t1\n22\t2\t21.94\tfalse\t160\t7\n29\t2\t55.14\tfalse\t2\t1\n54\t2\t53.77\tfalse\t2\t1\n42\t2\t4.98\tfalse\t2\t1\n33\t1\t39.34\tfalse\t2\t1\n26\t2\t87.08\tfalse\t84\t4\n40\t1\t28.39\tfalse\t4\t1\n54\t2\t85.88\tfalse\t84\t4\n33\t2\t190.53\ttrue\t205\t9\n33\t2\t451.92\ttrue\t205\t9\n32\t1\t25.23\tfalse\t2\t1\n38\t1\t33.16\tfalse\t2\t1\n27\t2\t38.71\tfalse\t2\t1\n26\t2\t17.18\tfalse\t2\t1\n30\t1\t34.69\tfalse\t2\t1\n51\t1\t53.92\tfalse\t4\t1\n60\t2\t52.11\tfalse\t2\t1\n32\t2\t29.17\tfalse\t4\t1\n51\t2\t29.01\tfalse\t2\t1\n19\t2\t4.29\tfalse\t2\t1\n54\t1\t35.13\tfalse\t2\t1\n41\t1\t17.79\tfalse\t222\t10\n27\t2\t16.6\tfalse\t2\t1\n28\t1\t50.19\tfalse\t4\t1\n27\t2\t21.45\tfalse\t2\t1\n64\t1\t31.49\tfalse\t2\t1\n48\t2\t17.81\tfalse\t2\t1\n44\t1\t109.8\tfalse\t745\t9\n27\t1\t130.55\tfalse\t929\t12\n19\t2\t45.94\tfalse\t2\t1\n38\t2\t18.79\tfalse\t2\t1\n34\t1\t42.78\tfalse\t2\t1\n59\t1\t39.2\tfalse\t2\t1\n56\t1\t45.95\tfalse\t2\t1\n28\t2\t25.72\tfalse\t2\t1\n33\t1\t42.4\tfalse\t2\t1\n40\t2\t28.42\tfalse\t2\t1\n42\t2\t11.48\tfalse\t2\t1\n41\t1\t70.93\tfalse\t205\t9\n20\t2\t23.93\tfalse\t2\t1\n30\t2\t12.96\tfalse\t2\t1\n21\t2\t17.68\tfalse\t4\t1\n60\t1\t44.68\tfalse\t2\t1\n52\t2\t32.77\tfalse\t2\t1\n64\t2\t15.87\tfalse\t2\t1\n62\t2\t48.61\tfalse\t2\t1\n19\t2\t26.27\tfalse\t2\t1\n68\t2\t17.32\tfalse\t4\t1\n29\t2\t62.0\tfalse\t205\t9\n42\t1\t142.75\tfalse\t205\t9\n51\t2\t13.42\tfalse\t2\t1\n38\t1\t34.01\tfalse\t2\t1\n42\t2\t16.12\tfalse\t2\t1\n24\t2\t5.48\tfalse\t2\t1\n51\t2\t42.0\tfalse\t84\t4\n36\t2\t45.9\tfalse\t4\t1\n42\t2\t63.81\tfalse\t335\t9\n64\t1\t1.91\tfalse\t4\t1\n39\t2\t49.03\tfalse\t2\t1\n23\t1\t20.27\tfalse\t2\t1\n29\t2\t31.57\tfalse\t2\t1\n19\t1\t44.1\tfalse\t222\t10\n47\t1\t54.8\tfalse\t2\t1\n19\t2\t14.34\tfalse\t2\t1\n23\t2\t0.64\tfalse\t2\t1\n63\t2\t93.13\tfalse\t141\t6\n39\t1\t46.5\tfalse\t222\t10\n60\t2\t39.41\tfalse\t2\t1\n30\t1\t153.11\tfalse\t1010\t5\n37\t2\t105.99\tfalse\t205\t9\n21\t2\t5.64\tfalse\t2\t1\n36\t1\t20.57\tfalse\t2\t1\n57\t2\t30.0\tfalse\t2\t1\n26\t2\t5.67\tfalse\t2\t1\n27\t1\t0.91\tfalse\t4\t1\n23\t2\t28.32\tfalse\t2\t1\n37\t2\t50.88\tfalse\t95\t2\n29\t2\t13.6\tfalse\t2\t1\n53\t2\t6.22\tfalse\t4\t1\n41\t2\t11.09\tfalse\t4\t1\n26\t1\t7.88\tfalse\t4\t1\n67\t1\t46.82\tfalse\t4\t1\n31\t2\t15.6\tfalse\t2\t1\n30\t2\t33.32\tfalse\t2\t1\n58\t2\t43.23\tfalse\t2\t1\n30\t1\t24.44\tfalse\t2\t1\n40\t2\t74.25\tfalse\t48\t2\n26\t2\t30.92\tfalse\t2\t1\n\u003c!--TABLE_COMMENT--\u003e\n\u003cfont color\u003dred\u003eResults are limited by 1000.\u003c/font\u003e"
           }
         ]
       },
@@ -272,15 +272,15 @@
       "jobName": "paragraph_1537296780460_-821930067",
       "id": "20180917-214847_451933357",
       "dateCreated": "Sep 18, 2018 6:53:00 PM",
-      "dateStarted": "Oct 12, 2018 10:00:16 PM",
-      "dateFinished": "Oct 12, 2018 10:00:17 PM",
+      "dateStarted": "Oct 16, 2018 9:14:32 PM",
+      "dateFinished": "Oct 16, 2018 9:14:34 PM",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
     {
       "text": "%md\n\n# 2 - Unbalanced data",
       "user": "anonymous",
-      "dateUpdated": "Oct 12, 2018 9:59:36 PM",
+      "dateUpdated": "Oct 16, 2018 9:13:44 PM",
       "config": {
         "tableHide": false,
         "editorSetting": {
@@ -319,7 +319,7 @@
       "title": "",
       "text": "%md\n\nAn unbalaced data set is problematic because training will be biased to the dominant class (not a fraud in this case). \nWe will have to compensate for this later. \n\nA simple look at the number of frauds compared to genuine transactions is enough to see that this is a highly unbalanced data set:",
       "user": "anonymous",
-      "dateUpdated": "Oct 12, 2018 9:59:37 PM",
+      "dateUpdated": "Oct 16, 2018 9:13:44 PM",
       "config": {
         "tableHide": false,
         "editorSetting": {
@@ -359,7 +359,7 @@
       "title": "",
       "text": "%spark\n\nval fraudsCount \u003d df.filter(col(\"fraud\")\u003d\u003d\u003d1).count()\n\nval percFraud\u003dfraudsCount/500000.0*100",
       "user": "anonymous",
-      "dateUpdated": "Oct 12, 2018 9:59:37 PM",
+      "dateUpdated": "Oct 16, 2018 9:13:44 PM",
       "config": {
         "editorSetting": {
           "language": "scala",
@@ -388,15 +388,15 @@
       "jobName": "paragraph_1537296780462_-821160570",
       "id": "20180917-234026_719483720",
       "dateCreated": "Sep 18, 2018 6:53:00 PM",
-      "dateStarted": "Oct 12, 2018 10:00:17 PM",
-      "dateFinished": "Oct 12, 2018 10:00:19 PM",
+      "dateStarted": "Oct 16, 2018 9:14:33 PM",
+      "dateFinished": "Oct 16, 2018 9:14:36 PM",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
     {
       "text": "%md\n\n# 3 - Training Helper Function",
       "user": "anonymous",
-      "dateUpdated": "Oct 12, 2018 9:59:37 PM",
+      "dateUpdated": "Oct 16, 2018 9:13:45 PM",
       "config": {
         "tableHide": false,
         "editorSetting": {
@@ -435,7 +435,7 @@
       "title": "Creating the Training Function",
       "text": "%spark\n\ndef runPipelineOnData(fulldata: DataFrame, pipeline: Pipeline, PMMLClassNamePrefix: String) : PipelineModel \u003d {\n    \n    val splits \u003d fulldata.randomSplit(Array(0.8, 0.2), 0)\n    val trainingData \u003d splits(0)\n    val testingData \u003d splits(1)\n    \n    val pipelineModel \u003d pipeline.fit(trainingData)\n    \n    val predictions \u003d pipelineModel.transform(testingData)\n\n    val evaluator \u003d new MulticlassClassificationEvaluator().setLabelCol(\"fraud\")\n\n    val accuracy \u003d evaluator.evaluate(predictions)\n\n    println(\"\\t\\tTest Error \u003d \" + (1.0 - accuracy) + \"%\")\n    \n    val fileName\u003d\"/common_shared/pmml/IRISDemo.ImportedModel.\"+PMMLClassNamePrefix+\".pmml\"\n    \n    println(\"\\t\\tExporting the model to PMML file \" + fileName)\n    \n    val file \u003d new File(fileName)\n    \n    val pmmlBuilder \u003d new org.jpmml.sparkml.PMMLBuilder(fulldata.schema, pipelineModel).buildFile(file)\n    \n    return pipelineModel\n\n}",
       "user": "anonymous",
-      "dateUpdated": "Oct 12, 2018 9:59:37 PM",
+      "dateUpdated": "Oct 16, 2018 9:13:45 PM",
       "config": {
         "colWidth": 12.0,
         "enabled": true,
@@ -464,15 +464,15 @@
       "jobName": "paragraph_1537303344014_1073119656",
       "id": "20180918-204224_1942830640",
       "dateCreated": "Sep 18, 2018 8:42:24 PM",
-      "dateStarted": "Oct 12, 2018 10:00:18 PM",
-      "dateFinished": "Oct 12, 2018 10:00:20 PM",
+      "dateStarted": "Oct 16, 2018 9:14:35 PM",
+      "dateFinished": "Oct 16, 2018 9:14:38 PM",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
     {
       "text": "%md\n# 4 - Preparing the data",
       "user": "anonymous",
-      "dateUpdated": "Oct 12, 2018 9:59:38 PM",
+      "dateUpdated": "Oct 16, 2018 9:13:45 PM",
       "config": {
         "tableHide": false,
         "editorSetting": {
@@ -511,7 +511,7 @@
       "title": "Converting other features data types",
       "text": "%md\n\nSee bellow how some of the colums are of type string, double or boolean:",
       "user": "anonymous",
-      "dateUpdated": "Oct 12, 2018 9:59:38 PM",
+      "dateUpdated": "Oct 16, 2018 9:13:45 PM",
       "config": {
         "tableHide": false,
         "editorSetting": {
@@ -550,7 +550,7 @@
     {
       "text": "%spark\n\ndf.printSchema()\n",
       "user": "anonymous",
-      "dateUpdated": "Oct 12, 2018 9:59:38 PM",
+      "dateUpdated": "Oct 16, 2018 9:13:45 PM",
       "config": {
         "colWidth": 12.0,
         "editorMode": "ace/mode/scala",
@@ -578,15 +578,15 @@
       "jobName": "paragraph_1537296780464_-811157098",
       "id": "20180918-034847_1303622092",
       "dateCreated": "Sep 18, 2018 6:53:00 PM",
-      "dateStarted": "Oct 12, 2018 10:00:19 PM",
-      "dateFinished": "Oct 12, 2018 10:00:21 PM",
+      "dateStarted": "Oct 16, 2018 9:14:36 PM",
+      "dateFinished": "Oct 16, 2018 9:14:39 PM",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
     {
       "text": "%md\n\nAmount is a numerical (continuous) dimension. We need to convert amount to an integer before using it to train our model.\n\nFraud is a boolean dimension. We need to convert it to a string before using it to train our model.\n\nGender is a string. We need to convert it to int.",
       "user": "anonymous",
-      "dateUpdated": "Oct 12, 2018 9:59:39 PM",
+      "dateUpdated": "Oct 16, 2018 9:13:45 PM",
       "config": {
         "tableHide": false,
         "editorSetting": {
@@ -624,7 +624,7 @@
     {
       "text": "%spark\n\nval df2 \u003d df.withColumn(\"amount\", col(\"amount\").cast(\"bigint\"))\n    .withColumn(\"fraud\", col(\"fraud\").cast(\"int\"))\n    .withColumn(\"gender\", col(\"gender\").cast(\"int\"))\n\ndf2.printSchema()\n\n",
       "user": "anonymous",
-      "dateUpdated": "Oct 12, 2018 9:59:39 PM",
+      "dateUpdated": "Oct 16, 2018 9:13:45 PM",
       "config": {
         "colWidth": 12.0,
         "editorMode": "ace/mode/scala",
@@ -652,8 +652,8 @@
       "jobName": "paragraph_1537296780464_-811157098",
       "id": "20180918-025428_2081805463",
       "dateCreated": "Sep 18, 2018 6:53:00 PM",
-      "dateStarted": "Oct 12, 2018 10:00:21 PM",
-      "dateFinished": "Oct 12, 2018 10:00:22 PM",
+      "dateStarted": "Oct 16, 2018 9:14:38 PM",
+      "dateFinished": "Oct 16, 2018 9:14:41 PM",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
@@ -661,7 +661,7 @@
       "title": "Spliting the Data Set into Training and Testing Sets",
       "text": "%md\n\nNow, let\u0027s split our data frame between our training set (70%) and our testing set (30%). We will do a random split:",
       "user": "anonymous",
-      "dateUpdated": "Oct 12, 2018 9:59:39 PM",
+      "dateUpdated": "Oct 16, 2018 9:13:46 PM",
       "config": {
         "tableHide": false,
         "editorSetting": {
@@ -700,7 +700,7 @@
     {
       "text": "%md \n\n# 5 - Basic Infrastructure",
       "user": "anonymous",
-      "dateUpdated": "Oct 12, 2018 9:59:39 PM",
+      "dateUpdated": "Oct 16, 2018 9:13:46 PM",
       "config": {
         "tableHide": false,
         "editorSetting": {
@@ -739,7 +739,7 @@
       "title": "Feature Selection - Testing for Independence",
       "text": "%md\n\nFeature selection is an important problem in Machine learning. There are many feature selection methods available such as mutual information, information gain, and chi square test.\n\nWe have 500K transactions. The *fraud* field will tell us if a transaction is marked as fraud or not. We have many features (age, gender, amount, merchant and category) but we are not\nsure which features have an impact in *fraud* class. Given a feature X, we can use Chi Square Test to evaluate its importance to distinguish the class. \n\nBy calculating the Chi square scores for all the features, we can rank the features by the chi square scores, then choose the top ranked features for model training. In other words, \nthe higher value of the \\chi^2 score, the more likelihood the feature is correlated with the class, thus it should be selected for model training.\n\nThe nice thing about Spark is that it can do all of this for us! We will use ChiSqSelector feature selector for that. ",
       "user": "anonymous",
-      "dateUpdated": "Oct 12, 2018 9:59:40 PM",
+      "dateUpdated": "Oct 16, 2018 9:13:46 PM",
       "config": {
         "tableHide": false,
         "editorSetting": {
@@ -779,7 +779,7 @@
       "title": "Vector Assembler",
       "text": "%md\n\nWe need to transform our features in vectors before giving them to the ML algorithms. That is done by a class called VectorAssembler(). It will take an array of column names and will build a single column on our dataframe that will include all the selected features.",
       "user": "anonymous",
-      "dateUpdated": "Oct 12, 2018 9:59:40 PM",
+      "dateUpdated": "Oct 16, 2018 9:13:46 PM",
       "config": {
         "colWidth": 12.0,
         "enabled": false,
@@ -819,7 +819,7 @@
       "title": "Vector Indexer",
       "text": "%md\n\nSpark needs to know if a feature is *categorical* or *numeric*. A categorical feature is something like Male/Female, Day of Week, a small range of numbers, etc. A numeric feature is a continuous value.\n\nWe could define this by hand but, again, Spark can help us with that with a VectorIndexer. It will look each feature and figure out for us if it is a categorical feature or continuous feature. We must give it a hint tough. Parameter MaxCategories defines the maximum number of items a feature must have to be considered a category. \n\nWe have a merchant category. Let\u0027s see how many merchant categories do we have:",
       "user": "anonymous",
-      "dateUpdated": "Oct 12, 2018 9:59:40 PM",
+      "dateUpdated": "Oct 16, 2018 9:13:46 PM",
       "config": {
         "colWidth": 12.0,
         "enabled": false,
@@ -858,7 +858,7 @@
     {
       "text": "%spark\n\nfor (colname \u003c- df.columns) println(colname + \" has \" + df.select(col(colname)).distinct().count() + \" distinct values \")\n",
       "user": "anonymous",
-      "dateUpdated": "Oct 12, 2018 9:59:40 PM",
+      "dateUpdated": "Oct 16, 2018 9:13:46 PM",
       "config": {
         "colWidth": 12.0,
         "enabled": true,
@@ -878,7 +878,7 @@
         "msg": [
           {
             "type": "TEXT",
-            "data": "age has 61 distinct values \ngender has 3 distinct values \namount has 22222 distinct values \nfraud has 2 distinct values \nmerchant has 50 distinct values \ncategory has 15 distinct values \n"
+            "data": "age has 62 distinct values \ngender has 3 distinct values \namount has 22222 distinct values \nfraud has 2 distinct values \nmerchant has 50 distinct values \ncategory has 15 distinct values \n"
           }
         ]
       },
@@ -886,8 +886,8 @@
       "jobName": "paragraph_1538260677104_1691720729",
       "id": "20180929-223757_1630009029",
       "dateCreated": "Sep 29, 2018 10:37:57 PM",
-      "dateStarted": "Oct 12, 2018 10:00:21 PM",
-      "dateFinished": "Oct 12, 2018 10:00:49 PM",
+      "dateStarted": "Oct 16, 2018 9:14:39 PM",
+      "dateFinished": "Oct 16, 2018 9:15:10 PM",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
@@ -895,7 +895,7 @@
       "title": "Creating the basic infrastructure to be used when training our models",
       "text": "%spark\n\nval vectorAssembler \u003d new VectorAssembler() \n    .setInputCols(Array(\"merchant\", \"category\", \"amount\", \"age\", \"gender\")) \n    .setOutputCol(\"rawFeatures\")\n\n//val vectorIndexer \u003d new VectorIndexer().setInputCol(\"rawFeatures\").setOutputCol(\"features\").setMaxCategories(16)\n\n// This will take the top 3 most important features accordingly to Chi2\n//val selectorChi \u003d new ChiSqSelector().setNumTopFeatures(4).setFeaturesCol(\"features\").setOutputCol(\"selectedFeatures\").setLabelCol(\"fraud\")\nval selectorChi \u003d new ChiSqSelector().setNumTopFeatures(3).setFeaturesCol(\"rawFeatures\").setOutputCol(\"selectedFeatures\").setLabelCol(\"fraud\")\n",
       "user": "anonymous",
-      "dateUpdated": "Oct 12, 2018 9:59:40 PM",
+      "dateUpdated": "Oct 16, 2018 9:13:47 PM",
       "config": {
         "colWidth": 12.0,
         "enabled": true,
@@ -916,7 +916,7 @@
         "msg": [
           {
             "type": "TEXT",
-            "data": "vectorAssembler: org.apache.spark.ml.feature.VectorAssembler \u003d vecAssembler_aafee334149a\nselectorChi: org.apache.spark.ml.feature.ChiSqSelector \u003d chiSqSelector_1307306db410\n"
+            "data": "vectorAssembler: org.apache.spark.ml.feature.VectorAssembler \u003d vecAssembler_bce1372984f5\nselectorChi: org.apache.spark.ml.feature.ChiSqSelector \u003d chiSqSelector_3e86c1f0c026\n"
           }
         ]
       },
@@ -924,15 +924,15 @@
       "jobName": "paragraph_1538259882991_-1445667942",
       "id": "20180929-222442_1424032271",
       "dateCreated": "Sep 29, 2018 10:24:42 PM",
-      "dateStarted": "Oct 12, 2018 10:00:22 PM",
-      "dateFinished": "Oct 12, 2018 10:00:51 PM",
+      "dateStarted": "Oct 16, 2018 9:14:41 PM",
+      "dateFinished": "Oct 16, 2018 9:15:12 PM",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
     {
       "text": "%spark\n\nvectorAssembler.transform(df2).show()\n",
       "user": "anonymous",
-      "dateUpdated": "Oct 12, 2018 9:59:41 PM",
+      "dateUpdated": "Oct 16, 2018 9:13:47 PM",
       "config": {
         "colWidth": 12.0,
         "enabled": true,
@@ -952,7 +952,7 @@
         "msg": [
           {
             "type": "TEXT",
-            "data": "+---+------+------+-----+--------+--------+--------------------+\n|age|gender|amount|fraud|merchant|category|         rawFeatures|\n+---+------+------+-----+--------+--------+--------------------+\n| 48|     1|     4|    0|       2|       1|[2.0,1.0,4.0,48.0...|\n| 30|     1|    39|    0|       2|       1|[2.0,1.0,39.0,30....|\n| 47|     2|    26|    0|       4|       1|[4.0,1.0,26.0,47....|\n| 40|     1|    17|    0|       2|       1|[2.0,1.0,17.0,40....|\n| 64|     1|    35|    0|       2|       1|[2.0,1.0,35.0,64....|\n| 42|     2|    25|    0|       2|       1|[2.0,1.0,25.0,42....|\n| 19|     2|     9|    0|       2|       1|[2.0,1.0,9.0,19.0...|\n| 48|     2|    21|    0|       2|       1|[2.0,1.0,21.0,48....|\n| 37|     1|    32|    0|       2|       1|[2.0,1.0,32.0,37....|\n| 61|     2|    35|    0|       2|       1|[2.0,1.0,35.0,61....|\n| 51|     2|    14|    0|       2|       1|[2.0,1.0,14.0,51....|\n| 24|     1|     1|    0|       4|       1|[4.0,1.0,1.0,24.0...|\n| 36|     1|    68|    0|      16|       2|[16.0,2.0,68.0,36...|\n| 63|     1|    20|    0|       4|       1|[4.0,1.0,20.0,63....|\n| 42|     1|    13|    0|       2|       1|[2.0,1.0,13.0,42....|\n| 38|     2|    30|    0|       2|       1|[2.0,1.0,30.0,38....|\n| 50|     1|    17|    0|       4|       1|[4.0,1.0,17.0,50....|\n| 63|     2|    40|    0|       2|       1|[2.0,1.0,40.0,63....|\n| 30|     1|    21|    0|       2|       1|[2.0,1.0,21.0,30....|\n| 28|     2|    10|    0|       2|       1|[2.0,1.0,10.0,28....|\n+---+------+------+-----+--------+--------+--------------------+\nonly showing top 20 rows\n\n"
+            "data": "+---+------+------+-----+--------+--------+--------------------+\n|age|gender|amount|fraud|merchant|category|         rawFeatures|\n+---+------+------+-----+--------+--------+--------------------+\n| 50|     1|     4|    0|       2|       1|[2.0,1.0,4.0,50.0...|\n| 30|     1|    39|    0|       2|       1|[2.0,1.0,39.0,30....|\n| 52|     2|    26|    0|       4|       1|[4.0,1.0,26.0,52....|\n| 41|     1|    17|    0|       2|       1|[2.0,1.0,17.0,41....|\n| 58|     1|    35|    0|       2|       1|[2.0,1.0,35.0,58....|\n| 41|     2|    25|    0|       2|       1|[2.0,1.0,25.0,41....|\n| 22|     2|     9|    0|       2|       1|[2.0,1.0,9.0,22.0...|\n| 47|     2|    21|    0|       2|       1|[2.0,1.0,21.0,47....|\n| 36|     1|    32|    0|       2|       1|[2.0,1.0,32.0,36....|\n| 57|     2|    35|    0|       2|       1|[2.0,1.0,35.0,57....|\n| 54|     2|    14|    0|       2|       1|[2.0,1.0,14.0,54....|\n| 20|     1|     1|    0|       4|       1|[4.0,1.0,1.0,20.0...|\n| 38|     1|    68|    0|      16|       2|[16.0,2.0,68.0,38...|\n| 64|     1|    20|    0|       4|       1|[4.0,1.0,20.0,64....|\n| 43|     1|    13|    0|       2|       1|[2.0,1.0,13.0,43....|\n| 42|     2|    30|    0|       2|       1|[2.0,1.0,30.0,42....|\n| 52|     1|    17|    0|       4|       1|[4.0,1.0,17.0,52....|\n| 63|     2|    40|    0|       2|       1|[2.0,1.0,40.0,63....|\n| 30|     1|    21|    0|       2|       1|[2.0,1.0,21.0,30....|\n| 34|     2|    10|    0|       2|       1|[2.0,1.0,10.0,34....|\n+---+------+------+-----+--------+--------+--------------------+\nonly showing top 20 rows\n\n"
           }
         ]
       },
@@ -960,15 +960,15 @@
       "jobName": "paragraph_1539100734286_1509631693",
       "id": "20181009-155854_1101550713",
       "dateCreated": "Oct 9, 2018 3:58:54 PM",
-      "dateStarted": "Oct 12, 2018 10:00:50 PM",
-      "dateFinished": "Oct 12, 2018 10:00:53 PM",
+      "dateStarted": "Oct 16, 2018 9:15:10 PM",
+      "dateFinished": "Oct 16, 2018 9:15:15 PM",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
     {
       "text": "%md\n# 6 - Training the Model\n",
       "user": "anonymous",
-      "dateUpdated": "Oct 12, 2018 9:59:41 PM",
+      "dateUpdated": "Oct 16, 2018 9:13:47 PM",
       "config": {
         "colWidth": 12.0,
         "enabled": false,
@@ -1006,7 +1006,7 @@
     {
       "text": "%md\n\n# 6.1 - Binary Decision Tree\n",
       "user": "anonymous",
-      "dateUpdated": "Oct 12, 2018 9:59:41 PM",
+      "dateUpdated": "Oct 16, 2018 9:13:48 PM",
       "config": {
         "tableHide": false,
         "editorSetting": {
@@ -1045,7 +1045,7 @@
       "title": "5.3.1 - Training the Model",
       "text": "%spark\n\nval decisionTreeClassifier \u003d new DecisionTreeClassifier().setLabelCol(\"fraud\").setFeaturesCol(\"selectedFeatures\").setPredictionCol(\"prediction\")\n\n//val pipelineBT \u003d new Pipeline().setStages(Array(vectorAssembler, vectorIndexer, selectorChi, binaryTree))\nval pipelineDTC \u003d new Pipeline().setStages(Array(vectorAssembler, selectorChi, decisionTreeClassifier))\n\nval pipelineModelDTC \u003d runPipelineOnData(df2, pipelineDTC, \"DecisionTreeClassifier\")\n\nval decisionTreeClassificationModel \u003d pipelineModelDTC.stages(2).asInstanceOf[DecisionTreeClassificationModel]\n",
       "user": "anonymous",
-      "dateUpdated": "Oct 12, 2018 9:59:41 PM",
+      "dateUpdated": "Oct 16, 2018 9:13:48 PM",
       "config": {
         "editorSetting": {
           "language": "scala",
@@ -1061,29 +1061,22 @@
         "params": {},
         "forms": {}
       },
-      "results": {
-        "code": "SUCCESS",
-        "msg": [
-          {
-            "type": "TEXT",
-            "data": "decisionTreeClassifier: org.apache.spark.ml.classification.DecisionTreeClassifier \u003d dtc_293077dd7b5e\npipelineDTC: org.apache.spark.ml.Pipeline \u003d pipeline_a4ab92c03c04\n\t\tTest Error \u003d 0.009832159045239264%\n\t\tExporting the model to PMML file /common_shared/pmml/IRISDemo.ImportedModel.DecisionTreeClassifier.pmml\npipelineModelDTC: org.apache.spark.ml.PipelineModel \u003d pipeline_a4ab92c03c04\ndecisionTreeClassificationModel: org.apache.spark.ml.classification.DecisionTreeClassificationModel \u003d DecisionTreeClassificationModel (uid\u003ddtc_293077dd7b5e) of depth 5 with 43 nodes\n"
-          }
-        ]
-      },
+      "results": "org.apache.thrift.transport.TTransportException",
       "apps": [],
       "jobName": "paragraph_1537296780472_-814235089",
       "id": "20180918-041035_1716649505",
       "dateCreated": "Sep 18, 2018 6:53:00 PM",
-      "dateStarted": "Oct 12, 2018 10:00:51 PM",
-      "dateFinished": "Oct 12, 2018 10:01:24 PM",
-      "status": "FINISHED",
+      "dateStarted": "Oct 16, 2018 9:15:14 PM",
+      "dateFinished": "Oct 16, 2018 9:17:03 PM",
+      "status": "ERROR",
+      "errorMessage": "org.apache.thrift.transport.TTransportException\n\tat org.apache.thrift.transport.TIOStreamTransport.read(TIOStreamTransport.java:132)\n\tat org.apache.thrift.transport.TTransport.readAll(TTransport.java:86)\n\tat org.apache.thrift.protocol.TBinaryProtocol.readAll(TBinaryProtocol.java:429)\n\tat org.apache.thrift.protocol.TBinaryProtocol.readI32(TBinaryProtocol.java:318)\n\tat org.apache.thrift.protocol.TBinaryProtocol.readMessageBegin(TBinaryProtocol.java:219)\n\tat org.apache.thrift.TServiceClient.receiveBase(TServiceClient.java:69)\n\tat org.apache.zeppelin.interpreter.thrift.RemoteInterpreterService$Client.recv_interpret(RemoteInterpreterService.java:266)\n\tat org.apache.zeppelin.interpreter.thrift.RemoteInterpreterService$Client.interpret(RemoteInterpreterService.java:250)\n\tat org.apache.zeppelin.interpreter.remote.RemoteInterpreter.interpret(RemoteInterpreter.java:373)\n\tat org.apache.zeppelin.interpreter.LazyOpenInterpreter.interpret(LazyOpenInterpreter.java:97)\n\tat org.apache.zeppelin.notebook.Paragraph.jobRun(Paragraph.java:406)\n\tat org.apache.zeppelin.scheduler.Job.run(Job.java:175)\n\tat org.apache.zeppelin.scheduler.RemoteScheduler$JobRunner.run(RemoteScheduler.java:329)\n\tat java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:511)\n\tat java.util.concurrent.FutureTask.run(FutureTask.java:266)\n\tat java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.access$201(ScheduledThreadPoolExecutor.java:180)\n\tat java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:293)\n\tat java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)\n\tat java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)\n\tat java.lang.Thread.run(Thread.java:748)\n",
       "progressUpdateIntervalMs": 500
     },
     {
       "title": "Let\u0027s see it!",
       "text": "%spark\n\nprintln(s\"\\n\\nLearned classification tree model:\\n ${decisionTreeClassificationModel.toDebugString}\")\n",
       "user": "anonymous",
-      "dateUpdated": "Oct 12, 2018 9:59:42 PM",
+      "dateUpdated": "Oct 16, 2018 9:13:48 PM",
       "config": {
         "colWidth": 12.0,
         "enabled": true,
@@ -1099,28 +1092,21 @@
         "params": {},
         "forms": {}
       },
-      "results": {
-        "code": "SUCCESS",
-        "msg": [
-          {
-            "type": "TEXT",
-            "data": "\n\nLearned classification tree model:\n DecisionTreeClassificationModel (uid\u003ddtc_293077dd7b5e) of depth 5 with 43 nodes\n  If (feature 2 \u003c\u003d 99.0)\n   If (feature 0 \u003c\u003d 84.0)\n    If (feature 0 \u003c\u003d 4.0)\n     Predict: 0.0\n    Else (feature 0 \u003e 4.0)\n     If (feature 0 \u003c\u003d 45.0)\n      If (feature 0 \u003c\u003d 16.0)\n       Predict: 0.0\n      Else (feature 0 \u003e 16.0)\n       Predict: 0.0\n     Else (feature 0 \u003e 45.0)\n      Predict: 0.0\n   Else (feature 0 \u003e 84.0)\n    If (feature 0 \u003c\u003d 95.0)\n     If (feature 2 \u003c\u003d 4.0)\n      If (feature 2 \u003c\u003d 2.0)\n       Predict: 0.0\n      Else (feature 2 \u003e 2.0)\n       Predict: 0.0\n     Else (feature 2 \u003e 4.0)\n      If (feature 2 \u003c\u003d 59.0)\n       Predict: 0.0\n      Else (feature 2 \u003e 59.0)\n       Predict: 0.0\n    Else (feature 0 \u003e 95.0)\n     If (feature 0 \u003c\u003d 713.0)\n      If (feature 0 \u003c\u003d 269.0)\n       Predict: 0.0\n      Else (feature 0 \u003e 269.0)\n       Predict: 0.0\n     Else (feature 0 \u003e 713.0)\n      If (feature 1 \u003c\u003d 13.0)\n       Predict: 0.0\n      Else (feature 1 \u003e 13.0)\n       Predict: 0.0\n  Else (feature 2 \u003e 99.0)\n   If (feature 1 \u003c\u003d 13.0)\n    If (feature 0 \u003c\u003d 713.0)\n     If (feature 0 \u003c\u003d 84.0)\n      If (feature 0 \u003c\u003d 45.0)\n       Predict: 0.0\n      Else (feature 0 \u003e 45.0)\n       Predict: 0.0\n     Else (feature 0 \u003e 84.0)\n      If (feature 0 \u003c\u003d 269.0)\n       Predict: 0.0\n      Else (feature 0 \u003e 269.0)\n       Predict: 1.0\n    Else (feature 0 \u003e 713.0)\n     If (feature 1 \u003c\u003d 11.0)\n      If (feature 1 \u003c\u003d 2.0)\n       Predict: 0.0\n      Else (feature 1 \u003e 2.0)\n       Predict: 0.0\n     Else (feature 1 \u003e 11.0)\n      If (feature 0 \u003c\u003d 929.0)\n       Predict: 1.0\n      Else (feature 0 \u003e 929.0)\n       Predict: 0.0\n   Else (feature 1 \u003e 13.0)\n    If (feature 1 \u003c\u003d 14.0)\n     Predict: 1.0\n    Else (feature 1 \u003e 14.0)\n     Predict: 1.0\n\n"
-          }
-        ]
-      },
+      "results": "org.apache.thrift.transport.TTransportException",
       "apps": [],
       "jobName": "paragraph_1538318613446_116130417",
       "id": "20180930-144333_333084227",
       "dateCreated": "Sep 30, 2018 2:43:33 PM",
-      "dateStarted": "Oct 12, 2018 10:00:54 PM",
-      "dateFinished": "Oct 12, 2018 10:01:25 PM",
-      "status": "FINISHED",
+      "dateStarted": "Oct 16, 2018 9:15:16 PM",
+      "dateFinished": "Oct 16, 2018 9:17:03 PM",
+      "status": "ERROR",
+      "errorMessage": "org.apache.thrift.transport.TTransportException\n\tat org.apache.thrift.transport.TIOStreamTransport.read(TIOStreamTransport.java:132)\n\tat org.apache.thrift.transport.TTransport.readAll(TTransport.java:86)\n\tat org.apache.thrift.protocol.TBinaryProtocol.readAll(TBinaryProtocol.java:429)\n\tat org.apache.thrift.protocol.TBinaryProtocol.readI32(TBinaryProtocol.java:318)\n\tat org.apache.thrift.protocol.TBinaryProtocol.readMessageBegin(TBinaryProtocol.java:219)\n\tat org.apache.thrift.TServiceClient.receiveBase(TServiceClient.java:69)\n\tat org.apache.zeppelin.interpreter.thrift.RemoteInterpreterService$Client.recv_interpret(RemoteInterpreterService.java:266)\n\tat org.apache.zeppelin.interpreter.thrift.RemoteInterpreterService$Client.interpret(RemoteInterpreterService.java:250)\n\tat org.apache.zeppelin.interpreter.remote.RemoteInterpreter.interpret(RemoteInterpreter.java:373)\n\tat org.apache.zeppelin.interpreter.LazyOpenInterpreter.interpret(LazyOpenInterpreter.java:97)\n\tat org.apache.zeppelin.notebook.Paragraph.jobRun(Paragraph.java:406)\n\tat org.apache.zeppelin.scheduler.Job.run(Job.java:175)\n\tat org.apache.zeppelin.scheduler.RemoteScheduler$JobRunner.run(RemoteScheduler.java:329)\n\tat java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:511)\n\tat java.util.concurrent.FutureTask.run(FutureTask.java:266)\n\tat java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.access$201(ScheduledThreadPoolExecutor.java:180)\n\tat java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:293)\n\tat java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)\n\tat java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)\n\tat java.lang.Thread.run(Thread.java:748)\n",
       "progressUpdateIntervalMs": 500
     },
     {
       "text": "%md\n\n## 6.2 - Random Forest Classifier",
       "user": "anonymous",
-      "dateUpdated": "Oct 12, 2018 9:59:42 PM",
+      "dateUpdated": "Oct 16, 2018 9:13:48 PM",
       "config": {
         "tableHide": false,
         "editorSetting": {
@@ -1159,7 +1145,7 @@
       "title": "6.2.1 - Training the model",
       "text": "%spark\n\nval randomForest \u003d new RandomForestClassifier().setLabelCol(\"fraud\").setFeaturesCol(\"selectedFeatures\").setNumTrees(10).setMaxDepth(4).setMaxBins(20)\n\n//val pipelineRF \u003d new Pipeline().setStages(Array(vectorAssembler, vectorIndexer, selectorChi, randomForest))\nval pipelineRF \u003d new Pipeline().setStages(Array(vectorAssembler, selectorChi, randomForest))\n\nval randomForestPipelineModel \u003d runPipelineOnData(df2, pipelineRF, \"RandomForest\")\n\nval randomForestModel \u003d randomForestPipelineModel.stages(2).asInstanceOf[RandomForestClassificationModel]",
       "user": "anonymous",
-      "dateUpdated": "Oct 12, 2018 9:59:42 PM",
+      "dateUpdated": "Oct 16, 2018 9:13:48 PM",
       "config": {
         "editorSetting": {
           "language": "scala",
@@ -1175,29 +1161,22 @@
         "params": {},
         "forms": {}
       },
-      "results": {
-        "code": "SUCCESS",
-        "msg": [
-          {
-            "type": "TEXT",
-            "data": "randomForest: org.apache.spark.ml.classification.RandomForestClassifier \u003d rfc_ad57592f8ca5\npipelineRF: org.apache.spark.ml.Pipeline \u003d pipeline_614ebb01a105\n\t\tTest Error \u003d 0.014665010957348512%\n\t\tExporting the model to PMML file /common_shared/pmml/IRISDemo.ImportedModel.RandomForest.pmml\nrandomForestPipelineModel: org.apache.spark.ml.PipelineModel \u003d pipeline_614ebb01a105\nrandomForestModel: org.apache.spark.ml.classification.RandomForestClassificationModel \u003d RandomForestClassificationModel (uid\u003drfc_43b16954e17b) with 10 trees\n"
-          }
-        ]
-      },
+      "results": "org.apache.zeppelin.interpreter.InterpreterException: org.apache.thrift.transport.TTransportException: java.net.ConnectException: Connection refused (Connection refused)",
       "apps": [],
       "jobName": "paragraph_1537296780466_-810387600",
       "id": "20180918-030614_825977513",
       "dateCreated": "Sep 18, 2018 6:53:00 PM",
-      "dateStarted": "Oct 12, 2018 10:01:24 PM",
-      "dateFinished": "Oct 12, 2018 10:01:42 PM",
-      "status": "FINISHED",
+      "dateStarted": "Oct 16, 2018 9:17:03 PM",
+      "dateFinished": "Oct 16, 2018 9:17:03 PM",
+      "status": "ERROR",
+      "errorMessage": "java.net.ConnectException: Connection refused (Connection refused)\n\tat java.net.PlainSocketImpl.socketConnect(Native Method)\n\tat java.net.AbstractPlainSocketImpl.doConnect(AbstractPlainSocketImpl.java:350)\n\tat java.net.AbstractPlainSocketImpl.connectToAddress(AbstractPlainSocketImpl.java:206)\n\tat java.net.AbstractPlainSocketImpl.connect(AbstractPlainSocketImpl.java:188)\n\tat java.net.SocksSocketImpl.connect(SocksSocketImpl.java:392)\n\tat java.net.Socket.connect(Socket.java:589)\n\tat org.apache.thrift.transport.TSocket.open(TSocket.java:182)\n\tat org.apache.zeppelin.interpreter.remote.ClientFactory.create(ClientFactory.java:51)\n\tat org.apache.zeppelin.interpreter.remote.ClientFactory.create(ClientFactory.java:37)\n\tat org.apache.commons.pool2.BasePooledObjectFactory.makeObject(BasePooledObjectFactory.java:60)\n\tat org.apache.commons.pool2.impl.GenericObjectPool.create(GenericObjectPool.java:861)\n\tat org.apache.commons.pool2.impl.GenericObjectPool.borrowObject(GenericObjectPool.java:435)\n\tat org.apache.commons.pool2.impl.GenericObjectPool.borrowObject(GenericObjectPool.java:363)\n\tat org.apache.zeppelin.interpreter.remote.RemoteInterpreterProcess.getClient(RemoteInterpreterProcess.java:92)\n\tat org.apache.zeppelin.interpreter.remote.RemoteInterpreter.interpret(RemoteInterpreter.java:352)\n\tat org.apache.zeppelin.interpreter.LazyOpenInterpreter.interpret(LazyOpenInterpreter.java:97)\n\tat org.apache.zeppelin.notebook.Paragraph.jobRun(Paragraph.java:406)\n\tat org.apache.zeppelin.scheduler.Job.run(Job.java:175)\n\tat org.apache.zeppelin.scheduler.RemoteScheduler$JobRunner.run(RemoteScheduler.java:329)\n\tat java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:511)\n\tat java.util.concurrent.FutureTask.run(FutureTask.java:266)\n\tat java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.access$201(ScheduledThreadPoolExecutor.java:180)\n\tat java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:293)\n\tat java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)\n\tat java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)\n\tat java.lang.Thread.run(Thread.java:748)\n",
       "progressUpdateIntervalMs": 500
     },
     {
       "title": "6.2.2 - Let\u0027s see it!",
       "text": "%spark\n\n//randomForestModel.extractParamMap()\n\nprintln(s\"\\n\\nLearned classification tree model:\\n ${randomForestModel.toDebugString}\")\n",
       "user": "anonymous",
-      "dateUpdated": "Oct 12, 2018 9:59:42 PM",
+      "dateUpdated": "Oct 16, 2018 9:13:49 PM",
       "config": {
         "colWidth": 12.0,
         "enabled": true,
@@ -1213,28 +1192,21 @@
         "params": {},
         "forms": {}
       },
-      "results": {
-        "code": "SUCCESS",
-        "msg": [
-          {
-            "type": "TEXT",
-            "data": "\n\nLearned classification tree model:\n RandomForestClassificationModel (uid\u003drfc_43b16954e17b) with 10 trees\n  Tree 0 (weight 1.0):\n    If (feature 2 \u003c\u003d 75.0)\n     If (feature 1 \u003c\u003d 6.0)\n      If (feature 1 \u003c\u003d 1.0)\n       Predict: 0.0\n      Else (feature 1 \u003e 1.0)\n       If (feature 1 \u003c\u003d 3.0)\n        Predict: 0.0\n       Else (feature 1 \u003e 3.0)\n        Predict: 0.0\n     Else (feature 1 \u003e 6.0)\n      If (feature 1 \u003c\u003d 8.0)\n       If (feature 1 \u003c\u003d 7.0)\n        Predict: 0.0\n       Else (feature 1 \u003e 7.0)\n        Predict: 0.0\n      Else (feature 1 \u003e 8.0)\n       If (feature 1 \u003c\u003d 13.0)\n        Predict: 0.0\n       Else (feature 1 \u003e 13.0)\n        Predict: 0.0\n    Else (feature 2 \u003e 75.0)\n     If (feature 1 \u003c\u003d 13.0)\n      If (feature 0 \u003c\u003d 84.0)\n       If (feature 1 \u003c\u003d 2.0)\n        Predict: 0.0\n       Else (feature 1 \u003e 2.0)\n        Predict: 0.0\n      Else (feature 0 \u003e 84.0)\n       If (feature 0 \u003c\u003d 95.0)\n        Predict: 1.0\n       Else (feature 0 \u003e 95.0)\n        Predict: 0.0\n     Else (feature 1 \u003e 13.0)\n      Predict: 1.0\n  Tree 1 (weight 1.0):\n    If (feature 2 \u003c\u003d 75.0)\n     If (feature 1 \u003c\u003d 4.0)\n      If (feature 1 \u003c\u003d 1.0)\n       Predict: 0.0\n      Else (feature 1 \u003e 1.0)\n       If (feature 0 \u003c\u003d 84.0)\n        Predict: 0.0\n       Else (feature 0 \u003e 84.0)\n        Predict: 0.0\n     Else (feature 1 \u003e 4.0)\n      If (feature 0 \u003c\u003d 269.0)\n       If (feature 0 \u003c\u003d 141.0)\n        Predict: 0.0\n       Else (feature 0 \u003e 141.0)\n        Predict: 0.0\n      Else (feature 0 \u003e 269.0)\n       If (feature 1 \u003c\u003d 8.0)\n        Predict: 0.0\n       Else (feature 1 \u003e 8.0)\n        Predict: 0.0\n    Else (feature 2 \u003e 75.0)\n     If (feature 1 \u003c\u003d 13.0)\n      If (feature 0 \u003c\u003d 84.0)\n       If (feature 1 \u003c\u003d 2.0)\n        Predict: 0.0\n       Else (feature 1 \u003e 2.0)\n        Predict: 0.0\n      Else (feature 0 \u003e 84.0)\n       If (feature 0 \u003c\u003d 95.0)\n        Predict: 1.0\n       Else (feature 0 \u003e 95.0)\n        Predict: 0.0\n     Else (feature 1 \u003e 13.0)\n      If (feature 1 \u003c\u003d 14.0)\n       Predict: 1.0\n      Else (feature 1 \u003e 14.0)\n       Predict: 1.0\n  Tree 2 (weight 1.0):\n    If (feature 1 \u003c\u003d 13.0)\n     If (feature 2 \u003c\u003d 75.0)\n      If (feature 1 \u003c\u003d 4.0)\n       If (feature 0 \u003c\u003d 84.0)\n        Predict: 0.0\n       Else (feature 0 \u003e 84.0)\n        Predict: 0.0\n      Else (feature 1 \u003e 4.0)\n       If (feature 1 \u003c\u003d 8.0)\n        Predict: 0.0\n       Else (feature 1 \u003e 8.0)\n        Predict: 0.0\n     Else (feature 2 \u003e 75.0)\n      If (feature 1 \u003c\u003d 1.0)\n       Predict: 0.0\n      Else (feature 1 \u003e 1.0)\n       If (feature 0 \u003c\u003d 84.0)\n        Predict: 0.0\n       Else (feature 0 \u003e 84.0)\n        Predict: 0.0\n    Else (feature 1 \u003e 13.0)\n     If (feature 2 \u003c\u003d 75.0)\n      If (feature 2 \u003c\u003d 51.0)\n       If (feature 1 \u003c\u003d 14.0)\n        Predict: 0.0\n       Else (feature 1 \u003e 14.0)\n        Predict: 0.0\n      Else (feature 2 \u003e 51.0)\n       Predict: 0.0\n     Else (feature 2 \u003e 75.0)\n      If (feature 1 \u003c\u003d 14.0)\n       Predict: 1.0\n      Else (feature 1 \u003e 14.0)\n       Predict: 1.0\n  Tree 3 (weight 1.0):\n    If (feature 2 \u003c\u003d 75.0)\n     If (feature 0 \u003c\u003d 84.0)\n      If (feature 1 \u003c\u003d 2.0)\n       If (feature 1 \u003c\u003d 1.0)\n        Predict: 0.0\n       Else (feature 1 \u003e 1.0)\n        Predict: 0.0\n      Else (feature 1 \u003e 2.0)\n       If (feature 0 \u003c\u003d 45.0)\n        Predict: 0.0\n       Else (feature 0 \u003e 45.0)\n        Predict: 0.0\n     Else (feature 0 \u003e 84.0)\n      If (feature 1 \u003c\u003d 5.0)\n       If (feature 0 \u003c\u003d 302.0)\n        Predict: 0.0\n       Else (feature 0 \u003e 302.0)\n        Predict: 0.0\n      Else (feature 1 \u003e 5.0)\n       If (feature 0 \u003c\u003d 269.0)\n        Predict: 0.0\n       Else (feature 0 \u003e 269.0)\n        Predict: 0.0\n    Else (feature 2 \u003e 75.0)\n     If (feature 1 \u003c\u003d 13.0)\n      If (feature 0 \u003c\u003d 84.0)\n       If (feature 1 \u003c\u003d 2.0)\n        Predict: 0.0\n       Else (feature 1 \u003e 2.0)\n        Predict: 0.0\n      Else (feature 0 \u003e 84.0)\n       If (feature 0 \u003c\u003d 95.0)\n        Predict: 1.0\n       Else (feature 0 \u003e 95.0)\n        Predict: 0.0\n     Else (feature 1 \u003e 13.0)\n      Predict: 1.0\n  Tree 4 (weight 1.0):\n    If (feature 2 \u003c\u003d 75.0)\n     If (feature 1 \u003c\u003d 4.0)\n      If (feature 0 \u003c\u003d 84.0)\n       If (feature 1 \u003c\u003d 2.0)\n        Predict: 0.0\n       Else (feature 1 \u003e 2.0)\n        Predict: 0.0\n      Else (feature 0 \u003e 84.0)\n       If (feature 2 \u003c\u003d 23.0)\n        Predict: 0.0\n       Else (feature 2 \u003e 23.0)\n        Predict: 0.0\n     Else (feature 1 \u003e 4.0)\n      If (feature 1 \u003c\u003d 5.0)\n       If (feature 0 \u003c\u003d 302.0)\n        Predict: 0.0\n       Else (feature 0 \u003e 302.0)\n        Predict: 0.0\n      Else (feature 1 \u003e 5.0)\n       If (feature 1 \u003c\u003d 8.0)\n        Predict: 0.0\n       Else (feature 1 \u003e 8.0)\n        Predict: 0.0\n    Else (feature 2 \u003e 75.0)\n     If (feature 0 \u003c\u003d 84.0)\n      If (feature 0 \u003c\u003d 45.0)\n       If (feature 1 \u003c\u003d 2.0)\n        Predict: 0.0\n       Else (feature 1 \u003e 2.0)\n        Predict: 0.0\n      Else (feature 0 \u003e 45.0)\n       Predict: 0.0\n     Else (feature 0 \u003e 84.0)\n      If (feature 1 \u003c\u003d 13.0)\n       If (feature 1 \u003c\u003d 8.0)\n        Predict: 0.0\n       Else (feature 1 \u003e 8.0)\n        Predict: 0.0\n      Else (feature 1 \u003e 13.0)\n       If (feature 1 \u003c\u003d 14.0)\n        Predict: 1.0\n       Else (feature 1 \u003e 14.0)\n        Predict: 1.0\n  Tree 5 (weight 1.0):\n    If (feature 2 \u003c\u003d 75.0)\n     If (feature 0 \u003c\u003d 84.0)\n      If (feature 0 \u003c\u003d 4.0)\n       Predict: 0.0\n      Else (feature 0 \u003e 4.0)\n       If (feature 1 \u003c\u003d 3.0)\n        Predict: 0.0\n       Else (feature 1 \u003e 3.0)\n        Predict: 0.0\n     Else (feature 0 \u003e 84.0)\n      If (feature 0 \u003c\u003d 95.0)\n       If (feature 2 \u003c\u003d 13.0)\n        Predict: 0.0\n       Else (feature 2 \u003e 13.0)\n        Predict: 0.0\n      Else (feature 0 \u003e 95.0)\n       If (feature 1 \u003c\u003d 8.0)\n        Predict: 0.0\n       Else (feature 1 \u003e 8.0)\n        Predict: 0.0\n    Else (feature 2 \u003e 75.0)\n     If (feature 1 \u003c\u003d 13.0)\n      If (feature 1 \u003c\u003d 1.0)\n       Predict: 0.0\n      Else (feature 1 \u003e 1.0)\n       If (feature 0 \u003c\u003d 84.0)\n        Predict: 0.0\n       Else (feature 0 \u003e 84.0)\n        Predict: 0.0\n     Else (feature 1 \u003e 13.0)\n      Predict: 1.0\n  Tree 6 (weight 1.0):\n    If (feature 1 \u003c\u003d 13.0)\n     If (feature 2 \u003c\u003d 75.0)\n      If (feature 0 \u003c\u003d 84.0)\n       If (feature 1 \u003c\u003d 1.0)\n        Predict: 0.0\n       Else (feature 1 \u003e 1.0)\n        Predict: 0.0\n      Else (feature 0 \u003e 84.0)\n       If (feature 1 \u003c\u003d 8.0)\n        Predict: 0.0\n       Else (feature 1 \u003e 8.0)\n        Predict: 0.0\n     Else (feature 2 \u003e 75.0)\n      If (feature 0 \u003c\u003d 84.0)\n       If (feature 0 \u003c\u003d 45.0)\n        Predict: 0.0\n       Else (feature 0 \u003e 45.0)\n        Predict: 0.0\n      Else (feature 0 \u003e 84.0)\n       If (feature 1 \u003c\u003d 8.0)\n        Predict: 0.0\n       Else (feature 1 \u003e 8.0)\n        Predict: 0.0\n    Else (feature 1 \u003e 13.0)\n     If (feature 2 \u003c\u003d 75.0)\n      Predict: 0.0\n     Else (feature 2 \u003e 75.0)\n      If (feature 1 \u003c\u003d 14.0)\n       Predict: 1.0\n      Else (feature 1 \u003e 14.0)\n       Predict: 1.0\n  Tree 7 (weight 1.0):\n    If (feature 1 \u003c\u003d 13.0)\n     If (feature 2 \u003c\u003d 75.0)\n      If (feature 1 \u003c\u003d 4.0)\n       If (feature 0 \u003c\u003d 84.0)\n        Predict: 0.0\n       Else (feature 0 \u003e 84.0)\n        Predict: 0.0\n      Else (feature 1 \u003e 4.0)\n       If (feature 1 \u003c\u003d 5.0)\n        Predict: 0.0\n       Else (feature 1 \u003e 5.0)\n        Predict: 0.0\n     Else (feature 2 \u003e 75.0)\n      If (feature 0 \u003c\u003d 84.0)\n       If (feature 1 \u003c\u003d 2.0)\n        Predict: 0.0\n       Else (feature 1 \u003e 2.0)\n        Predict: 0.0\n      Else (feature 0 \u003e 84.0)\n       If (feature 0 \u003c\u003d 95.0)\n        Predict: 1.0\n       Else (feature 0 \u003e 95.0)\n        Predict: 0.0\n    Else (feature 1 \u003e 13.0)\n     If (feature 1 \u003c\u003d 14.0)\n      Predict: 1.0\n     Else (feature 1 \u003e 14.0)\n      If (feature 2 \u003c\u003d 75.0)\n       Predict: 0.0\n      Else (feature 2 \u003e 75.0)\n       Predict: 1.0\n  Tree 8 (weight 1.0):\n    If (feature 1 \u003c\u003d 13.0)\n     If (feature 2 \u003c\u003d 75.0)\n      If (feature 1 \u003c\u003d 4.0)\n       If (feature 0 \u003c\u003d 84.0)\n        Predict: 0.0\n       Else (feature 0 \u003e 84.0)\n        Predict: 0.0\n      Else (feature 1 \u003e 4.0)\n       If (feature 1 \u003c\u003d 5.0)\n        Predict: 0.0\n       Else (feature 1 \u003e 5.0)\n        Predict: 0.0\n     Else (feature 2 \u003e 75.0)\n      If (feature 0 \u003c\u003d 84.0)\n       If (feature 1 \u003c\u003d 2.0)\n        Predict: 0.0\n       Else (feature 1 \u003e 2.0)\n        Predict: 0.0\n      Else (feature 0 \u003e 84.0)\n       If (feature 0 \u003c\u003d 95.0)\n        Predict: 1.0\n       Else (feature 0 \u003e 95.0)\n        Predict: 0.0\n    Else (feature 1 \u003e 13.0)\n     If (feature 1 \u003c\u003d 14.0)\n      If (feature 2 \u003c\u003d 75.0)\n       If (feature 2 \u003c\u003d 5.0)\n        Predict: 0.0\n       Else (feature 2 \u003e 5.0)\n        Predict: 0.0\n      Else (feature 2 \u003e 75.0)\n       Predict: 1.0\n     Else (feature 1 \u003e 14.0)\n      If (feature 2 \u003c\u003d 75.0)\n       Predict: 0.0\n      Else (feature 2 \u003e 75.0)\n       Predict: 1.0\n  Tree 9 (weight 1.0):\n    If (feature 2 \u003c\u003d 75.0)\n     If (feature 0 \u003c\u003d 84.0)\n      If (feature 1 \u003c\u003d 1.0)\n       Predict: 0.0\n      Else (feature 1 \u003e 1.0)\n       If (feature 0 \u003c\u003d 45.0)\n        Predict: 0.0\n       Else (feature 0 \u003e 45.0)\n        Predict: 0.0\n     Else (feature 0 \u003e 84.0)\n      If (feature 0 \u003c\u003d 95.0)\n       If (feature 2 \u003c\u003d 42.0)\n        Predict: 0.0\n       Else (feature 2 \u003e 42.0)\n        Predict: 0.0\n      Else (feature 0 \u003e 95.0)\n       If (feature 1 \u003c\u003d 8.0)\n        Predict: 0.0\n       Else (feature 1 \u003e 8.0)\n        Predict: 0.0\n    Else (feature 2 \u003e 75.0)\n     If (feature 0 \u003c\u003d 84.0)\n      If (feature 0 \u003c\u003d 45.0)\n       If (feature 1 \u003c\u003d 2.0)\n        Predict: 0.0\n       Else (feature 1 \u003e 2.0)\n        Predict: 0.0\n      Else (feature 0 \u003e 45.0)\n       Predict: 0.0\n     Else (feature 0 \u003e 84.0)\n      If (feature 1 \u003c\u003d 13.0)\n       If (feature 0 \u003c\u003d 95.0)\n        Predict: 1.0\n       Else (feature 0 \u003e 95.0)\n        Predict: 0.0\n      Else (feature 1 \u003e 13.0)\n       Predict: 1.0\n\n"
-          }
-        ]
-      },
+      "results": "org.apache.zeppelin.interpreter.InterpreterException: org.apache.thrift.transport.TTransportException: java.net.ConnectException: Connection refused (Connection refused)",
       "apps": [],
       "jobName": "paragraph_1538318968303_-951078189",
       "id": "20180930-144928_212907788",
       "dateCreated": "Sep 30, 2018 2:49:28 PM",
-      "dateStarted": "Oct 12, 2018 10:01:25 PM",
-      "dateFinished": "Oct 12, 2018 10:01:43 PM",
-      "status": "FINISHED",
+      "dateStarted": "Oct 16, 2018 9:17:04 PM",
+      "dateFinished": "Oct 16, 2018 9:17:04 PM",
+      "status": "ERROR",
+      "errorMessage": "java.net.ConnectException: Connection refused (Connection refused)\n\tat java.net.PlainSocketImpl.socketConnect(Native Method)\n\tat java.net.AbstractPlainSocketImpl.doConnect(AbstractPlainSocketImpl.java:350)\n\tat java.net.AbstractPlainSocketImpl.connectToAddress(AbstractPlainSocketImpl.java:206)\n\tat java.net.AbstractPlainSocketImpl.connect(AbstractPlainSocketImpl.java:188)\n\tat java.net.SocksSocketImpl.connect(SocksSocketImpl.java:392)\n\tat java.net.Socket.connect(Socket.java:589)\n\tat org.apache.thrift.transport.TSocket.open(TSocket.java:182)\n\tat org.apache.zeppelin.interpreter.remote.ClientFactory.create(ClientFactory.java:51)\n\tat org.apache.zeppelin.interpreter.remote.ClientFactory.create(ClientFactory.java:37)\n\tat org.apache.commons.pool2.BasePooledObjectFactory.makeObject(BasePooledObjectFactory.java:60)\n\tat org.apache.commons.pool2.impl.GenericObjectPool.create(GenericObjectPool.java:861)\n\tat org.apache.commons.pool2.impl.GenericObjectPool.borrowObject(GenericObjectPool.java:435)\n\tat org.apache.commons.pool2.impl.GenericObjectPool.borrowObject(GenericObjectPool.java:363)\n\tat org.apache.zeppelin.interpreter.remote.RemoteInterpreterProcess.getClient(RemoteInterpreterProcess.java:92)\n\tat org.apache.zeppelin.interpreter.remote.RemoteInterpreter.interpret(RemoteInterpreter.java:352)\n\tat org.apache.zeppelin.interpreter.LazyOpenInterpreter.interpret(LazyOpenInterpreter.java:97)\n\tat org.apache.zeppelin.notebook.Paragraph.jobRun(Paragraph.java:406)\n\tat org.apache.zeppelin.scheduler.Job.run(Job.java:175)\n\tat org.apache.zeppelin.scheduler.RemoteScheduler$JobRunner.run(RemoteScheduler.java:329)\n\tat java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:511)\n\tat java.util.concurrent.FutureTask.run(FutureTask.java:266)\n\tat java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.access$201(ScheduledThreadPoolExecutor.java:180)\n\tat java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:293)\n\tat java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)\n\tat java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)\n\tat java.lang.Thread.run(Thread.java:748)\n",
       "progressUpdateIntervalMs": 500
     },
     {
       "text": "%md\n\n## 6.2 - NOT WORKING - Random Forest Classifier - Training the model with all features",
       "user": "anonymous",
-      "dateUpdated": "Oct 12, 2018 9:59:42 PM",
+      "dateUpdated": "Oct 16, 2018 9:13:49 PM",
       "config": {
         "tableHide": false,
         "editorSetting": {
@@ -1264,8 +1236,8 @@
       "jobName": "paragraph_1537296780469_-813080843",
       "id": "20180918-171322_1868313588",
       "dateCreated": "Sep 18, 2018 6:53:00 PM",
-      "dateStarted": "Oct 12, 2018 9:59:42 PM",
-      "dateFinished": "Oct 12, 2018 9:59:44 PM",
+      "dateStarted": "Oct 16, 2018 9:13:49 PM",
+      "dateFinished": "Oct 16, 2018 9:13:52 PM",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
@@ -1273,7 +1245,7 @@
       "title": "6.2.1 - Training the Model without using Chi2 feature selection",
       "text": "%spark.pyspark\n\n# We will not specify parametrers by hand. We will use a parameter grid to allow for many combinations of parameters\n# to be evaluated. \n#rf \u003d RandomForestClassifier(labelCol\u003d\"fraud\", featuresCol\u003d\"features\", numTrees\u003d10)\nrf \u003d RandomForestClassifier(labelCol\u003d\"fraud\", featuresCol\u003d\"features\")\n\n# We must create the pipeline first. Then we will run this pipeline many times, \n# with different estimator parameres given by a ParamGridBuilder\npipelineRF \u003d Pipeline() \\\n    .setStages([vectorAssembler, rf])\n\nparamGridRF \u003d ParamGridBuilder() \\\n             .addGrid(rf.maxDepth, [2, 5, 10]) \\\n             .addGrid(rf.maxBins, [10, 20, 30]) \\\n             .addGrid(rf.numTrees, [5, 10]) \\\n             .build()\n\n# The CrossValidator will split the training data into 3 (numFolds) sets of training data. Each with will be splitted in\n# a sub-training-set and a sub-testing-set. That will help reducing overfitting. Then, the CrossValidator will use\n# the paramGrid to test different configurations of the estimator (the training algorithm) on the three sets of data.\n# The CrossValidator needs a way to evaluate the results. That is the function of the evaluator. The evaluator will\n# be evaluate the final predictions of each resulting model. The CrossValidator will them compare the results and pick\n# the configuration that worked best.\nevaluatorRF \u003d MulticlassClassificationEvaluator(labelCol\u003d\"fraud\")\n\n# Create 3-fold CrossValidator combining the model pipeline + paramGrid + evaluator:\ncvRF \u003d CrossValidator(estimator\u003dpipelineRF, estimatorParamMaps\u003dparamGridRF, evaluator\u003devaluatorRF, numFolds\u003d2)\n\n# Run cross validations.  This can take about 6 minutes\ncvModelRF \u003d cvRF.fit(trainingData)\n            ",
       "user": "anonymous",
-      "dateUpdated": "Oct 12, 2018 9:59:42 PM",
+      "dateUpdated": "Oct 16, 2018 9:13:49 PM",
       "config": {
         "editorSetting": {
           "language": "python",
@@ -1312,7 +1284,7 @@
       "title": "6.2.2 - Making Predictions",
       "text": "%spark.pyspark\n\npredictionsRF \u003d cvModelRF.transform(testData)\n\n#predictionsRF.printSchema()\n\nz.show(predictionsRF)\n",
       "user": "anonymous",
-      "dateUpdated": "Oct 12, 2018 9:59:43 PM",
+      "dateUpdated": "Oct 16, 2018 9:13:49 PM",
       "config": {
         "editorSetting": {
           "language": "python",
@@ -1351,7 +1323,7 @@
       "title": "6.2.3 - Evaluating Predictions",
       "text": "%spark.pyspark\n\nmyEvaluatorRF\u003d MulticlassClassificationEvaluator(labelCol\u003d\"fraud\")\n    \naccuracyRF \u003d myEvaluatorRF.evaluate(predictionsRF)\nprint(\"Test Error \u003d %g\" % (1.0 - accuracyRF))",
       "user": "anonymous",
-      "dateUpdated": "Oct 12, 2018 9:59:43 PM",
+      "dateUpdated": "Oct 16, 2018 9:13:51 PM",
       "config": {
         "editorSetting": {
           "language": "python",
@@ -1390,7 +1362,7 @@
       "title": "6.3.2 - Decision Tree Classifier - Making Predictions",
       "text": "%spark.pyspark\n\npredictionsBT \u003d cvModelBT.transform(testData)\n\nz.show(predictionsBT)\n",
       "user": "anonymous",
-      "dateUpdated": "Oct 12, 2018 9:59:43 PM",
+      "dateUpdated": "Oct 16, 2018 9:13:51 PM",
       "config": {
         "editorSetting": {
           "language": "python",
@@ -1429,7 +1401,7 @@
       "title": "5.3.3 - Evaluating the Predictions",
       "text": "%spark.pyspark\n\nmyEvaluatorBT \u003d BinaryClassificationEvaluator(labelCol\u003d\"fraud\")\n    \naccuracyBT \u003d myEvaluatorBT.evaluate(predictionsBT)\nprint(\"Test Error \u003d %g\" % (1.0 - accuracyBT))",
       "user": "anonymous",
-      "dateUpdated": "Oct 12, 2018 9:59:44 PM",
+      "dateUpdated": "Oct 16, 2018 9:13:51 PM",
       "config": {
         "editorSetting": {
           "language": "python",
@@ -1467,7 +1439,7 @@
     {
       "text": "%spark.pyspark\n",
       "user": "anonymous",
-      "dateUpdated": "Oct 12, 2018 9:59:44 PM",
+      "dateUpdated": "Oct 16, 2018 9:13:52 PM",
       "config": {
         "colWidth": 12.0,
         "editorMode": "ace/mode/python",
