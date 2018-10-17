@@ -73,7 +73,7 @@ services:
       args:
       - IRIS_PROJECT_FOLDER_NAME=archivedb-atelier-project
     image: amirsamary/irisdemo:iotpredmaint_archivedb
-    command: --key /shared/iris.key
+    command: --key /irislicense/iris.key
     hostname: archivedb
     ports:
     # 51773 is the superserver default port
@@ -81,6 +81,7 @@ services:
     # 52773 is the webserver/management portal port
     - "9092:52773"
     volumes:
+    - ../../IRISLicense/:/irislicense
     - ${PWD}/archivedb/shared/:/shared
     - ${PWD}/common_shared/:/common_shared # We will use this to pass new events from the overflow files,
                                             # at every minute, to the iotmon production.
@@ -107,7 +108,7 @@ services:
       args:
       - IRIS_PROJECT_FOLDER_NAME=iotmon-atelier-project
     image: amirsamary/irisdemo:iotpredmaint_iotmon
-    command: --key /shared/iris.key
+    command: --key /irislicense/iris.key
     hostname: iotmon
     ports:
     # 51773 is the superserver default port
@@ -115,6 +116,7 @@ services:
     # 52773 is the webserver/management portal port
     - "9094:52773"
     volumes:
+    - ../../IRISLicense/:/irislicense
     - ${PWD}/iotmon/shared/:/shared
     - ${PWD}/common_shared/:/common_shared  # The production will be looking into this folder for new files
                                             # that will be sent by the archivedb service. Of course we would
