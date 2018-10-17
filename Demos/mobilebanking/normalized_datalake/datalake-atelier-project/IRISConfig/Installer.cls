@@ -39,7 +39,7 @@ XData Install [ XMLNamespace = INSTALLER ]
 	</Invoke>
 	
 	<Log Text="Building cube..." Level="0"/>	
-	<Invoke Class="%DeepSee.Utils" Method="%BuildCube" CheckStatus="true">
+	<Invoke Class="%DeepSee.Utils" Method="%BuildCube" CheckStatus="false">
 		<Arg name="pCubeName" Value="Transactions"/>
 	</Invoke>
 </Manifest>
