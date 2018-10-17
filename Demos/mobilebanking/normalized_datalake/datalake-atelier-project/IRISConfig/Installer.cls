@@ -44,12 +44,12 @@ XData Install [ XMLNamespace = INSTALLER ]
 	<Invoke Class="IRISConfig.Installer" Method="LoadTransactionalData" CheckStatus="true">
 		<Arg name="pNamespace" Value="${Namespace}"/>
 	</Invoke>
-	
-	<Namespace Name="${Namespace}" Create="no">
-	<Invoke Class="IRISConfig.Installer" Method="CSPAppEnableAnalytics" CheckStatus="false">
+
+	<Invoke Class="IRISConfig.InstallerBase" Method="CSPAppEnableAnalytics" CheckStatus="false">
 		<Arg name="pCSPAppName" Value="/csp/${Namespace}"/>
 	</Invoke>
 	
+	<Namespace Name="${Namespace}" Create="no">
 	<Invoke Class="IRISConfig.Installer" Method="FixDSW" CheckStatus="false" />
 	
 	<Compile Class="BI.Transactions" IgnoreErrors="true"/>
