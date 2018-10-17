@@ -38,10 +38,23 @@ XData Install [ XMLNamespace = INSTALLER ]
 		<Arg name="pNamespace" Value="${Namespace}"/>
 	</Invoke>
 	
+	<Invoke Class="IRISConfig.Installer" Method="CSPAppEnableAnalytics" CheckStatus="false">
+		<Arg name="pCSPAppName" Value="/csp/${Namespace}"/>
+	</Invoke>
+	
+	<Compile Class="BI.Transactions"/>
+	
 	<Log Text="Building cube..." Level="0"/>	
 	<Invoke Class="%DeepSee.Utils" Method="%BuildCube" CheckStatus="false">
 		<Arg name="pCubeName" Value="Transactions"/>
 	</Invoke>
+		
+	<Import File="/tmp/installers/" Recurse="true"/>
+	
+	<Invoke Class="MDX2JSON.Installer" Method="setup" CheckStatus="true" />
+
+	<Invoke Class="DSW.Installer" Method="setup" CheckStatus="true" />
+	
 </Manifest>
 }
 }

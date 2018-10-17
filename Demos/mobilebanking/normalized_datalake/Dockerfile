@@ -18,3 +18,6 @@ ADD ./banksim_data.tar.gz /tmp/
 
 # Running the installer. This will load the source from our project.
 RUN /usr/irissys/demo/irisdemoinstaller.sh
+
+ADD https://raw.githubusercontent.com/intersystems-ru/Cache-MDX2JSON/master/MDX2JSON/Installer.cls.xml /tmp/installers/MDX2JSON.xml
+ADD https://github.com/intersystems-ru/DeepSeeWeb/releases/download/2.1.26/DSW.Installer.2.1.26.xml /tmp/installers/DSW.xml
