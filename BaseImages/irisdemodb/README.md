@@ -60,14 +60,14 @@ The script will create an emphemeral container with the name of the folder you a
 
 ## Specifying the IRIS license
 
-The script will verify if a folder called *./shared* exists. If it doesn't, it will create it for you. this folder will be mapped to the /shared folder into your container. If you put a file called license.key on this folder, IRIS will use it. Otherwise, the IRIS will run without a license:
+The script will mount the folder *IRISLicense* inside the container's */irislicense* folder. There should exist an iris.key file in there with your IRIS License.
 
     git  
     └── IRISDemoImages  
+        └── IRISLicense  
+            └─── iris.key  
         └── BaseImages  
             └─── irisdemodb  
-                 ├── shared  
-                 │   └── license.key  
                  ├── build.sh
                  ├── Dockerfile  
                  ├── README.md  
