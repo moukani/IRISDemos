@@ -109,7 +109,6 @@ XData BPL [ XMLNamespace = "http://www.intersystems.com/bpl" ]
 <assign property="callrequest.FromAccountNumber" value="request.FromAccountNumber" action="set" />
 <assign property="callrequest.ToAccountNumber" value="request.ToAccountNumber" action="set" />
 </request>
-<response type='Ens.Response' />
 </call>
 </true>
 <false>
