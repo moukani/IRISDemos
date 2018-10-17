@@ -42,12 +42,12 @@ XData Install [ XMLNamespace = INSTALLER ]
 		<Arg name="pCSPAppName" Value="/csp/${Namespace}"/>
 	</Invoke>
 	
-	<Compile Class="BI.Transactions" IgnoreErrors="true"/>
+	<!--<Compile Class="BI.Transactions" IgnoreErrors="true"/>
 	
 	<Log Text="Building cube..." Level="0"/>	
 	<Invoke Class="%DeepSee.Utils" Method="%BuildCube" CheckStatus="false">
 		<Arg name="pCubeName" Value="Transactions"/>
-	</Invoke>
+	</Invoke>-->
 		
 	<Import File="/tmp/installers/" Recurse="true"/>
 	
