@@ -22,6 +22,13 @@ ClassMethod LoadTransactionalData(pNamespace As %String) As %Status
 	Quit tSC 
 }
 
+ClassMethod FixDSW() As %Status
+{
+	Set ^%SYS("CSP","DefaultFileCharset")="utf-8"
+	Quit $$$OK
+}
+
+
 /// You can customize this to run code during docker build
 XData Install [ XMLNamespace = INSTALLER ]
 {
@@ -38,23 +45,26 @@ XData Install [ XMLNamespace = INSTALLER ]
 		<Arg name="pNamespace" Value="${Namespace}"/>
 	</Invoke>
 	
+	<Namespace Name="${Namespace}" Create="no">
 	<Invoke Class="IRISConfig.Installer" Method="CSPAppEnableAnalytics" CheckStatus="false">
 		<Arg name="pCSPAppName" Value="/csp/${Namespace}"/>
 	</Invoke>
 	
-	<!--<Compile Class="BI.Transactions" IgnoreErrors="true"/>
+	<Invoke Class="IRISConfig.Installer" Method="FixDSW" CheckStatus="false" />
+	
+	<Compile Class="BI.Transactions" IgnoreErrors="true"/>
 	
 	<Log Text="Building cube..." Level="0"/>	
 	<Invoke Class="%DeepSee.Utils" Method="%BuildCube" CheckStatus="false">
 		<Arg name="pCubeName" Value="Transactions"/>
-	</Invoke>-->
+	</Invoke>
 		
 	<Import File="/tmp/installers/" Recurse="true"/>
 	
 	<Invoke Class="MDX2JSON.Installer" Method="setup" CheckStatus="true" />
 
 	<Invoke Class="DSW.Installer" Method="setup" CheckStatus="true" />
-	
+	</Namespace>
 </Manifest>
 }
 }
