@@ -22,6 +22,7 @@ XData BPL [ XMLNamespace = "http://www.intersystems.com/bpl" ]
 <property name='LooksLikeFraud' type='%Library.Boolean' instantiate='0' />
 <property name='LooksLikeFraudReason' type='%Library.String' instantiate='0' />
 </context>
+<sequence xend='200' yend='2100' >
 <!--
 <transform name='Prepare Model Features' class='BankingSrv.DTL.BuildFeatures' source='request' target='context.ExecuteModelReq' xpos='200' ypos='250' >
 <annotation><![CDATA[Translate transactional data into features to call the ML model]]></annotation>
