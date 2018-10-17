@@ -19,7 +19,7 @@ services:
       - 8080:8080
     volumes:
       - ./data:/tmp/data    # Shared between all spark nodes. Good place to place a file we are working with.
-      - ${PWD}/common_shared/:/common_shared # Here is where we are going to leave the new PMML files
+      - ./common_shared/:/common_shared # Here is where we are going to leave the new PMML files
 
   worker1:
     image: amirsamary/irisdemo:spark-iris
@@ -82,8 +82,8 @@ services:
     - "9092:52773"
     volumes:
     - ../../IRISLicense/:/irislicense
-    - ${PWD}/archivedb/shared/:/shared
-    - ${PWD}/common_shared/:/common_shared # We will use this to pass new events from the overflow files,
+    - ./archivedb/shared/:/shared
+    - ./common_shared/:/common_shared # We will use this to pass new events from the overflow files,
                                             # at every minute, to the iotmon production.
 
   advancedanalytics:
@@ -91,8 +91,8 @@ services:
     ports:
     - "9096:9090"   # Zeppelin
     volumes:
-    - $PWD/advanced_analytics/shared/:/shared
-    - ${PWD}/common_shared/:/common_shared  # That is where we will be leaving our generated PMML files
+    - ./advanced_analytics/shared/:/shared
+    - ./common_shared/:/common_shared  # That is where we will be leaving our generated PMML files
                                             # so that iotmon can grab them
 
     environment:
@@ -117,8 +117,8 @@ services:
     - "9094:52773"
     volumes:
     - ../../IRISLicense/:/irislicense
-    - ${PWD}/iotmon/shared/:/shared
-    - ${PWD}/common_shared/:/common_shared  # The production will be looking into this folder for new files
+    - ./iotmon/shared/:/shared
+    - ./common_shared/:/common_shared  # The production will be looking into this folder for new files
                                             # that will be sent by the archivedb service. Of course we would
                                             # never receive files from archivedb on the real world. But on this
                                             # demo, we are.

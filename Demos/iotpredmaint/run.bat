@@ -5,4 +5,6 @@ git submodule init
 git submodule update
 
 echo RUNNING...
+docker-compose stop
+docker-compose rm -f
 docker-compose up
