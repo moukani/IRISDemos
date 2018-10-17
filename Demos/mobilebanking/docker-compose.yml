@@ -8,7 +8,7 @@ services:
       args:
       - IRIS_PROJECT_FOLDER_NAME=datalake-atelier-project
     image: amirsamary/irisdemo:mobilebanking_datalake
-    command: --key /shared/iris.key
+    command: --key /irislicense/iris.key
     hostname: datalake
     ports:
     # 51773 is the superserver default port
@@ -17,6 +17,7 @@ services:
     - "9094:52773"
     volumes:
     - ./normalized_datalake/shared/:/shared
+    - ../../IRISLicense/:/irislicense
     networks:
     - bankingtrnsrv-tier
     - datalake-tier
@@ -29,7 +30,7 @@ services:
       args:
       - IRIS_PROJECT_FOLDER_NAME=bankingcore-atelier-project
     image: amirsamary/irisdemo:mobilebanking_bankingcore
-    command: --key /shared/iris.key
+    command: --key /irislicense/iris.key
     hostname: bankingcore
     ports:
     # 51773 is the superserver default port
@@ -38,6 +39,7 @@ services:
     - "9090:52773"
     volumes:
     - ./banking_core/shared/:/shared
+    - ../../IRISLicense/:/irislicense
     networks:
     - bankingcore-tier
 
@@ -49,7 +51,7 @@ services:
       args:
       - IRIS_PROJECT_FOLDER_NAME=bankingtrnsrv-atelier-project
     image: amirsamary/irisdemo:mobilebanking_bankingtrnsrv
-    command: --key /shared/iris.key
+    command: --key /irislicense/iris.key
     hostname: bankingtrnsrv
     ports:
     # 51773 is the superserver default port
@@ -57,6 +59,7 @@ services:
     # 52773 is the webserver/management portal port
     - "9092:52773"
     volumes:
+    - ../../IRISLicense/:/irislicense
     - ./banking_trn_srv/shared/:/shared
     - ./common_shared/:/common_shared  # The production will be looking into this folder for new PMML files
                                             # that will be sent by the advancedanalytics service. 

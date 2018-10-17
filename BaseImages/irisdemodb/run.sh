@@ -74,8 +74,9 @@ printfY "\n\nRunning container. Management portal is on http://localhost:52773/c
 docker run $EPHEMERALFLAG -it  \
     -p 51773:51773 -p 52773:52773 \
     -v $PWD/shared:/shared \
+    -v $PWD/../../IRISLicense/:/irislicense \
     --name $CONTAINER_NAME \
     $IMAGE_NAME \
-    --key /shared/iris.key
+    --key /irislicense/iris.key
 
 printfY "\nExited container\n"
