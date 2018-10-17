@@ -11,6 +11,3 @@ git submodule update
 
 printfY "\nBUILDING...\n"
 docker-compose build
-
-printfY "\n\nRUNNING...\n"
-docker-compose up

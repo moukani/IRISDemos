@@ -6,6 +6,3 @@ git submodule update
 
 echo BUILDING...
 docker-compose build
-
-echo RUNNING...
-docker-compose up
