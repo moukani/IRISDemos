@@ -10,4 +10,6 @@ git submodule init
 git submodule update
 
 printfY "\nBUILDING...\n"
+docker-compose stop
+docker-compose rm -f
 docker-compose build

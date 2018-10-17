@@ -2,7 +2,7 @@
 
 for /d %%D in (*) do (
     cd %%~D
-    build.bat
+    call build.bat
 
     cd ..
 )
