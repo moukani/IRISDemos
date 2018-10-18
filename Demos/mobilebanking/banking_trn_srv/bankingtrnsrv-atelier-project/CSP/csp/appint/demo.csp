@@ -33,57 +33,57 @@
 			
 			function openPOS()
 			{
-				window.open('http://localhost:9099','_blank')
+				window.open('http://localhost:9099')
 			}
 			
 			function openProduction()
 			{
-				window.open('EnsPortal.ProductionConfig.zen?$NAMESPACE=APPINT&IRISUserName=SuperUser&IRISPassword=sys','_blank');
+				window.open('EnsPortal.ProductionConfig.zen?$NAMESPACE=APPINT&IRISUserName=SuperUser&IRISPassword=sys');
 			}
 			
 			function openBusinessProcess()
 			{
-				window.open('EnsPortal.BPLEditor.zen?NAMESPACE=APPINT&BP=BankingSrv.BP.Transaction.AIProcess.bpl&IRISUserName=SuperUser&IRISPassword=sys','_blank')
+				window.open('EnsPortal.BPLEditor.zen?NAMESPACE=APPINT&BP=BankingSrv.BP.Transaction.AIProcess.bpl&IRISUserName=SuperUser&IRISPassword=sys')
 			}
 			
 			function openDataTransformation()
 			{
-				window.open('EnsPortal.DTLEditor.zen?NAMESPACE=APPINT&DT=BankingSrv.DTL.BuildFeatures.DTL&IRISUserName=SuperUser&IRISPassword=sys','_blank')
+				window.open('EnsPortal.DTLEditor.zen?NAMESPACE=APPINT&DT=BankingSrv.DTL.BuildFeatures.DTL&IRISUserName=SuperUser&IRISPassword=sys')
 			}
 			
 			function openDataLookup()
 			{
-				window.open('EnsPortal.LookupSettings.zen?LookupTable=Merchant_Category_Feature.lut&NAMESPACE=APPINT&IRISUserName=SuperUser&IRISPassword=sys','_blank')
+				window.open('EnsPortal.LookupSettings.zen?LookupTable=Merchant_Category_Feature.lut&NAMESPACE=APPINT&IRISUserName=SuperUser&IRISPassword=sys')
 			}
 			
 			function openBusinessRule()
 			{
-				window.open('EnsPortal.RuleEditor.zen?RULE=BankingSrv.Rule.AIRule&NAMESPACE=APPINT&IRISUserName=SuperUser&IRISPassword=sys','_blank')
+				window.open('EnsPortal.RuleEditor.zen?RULE=BankingSrv.Rule.AIRule&NAMESPACE=APPINT&IRISUserName=SuperUser&IRISPassword=sys')
 			}
 			
 			function openMessageTrace()
 			{
-				window.open('EnsPortal.MessageViewer.zen?$NAMESPACE=APPINT&IRISUserName=SuperUser&IRISPassword=sys','_blank')
+				window.open('EnsPortal.MessageViewer.zen?$NAMESPACE=APPINT&IRISUserName=SuperUser&IRISPassword=sys')
 			}
 			
 			function openPMMLTestPage()
 			{
-				window.open('BankingSrv.PMML.FraudPrevModel.cls?$NAMESPACE=APPINT&IRISUserName=SuperUser&IRISPassword=sys','_blank')
+				window.open('BankingSrv.PMML.FraudPrevModel.cls?$NAMESPACE=APPINT&IRISUserName=SuperUser&IRISPassword=sys')
 			}
 			
 			function openPMML()
 			{
-				window.open('pmml.xml','_blank')
+				window.open('pmml.xml')
 			}
 
 			function openSparkMaster()
 			{
-				window.open('http://localhost:8080','_blank')
+				window.open('http://localhost:8080')
 			}
 
 			function openZeppelin()
 			{
-				window.open('http://localhost:9096/#/notebook/2DSRX14XE','_blank')
+				window.open('http://localhost:9096/#/notebook/2DSRX14XE')
 			}
 		</script>
 	</head>
