@@ -46,7 +46,7 @@ Class IRISDemo.BO.PMML.Operation Extends Ens.BusinessOperation
 			
 			Set pOutput = ##class(IRISDemo.BO.PMML.ExecuteModelResp).%New()
 			
-			Do oModelDataOutput.GetFields(.aFields)
+			Do oModelDataOutput.%GetFields(.aFields)
 			set tFieldName = ""
 			For 
 			{
