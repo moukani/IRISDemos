@@ -18,37 +18,42 @@
 		if ((is_chrome)&&(is_safari)) { is_safari = false; }
 		if ((is_chrome)&&(is_opera)) { is_chrome = false; }
 		
-		function sleep(milliseconds) {
+		var TIMEOUT = 2000;
+		if (is_firefox == true) {
+			TIMEOUT = 0;
+		}
+
+		function sleep() {
 			var currentTime = new Date().getTime();
-			while (currentTime + milliseconds >= new Date().getTime()) {
+			while (currentTime + TIMEOUT >= new Date().getTime()) {
 			}
 		}
 		
 		function openWindows()
 			{
 				openSparkMaster();
-				sleep(2000);
+				sleep();
 				
 				openZeppelin();
-				sleep(2000);
+				sleep();
 				
 				openMessageTrace();
-				sleep(2000);
+				sleep();
 				
 				openPOS();
-				sleep(2000);
+				sleep();
 				
 				openBusinessRule();
-				sleep(2000);
+				sleep();
 				
 				openDataLookup();
-				sleep(2000);
+				sleep();
 				
 				openDataTransformation();
-				sleep(2000);
+				sleep();
 				
 				openBusinessProcess();
-				sleep(2000);
+				sleep();
 				
 				openProduction();
 			}
@@ -116,30 +121,10 @@
 			
 			function on_load()
 			{
-				var html = '<tr>';
-				if (is_safari == false) {
-					html = html + '<td><input type="button" class="Button" value="Open All Windows" onclick="openWindows()"/></td>';
+				if (is_safari == true) {
+					btnElem = document.getElementById('BTNALL');
+					btnElem.style.visibility = 'hidden';
 				}
-				html = html + '<td><input type="button" class="Button" value="1 - Open Production" onclick="openProduction()"/></td>';
-				html = html + '<td><input type="button" class="Button" value="2 - Open Business Process" onclick="openBusinessProcess()"/></td>';
-				html = html + '<td><input type="button" class="Button" value="3 - Open Data Transformation" onclick="openDataTransformation()"/></td>';
-				html = html + '<td><input type="button" class="Button" value="4 - Open Data Lookup" onclick="openDataLookup()"/></td>';
-				html = html + '<td><input type="button" class="Button" value="5 - Open Business Rule" onclick="openBusinessRule()"/></td>';
-				html = html + '</tr>';
-				html = html + '<tr>';
-				html = html + '<td>&nbsp;</td>';
-				html = html + '</tr>';
-				html = html + '<tr>';
-				html = html + '<td><input type="button" class="Button" value="6 - Open POS Simulator" onclick="openPOS()"/></td>';
-				html = html + '<td><input type="button" class="Button" value="7 - Open Message Trace" onclick="openMessageTrace()"/></td>';
-				html = html + '<td><input type="button" class="Button" value="8 - Open Zeppelin" onclick="openZeppelin()"/></td>';
-				html = html + '<td><input type="button" class="Button" value="9 - Open Spark Master" onclick="openSparkMaster()"/></td>';
-				html = html + '<td><input type="button" class="Button" value="10 - Open PMML Test Page" onclick="openPMMLTestPage()"/></td>';
-				html = html + '<td><input type="button" class="Button" value="11 - Open PMML" onclick="openPMML()"/></td>';
-				html = html + '</tr>';
-				
-				var elemTable = document.getElementById('BTN_OPTIONS')
-				elemTable.innerHTML = html;
 			}
 		</script>
 		<style>
@@ -174,7 +159,26 @@
 		    <area target="_blank" alt="Spark Master" title="Spark Master" href="http://localhost:8080" coords="1546,454,1772,584" shape="rect">
 		</map>
 		
-		<table ID="BTN_OPTIONS" width="100%" style="text-align: center; background-color: #b7c8e2;">
+		<table width="100%" style="text-align: center; background-color: #b7c8e2;">
+			<tr>
+				<td><input ID="BTNALL" type="button" class="Button" value="Open All Windows" onclick="openWindows()"/></td>
+				<td><input type="button" class="Button" value="1 - Open Production" onclick="openProduction()"/></td>
+				<td><input type="button" class="Button" value="2 - Open Business Process" onclick="openBusinessProcess()"/></td>
+				<td><input type="button" class="Button" value="3 - Open Data Transformation" onclick="openDataTransformation()"/></td>
+				<td><input type="button" class="Button" value="4 - Open Data Lookup" onclick="openDataLookup()"/></td>
+				<td><input type="button" class="Button" value="5 - Open Business Rule" onclick="openBusinessRule()"/></td>
+			</tr>
+			<tr>
+				<td>&nbsp;</td>
+			</tr>
+			<tr>
+				<td><input type="button" class="Button" value="6 - Open POS Simulator" onclick="openPOS()"/></td>
+				<td><input type="button" class="Button" value="7 - Open Message Trace" onclick="openMessageTrace()"/></td>
+				<td><input type="button" class="Button" value="8 - Open Zeppelin" onclick="openZeppelin()"/></td>
+				<td><input type="button" class="Button" value="9 - Open Spark Master" onclick="openSparkMaster()"/></td>
+				<td><input type="button" class="Button" value="10 - Open PMML Test Page" onclick="openPMMLTestPage()"/></td>
+				<td><input type="button" class="Button" value="11 - Open PMML" onclick="openPMML()"/></td>
+			</tr>
 		</table>
 	
 	
