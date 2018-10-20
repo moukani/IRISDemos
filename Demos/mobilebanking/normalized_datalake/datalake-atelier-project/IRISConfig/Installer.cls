@@ -54,11 +54,15 @@ XData Install [ XMLNamespace = INSTALLER ]
 	
 	<Compile Class="BI.Transactions" IgnoreErrors="true"/>
 	
-	<Log Text="Building cube..." Level="0"/>	
+	<Log Text="Building cubes..." Level="0"/>	
 	<Invoke Class="%DeepSee.Utils" Method="%BuildCube" CheckStatus="false">
 		<Arg name="pCubeName" Value="Transactions"/>
 	</Invoke>
-		
+
+		<Invoke Class="%DeepSee.Utils" Method="%BuildCube" CheckStatus="false">
+		<Arg name="pCubeName" Value="Accounts"/>
+	</Invoke>
+	
 	<Import File="/tmp/installers/" Recurse="true"/>
 	
 	<Invoke Class="MDX2JSON.Installer" Method="setup" CheckStatus="true" />
