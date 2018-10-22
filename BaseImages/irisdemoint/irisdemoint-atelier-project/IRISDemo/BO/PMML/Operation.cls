@@ -8,6 +8,9 @@ Class IRISDemo.BO.PMML.Operation Extends Ens.BusinessOperation
 	/// This setting is required only if you are using the simple Execute() method. 
 	Property PMML As %String(MAXLEN = "") [ InitialExpression = "[Based on Request]" ];
 	
+	/// Internal array of model instances to (re)use
+	Property ModelInstances as array of %DeepSee.PMML.Model.AbstractModel [ Private, Internal ];
+
 	Parameter SETTINGS = "PMML::selector?context={IRISDemo.Util.ContextSearch/PMMLModels?targets=1&productionName=@productionId}";
 
 	Method Execute(pInput As IRISDemo.BO.PMML.ExecuteModelReq, Output pOutput As IRISDemo.BO.PMML.ExecuteModelResp) As %Status
@@ -16,23 +19,19 @@ Class IRISDemo.BO.PMML.Operation Extends Ens.BusinessOperation
 		
 		Set tSC = $System.Status.OK()
 		Try
-		{
-			If ..PMML="[Based on Request]"
-			{
-				Set tSC = $System.Status.DisplayError(5001, "Specify the PMML parameter or use ExecuteParamModelReq instead of ExecuteModelReq.")
-				Quit
-			}
-			
+		{			
 			// Obtain an instance of the requested model
-			Set tSC = ..GetModelInstance(pInput.ModelName, .oModel)
+			Set tSC = ..GetModelInstance(.oModel)
 			Quit:$$$ISERR(tSC)
 			
 			// Provide ModelData as an array
 			Kill aModelData
 			Set tKey = ""
-			While 1 {
+			For 
+			{
 				Set tValue = pInput.ModelData.GetNext(.tKey)
 				Quit:tKey=""
+				
 				Set aModelData(tKey) = tValue
 			}
 			
@@ -72,30 +71,39 @@ Class IRISDemo.BO.PMML.Operation Extends Ens.BusinessOperation
 		Quit ..Execute(pInput, .pOutput)
 	}
 	
-	
-	/// Internal array of model instances to (re)use
-	Property ModelInstances as array of %DeepSee.PMML.Model.AbstractModel [ Private, Internal ];
-	
-	Method GetModelInstance(pModelName As %String = "", pModel As %DeepSee.PMML.Model.AbstractModel) As %Status [ Private ]
+	Method GetModelInstance(pModel As %DeepSee.PMML.Model.AbstractModel) As %Status [ Private ]
 	{
-		set pModel = ..ModelInstances.GetAt(pModelName)
-		quit:$isobject(pModel) $$$OK
+		Set tSC = $$$OK
+		Try
+		{
+			If ..PMML="[Based on Request]"
+			{
+				Set tSC = $System.Status.DisplayError(5001, "Specify the PMML parameter or use ExecuteParamModelReq instead of ExecuteModelReq.")
+				Quit
+			}
+			
+			Set pModel = ..ModelInstances.GetAt(..PMML)
+			Quit:$isobject(pModel)
+			
+			//Oddily enough, %GetModelInstance will give me not an instance of the model
+			//but the type of model (i.e: TreeModel)
+			Set tSC = $classmethod(..PMML, "%GetModelInstance", .tModelType)
+			Quit:$$$ISERR(tSC)
+			
+			Set tModelClass = ..PMML_"."_tModelType
+			
+			//Now we can create that model
+			Set pModel = $classmethod(tModelClass, "%New")
+				
+			Do ..ModelInstances.SetAt(pModel, ..PMML)
+		}
+		Catch (oException)
+		{
+			Set tSC = oException.AsStatus()
+		}
 		
-		// if the model hadn't been cached yet, create a fresh instance
-		set tSC = $classmethod(..PMML, "%GetModelInstance", pModelName, .pModel)
-		quit:$$$ISERR(tSC) tSC
-		do ..ModelInstances.SetAt(pModel, pModelName)
-		quit $$$OK
+		Quit tSC
 	}
-	
-	/// Override Set method to ensure model instances are cleaned up
-	Method PMMLSet(pPMML As %String) As %Status [ ServerOnly = 1, Internal ]
-	{
-		set i%PMML = pPMML
-		do ..ModelInstances.Clear()
-		quit $$$OK
-	}
-
 
 	XData MessageMap
 	{

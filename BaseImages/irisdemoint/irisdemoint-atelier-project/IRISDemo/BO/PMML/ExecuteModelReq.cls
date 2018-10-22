@@ -1,9 +1,5 @@
 Class IRISDemo.BO.PMML.ExecuteModelReq Extends (%Persistent,Ens.Request)
 {
-	/// Some PMML definitions contain multiple models. 
-	/// Use this parameter to identify which one to run.
-	Property ModelName As %String(MAXLEN=250);
-
 	/// Array of string values containing model input values
 	Property ModelData As Array of %String;
 

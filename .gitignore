@@ -1,5 +1,15 @@
-container_runtime
+# IRIS licenses
 license.key
 iris.key
-target/*
+
+# Mac specific files
 .DS_Store
+
+# Eclipse specific files
+.buildpath
+.settings
+.project
+
+# Demos
+container_runtime
+target/*
