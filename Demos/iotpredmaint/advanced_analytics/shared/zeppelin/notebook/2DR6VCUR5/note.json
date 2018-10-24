@@ -44,7 +44,7 @@
       "title": "Merchant Categories",
       "text": "%irisjdbc\n\nselect * from IRISDemo.TransformerSignal",
       "user": "anonymous",
-      "dateUpdated": "Oct 2, 2018 7:28:05 PM",
+      "dateUpdated": "Oct 24, 2018 2:24:18 PM",
       "config": {
         "editorSetting": {
           "language": "sql",
@@ -56,7 +56,7 @@
         "results": {
           "0": {
             "graph": {
-              "mode": "lineChart",
+              "mode": "table",
               "height": 300.0,
               "optionOpen": true,
               "setting": {

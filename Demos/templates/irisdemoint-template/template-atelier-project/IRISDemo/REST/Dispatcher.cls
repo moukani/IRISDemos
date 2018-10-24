@@ -7,6 +7,8 @@ Parameter CONVERTINPUTSTREAM = 1;
 
 Parameter CHARSET = "utf-8";
 
+Parameter HandleCorsRequest = 1;
+
 XData UrlMap
 {
 	<Routes>
