@@ -9,7 +9,7 @@ services:
       args:
       - IRIS_PROJECT_FOLDER_NAME=template-atelier-project      # RENAME THIS ON YOUR DEMO FOLDER TO THE NAME YOU PICKED
     image: amirsamary/irisdemo:<YOUR DEMO FOLDER NAME>_datalake                    # RENAME THIS ON YOUR DEMO FOLDER TO THE NAME YOU PICKED
-    command: --key /shared/iris.key
+    command: --key /irislicense/iris.key
     hostname: datalake                                         # RENAME THIS ON YOUR DEMO FOLDER TO THE NAME YOU PICKED
     ports:
     # 51773 is the superserver default port
@@ -17,7 +17,8 @@ services:
     # 52773 is the webserver/management portal port
     - "9094:52773"
     volumes:
-    - ${PWD}/<YOUR DEMO FOLDER NAME>_datalake/shared/:/shared   # RENAME THIS ON YOUR DEMO FOLDER TO THE NAME YOU PICKED
+    - ../../IRISLicense/:/irislicense
+    - ./common_shared/:/common_shared
 
   ################## APPLICATION DATA DRIVEN SERVICES that can be based on irisdemodb-template ##############
   myapp:
@@ -28,7 +29,7 @@ services:
       args:
       - IRIS_PROJECT_FOLDER_NAME=template-atelier-project       # RENAME THIS ON YOUR DEMO FOLDER TO THE NAME YOU PICKED
     image: amirsamary/irisdemo:<YOUR DEMO FOLDER NAME>_myapp                        # RENAME THIS ON YOUR DEMO FOLDER TO THE NAME YOU PICKED
-    command: --key /shared/iris.key
+    command: --key /irislicense/iris.key
     hostname: myapp                                             # RENAME THIS ON YOUR DEMO FOLDER TO THE NAME YOU PICKED
     ports:
     # 51773 is the superserver default port
@@ -36,7 +37,8 @@ services:
     # 52773 is the webserver/management portal port
     - "9090:52773"
     volumes:
-    - ${PWD}/myapp/shared/:/shared                              # RENAME THIS ON YOUR DEMO FOLDER TO THE NAME YOU PICKED
+    - ../../IRISLicense/:/irislicense
+    - ./common_shared/:/common_shared
 
   ################## INTEROPERABILITY SERVICES that can be based on irisdemoint-template ##################
   intsrv:
@@ -47,7 +49,7 @@ services:
       args:
       - IRIS_PROJECT_FOLDER_NAME=template-atelier-project       # RENAME THIS ON YOUR DEMO FOLDER TO THE NAME YOU PICKED
     image: amirsamary/irisdemo:<YOUR DEMO FOLDER NAME>_intsrv                       # RENAME THIS ON YOUR DEMO FOLDER TO THE NAME YOU PICKED
-    command: --key /shared/iris.key
+    command: --key /irislicense/iris.key
     hostname: intsrv                                            # RENAME THIS ON YOUR DEMO FOLDER TO THE NAME YOU PICKED
     ports:
     # 51773 is the superserver default port
@@ -55,21 +57,88 @@ services:
     # 52773 is the webserver/management portal port
     - "9092:52773"
     volumes:
-    - ${PWD}/intsrv/shared/:/shared                             # RENAME THIS ON YOUR DEMO FOLDER TO THE NAME YOU PICKED
+    - ../../IRISLicense/:/irislicense
+    - ./common_shared/:/common_shared
 
-  ################## DATA SCIENCE NODES that can be based on zeppelin-spark-template #########################
-  advancedanalytics:
-    build: ./advancedanalytics                                 # RENAME THIS ON YOUR DEMO FOLDER TO THE NAME YOU PICKED
-    image: amirsamary/irisdemo:<YOUR DEMO FOLDER NAME>_advancedanalytics            # RENAME THIS ON YOUR DEMO FOLDER TO THE NAME YOU PICKED
+  ################## Zeppelin template based on zeppelin-template #########################
+  zeppelin:
+    build: ./zeppelin
+    image: amirsamary/irisdemo:<YOUR DEMO FOLDER NAME>_zeppelin  # RENAME THIS ON YOUR DEMO FOLDER TO THE NAME YOU PICKED
     ports:
     - "9096:9090"   # Zeppelin
-    - "9097:8080"   # Spark Master Portal
-    - "9098:8081"   # Spark Worker Portal
     volumes:
-    - $PWD/advanced_analytics/shared/:/shared
+    - ./zeppelin/shared/:/shared       # This is where your Zeppelin notebooks will be created (outside the container). 
+                                       # This allows you to commit them to source control.
+    - ./common_shared/:/common_shared  # That is where we will be leaving our generated PMML files
+                                       # so that other IRIS images can grab them
     environment:
-    - IRIS_MASTER_HOST=myapp                                    # DNS based on the name of the service! This is how you point zeppelin to your IRIS instance
+    - IRIS_MASTER_HOST=datalake # DNS based on the name of the service! Change it accordingly
     - IRIS_MASTER_PORT=51773 
     - IRIS_MASTER_USERNAME=SuperUser 
     - IRIS_MASTER_PASSWORD=sys 
     - IRIS_MASTER_NAMESPACE=APP 
+
+################## Spark Cluster #########################
+sparkmaster:
+    image: amirsamary/irisdemo:spark-iris
+    hostname: sparkmaster # Must be always sparkmaster
+    environment:
+      SPARK_NODE_TYPE: Master
+      SPARK_PUBLIC_DNS: localhost
+      IRIS_MASTER_HOST: datalake          # DNS based on the name of the service! Change it accordingly
+      IRIS_MASTER_PORT: 51773 
+      IRIS_MASTER_USERNAME: SuperUser 
+      IRIS_MASTER_PASSWORD: sys 
+      IRIS_MASTER_NAMESPACE: APP 
+    ports:
+      - 4040:4040
+      - 6066:6066
+      - 7077:7077
+      - 8080:8080   # Spark Master Portal
+    volumes:
+      - ./common_shared/:/common_shared   # Shared between all spark nodes. Good place to place a file we are working with.
+                                          # Here is where we are going to leave the new PMML files
+
+  worker1:
+    image: amirsamary/irisdemo:spark-iris
+    hostname: worker1
+    environment:
+      IRIS_MASTER_HOST: datalake # DNS based on the name of the service! Change it accordingly
+      IRIS_MASTER_PORT: 51773 
+      IRIS_MASTER_USERNAME: SuperUser 
+      IRIS_MASTER_PASSWORD: sys 
+      IRIS_MASTER_NAMESPACE: APP 
+
+      SPARK_NODE_TYPE: Worker
+      SPARK_WORKER_CORES: 1
+      SPARK_WORKER_MEMORY: 1g   # You can give more memory to your work if you are getting errors when using Spark
+      SPARK_WORKER_PORT: 8881
+      SPARK_WORKER_WEBUI_PORT: 8081
+      SPARK_PUBLIC_DNS: localhost
+    ports:
+      - 8081:8081   # Spark Worker Portal
+    volumes:
+      - ./common_shared/:/common_shared   # Shared between all spark nodes. Good place to place a file we are working with.
+                                          # Here is where we are going to leave the new PMML files
+
+  worker2:
+    image: amirsamary/irisdemo:spark-iris
+    hostname: worker2
+    environment:
+      IRIS_MASTER_HOST: datalake # DNS based on the name of the service! Change it accordingly
+      IRIS_MASTER_PORT: 51773 
+      IRIS_MASTER_USERNAME: SuperUser 
+      IRIS_MASTER_PASSWORD: sys 
+      IRIS_MASTER_NAMESPACE: APP 
+
+      SPARK_NODE_TYPE: Worker
+      SPARK_WORKER_CORES: 1
+      SPARK_WORKER_MEMORY: 1g   # You can give more memory to your work if you are getting errors when using Spark
+      SPARK_WORKER_PORT: 8882
+      SPARK_WORKER_WEBUI_PORT: 8082
+      SPARK_PUBLIC_DNS: localhost
+    ports:
+      - 8082:8082   # Spark Worker Portal
+    volumes:
+      - ./common_shared/:/common_shared   # Shared between all spark nodes. Good place to place a file we are working with.
+                                          # Here is where we are going to leave the new PMML files

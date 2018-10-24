@@ -3,7 +3,7 @@ then create your demo folder under *IRISDemoImages/Demos/<YourDemo>*. Then chang
 to this directory and execute the following:
 
 ``` shell
-copy -r ../templates/zeppelin-spark-template ./<my zeppelin folder name>
+copy -r ../templates/zeppelin ./zeppelin
 ```
 
 Then, create your docker-compose.yml file under *IRISDemoImages/Demos/<YourDemo>* folder
