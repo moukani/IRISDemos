@@ -1,4 +1,5 @@
 #!/bin/bash
+
 source ../ShellScriptUtils/util.sh
 source ../ShellScriptUtils/buildandpush.sh
 
@@ -13,7 +14,7 @@ do
     if [[ ! $dir =~ (templates|mydemo) ]]
     then
         cd $dir
-        ./push.sh
+        ./docker-compose push
 
         cd ..
     fi
