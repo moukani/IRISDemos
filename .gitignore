@@ -1,14 +1,14 @@
 # IRIS licenses
-license.key
-iris.key
+**/license.key
+**/iris.key
 
 # Mac specific files
-.DS_Store
+**/.DS_Store
 
 # Eclipse specific files
-.buildpath
-.settings
-.project
+**/.buildpath
+**/.settings
+**/.project
 
 # Demos
 container_runtime
