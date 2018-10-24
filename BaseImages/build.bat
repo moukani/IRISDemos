@@ -1,8 +1,16 @@
 @ECHO OFF
 
 for /d %%D in (*) do (
-    cd %%~D
-    call build.bat
+    if "%%~D" NEQ "tomcat" if "%%~D" NEQ "zeppelin-spark" (
+        echo.
+        echo ####################################
+        echo Building Base Image %%~D
+        echo ####################################
+        echo.
 
-    cd ..
+        cd %%~D
+        call build.bat
+
+        cd ..
+    )
 )

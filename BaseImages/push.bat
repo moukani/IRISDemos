@@ -4,7 +4,7 @@ for /D %%G in (*) do (
     if "%%~G" NEQ "tomcat" if "%%~G" NEQ "zeppelin-spark" (
         echo.
         echo ####################################
-        echo %%~G
+        echo Pushing Base Image %%~G
         echo ####################################
         echo.
 

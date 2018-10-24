@@ -6,7 +6,10 @@ for dir in `ls -l | grep ^d. | awk '{print $NF}'`
 do
     if [[ ! $dir =~ (templates|mydemo) ]]
     then
-        printfY "\nBuilding Images for Demo $dir..."
+        printfY "\n#################################################"
+        printfY "\n Building Demo $dir"
+        printfY "\n#################################################\n"
+
         cd $dir
         ./build.sh
     

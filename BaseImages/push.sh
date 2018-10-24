@@ -12,7 +12,10 @@ for dir in `ls -l | grep ^d. | awk '{print $NF}'`
 do
     IMAGE_NAME=amirsamary/irisdemo:$dir
 
-    printfY "\n\nPushing image ${IMAGE_NAME} to docker hub...\n\n"
+    printfY "\n#################################################"
+    printfY "\n Pushing Base Image $dir"
+    printfY "\n#################################################\n"
+
     docker push $IMAGE_NAME
     checkError "ERROR: Image ${IMAGE_NAME} failed to be pushed to docker hub!" "Image ${IMAGE_NAME} pushed to docker!"
 done

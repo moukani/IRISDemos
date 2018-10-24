@@ -13,6 +13,10 @@ for dir in `ls -l | grep ^d. | awk '{print $NF}'`
 do
     if [[ ! $dir =~ (templates|mydemo) ]]
     then
+        printfY "\n#################################################"
+        printfY "\n Pushing Demo $dir"
+        printfY "\n#################################################\n"
+
         cd $dir
         ./docker-compose push
 
