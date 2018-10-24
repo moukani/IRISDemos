@@ -13,11 +13,16 @@
 #
 function buildAndPush
  {
+  $currDir = split-path -leaf (pwd)
+  $IMAGE_NAME="amirsamary/irisdemo:$currDir"
+  #Filename to use as Dockerfile. By default Dockerfile in current path
+  #But if Dockerfile.win exists, it uses this one
+  $DockerFile = "."
+  if (test-path ./Dockerfile.win) {$DockerFile = "./Dockerfile.win"}
 
-  $IMAGE_NAME="amirsamary/irisdemo:$(split-path -Leaf -Resolve $PWD)"
-  
-  write-host "`n Building image $IMAGE_NAME... `n"
-  
+  write-host "`n Building image $IMAGE_NAME...using Dockerfile in: $Dockerfile `n"
+
+  #split arguments. $first will store the first one, $rest the remaining 
   $first, $rest = $args
 
   #param could be push or pushcontainer, in both cases we have to take it away before calling docker build
@@ -36,7 +41,7 @@ function buildAndPush
   try 
   {
     write-host "`n docker build $params --force-rm -t $IMAGE_NAME . "
-    docker build $params --force-rm -t $IMAGE_NAME . 2>$null
+    docker build $params --force-rm -t $IMAGE_NAME -f $DockerFile . 2>$null
     write-host -F Green  "`nImage $IMAGE_NAME built!"
   }
   catch
@@ -69,8 +74,8 @@ function buildAndPush
   }
   else
   {
-      write-host -Foreground Y "`nImage $IMAGE_NAME NOT pushed to docker hub. If you want to push it, run the following command now:"
+      write-host -F Yellow "`nImage $IMAGE_NAME NOT pushed to docker hub. If you want to push it, run the following command now:"
       write-host "`tdocker push $IMAGE_NAME"
-      write-host -Foreground Y "Or call the build.ps1 script again passing the push parameter.`n"
+      write-host -F Yellow "Or call the build.ps1 script again passing the push parameter.`n"
   }
 }
