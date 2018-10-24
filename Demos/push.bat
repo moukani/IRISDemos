@@ -9,7 +9,7 @@ for /D %%G in (*) do (
         echo.
 
         cd %%~G
-        call push.bat
+        docker-compose push
         cd ..
     )
 )
