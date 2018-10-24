@@ -5,7 +5,7 @@ echo Pushing Base Images
 echo.
 
 cd BaseImages
-push
+call push.bat
 cd ..
 
 echo.
@@ -13,5 +13,5 @@ echo Pushing Demos
 echo.
 
 cd Demos
-push
+call push.bat
 cd ..

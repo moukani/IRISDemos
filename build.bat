@@ -1,6 +1,11 @@
 @ECHO OFF
 
 echo.
+echo Docker login:
+echo.
+docker login
+
+echo.
 echo #######################################
 echo "Building Base Images"
 cd BaseImages

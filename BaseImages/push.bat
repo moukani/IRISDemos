@@ -1,9 +1,17 @@
 @ECHO OFF
 
 for /D %%G in (*) do (
-    rem if "%%~G" NEQ "." if "%%~G" NEQ ".." (
-    cd %%~G
-    call push.bat
-    cd ..
-    rem )
+    if "%%~G" NEQ "tomcat" if "%%~G" NEQ "zeppelin-spark" (
+        echo.
+        echo ####################################
+        echo %%~G
+        echo ####################################
+        echo.
+
+        set IMAGE_NAME=amirsamary/irisdemo:%%~G
+
+        cd %%~G
+        docker push %IMAGE_NAME%
+        cd ..
+    )
 )
