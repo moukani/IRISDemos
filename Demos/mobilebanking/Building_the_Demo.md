@@ -31,11 +31,8 @@ This service is based on irisdemodb image.
 
 The file bs140513_032310.csv was dowloaded from [Kaggle][KagglePaySim]
 
-It has 594.644 records (including the header) and weights 46Mb. I split it into two files:
-* training_set.csv (500K records with 39Mb) - this will be pre-loaded into the demo (banking_core and data lake) 
-and will be used to train the model. We will consider it as past data. 
-* testing_set.csv (94644 records with 7.4Mb) - this will be available on the shared folder of the banking_trn_srv
-and will be used run the demo.
+It has 594.644 records (including the header) and weights 46Mb. I took 500K records from it.
+This will be pre-loaded into the demo (banking_core and data lake) and will be used to train the model. We will consider it as past data. 
 
 I converted the EOL sequence from CR/LF to LF and used the following commands to split it:
 
