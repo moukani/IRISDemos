@@ -9,7 +9,7 @@ XData ProductionDefinition
   <Item Name="Banking Core Transaction Operation" Category="Banking Core" ClassName="BankingCore.Transaction.TransactionServicesSoap" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
     <Setting Target="Adapter" Name="SOAPCredentials">BankingCore</Setting>
     <Setting Target="Host" Name="SendSuperSession">0</Setting>
-    <Setting Target="Adapter" Name="WebServiceURL">http://bankingcore:52773/csp/app/IRISDemo.SOAP.TransactionServices.cls</Setting>
+    <Setting Target="Adapter" Name="WebServiceURL">http://bankingcore:52773/csp/app/soap/IRISDemo.SOAP.TransactionServices.cls</Setting>
   </Item>
   <Item Name="Banking Transaction Service" Category="Banking Tran. Srv." ClassName="BankingSrv.BS.Transaction.Service" PoolSize="0" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
   </Item>

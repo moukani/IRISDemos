@@ -26,15 +26,20 @@ XData Install [ XMLNamespace = INSTALLER ]
 	
 	<Log Text="Creating CSP Applications for ${Namespace}..." Level="0"/>
 	<Namespace Name="${Namespace}" Create="no">
-		<CSPApplication Url="/csp/${CSPAppName}" Directory="${CSPDIR}${CSPAppName}" AuthenticationMethods="#{##class(IRISConfig.Installer).AuthForSMP()}" IsNamespaceDefault="true" CookiePath="/csp/${CSPAppName}" AutoCompile="false" CSPZENEnabled="true" InboundWebServicesEnabled="false" GroupById="%ISCMgtPortal" Resource="%Ens_Portal"/>
-		<CSPApplication Url="/csp/${CSPAppName}/soap" Directory="${CSPDIR}${CSPAppName}" AuthenticationMethods="#{##class(IRISConfig.Installer).AuthForSOAP()}" IsNamespaceDefault="false" Grant="AppRole" CookiePath="/csp/${CSPAppName}/soap" Recurse="true"  AutoCompile="false" CSPZENEnabled="true" InboundWebServicesEnabled="true" GroupById="${CSPAppName}"/>
+		<!--
+		We want to have the Ensemble CSP application completely apart from the REST and SOAP CSP applications.
+		-->
+		<CSPApplication Url="/csp/${CSPAppName}" Directory="${CSPDIR}${CSPAppName}"     Recurse="true" AuthenticationMethods="#{##class(IRISConfig.Installer).AuthForSMP()}" IsNamespaceDefault="true"   CookiePath="/csp/${CSPAppName}" AutoCompile="false" Grant="AppRole" CSPZENEnabled="true" InboundWebServicesEnabled="false" GroupById="%ISCMgtPortal" Resource="%Ens_Portal"/>
+		
+		<CSPApplication Url="/csp/${CSPAppName}/soap" Directory="${CSPDIR}${CSPAppName}" Recurse="true" AuthenticationMethods="#{##class(IRISConfig.Installer).AuthForSOAP()}" IsNamespaceDefault="false" CookiePath="/csp/${CSPAppName}/soap" AutoCompile="false" Grant="AppRole" CSPZENEnabled="true" InboundWebServicesEnabled="true"  GroupById="${CSPAppName}" UseSessionCookie="1"/>
+		
+		<CSPApplication Url="/csp/${CSPAppName}/rest" Directory="${CSPDIR}${CSPAppName}" Recurse="true" AuthenticationMethods="#{##class(IRISConfig.Installer).AuthForREST()}" IsNamespaceDefault="false" CookiePath="/csp/${CSPAppName}/rest" AutoCompile="false" Grant="AppRole" CSPZENEnabled="true" InboundWebServicesEnabled="false" GroupById="${CSPAppName}" DispatchClass="IRISDemo.REST.Dispatcher" UseSessionCookie="1"/>
 		
 		<IfDef Var="SourceDir">
             <Log Text="SourceDir defined - offline install from ${SourceDir}" Level="0"/>
             <Import File="${SourceDir}" Recurse="true"/>
         </IfDef>
 
-		<CSPApplication Url="/csp/${CSPAppName}/rest" Directory="${CSPDIR}${CSPAppName}" AuthenticationMethods="#{##class(IRISConfig.Installer).AuthForREST()}" IsNamespaceDefault="false" Grant="AppRole" CookiePath="/csp/${CSPAppName}/rest" Recurse="true"  AutoCompile="false" CSPZENEnabled="true" InboundWebServicesEnabled="false" GroupById="${CSPAppName}" DispatchClass="IRISDemo.REST.Dispatcher"  UseSessionCookie="1"/>
 	</Namespace>
 	
 	<Log Text="Applying additional configurations to the new REST CSP Application..." Level="0"/>

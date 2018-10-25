@@ -28,6 +28,10 @@ ENV IRIS_ROUTINE_BUFFERS=64
 # Adding source code that will be loaded by the installer
 ADD ./${IRIS_PROJECT_FOLDER_NAME}/ $IRIS_APP_SOURCEDIR
 
-# Running the installer.
+# Loading the base installer.
+ADD ./irisdemobaseinstaller.sh /usr/irissys/demo/irisdemobaseinstaller.sh
+RUN /usr/irissys/demo/irisdemobaseinstaller.sh
+
+# Running the base installer
 ADD ./irisdemoinstaller.sh /usr/irissys/demo/irisdemoinstaller.sh
 RUN /usr/irissys/demo/irisdemoinstaller.sh

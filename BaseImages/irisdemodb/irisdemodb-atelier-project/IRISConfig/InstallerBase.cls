@@ -18,7 +18,7 @@ Class IRISConfig.InstallerBase [ Abstract ]
 	
 	ClassMethod AuthForCSP()
 	{
-		Quit $$$AutheCache+$$$AutheDelegated
+		Quit $$$AutheCache+$$$AutheDelegated+$$$AutheLoginToken
 	}
 	
 	ClassMethod AuthForInt()
