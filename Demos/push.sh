@@ -18,7 +18,7 @@ do
         printfY "\n#################################################\n"
 
         cd $dir
-        ./docker-compose push
+        docker-compose push
 
         cd ..
     fi
