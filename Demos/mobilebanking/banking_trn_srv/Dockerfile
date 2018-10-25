@@ -18,3 +18,4 @@ RUN /usr/irissys/demo/irisdemoinstaller.sh
 ADD ./html/pmml.xml $ISC_PACKAGE_INSTALLDIR/csp/appint/
 ADD ./html/PaymentDemo.png $ISC_PACKAGE_INSTALLDIR/csp/appint/
 ADD ./html/image-map-resizer/js/imageMapResizer.min.js $ISC_PACKAGE_INSTALLDIR/csp/appint/
+ADD ./html/image-map-resizer/js/imageMapResizer.map $ISC_PACKAGE_INSTALLDIR/csp/appint/
