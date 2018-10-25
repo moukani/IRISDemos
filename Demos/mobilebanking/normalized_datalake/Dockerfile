@@ -17,4 +17,6 @@ ADD ./banksim_data.tar.gz /tmp/
 # ENV IRIS_ROUTINE_BUFFERS=64
 
 # Running the installer. This will load the source from our project.
-RUN /usr/irissys/demo/irisdemoinstaller.sh
+RUN /usr/irissys/demo/irisdemoinstaller.sh && \
+    rm /tmp/testing_set.csv && \
+    rm /tmp/training_set.csv
