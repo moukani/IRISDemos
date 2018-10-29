@@ -9,3 +9,8 @@ ADD ./${IRIS_PROJECT_FOLDER_NAME}/ $IRIS_APP_SOURCEDIR
 
 # Running the installer. This will load the source from our project.
 RUN /usr/irissys/demo/irisdemoinstaller.sh
+
+ADD ./html/pmml.xml $ISC_PACKAGE_INSTALLDIR/csp/appint/
+ADD ./html/IoTPredMaintenance.png $ISC_PACKAGE_INSTALLDIR/csp/appint/
+ADD ./html/image-map-resizer/js/imageMapResizer.min.js $ISC_PACKAGE_INSTALLDIR/csp/appint/
+ADD ./html/image-map-resizer/js/imageMapResizer.map $ISC_PACKAGE_INSTALLDIR/csp/appint/

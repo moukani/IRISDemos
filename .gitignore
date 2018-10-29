@@ -8,6 +8,7 @@
 # Eclipse specific files
 **/.buildpath
 **/.settings
+!**/.settings/atelier.prefs
 **/.project
 
 # Demos
