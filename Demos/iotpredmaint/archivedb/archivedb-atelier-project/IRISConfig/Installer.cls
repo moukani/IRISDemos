@@ -68,6 +68,9 @@ XData Install [ XMLNamespace = INSTALLER ]
 		<Arg name="pNamespace" Value="${Namespace}"/>
 	</Invoke>
 	
+	<Var Name="Password" Value="jsmith123!"/>
+	<User Username="jsmith" Fullname="John Smith" Enabled="true" Roles="AppRole" PasswordVar="Password"/>
+
 </Manifest>
 }
 }
