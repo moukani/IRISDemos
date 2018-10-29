@@ -10,6 +10,9 @@
 		<title>IRIS Payment Fraud Prevention Demo</title>
 		
 		<script language="javascript">
+		/*
+		AMIR: Not required anymore now that we are using setTimeout()
+		
 		var is_chrome = navigator.userAgent.indexOf('Chrome') > -1;
 		var is_explorer = navigator.userAgent.indexOf('MSIE') > -1;
 		var is_firefox = navigator.userAgent.indexOf('Firefox') > -1;
@@ -28,13 +31,14 @@
 			while (currentTime + TIMEOUT >= new Date().getTime()) {
 			}
 		}
+		*/
 		
 		function openWindows()
 			{
 				var timeout=1000;
 				var increment=0
 				
-				openSparkMaster();
+				setTimeout("openSparkMaster()",++increment*timeout);
 				
 				setTimeout("openZeppelin()",++increment*timeout);
 				
@@ -58,7 +62,7 @@
 			{
 				var winReference = window.open();
 				winReference.location = url;
-				winReference.parent.focus();
+				winReference.parent.focus(); 
 			}
 			
 			function openPOS()
