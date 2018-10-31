@@ -132,7 +132,7 @@
 			
 			function openDatalake()
 			{
-				window_open('http://localhost:9094/csp/sys/exp/%25CSP.UI.Portal.SQL.Home.zen?$NAMESPACE=APP')
+				window_open('http://localhost:9092/csp/sys/exp/%25CSP.UI.Portal.SQL.Home.zen?$NAMESPACE=APP')
 			}
 			
 			function openDashboard()
@@ -156,6 +156,24 @@
 				}
 				*/
 			}
+			
+			function openInstructions()
+			{
+				var btn = document.getElementById('instructionsbtn');
+				var instructions = document.getElementById('instructions');
+				
+				if (btn.value == 'Show Instructions')
+				{
+					btn.value = 'Hide Instructions';
+					instructions.hidden=false;
+				}
+				else
+				{
+					btn.value = 'Show Instructions';
+					instructions.hidden=true;
+				}
+			}
+			
 		</script>
 		<style>
 		.Button {
@@ -208,8 +226,9 @@
 				<td><input type="button" class="Button" value="7 - Open Message Trace" onclick="openMessageTrace()"/></td>
 				<td><input type="button" class="Button" value="8 - Open Zeppelin" onclick="openZeppelin()"/></td>
 				<td><input type="button" class="Button" value="9 - Open Spark Master" onclick="openSparkMaster()"/></td>
-				<td><input type="button" class="Button" value="10 - Open PMML Test Page" onclick="openPMMLTestPage()"/></td>
-				<td><input type="button" class="Button" value="11 - Open PMML" onclick="openPMML()"/></td>
+				<td><input type="button" class="Button" value="10 - Open PMML" onclick="openPMML()"/></td>
+				<td><input type="button" class="Button" value="11 - Open PMML Test Page" onclick="openPMMLTestPage()"/></td>
+				<td><input type="button" class="Button" value="Show Instructions" onclick="openInstructions()" id="instructionsbtn"/></td>
 			</tr>
 		</table>
 	
@@ -223,5 +242,65 @@
 			
 			imageMapResize();
 		</script>
+		
+		<div id="instructions" hidden="true">
+		
+			<p>Explain what they are going to see using the image on this page.</p>
+			
+			<p>Click on open all windows. Many tabs will be opened for you. You will be left on the tab you should start with. 
+			You should clik each tab and explain what is it accordingly to the followin script:</p>
+			
+			<ol>
+				<li>
+					On the production tab, explain what services, processes and operations are.</li>
+					<ul>
+						<li>Click on the green circle of the business service that receives the signal. Call their attention to the dependency on the Business Process.</li>
+						<li>Click on the green circle of the business process. Show them how the other dependencies are shown by IRIS. Explain that this process is taking the signal
+						    and calling the ML model to evaluate if there is an anomaly. Then, if there is an anomaly, the process will send an alert and start a workflow with
+						    the maitenance team.
+						</li>
+						<li>
+							Show tham that the Business Process is also storing the signal on an archive data base so that data scientists can not only monitor the performance of 
+							their current model, but also compute new models. 
+						</li>
+					</ul>
+				</li>
+
+				<li>Click again on the Business Service that receives the signal. Tell them that on this demo, all signals, from all transformers models, follow the same structure. 
+					If you have different data structures for different models of transformers, we can help you to describe these structures.</li>
+				<li>Jump to the record map tab. Tell them that this is one of the tools we have that helps them to configure the format of messages. 
+				 Data can come in in many different formats such as XML, CSV, Complex Text files, EDIFACT, X12, etc.</li> 
+				<li>Now show the Business Process tab. Show them how complex processes can be designed in a low code aproach that is
+					easy to understand and to maintain. Synchronous and Asynchronous activities, calling business rules, data transformations, initiating human workflows, sending alerts, 
+					all can be easily designed here.</li>
+				<li>Click on the "Call ML Model" activity. On the right of your screen, click on "Request builder" button. Show them how
+					a typical data transformation is built. Data from the context of our process is being mapped to the Machine Learning model message.
+					Other systems could be called in the same way.</li>
+				<li>Tell them that message should be coming in already and jump to the message trace tab. Explain what they are looking at. 
+					Find a trace that has started a workflow. </li>
+				<li>Show them the visual trace. This is one of the most important screens! Explore this trace with them. Governance. 
+					Auditing. Evidence for solving conflictive problems. Tell them that they can choose to store as many months or 
+					years of message as they need. Tell them that we have a message bank component 
+					that allow them to keep their production systems small (and stateless) while keeping with all the messages on a message bank that
+					is searchable and allow you to resend messages if necessary.</li>
+				<li>Show that we called the PMML model and we got a threat level > 0. Tell them that we will see where that PMML model came from soon.</li>
+				<li>Leave the message trace tab OPEN! Now jump to workflow tab and show them the workflow inbox. Try taking the ticket of the message trace you were 
+				looking at and then finish with it.</li> 
+				<li>Go back to that message trace and refresh it to show that it moved.</li>
+				<li>
+					Now go to the Zeppelin tab and show them how we built the model. You will find there two notebooks:
+					<ul>
+						<li>Notebook 1 - Introduction: Just show how you can access data on IRIS using JDBC, Scala with Spark and Scala with Python</li>
+						<li>Notebook 2 - Building the Models (Scala): Show how the model was built. You can try running the notebooks. 
+							There is a PLAY button on the top of the screen that runs all the code on a notebook. If you have problems 
+							running it, you may try giving more memory to your Docker Machine.</li>
+						<li>If you run the model, you will notice that PMML files will be generated. The production on iotmon will consume these PMML files.</li>
+						<li>You may want to disable the business service that consumes the PMML file so you may be able to open them and show the XML of 
+						one of them. The folder is under git/Demos/iotpredmaint/common_shared/pmml/</li>
+						<li>You can also click on button 10 and 11 on the main demo screen to see the PMML and test it. You don't need to run the Zeppelin notebook to use these buttons.</li>
+					</ul>
+				</li>
+			</ol>
+		</div>
 	</body>
 </html>
