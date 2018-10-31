@@ -1,4 +1,5 @@
-FROM amirsamary/irisdemo:iris.2018.2.0-stable
+#FROM docker.iscinternal.com/intersystems/iris:2018.2.0.519.0qdtestsys
+FROM jtsalvador/iris:2018.2.0.519
 LABEL maintainer="Amir Samary <amir.samary@intersystems.com>"
 
 # Name of the project folder ex.: irisdemodb-atelier-project
@@ -19,10 +20,10 @@ ENV IRIS_USERNAME="SuperUser"
 ENV IRIS_PASSWORD="sys"
 
 # This is an image for using with demos. I don't care about protecting the password
-RUN echo "$IRIS_PASSWORD" >> /tmp/pwd.isc && /usr/irissys/dev/Cloud/ICM/changePassword.sh /tmp/pwd.isc; if [ $? -eq 5 ]; then exit 0; else exit $?; fi
+RUN echo "$IRIS_PASSWORD" >> /tmp/pwd.isc && /usr/irissys/dev/Cloud/ICM/changePassword.sh /tmp/pwd.isc
 
 # IRIS Global buffers and Routine Buffers
-ENV IRIS_GLOBAL_BUFFERS=128
+ENV IRIS_GLOBAL_BUFFERS=256
 ENV IRIS_ROUTINE_BUFFERS=64
 
 # Adding source code that will be loaded by the installer
