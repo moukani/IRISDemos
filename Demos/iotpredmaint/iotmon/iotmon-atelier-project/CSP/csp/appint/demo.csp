@@ -35,28 +35,29 @@
 		
 		function openWindows()
 			{
-				var timeout=1000;
-				var increment=0
+				var time=1000;
+				var callNumber=0
+				var timeout = function () { return ++callNumber*time };
 				
-				setTimeout("openSparkMaster()",++increment*timeout);
+				setTimeout("openSparkMaster()",timeout());
 				
-				setTimeout("openZeppelin()",++increment*timeout);
+				setTimeout("openZeppelin()", timeout());
 				
-				setTimeout("openWorkflow()",++increment*timeout);
+				setTimeout("openWorkflow()", timeout());
 				
-				setTimeout("openMessageTrace()",++increment*timeout);
+				setTimeout("openMessageTrace()", timeout());
 				
-				setTimeout("openBusinessRule()",++increment*timeout);
+				setTimeout("openBusinessRule()", timeout());
 				
-				//setTimeout("openDataLookup()",++increment*timeout);
+				//setTimeout("openDataLookup()", timeout());
 				
-				//setTimeout("openDataTransformation()",++increment*timeout);
+				//setTimeout("openDataTransformation()", timeout());
 				
-				setTimeout("openBusinessProcess()",++increment*timeout);
+				setTimeout("openBusinessProcess()", timeout());
 				
-				setTimeout("openRecordMap()",++increment*timeout);
+				setTimeout("openRecordMap()", timeout());
 				
-				setTimeout("openProduction()",++increment*timeout);
+				setTimeout("openProduction()", timeout());
 			}
 			function window_open(url)
 			{
@@ -132,7 +133,7 @@
 			
 			function openDatalake()
 			{
-				window_open('http://localhost:9092/csp/sys/exp/%25CSP.UI.Portal.SQL.Home.zen?$NAMESPACE=APP')
+				window_open('http://localhost:9092/csp/sys/exp/%25CSP.UI.Portal.SQL.Home.zen?$NAMESPACE=APP&IRISUserName=SuperUser&IRISPassword=sys')
 			}
 			
 			function openDashboard()
@@ -205,8 +206,8 @@
 		    <area target="" alt="Event Log" title="Event Log" href="javascript:openEventLog()" coords="821,338,655,387" shape="rect">
 		    <area target="" alt="Workflow Inbox" title="Workflow Inbox" href="javascript:openWorkflow()" coords="817,400,630,445" shape="rect">
 		    <area target="" alt="Enterprise Data" title="Enterprise Data" href="javascript:openDatalake()" coords="1071,274,1313,557" shape="rect">
-		    <area target="" alt="Zeppelin Notebook" title="Zeppelin Notebook" href="javascript:openZeppelin()" coords="" shape="rect">
-		    <area target="" alt="Spark Master" title="Spark Master" href="javascript:openSparkMaster()" coords="" shape="rect">
+		    <area target="" alt="Zeppelin Notebook" title="Zeppelin Notebook" href="javascript:openZeppelin()" coords="1571,250,1750,420" shape="rect">
+		    <area target="" alt="Spark Master" title="Spark Master" href="javascript:openSparkMaster()" coords="1571,500,1750,580" shape="rect">
 		</map>
 				
 		<table width="100%" style="text-align: center; background-color: #b7c8e2;">
