@@ -121,7 +121,7 @@
 			
 			function openDatalake()
 			{
-				window_open('http://localhost:9094/csp/sys/exp/%25CSP.UI.Portal.SQL.Home.zen?$NAMESPACE=APP')
+				window_open('http://localhost:9094/csp/sys/exp/%25CSP.UI.Portal.SQL.Home.zen?$NAMESPACE=APP&IRISUserName=SuperUser&IRISPassword=sys')
 			}
 			
 			function on_load()
