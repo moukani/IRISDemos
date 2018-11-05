@@ -72,6 +72,7 @@ services:
     image: amirsamary/irisdemo:mobilebanking_advancedanalytics
     ports:
     - "9096:9090"   # Zeppelin
+    - 4141:4040
     volumes:
     - ./advanced_analytics/shared/:/shared
     - ./common_shared/:/common_shared  # That is where we will be leaving our generated PMML files
@@ -164,6 +165,15 @@ services:
     environment:
       - NODE_ENV=production
       - OVERRID_BANKINGTRNSRV_HOST=
+    command: "npm run proxy"
+    networks:
+      - bankingtrnsrv-tier
+  
+  bankingui:
+    build: ./bankingui
+    image: amirsamary/irisdemo:mobilebanking_bankingui
+    ports:
+      - "9098:4200"
     command: "npm run proxy"
     networks:
       - bankingtrnsrv-tier
