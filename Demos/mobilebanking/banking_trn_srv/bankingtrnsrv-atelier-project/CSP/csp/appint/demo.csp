@@ -195,8 +195,8 @@
 		    <area alt="IRIS Interoperability" title="IRIS Interoperability" href="javascript:openProduction()" coords="436,249,655,482" shape="rect">
 		    <area alt="IRIS Data Lake" title="IRIS Data Lake" href="javascript:openDatalake()" coords="1056,261,1315,578" shape="rect">
 		    <area alt="Zeppelin Notebook" title="Zeppelin Notebook" href="javascript:openZeppelin()" coords="1543,225,1781,416" shape="rect">
-		    <area alt="Spark Cluster" title="Spark Master" href="javascript:openSparkMaster()" coords="1750,500,1880,520" shape="rect">
-		    <area alt="Zeppelin Spark App UI - Only works after you have used Zeppelin with Spark" title="Zeppelin Spark App UI" href="javascript:openZeppelinSparkUI()" coords="1750,550,1880,580" shape="rect">
+		    <area alt="Zeppelin Spark App UI" href="javascript:openZeppelinSparkUI()" coords="1750,500,1880,520" shape="rect">
+		    <area alt="Spark Cluster" href="javascript:openSparkMaster()" coords="1750,550,1880,580" shape="rect">
 		    <area alt="Open Current PMML" title="Open Current PMML" href="javascript:openPMML()" coords="436,700,655,850" shape="rect">
 		</map>
 		

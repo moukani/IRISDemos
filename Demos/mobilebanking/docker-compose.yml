@@ -72,7 +72,7 @@ services:
     image: amirsamary/irisdemo:mobilebanking_advancedanalytics
     ports:
     - "9096:9090"   # Zeppelin
-    - 4141:4040
+    - 4141:4040     # Zeppelin Spark UI
     volumes:
     - ./advanced_analytics/shared/:/shared
     - ./common_shared/:/common_shared  # That is where we will be leaving our generated PMML files

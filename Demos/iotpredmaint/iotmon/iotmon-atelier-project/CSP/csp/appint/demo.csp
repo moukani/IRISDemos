@@ -39,7 +39,15 @@
 				var callNumber=0
 				var timeout = function () { return ++callNumber*time };
 				
-				setTimeout("openSparkMaster()",timeout());
+				openSparkMaster();
+				
+				/*
+				A timeout between each opened tab is necessary for Safari.
+				Otherwise, Safari will simply open all windows on a single tab.
+				With the timeout, Safari will first block the popups. Once the user tells
+				safari that it should allow popups, the user should be able to try opening all
+				windows again and all the tabs will be opened, one every second, on a new tab.
+				*/
 				
 				setTimeout("openZeppelin()", timeout());
 				
@@ -59,6 +67,7 @@
 				
 				setTimeout("openProduction()", timeout());
 			}
+			
 			function window_open(url)
 			{
 				var winReference = window.open();
@@ -147,6 +156,11 @@
 				window_open('csp/appint/_DeepSee.UserPortal.Workflow.zen?$NAMESPACE=APPINT&IRISUserName=jsmith&IRISPassword=jsmith123!');
 			}
 			
+			function openZeppelinSparkUI()
+			{
+				window_open('http://localhost:4141')
+			}
+			
 			function on_load()
 			{
 				/* Amir: Not required anymore now that we are using setTimeout()
@@ -207,7 +221,9 @@
 		    <area target="" alt="Workflow Inbox" title="Workflow Inbox" href="javascript:openWorkflow()" coords="817,400,630,445" shape="rect">
 		    <area target="" alt="Enterprise Data" title="Enterprise Data" href="javascript:openDatalake()" coords="1071,274,1313,557" shape="rect">
 		    <area target="" alt="Zeppelin Notebook" title="Zeppelin Notebook" href="javascript:openZeppelin()" coords="1571,250,1750,420" shape="rect">
-		    <area target="" alt="Spark Master" title="Spark Master" href="javascript:openSparkMaster()" coords="1571,500,1750,580" shape="rect">
+		    <area alt="Zeppelin Spark App UI"  href="javascript:openZeppelinSparkUI()" coords="1750,500,1880,520" shape="rect">
+		    <area alt="Spark Cluster" href="javascript:openSparkMaster()" coords="1750,550,1880,580" shape="rect">
+
 		</map>
 				
 		<table width="100%" style="text-align: center; background-color: #b7c8e2;">
@@ -248,8 +264,14 @@
 		
 			<p>Explain what they are going to see using the image on this page.</p>
 			
-			<p>Click on open all windows. Many tabs will be opened for you. You will be left on the tab you should start with. 
-			You should clik each tab and explain what is it accordingly to the followin script:</p>
+			<p>Click on open all windows. Many tabs will be opened for you. If many tabs hasn't been opened for you or
+			just a single tab has been opened, check to see if your browser has blocked your popups. 
+			If it has, tell it to allow popups and close any tab that has been opened before trying clickin on the <b>Open All Windows</b> 
+			button again.</p> 
+			
+			<p>
+			You will be left on the tab you should start with. You should clik each tab and explain what is it 
+			accordingly to the followin script:</p>
 			
 			<ol>
 				<li>
@@ -261,7 +283,7 @@
 						    the maitenance team.
 						</li>
 						<li>
-							Show tham that the Business Process is also storing the signal on an archive data base so that data scientists can not only monitor the performance of 
+							Show them that the Business Process is also storing the signal on an archive data base so that data scientists can not only monitor the performance of 
 							their current model, but also compute new models. 
 						</li>
 					</ul>
