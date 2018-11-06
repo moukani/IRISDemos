@@ -169,14 +169,14 @@ services:
     networks:
       - bankingtrnsrv-tier
   
-  bankingui:
-    build: ./bankingui
-    image: amirsamary/irisdemo:mobilebanking_bankingui
-    ports:
-      - "9098:4200"
-    command: "npm run proxy"
-    networks:
-      - bankingtrnsrv-tier
+  # bankingui:
+  #   build: ./bankingui
+  #   image: amirsamary/irisdemo:mobilebanking_bankingui
+  #   ports:
+  #     - "9098:4200"
+  #   command: "npm run proxy"
+  #   networks:
+  #     - bankingtrnsrv-tier
 
 networks:
   bankingtrnsrv-tier:
