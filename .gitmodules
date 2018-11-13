@@ -4,6 +4,3 @@
 [submodule "Demos/iotpredmaint/iotmon/html/image-map-resizer"]
 	path = Demos/iotpredmaint/iotmon/html/image-map-resizer
 	url = https://github.com/davidjbradshaw/image-map-resizer
-[submodule "Demos/Demos/miningiot/iotmon/html/image-map-resizer"]
-	path = Demos/Demos/miningiot/iotmon/html/image-map-resizer
-	url = https://github.com/davidjbradshaw/image-map-resizer
