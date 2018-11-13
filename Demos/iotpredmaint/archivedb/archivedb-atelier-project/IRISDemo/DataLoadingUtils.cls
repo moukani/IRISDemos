@@ -133,6 +133,8 @@ Class IRISDemo.DataLoadingUtils
 			
 			Set pTransformer=##class(IRISDemo.Transformer).%New()
 			Set pTransformer.Code=tTransformerCode
+			Set pTransformer.Model = ..GetTransformerModel(tTransformerCode, .tSC)
+			Quit:$System.Status.IsError(tSC)
 			
 			Set tSC = pTransformer.%Save()
 			Quit:$System.Status.IsError(tSC)
@@ -155,7 +157,53 @@ Class IRISDemo.DataLoadingUtils
 		
 		Quit tSC
 	}
-	
+
+ClassMethod GetTransformerModel(pTransformerCode As %String, Output pSC As %Status) As IRISDemo.TransformerModel
+{
+		Set pSC = $$$OK
+		Set oTransformerModel=""
+		Try
+		{
+			Set tCompanyList="Mitsubishi,Alstom,Siemens,Delta Star,VTC,ABB"
+			Set iModelIdx=(pTransformerCode#3)+1
+			Set tManufacturer=$Piece(tCompanyList,",",iModelIdx)
+			Set iBase=$Ascii("A")
+			Set tTransformerModelCode = tManufacturer_" "_(100*iModelIdx)_$Char(iBase+iModelIdx)
+			
+			Set oTransformerModel=##class(IRISDemo.TransformerModel).CodeIndexOpen(tTransformerModelCode,, .tSC)
+			
+			// We must always check the status code:
+			If $System.Status.IsError(tSC)
+			{
+				// If the error is something different from "object does not exist", 
+				// let's quit because something went really wrong...
+				If $System.Status.GetErrorCodes(tSC)'["5770"
+				{
+					Quit
+				}
+				
+				// If I am here, that is because the error is "object does not exist"
+				// So let's reset it to Ok, because we are going to create this object...
+				Set tSC = $$$OK
+			}
+			
+			// If I found the object, we are done!
+			Quit:$IsObject(oTransformerModel)
+			
+			Set oTransformerModel=##class(IRISDemo.TransformerModel).%New()
+			Set oTransformerModel.Code=tTransformerModelCode
+			Set oTransformerModel.Manufacturer=tManufacturer
+			
+			Set pSC = oTransformerModel.%Save()
+		}
+		Catch (oException)
+		{
+			Set pSC = oException.AsStatus()
+		}
+		
+		Quit oTransformerModel
+}
+
 ClassMethod WriteToOverflowFile(pMeasurementDateTime As %TimeStamp, pTransformerCode As %String, pRSSignal As %ResultSet, pOverflowFileHeader As %String) As %Status
 	{
 		#Dim oOverflowFile As %File

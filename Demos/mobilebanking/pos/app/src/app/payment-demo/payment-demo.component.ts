@@ -135,8 +135,10 @@ export class PaymentDemoComponent implements OnInit {
     });
   }
 
-  sendRequest() {
-    const options = {
+  sendRequest() 
+  {
+    const options = 
+    {
       headers: new HttpHeaders({
         'Content-Type': 'application/json; charset=utf-8',
         'Authorization': 'Basic ' + btoa(this.userName + ':' + this.password),

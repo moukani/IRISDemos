@@ -44,7 +44,7 @@
       "title": "Merchant Categories",
       "text": "%irisjdbc\n\nselect * from \nIRISDemo.BC_MERCH_CATEGORY",
       "user": "anonymous",
-      "dateUpdated": "Oct 12, 2018 9:44:22 PM",
+      "dateUpdated": "Nov 8, 2018 5:50:42 PM",
       "config": {
         "editorSetting": {
           "language": "sql",
@@ -254,7 +254,7 @@
     {
       "text": "%md\n\nBut that is not pretty... Zeppelin can help us with some magic:",
       "user": "anonymous",
-      "dateUpdated": "Oct 12, 2018 9:44:24 PM",
+      "dateUpdated": "Nov 8, 2018 5:51:55 PM",
       "config": {
         "tableHide": false,
         "editorSetting": {

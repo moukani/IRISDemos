@@ -2,11 +2,14 @@ Class IRISDemo.Transformer Extends %Persistent
 {
 	Property Code As %String [ Required ];
 	
+	Property Model As TransformerModel [ Required ];
+	
+	ForeignKey ModelFK(Model) References TransformerModel();
+	
 	Index CodeIndex On Code [ Unique ];
 	
 	/// "bulgin" on text file
 	Property IsThereBulging As %Boolean;
-	
 	
 Storage Default
 {
@@ -18,6 +21,9 @@ Storage Default
 <Value>Code</Value>
 </Value>
 <Value name="3">
+<Value>Model</Value>
+</Value>
+<Value name="4">
 <Value>IsThereBulging</Value>
 </Value>
 </Data>

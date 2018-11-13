@@ -11,6 +11,8 @@ ADD ./app/ /home/node/app
 
 WORKDIR /home/node/app
 
+#RUN npm install -g ajv
+
 RUN npm install
 
 # node won't listen on all interfaces by default. You must
