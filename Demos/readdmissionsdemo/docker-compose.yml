@@ -1,0 +1,23 @@
+version: '3.6'
+services:
+  ################## DATA LAKE INSTANCES that can be based on irisdemodb-template ############################
+  readmissionsdb:
+    # environment:
+    # - ISC_DATA_DIRECTORY=/shared/iris                          # USE THIS TO ENABLE PERSISTENT %SYS 
+    build: 
+      context: ./readmissionsdb                                      # RENAME THIS ON YOUR DEMO FOLDER TO THE NAME YOU PICKED
+      args:
+      - IRIS_PROJECT_FOLDER_NAME=readmissionsdb-atelier-project      # RENAME THIS ON YOUR DEMO FOLDER TO THE NAME YOU PICKED
+    image: amirsamary/irisdemo:readmissions_readmissionsdb                    # RENAME THIS ON YOUR DEMO FOLDER TO THE NAME YOU PICKED
+    command: --key /irislicense/iris.key
+    hostname: readmissionsdb                                         # RENAME THIS ON YOUR DEMO FOLDER TO THE NAME YOU PICKED
+    ports:
+    # 51773 is the superserver default port
+    - "9095:51773"
+    # 52773 is the webserver/management portal port
+    - "9094:52773"
+    volumes:
+    - ../../IRISLicense/:/irislicense
+    - ./common_shared/:/common_shared
+
+ 
