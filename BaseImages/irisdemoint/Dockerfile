@@ -39,9 +39,9 @@ ENV IRIS_USERNAME="SuperUser"
 # Used by runinstaller.sh and to set instance's default password (this is just a demo!)
 ENV IRIS_PASSWORD="sys"
 
-# This is an image for using with demos. I don't care about protecting the password
-#
-RUN echo "$IRIS_PASSWORD" >> /tmp/pwd.isc && /usr/irissys/dev/Cloud/ICM/changePassword.sh /tmp/pwd.isc; if [ $? -eq 5 ]; then exit 0; else exit $?; fi
+# This is an image for using with demos. I don't care about protecting the password. I just
+# want all instances to have the same password.
+RUN echo "$IRIS_PASSWORD" >> /tmp/pwd.isc && /usr/irissys/dev/Cloud/ICM/changePassword.sh /tmp/pwd.isc
 
 # IRIS Global buffers and Routine Buffers
 ENV IRIS_GLOBAL_BUFFERS=128
