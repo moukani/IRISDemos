@@ -1,4 +1,5 @@
 version: '3.6'
+
 services:
   datalake:
     # environment:
@@ -16,13 +17,20 @@ services:
     # 52773 is the webserver/management portal port
     - "9094:52773"
     volumes:
-    - ./normalized_datalake/shared/:/shared
-    - ../../IRISLicense/:/irislicense
+    - type: bind
+      source: ../../IRISLicense/
+      target: /irislicense
+    - type: bind
+      source: ./normalized_datalake/shared/
+      target: /shared
+
     networks:
     - bankingtrnsrv-tier
     - datalake-tier
 
   bankingcore:
+    depends_on: 
+      - datalake
     # environment:
     # - ISC_DATA_DIRECTORY=/shared/iris
     build: 
@@ -38,12 +46,19 @@ services:
     # 52773 is the webserver/management portal port
     - "9090:52773"
     volumes:
-    - ./banking_core/shared/:/shared
-    - ../../IRISLicense/:/irislicense
+    - type: bind
+      source: ../../IRISLicense/
+      target: /irislicense
+    - type: bind
+      source: ./banking_core/shared/
+      target: /shared
+      
     networks:
     - bankingcore-tier
 
   bankingtrnsrv:
+    depends_on: 
+      - bankingcore
     # environment:
     # - ISC_DATA_DIRECTORY=/shared/iris
     build: 
@@ -59,24 +74,35 @@ services:
     # 52773 is the webserver/management portal port
     - "9092:52773"
     volumes:
-    - ../../IRISLicense/:/irislicense
-    - ./banking_trn_srv/shared/:/shared
-    - ./common_shared/:/common_shared  # The production will be looking into this folder for new PMML files
-                                            # that will be sent by the advancedanalytics service. 
+    - type: bind
+      source: ../../IRISLicense/
+      target: /irislicense
+    - type: bind                            # The production will be looking into this folder for new PMML files
+      source: ./common_shared               # that will be sent by the advancedanalytics service.
+      target: /common_shared
+    - type: bind
+      source: ./banking_trn_srv/shared/
+      target: /shared
+                                             
     networks:
     - bankingtrnsrv-tier
     - bankingcore-tier
 
   advancedanalytics:
+    depends_on: 
+      - sparkmaster
     build: ./advanced_analytics
     image: amirsamary/irisdemo:mobilebanking_advancedanalytics
     ports:
     - "9096:9090"   # Zeppelin
     - 4141:4040     # Zeppelin Spark UI
     volumes:
-    - ./advanced_analytics/shared/:/shared
-    - ./common_shared/:/common_shared  # That is where we will be leaving our generated PMML files
-                                            # so that iotmon can grab them
+    - type: bind                            # The production will be looking into this folder for new PMML files
+      source: ./common_shared               # that will be sent by the advancedanalytics service.
+      target: /common_shared
+    - type: bind
+      source: ./advanced_analytics/shared/
+      target: /shared
 
     environment:
     - IRIS_MASTER_HOST=datalake # DNS based on the name of the service!
@@ -88,6 +114,8 @@ services:
     - datalake-tier
 
   sparkmaster:
+    depends_on: 
+      - bankingtrnsrv
     image: amirsamary/irisdemo:spark-iris
     hostname: sparkmaster # Must be always sparkmaster
     environment:
@@ -104,12 +132,15 @@ services:
       - 7077:7077
       - 8080:8080   # Spark Master Portal
     volumes:
-      - ./data:/tmp/data    # Shared between all spark nodes. Good place to place a file we are working with.
-      - ./common_shared/:/common_shared # Here is where we are going to leave the new PMML files
+    - type: bind                            # Shared between all spark nodes. Good place to place a file we are working with.
+      source: ./common_shared               # that will be sent by the advancedanalytics service.
+      target: /common_shared
     networks:
     - datalake-tier
 
   worker1:
+    depends_on: 
+      - sparkmaster
     image: amirsamary/irisdemo:spark-iris
     hostname: worker1
     environment:
@@ -128,11 +159,16 @@ services:
     ports:
       - 8081:8081   # Spark Worker Portal
     volumes:
-      - ./data:/tmp/data # Shared between all spark nodes. Good place to place a file we are working with.
+    - type: bind                            # Shared between all spark nodes. Good place to place a file we are working with.
+      source: ./common_shared               # that will be sent by the advancedanalytics service.
+      target: /common_shared
+
     networks:
     - datalake-tier
 
   worker2:
+    depends_on: 
+      - sparkmaster
     image: amirsamary/irisdemo:spark-iris
     hostname: worker2
     environment:
@@ -151,7 +187,10 @@ services:
     ports:
       - 8082:8082   # Spark Worker Portal
     volumes:
-      - ./data:/tmp/data # Shared between all spark nodes. Good place to place a file we are working with.
+    - type: bind                            # Shared between all spark nodes. Good place to place a file we are working with.
+      source: ./common_shared               # that will be sent by the advancedanalytics service.
+      target: /common_shared
+
     networks:
     - datalake-tier
 
