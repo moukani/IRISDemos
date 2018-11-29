@@ -39,7 +39,7 @@ Class IRISDemo.SendSignalsToMonitorTask Extends (IRISDemo.Util.BaseTask, %SYS.Ta
 				Set tNewFileName = ..IOTMonitorDir_$Piece(tFileName,"/",*)
 				
 				Do ##class(%File).CopyFile(tFileName,tNewFileName, .return)
-				If return'=0
+				If ((return'=0) || (##class(%File).Exists(tNewFileName) = 0))
 				{
 					Set tSC = $System.Status.Error(5001,"Could not move file "_tFileName_" to "_tNewFileName_".")
 					Quit
