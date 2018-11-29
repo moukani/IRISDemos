@@ -23,6 +23,8 @@ services:
       target: /common_shared
 
   worker1:
+    depends_on:
+    - sparkmaster
     image: amirsamary/irisdemo:spark-iris
     hostname: worker1
     environment:
@@ -49,6 +51,8 @@ services:
 
 
   worker2:
+    depends_on:
+    - sparkmaster
     image: amirsamary/irisdemo:spark-iris
     hostname: worker2
     environment:
@@ -99,6 +103,8 @@ services:
       target: /shared
 
   advancedanalytics:
+    depends_on:
+    - sparkmaster
     image: amirsamary/irisdemo:zeppelin
     ports:
     - "9096:9090"   # Zeppelin
@@ -119,6 +125,9 @@ services:
     - IRIS_MASTER_NAMESPACE=APP 
   
   iotmon:
+    depends_on:
+    - sparkmaster
+    - archivedb
     build: 
       context: ./iotmon
       args:
