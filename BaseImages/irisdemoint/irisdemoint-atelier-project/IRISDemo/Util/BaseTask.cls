@@ -36,7 +36,7 @@ Class IRISDemo.Util.BaseTask Extends %RegisteredObject
 	Parameter TaskName = "";
 	
 	/// Activate this so that Log() and LogStatus() messages are written to a file of your choice.
-	Property DebugLog As %Boolean [ InitialExpression = 0 ];
+	Property DebugLog As %Boolean [ InitialExpression = 1 ];
 	
 	/// If DebugLog is activated, choose a folder where to put your log files. One log file will
 	/// be created every day. You may choose to keep as many days of log files as you wish by specifying 
