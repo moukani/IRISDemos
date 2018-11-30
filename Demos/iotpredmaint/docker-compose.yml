@@ -1,6 +1,60 @@
 version: '3.6'
 
+volumes:
+  common_shared:
+
 services:
+  archivedb:
+    build:
+      context: ./archivedb
+      args:
+      - IRIS_PROJECT_FOLDER_NAME=archivedb-atelier-project
+    image: amirsamary/irisdemo:iotpredmaint_archivedb
+    command: --key /irislicense/iris.key
+    hostname: archivedb
+    ports:
+    # 51773 is the superserver default port
+    - "9093:51773"
+    # 52773 is the webserver/management portal port
+    - "9092:52773"
+    volumes:
+     - common_shared:/common_shared   # The production will be looking into this folder for new PMML files
+                                       # that will be sent by the advancedanalytics service.
+     - type: bind
+       source: ../../IRISLicense/
+       target: /irislicense
+     - type: bind
+       source: ./archivedb/shared/
+       target: /shared
+
+  iotmon:
+    depends_on:
+    - sparkmaster
+    - archivedb
+    build: 
+      context: ./iotmon
+      args:
+      - IRIS_PROJECT_FOLDER_NAME=iotmon-atelier-project
+    image: amirsamary/irisdemo:iotpredmaint_iotmon
+    command: --key /irislicense/iris.key
+    hostname: iotmon
+    ports:
+    # 51773 is the superserver default port
+    - "9095:51773"
+    # 52773 is the webserver/management portal port
+    - "9094:52773"
+    volumes:
+     - common_shared:/common_shared   # The production will be looking into this folder for new PMML files
+                                       # that will be sent by the archivedb service. Of course we would
+                                       # never receive files from archivedb on the real world. But on this
+                                       # demo, we are.
+     - type: bind
+       source: ../../IRISLicense/
+       target: /irislicense
+     - type: bind                            # demo, we are.
+       source: ./iotmon/shared/              # Also, we will be loading PMML files from this folder too
+       target: /shared
+      
   sparkmaster:
     image: amirsamary/irisdemo:spark-iris
     hostname: sparkmaster # Must be always sparkmaster
@@ -18,9 +72,8 @@ services:
       - 7077:7077
       - 8080:8080
     volumes:
-    - type: bind                            # Shared between all spark nodes. Good place to place a file we are working with.
-      source: ./common_shared               # that will be sent by the advancedanalytics service.
-      target: /common_shared
+      - common_shared:/common_shared   # Shared between all spark nodes. Good place to place a file we are working with.
+                                       # that will be sent by the advancedanalytics service.
 
   worker1:
     depends_on:
@@ -45,9 +98,8 @@ services:
     ports:
       - 8081:8081
     volumes:
-    - type: bind                            # Shared between all spark nodes. Good place to place a file we are working with.
-      source: ./common_shared               # that will be sent by the advancedanalytics service.
-      target: /common_shared
+      - common_shared:/common_shared   # Shared between all spark nodes. Good place to place a file we are working with.
+                                       # that will be sent by the advancedanalytics service.
 
 
   worker2:
@@ -73,34 +125,8 @@ services:
     ports:
       - 8082:8081
     volumes:
-    - type: bind                            # Shared between all spark nodes. Good place to place a file we are working with.
-      source: ./common_shared               # that will be sent by the advancedanalytics service.
-      target: /common_shared
-
-
-  archivedb:
-    build:
-      context: ./archivedb
-      args:
-      - IRIS_PROJECT_FOLDER_NAME=archivedb-atelier-project
-    image: amirsamary/irisdemo:iotpredmaint_archivedb
-    command: --key /irislicense/iris.key
-    hostname: archivedb
-    ports:
-    # 51773 is the superserver default port
-    - "9093:51773"
-    # 52773 is the webserver/management portal port
-    - "9092:52773"
-    volumes:
-    - type: bind
-      source: ../../IRISLicense/
-      target: /irislicense
-    - type: bind                            # The production will be looking into this folder for new PMML files
-      source: ./common_shared               # that will be sent by the advancedanalytics service.
-      target: /common_shared
-    - type: bind
-      source: ./archivedb/shared/
-      target: /shared
+      - common_shared:/common_shared   # Shared between all spark nodes. Good place to place a file we are working with.
+                                       # that will be sent by the advancedanalytics service.
 
   advancedanalytics:
     depends_on:
@@ -110,12 +136,11 @@ services:
     - "9096:9090"   # Zeppelin
     - 4141:4040     # Zeppelin Spark UI
     volumes:
-    - type: bind                            # The production will be looking into this folder for new PMML files
-      source: ./common_shared               # that will be sent by the advancedanalytics service.
-      target: /common_shared
-    - type: bind
-      source: ./advanced_analytics/shared/
-      target: /shared
+     - common_shared:/common_shared   # Shared between all spark nodes. Good place to place a file we are working with.
+                                     # that will be sent by the advancedanalytics service.
+     - type: bind
+       source: ./advanced_analytics/shared/
+       target: /shared
 
     environment:
     - IRIS_MASTER_HOST=archivedb # DNS based on the name of the service!
@@ -124,29 +149,3 @@ services:
     - IRIS_MASTER_PASSWORD=sys 
     - IRIS_MASTER_NAMESPACE=APP 
   
-  iotmon:
-    depends_on:
-    - sparkmaster
-    - archivedb
-    build: 
-      context: ./iotmon
-      args:
-      - IRIS_PROJECT_FOLDER_NAME=iotmon-atelier-project
-    image: amirsamary/irisdemo:iotpredmaint_iotmon
-    command: --key /irislicense/iris.key
-    hostname: iotmon
-    ports:
-    # 51773 is the superserver default port
-    - "9095:51773"
-    # 52773 is the webserver/management portal port
-    - "9094:52773"
-    volumes:
-    - type: bind
-      source: ../../IRISLicense/
-      target: /irislicense
-    - type: bind                            # The production will be looking into this folder for new files
-      source: ./common_shared               # that will be sent by the archivedb service. Of course we would
-      target: /common_shared                # never receive files from archivedb on the real world. But on this
-    - type: bind                            # demo, we are.
-      source: ./iotmon/shared/              # Also, we will be loading PMML files from this folder too
-      target: /shared

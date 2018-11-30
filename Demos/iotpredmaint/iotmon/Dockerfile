@@ -7,6 +7,13 @@ ARG IRIS_PROJECT_FOLDER_NAME
 # Adding source code that will be loaded by the installer
 ADD ./${IRIS_PROJECT_FOLDER_NAME}/ $IRIS_APP_SOURCEDIR
 
+# This folder will be shared with the other containers (i.e.: archivedb)
+RUN mkdir /common_shared/ && \
+    mkdir /common_shared/transformer_signals/ && \
+    mkdir /common_shared/pmml && \
+    chgrp irisusr -R /common_shared && \
+    chmod g+w -R /common_shared/
+
 # Running the installer. This will load the source from our project.
 RUN /usr/irissys/demo/irisdemoinstaller.sh
 
