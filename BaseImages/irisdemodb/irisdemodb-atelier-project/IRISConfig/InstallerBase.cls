@@ -135,11 +135,18 @@ Class IRISConfig.InstallerBase [ Abstract ]
 		Set tSC = $System.Status.OK()
 		Try
 		{
-			Set oCSPApp = ##class(Security.Applications).%OpenId(pCSPAppName, , .tSC)
+			// This is not required any longer. 
+			// Set oCSPApp = ##class(Security.Applications).%OpenId(pCSPAppName, , .tSC)
 	
-			Set oCSPApp.DeepSeeEnabled=1
-			Set tSC = oCSPApp.%Save()
-			Quit:$System.Status.IsError(tSC)
+			// Set oCSPApp.DeepSeeEnabled=1
+			// Set oCSPApp.iKnowEnabled=1
+			// Set tSC = oCSPApp.%Save()
+			// Quit:$System.Status.IsError(tSC)
+
+			// This will do all the work for us.
+			Set pCSPAppName=pCSPAppName_"/"
+			Do EnableDeepSee^%SYS.cspServer(pCSPAppName)
+			Do EnableIKnow^%SYS.cspServer(pCSPAppName)
 		}
 		Catch (oException)
 		{
@@ -148,7 +155,6 @@ Class IRISConfig.InstallerBase [ Abstract ]
 	
 		Quit tSC
 	}
-
 	
 	XData Install [ XMLNamespace = INSTALLER ]
 	{
