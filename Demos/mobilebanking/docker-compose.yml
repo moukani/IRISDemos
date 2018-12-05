@@ -64,8 +64,6 @@ services:
     - datalake-tier
 
   bankingcore:
-    depends_on: 
-      - datalake
     # environment:
     # - ISC_DATA_DIRECTORY=/shared/iris
     build: 
