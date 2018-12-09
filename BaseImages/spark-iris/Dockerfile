@@ -75,19 +75,53 @@ RUN curl -sL --retry 3 \
  && rm -rf $HADOOP_HOME/share/doc \
  && chown -R root:root $HADOOP_HOME
 
-# SPARK
-ENV SPARK_VERSION 2.1.3
+# SPARK Version 2.1.3
+# This is the same version that the zeppelin image uses and that InterSystems currently supports
+# ENV SPARK_VERSION 2.1.3
+# ENV SPARK_PACKAGE spark-${SPARK_VERSION}-bin-without-hadoop
+# ENV SPARK_HOME /usr/spark-${SPARK_VERSION}
+# ENV SPARK_DIST_CLASSPATH="$HADOOP_HOME/etc/hadoop/*:$HADOOP_HOME/share/hadoop/common/lib/*:$HADOOP_HOME/share/hadoop/common/*:$HADOOP_HOME/share/hadoop/hdfs/*:$HADOOP_HOME/share/hadoop/hdfs/lib/*:$HADOOP_HOME/share/hadoop/hdfs/*:$HADOOP_HOME/share/hadoop/yarn/lib/*:$HADOOP_HOME/share/hadoop/yarn/*:$HADOOP_HOME/share/hadoop/mapreduce/lib/*:$HADOOP_HOME/share/hadoop/mapreduce/*:$HADOOP_HOME/share/hadoop/tools/lib/*"
+# ENV PATH $PATH:${SPARK_HOME}/bin
+# ENV SPARK_OPTS --driver-java-options=-Xms1024M --driver-java-options=-Xmx4096M --driver-java-options=-Dlog4j.logLevel=info
+# RUN curl -sL --retry 3 \
+#   "https://www.apache.org/dyn/mirrors/mirrors.cgi?action=download&filename=spark/spark-${SPARK_VERSION}/${SPARK_PACKAGE}.tgz" \
+#   | gunzip \
+#   | tar x -C /usr/ \
+#  && mv /usr/$SPARK_PACKAGE $SPARK_HOME \
+#  && chown -R root:root $SPARK_HOME
+
+# SPARK Version 2.1.1
+# This is the same version that the zeppelin image uses and that InterSystems currently supports
+ENV SPARK_VERSION 2.1.1
 ENV SPARK_PACKAGE spark-${SPARK_VERSION}-bin-without-hadoop
 ENV SPARK_HOME /usr/spark-${SPARK_VERSION}
 ENV SPARK_DIST_CLASSPATH="$HADOOP_HOME/etc/hadoop/*:$HADOOP_HOME/share/hadoop/common/lib/*:$HADOOP_HOME/share/hadoop/common/*:$HADOOP_HOME/share/hadoop/hdfs/*:$HADOOP_HOME/share/hadoop/hdfs/lib/*:$HADOOP_HOME/share/hadoop/hdfs/*:$HADOOP_HOME/share/hadoop/yarn/lib/*:$HADOOP_HOME/share/hadoop/yarn/*:$HADOOP_HOME/share/hadoop/mapreduce/lib/*:$HADOOP_HOME/share/hadoop/mapreduce/*:$HADOOP_HOME/share/hadoop/tools/lib/*"
 ENV PATH $PATH:${SPARK_HOME}/bin
 ENV SPARK_OPTS --driver-java-options=-Xms1024M --driver-java-options=-Xmx4096M --driver-java-options=-Dlog4j.logLevel=info
 RUN curl -sL --retry 3 \
-  "https://www.apache.org/dyn/mirrors/mirrors.cgi?action=download&filename=spark/spark-${SPARK_VERSION}/${SPARK_PACKAGE}.tgz" \
+  "https://archive.apache.org/dist/spark/spark-${SPARK_VERSION}/${SPARK_PACKAGE}.tgz" \
   | gunzip \
   | tar x -C /usr/ \
  && mv /usr/$SPARK_PACKAGE $SPARK_HOME \
  && chown -R root:root $SPARK_HOME
+
+#R version 3.4.4 (2018-03-15) -- "Someone to Lean On"
+# That is the same version that the Zeppelin 0.8.0 image uses
+RUN echo "$LOG_TAG Install R related packages" && \
+    echo "deb http://cran.rstudio.com/bin/linux/ubuntu xenial/" | tee -a /etc/apt/sources.list && \
+    gpg --keyserver keyserver.ubuntu.com --recv-key E084DAB9 && \
+    gpg -a --export E084DAB9 | apt-key add - && \
+    apt-get -y update && \
+    apt-get -y install r-base r-base-dev && \
+    R -e "install.packages('knitr', repos='http://cran.us.r-project.org')" && \
+    R -e "install.packages('ggplot2', repos='http://cran.us.r-project.org')" && \
+    R -e "install.packages('googleVis', repos='http://cran.us.r-project.org')" && \
+    R -e "install.packages('data.table', repos='http://cran.us.r-project.org')" && \
+    # for devtools, Rcpp
+    apt-get -y install libcurl4-gnutls-dev libssl-dev && \
+    R -e "install.packages('devtools', repos='http://cran.us.r-project.org')" && \
+    R -e "install.packages('Rcpp', repos='http://cran.us.r-project.org')" && \
+    Rscript -e "library('devtools'); library('Rcpp'); install_github('ramnathv/rCharts')"
 
 # JPMML
 RUN cd /custom/lib && \

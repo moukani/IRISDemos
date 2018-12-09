@@ -49,8 +49,18 @@ ENV PATH $PATH:$HADOOP_HOME/bin
 COPY --from=0 $HADOOP_HOME/ $HADOOP_HOME/
 RUN chown -R root:root $HADOOP_HOME
 
-# SPARK
-ENV SPARK_VERSION 2.1.3
+# SPARK 2.1.3
+# ENV SPARK_VERSION 2.1.3
+# ENV SPARK_PACKAGE spark-${SPARK_VERSION}-bin-without-hadoop
+# ENV SPARK_HOME /usr/spark-${SPARK_VERSION}
+# ENV SPARK_DIST_CLASSPATH="$HADOOP_HOME/etc/hadoop/*:$HADOOP_HOME/share/hadoop/common/lib/*:$HADOOP_HOME/share/hadoop/common/*:$HADOOP_HOME/share/hadoop/hdfs/*:$HADOOP_HOME/share/hadoop/hdfs/lib/*:$HADOOP_HOME/share/hadoop/hdfs/*:$HADOOP_HOME/share/hadoop/yarn/lib/*:$HADOOP_HOME/share/hadoop/yarn/*:$HADOOP_HOME/share/hadoop/mapreduce/lib/*:$HADOOP_HOME/share/hadoop/mapreduce/*:$HADOOP_HOME/share/hadoop/tools/lib/*"
+# ENV PATH $PATH:${SPARK_HOME}/bin
+# ENV SPARK_OPTS --driver-java-options=-Xms1024M --driver-java-options=-Xmx4096M --driver-java-options=-Dlog4j.logLevel=info
+# COPY --from=0 $SPARK_HOME/ $SPARK_HOME/
+# RUN chown -R root:root $SPARK_HOME
+
+# SPARK 2.1.1
+ENV SPARK_VERSION 2.1.1
 ENV SPARK_PACKAGE spark-${SPARK_VERSION}-bin-without-hadoop
 ENV SPARK_HOME /usr/spark-${SPARK_VERSION}
 ENV SPARK_DIST_CLASSPATH="$HADOOP_HOME/etc/hadoop/*:$HADOOP_HOME/share/hadoop/common/lib/*:$HADOOP_HOME/share/hadoop/common/*:$HADOOP_HOME/share/hadoop/hdfs/*:$HADOOP_HOME/share/hadoop/hdfs/lib/*:$HADOOP_HOME/share/hadoop/hdfs/*:$HADOOP_HOME/share/hadoop/yarn/lib/*:$HADOOP_HOME/share/hadoop/yarn/*:$HADOOP_HOME/share/hadoop/mapreduce/lib/*:$HADOOP_HOME/share/hadoop/mapreduce/*:$HADOOP_HOME/share/hadoop/tools/lib/*"
@@ -59,6 +69,26 @@ ENV SPARK_OPTS --driver-java-options=-Xms1024M --driver-java-options=-Xmx4096M -
 COPY --from=0 $SPARK_HOME/ $SPARK_HOME/
 RUN chown -R root:root $SPARK_HOME
 
+# R version 3.4.4 (2018-03-15) -- "Someone to Lean On"
+# This is already being done by the Zeppelin image. But 0.8.0 is broken and 0.7.3
+# brings an older version of R. So I am running this again to get R version 3.4.4 that
+# is the same that the Spark Images are using.
+RUN echo "$LOG_TAG Install R related packages" && \
+    echo "deb http://cran.rstudio.com/bin/linux/ubuntu xenial/" | tee -a /etc/apt/sources.list && \
+    gpg --keyserver keyserver.ubuntu.com --recv-key E084DAB9 && \
+    gpg -a --export E084DAB9 | apt-key add - && \
+    apt-get -y update && \
+    apt-get -y install r-base r-base-dev && \
+    R -e "install.packages('knitr', repos='http://cran.us.r-project.org')" && \
+    R -e "install.packages('ggplot2', repos='http://cran.us.r-project.org')" && \
+    R -e "install.packages('googleVis', repos='http://cran.us.r-project.org')" && \
+    R -e "install.packages('data.table', repos='http://cran.us.r-project.org')" && \
+    # for devtools, Rcpp
+    apt-get -y install libcurl4-gnutls-dev libssl-dev && \
+    R -e "install.packages('devtools', repos='http://cran.us.r-project.org')" && \
+    R -e "install.packages('Rcpp', repos='http://cran.us.r-project.org')" && \
+    Rscript -e "library('devtools'); library('Rcpp'); install_github('ramnathv/rCharts')"
+    
 ADD ./image_build_files/sbin/startservices.sh /custom/sbin/
 RUN chmod +x /custom/sbin/startservices.sh
    
