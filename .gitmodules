@@ -4,3 +4,6 @@
 [submodule "Demos/iotpredmaint/iotmon/html/image-map-resizer"]
 	path = Demos/iotpredmaint/iotmon/html/image-map-resizer
 	url = https://github.com/davidjbradshaw/image-map-resizer
+[submodule "Demos/twittersentiment/twittersrv/html/image-map-resizer"]
+	path = Demos/twittersentiment/twittersrv/html/image-map-resizer
+	url = https://github.com/davidjbradshaw/image-map-resizer
