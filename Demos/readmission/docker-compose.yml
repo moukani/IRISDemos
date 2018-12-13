@@ -20,6 +20,9 @@ services:
     - type: bind
       source: ../../IRISLicense/
       target: /irislicense
+    - type: bind
+      source: ./hl7files/
+      target: /hl7files
 
   RRLACESrv:   # Readmission Risk LACE Service
     build: 
