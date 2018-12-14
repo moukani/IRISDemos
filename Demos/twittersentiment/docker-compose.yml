@@ -34,7 +34,7 @@ services:
     command: --key /irislicense/iris.key
     hostname: twittersrv
     ports:
-    - "9092:52773" # 52773 is the webserver/management portal port
+    - "9092:52773" # 52773 is the webserver/management portal port: http://localhost:9092/csp/sys/UtilHome.csp
     #- "9093:51773" # 51773 is the superserver default port
     volumes:
     - type: bind
@@ -52,7 +52,7 @@ services:
     command: --key /irislicense/iris.key
     hostname: twitterarchive
     ports:
-    - "9094:52773" # 52773 is the webserver/management portal port
+    - "9094:52773" # 52773 is the webserver/management portal port: http://localhost:9094/csp/sys/UtilHome.csp
     #- "9095:51773" # 51773 is the superserver default port
     volumes:
     - type: bind
@@ -72,7 +72,7 @@ services:
     command: --key /irislicense/iris.key
     hostname: callcenterdb
     ports:
-    - "9096:52773" # 52773 is the webserver/management portal port
+    - "9096:52773" # 52773 is the webserver/management portal port: http://localhost:9096/csp/sys/UtilHome.csp
     #- "9097:51773" # 51773 is the superserver default port
     volumes:
     - type: bind
