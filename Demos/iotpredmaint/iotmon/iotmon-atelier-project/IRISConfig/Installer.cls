@@ -19,7 +19,7 @@ ClassMethod LoadTransactionalData(pNamespace As %String) As %Status
 	
 	ZN "%SYS"
 	
-	Quit tSC 
+	Quit tSC
 }
 
 /// This method will create an Interoperability credential meant to be used on Interoperability Productions.
@@ -42,12 +42,29 @@ ClassMethod CreateCredentials(pNamespace As %String) As %Status
 	
 	ZN tNS
 	
-	Quit tSC 
+	Quit tSC
+}
+
+ClassMethod CreateWebApp(pVars, pLogLevel, tInstaller) As %Status
+{
+	Set Namespace=tInstaller.Evaluate("${Namespace}")
+	Do tInstaller.PushNS("%SYS")
+	Do ##class(Security.System).GetInstallationSecuritySetting(.security)
+	Set cspProperties("AutheEnabled") = 32
+	Set cspProperties("NameSpace") = Namespace
+	Set cspProperties("GroupById") = "wf"
+	Set cspProperties("CookiePath") = "/wf/"
+	Set cspProperties("IsNameSpaceDefault") = $$$NO
+	Set cspProperties("DispatchClass") = "Workflow.REST"
+	Set tSC = ##class(Security.Applications).Create("/wf/rest", .cspProperties)
+	Do tInstaller.PopNS()
+	If $$$ISERR(tSC) Throw ##class(%Installer.Exception).CreateFromStatus(tSC)
+	Quit $$$OK
 }
 
 /// You can customize this to run code during docker build
 XData Install [ XMLNamespace = INSTALLER ]
-{ 
+{
 <Manifest>
 	
 	<Log Text="Configuring credentials..." Level="0"/>
@@ -60,7 +77,9 @@ XData Install [ XMLNamespace = INSTALLER ]
             <Log Text="SourceDir defined - offline install from ${SourceDir}" Level="0"/>
             <Import File="${SourceDir}" Recurse="true"/>
         </IfDef>
-        
+        <Import File="/tmp/installers/" Recurse="true"/>
+        <CSPApplication Url="/wf" Recurse="1"  AuthenticationMethods="32" AutoCompile="1" CookiePath="/wf/" CSPZENEnabled="1" GroupById="wf" Directory="/shared/WorkflowUI/workflow/" />
+	    <RunInstall Class="IRISConfig.Installer" Method="CreateWebApp"/>
 	</Namespace>
 	
 	<Log Text="Loading transactional data..." Level="0"/>
@@ -89,7 +108,8 @@ XData Install [ XMLNamespace = INSTALLER ]
 		<Arg name="pFullName" Value="Jane Smith"/>
 		<Arg name="pRoleName" Value="Maintenance Team"/>
 	</Invoke>
-
+	
 </Manifest>
 }
+
 }

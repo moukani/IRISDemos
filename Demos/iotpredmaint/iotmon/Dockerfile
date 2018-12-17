@@ -7,6 +7,8 @@ ARG IRIS_PROJECT_FOLDER_NAME
 # Adding source code that will be loaded by the installer
 ADD ./${IRIS_PROJECT_FOLDER_NAME}/ $IRIS_APP_SOURCEDIR
 
+ADD https://github.com/intersystems-ru/EnsembleWorkflow/releases/download/v1.0/Workflow.xml /tmp/installers/Workflow.xml
+
 # This folder will be shared with the other containers (i.e.: archivedb)
 RUN mkdir /common_shared/ && \
     mkdir /common_shared/transformer_signals/ && \
