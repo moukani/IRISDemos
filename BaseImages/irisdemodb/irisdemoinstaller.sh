@@ -34,7 +34,7 @@ printf "%s\n%s\nzn \"%s\"\nSet tSC=\$system.OBJ.Load(\"%s\",\"ck\")\n$VerifySC\n
 # ERROR #5840: Unable to import file '/tmp/iris_project/.buildpath' as this is not a supported type.ERROR: Service 'twittersrv' failed to build: The command '/bin/sh -c /usr/irissys/demo/irisdemoinstaller.sh' returned a non-zero code: 1
 rm -f /tmp/iris_project/.buildpath
 rm -f /tmp/iris_project/.project
-rm -f /tmp/iris_project/.settings
+rm -rf /tmp/iris_project/.settings
 
 # Running the installer...
 printf "\n\nRunning Installer..."
