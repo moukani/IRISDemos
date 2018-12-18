@@ -1,4 +1,4 @@
-/subsystem=datasources/jdbc-driver=com.intersystems.jdbc.IRISDriver:add(driver-name=com.intersystems.jdbc.IRISDriver,driver-datasource-class-name=com.intersystems.jdbc.IRISDataSource,driver-module-name=com.intersystems)
+/subsystem=datasources/jdbc-driver=com.intersystems.jdbc.IRISDriver:add(driver-name=com.intersystems.jdbc.IRISDriver,driver-module-name=com.intersystems)
 data-source add \
      --name=InterSystemsDS \
      --driver-name=com.intersystems.jdbc.IRISDriver \
