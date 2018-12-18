@@ -23,7 +23,7 @@ services:
     
 
   # This is where the Twitter service is running, fetching twitts,
-  # analyzing sentiment, and pushing the data to the twitterarchive.
+  # analyzing sentiment, and pushing the data to the twittersentiment.
   # If there is a twitter with "bad sentiment" about our brand out there
   # we will open a ticket on the call center to reach out to that customer.
   twittersrv: 
@@ -44,14 +44,14 @@ services:
 
   # Here is where we are storing all twitts. Analysts will use this
   # data to further NLP processing, maitaining the sentiment dictionary, etc.
-  twitterarchive:
+  twittersentiment:
     build: 
-      context: ./twitterarchive
+      context: ./twittersentiment
       args:
-      - IRIS_PROJECT_FOLDER_NAME=twitterarchive-atelier-project
-    image: amirsamary/irisdemo:twittersentiment_twitterarchive
+      - IRIS_PROJECT_FOLDER_NAME=twittersentiment-atelier-project
+    image: amirsamary/irisdemo:twittersentiment_twittersentiment
     command: --key /irislicense/iris.key
-    hostname: twitterarchive
+    hostname: twittersentiment
     ports:
     - "9094:52773" # 52773 is the webserver/management portal port: http://localhost:9094/csp/sys/UtilHome.csp
     #- "9095:51773" # 51773 is the superserver default port
