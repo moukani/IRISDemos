@@ -19,16 +19,50 @@ Class IRISDemo.REST.Twitter.Service Extends %CSP.REST
 	ClassMethod StoreAndAnalyse() As %Status
 	{
 		Set tSC = $$$OK
+		Set SentimentResult = ""
 		Try
 		{
 			// Configuring response type to JSON
 			Set %response.ContentType=..#CONTENTTYPEJSON
 			
-			Set document = ##class(%DynamicObject).%FromJSON(%request.Content)
+			Set twitter = ##class(%DynamicObject).%FromJSON(%request.Content)
 			
-			Set result = {"echo": (document)}
+			Set tweet = ##class(IRISDemo.Data.Tweets).%New()
+			Set tweet.TwitterId = twitter.id 
+			Set tweet.TwitterUser = twitter.user
+			Set tweet.TwitterText = twitter.text
+			
+			Set domainId = ##class(%SYSTEM.iKnow).GetDomainId("TwitterAnalytics")
+	
+			Do ##class(%SYSTEM.iKnow).IndexString("TwitterAnalytics",twitter.id,twitter.text,,1,.vSrcId)
+		
+			Do ##class(%iKnow.Queries.SourceAPI).GetAttributes(.tResult, domainId, vSrcId)
+	    
+			Set iSent=""
+
+			For
+			{
+				Set iSent=$Order(tResult(iSent))
+				Quit:iSent=""
+		
+				Set sentList=tResult(iSent)
+				Set sent = $ListGet(sentList, 2)
+				Set SentimentResult = sent
+			   
+			}
+			
+			Set tweet.Sentiment = SentimentResult
+			
+			Set tSC = tweet.%Save()
+			
+			Do ##class(%SYSTEM.iKnow).DeleteVirtualSource("Twitter",vSrcId)
+			
+			Set result = {"sentiment": (SentimentResult)}
+			
 			Write result.%ToJSON()
+		
 		}
+		
 		Catch (oException)
 		{
 			Set tSC = oException.AsStatus()
