@@ -50,5 +50,6 @@ rm -f $ISC_PACKAGE_INSTALLDIR/mgr/iris.ids
 rm -f $ISC_PACKAGE_INSTALLDIR/mgr/alerts.log
 rm -f $ISC_PACKAGE_INSTALLDIR/mgr/journal/*
 rm -f $ISC_PACKAGE_INSTALLDIR/mgr/messages.log
+rm -f $ISC_PACKAGE_INSTALLDIR/mgr/iris.key
 
 rm -rf /tmp/iris_project
