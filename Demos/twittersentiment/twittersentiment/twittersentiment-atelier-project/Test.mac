@@ -1,0 +1,65 @@
+ROUTINE Test
+#Include DEMOMACROS
+
+	Try
+	{
+		#Dim oNLPSQLLister As %iKnow.Source.SQL.Lister
+		
+		Set tSC = $System.Status.OK()
+		
+		Kill ^IRISDemo.Data.TweetsD
+		Kill ^IRISDemo.Data.TweetsI
+		Set tSC=$System.iKnow.DropData("TwitterAnalytics",0,0)
+		$$$ThrowStatusExceptionIfError(tSC, "NLPDropDataException")
+		
+		&SQL(insert into IRISDemo_Data.Tweets (TwitterId, TwitterText, TwitterUser) values (1, 'I hate this company. They treat you like shit.', 'user1'))
+		$$$ThrowSQLExceptionIfError("PopulateTweetsException")
+		
+		&SQL(insert into IRISDemo_Data.Tweets (TwitterId, TwitterText, TwitterUser) values (2, 'I disagree. I never had a problem with their customer services.', 'user2'))
+		$$$ThrowSQLExceptionIfError("PopulateTweetsException")
+		
+		&SQL(insert into IRISDemo_Data.Tweets (TwitterId, TwitterText, TwitterUser) values (3, 'I think they have very good products, but a horrible customer services.', 'user3'))
+		$$$ThrowSQLExceptionIfError("PopulateTweetsException")
+		
+		&SQL(insert into IRISDemo_Data.Tweets (TwitterId, TwitterText, TwitterUser) values (4, 'I can''t say I love this company either.', 'user4'))
+		$$$ThrowSQLExceptionIfError("PopulateTweetsException")
+		
+		&SQL(insert into IRISDemo_Data.Tweets (TwitterId, TwitterText, TwitterUser) values (5, 'I can''t say I hate it. But loving is a strech.', 'user5'))
+		$$$ThrowSQLExceptionIfError("PopulateTweetsException")
+		
+		&SQL(insert into IRISDemo_Data.Tweets (TwitterId, TwitterText, TwitterUser) values (6, 'I love this company! I wish they had a better customer services though.', 'user6'))
+		$$$ThrowSQLExceptionIfError("PopulateTweetsException")
+		
+		Set tDomainId = ##class(%SYSTEM.iKnow).GetDomainId("TwitterAnalytics")
+		If tDomainId="" $$$ThrowException("NLPDomainNotFoundException", ..#NLPDOMAINNAME) 
+
+		SET oNLPSQLLister = ##class(%iKnow.Source.SQL.Lister).%New(tDomainId)
+		
+		SET oNLPSQLLoader = ##class(%iKnow.Source.Loader).%New(tDomainId)
+		Set tSC = oNLPSQLLoader.SetLister(oNLPSQLLister)
+		$$$ThrowStatusExceptionIfError(tSC, "NLPCouldNotSetLister")
+		
+		Set tMetadataFields=$ListBuild("TwitterId", "TwitterUser")
+		Set tDataField="TwitterText"
+		Set tGroupField="TWitterUser"
+		Set tIdField="TwitterId"
+		Set tTableName="IRISDemo_Data.Tweets"
+		Set tQuery="select TwitterId, TwitterUser, TwitterText from IRISDemo_Data.Tweets"
+		
+		Set tSC = oNLPSQLLister.ProcessList(tQuery, tIdField, tGroupField, tDataField, tMetadataFields)
+		$$$ThrowStatusExceptionIfError(tSC, "NLPSQLListerProcessListException")
+		
+		For id=1:1:6
+		{
+			Set pSourceId=":SQL:"_id_":"_id
+			
+		}		
+
+	}
+	Catch (oException)
+	{
+		Set tSC = oException.AsStatus()
+	}
+	
+	Do $System.Status.DisplayError(tSC)
+	
