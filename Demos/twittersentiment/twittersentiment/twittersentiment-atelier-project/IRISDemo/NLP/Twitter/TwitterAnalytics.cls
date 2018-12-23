@@ -6,18 +6,17 @@ XData Domain [ XMLNamespace = "http://www.intersystems.com/iknow" ]
 <domain name="TwitterAnalytics" disabled="false" allowCustomUpdates="true">
 <parameter name="DefaultConfig" value="TwitterAnalytics.Configuration" isList="false" />
 <data dropBeforeBuild="true">
-<table listname="TableTwitter" batchMode="true" disabled="false" listerClass="%iKnow.Source.SQL.Lister" tableName="IRISDemo_Data.Tweets" idField="ID" groupField="ID" dataFields="TwitterText" metadataColumns="Sentiment,TwitterText,TwitterUser,TwitterId" metadataFields="TwitterSentiment,TwitterText,TwitterUser,TwitterID">
-<parameter value="SELECT ID __idField, ID __groupField, TwitterText, Sentiment,TwitterText,TwitterUser,TwitterId FROM IRISDemo_Data.Tweets" isList="false" />
+<table listname="TableTwitter" batchMode="true" disabled="false" listerClass="%iKnow.Source.SQL.Lister" tableName="IRISDemo_Data.Tweets" idField="ID" groupField="ID" dataFields="TwitterText" metadataColumns="TwitterText,TwitterUser,TwitterId" metadataFields="TwitterText,TwitterUser,TwitterID">
+<parameter value="SELECT ID __idField, ID __groupField, TwitterText,TwitterText,TwitterUser,TwitterId FROM IRISDemo_Data.Tweets" isList="false" />
 <parameter value="__idField" isList="false" />
 <parameter value="__groupField" isList="false" />
 <parameter value="TwitterText" isList="true" />
-<parameter value="Sentiment,TwitterText,TwitterUser,TwitterId" isList="true" />
-<parameter value="TwitterSentiment,TwitterText,TwitterUser,TwitterID" isList="true" />
+<parameter value="TwitterText,TwitterUser,TwitterId" isList="true" />
+<parameter value="TwitterText,TwitterUser,TwitterID" isList="true" />
 </table>
 </data>
 <matching disabled="false" dropBeforeBuild="true" autoExecute="true" ignoreDictionaryErrors="true" />
 <metadata>
-<field name="TwitterSentiment" operators="=" dataType="STRING" storage="0" caseSensitive="false" disabled="false" />
 <field name="TwitterText" operators="=" dataType="STRING" storage="0" caseSensitive="false" disabled="false" />
 <field name="TwitterUser" operators="=" dataType="STRING" storage="0" caseSensitive="false" disabled="false" />
 <field name="TwitterID" operators="=" dataType="NUMBER" storage="0" caseSensitive="false" disabled="false" />

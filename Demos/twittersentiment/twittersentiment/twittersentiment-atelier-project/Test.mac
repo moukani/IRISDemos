@@ -143,8 +143,8 @@ Test2
 		Do CreateTweet(2, "I hate this company. They treat you like shit.", "user1")
 		Do CreateTweet(3, "I disagree. I never had a problem with their customer services.", "user2")
 		Do CreateTweet(4, "I think they have very good products, but a horrible customer services.", "user1")
-		Do CreateTweet(5, "I can""t say I love this company either.", "user3")
-		Do CreateTweet(6, "I can""t say I hate it. But loving is a strech.", "user5")
+		Do CreateTweet(5, "I can't say I love this company either.", "user3")
+		Do CreateTweet(6, "I can't say I hate it. But loving is an exaggeration.", "user5")
 		Do CreateTweet(7, "I love this company! I wish they had a better customer services though.", "user6")		
 	}
 	Catch (oException)

@@ -10,7 +10,7 @@ Class IRISDemo.Data.Tweets Extends %Persistent
 	
 	/// By default, people will say only nice things about us. The REST service will
 	/// only change this to TRUE if a tweet comes in with negative sentiment.
-	Property HasNegativeSentiment As %Boolean [ InitialExpression = 0, Required ];
+	Property Sentiment As %String (VALUELIST=",0,1,2", DISPLAYLIST=",Neutral,Positive,Negative") [ InitialExpression = 0, Required ];
 	
 	Property NLPExternalSourceId As %String [ SqlComputed, SqlComputeCode = {Set {NLPExternalSourceId}=":SQL:"_{TwitterUser}_":"_{TwitterId} } ];
 		
@@ -62,6 +62,11 @@ Class IRISDemo.Data.Tweets Extends %Persistent
 		$$$ThrowStatusExceptionIfError(tSC, "NLPSQLListerProcessListException")		
 	}
 	
+	ClassMethod OpenByTweetId(pTweetId As %String) As IRISDemo.Data.Tweets
+	{
+		Quit ..TwitterIdIndexOpen(pTweetId)
+	}
+	
 	/// <p>Throws exceptions</p>
 	/// <p>This method must is called by the REST service to evaluate the sentiment of a tweet that has just been saved.</p>
 	/// <p>NLP can help us to evaluate sentiment more precisely because:</p>
@@ -78,9 +83,9 @@ Class IRISDemo.Data.Tweets Extends %Persistent
 		
 		// By default, people only say nice things
 		
-		If ..HasNegativeSentiment=1
+		If ..Sentiment'=0
 		{
-			Set ..HasNegativeSentiment=0
+			Set ..Sentiment=0
 			Set bChanged=1
 		}
 		
@@ -120,7 +125,7 @@ Class IRISDemo.Data.Tweets Extends %Persistent
 		The catch is that a sentence can be negated. While "This is a very bad product" is clearly a SENTPOSITIVE,
 		"This is not such a bad product" is not. The negation, negates the bad sentiment. 
 		
-		So we must find out if we have on our tweet:
+		To find out if we have a negative sentiment, we must find on our tweet:
 		- SENTPOSITIVE labels with negation
 		- SENTNEGATIVE labels without negation
 		
@@ -166,22 +171,35 @@ Class IRISDemo.Data.Tweets Extends %Persistent
 				Set vAttributes(tAttr)=""
 			}
 			
-			//Now, let's ask our questions:
+			// By default, we have a Neutral sentiment. We need to know if this is something else
+			
+			// Let's see if this looks like a negative sentiment:
 			If $Data(vAttributes("sentpositive")) && $Data(vAttributes("negation"))
 			{
-				Set ..HasNegativeSentiment=1
+				Set ..Sentiment=2
 				Quit //Just one negative sentiment is enough
 			} 
 			
 			If $Data(vAttributes("sentnegative")) && '$Data(vAttributes("negation"))
 			{
-				Set ..HasNegativeSentiment=1
+				Set ..Sentiment=2
 				Quit //Just one negative sentiment is enough
-			} 
+			}
+			
+			// Negative sentiments are our priority. If we are still here it is because
+			// we could not find anything negative. Let's see if we can find something positive.
+			// Positives must be categorical. Negating a negative sentiment is not being posistive:
+			
+			If $Data(vAttributes("sentpositive")) && '$Data(vAttributes("negation"))
+			{
+				Set ..Sentiment=1
+				Quit // Found this tweet to be exclusively positive.
+			}
+
 		} //For
 		
 		// If we changed the object in a way or the other...
-		If bChanged || (..HasNegativeSentiment=1)
+		If bChanged || (..Sentiment'=0)
 		{
 			Set tSC = ..%Save()
 			$$$ThrowStatusExceptionIfError(tSC, "PersistUpdatedSentimentException")
@@ -211,6 +229,9 @@ Storage Default
 </Value>
 <Value name="7">
 <Value>NLPSourceId</Value>
+</Value>
+<Value name="8">
+<Value>Sentiment</Value>
 </Value>
 </Data>
 <DataLocation>^IRISDemo.Data.TweetsD</DataLocation>

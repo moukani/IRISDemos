@@ -46,20 +46,22 @@ Class IRISDemo.REST.Twitter.Service Extends %CSP.REST
 			// persistent table to store the data. Our persistent table has a trigger that will make sure
 			// that the tweet data will be kept in sync with the NLP Domain
 			
-			//TODO: Verify if an object with this Tweet ID already exist and open it 
+			Set tweet = ##class(IRISDemo.Data.Tweets).OpenByTweetId(doPOSTData.id)
+			If '$IsObject(tweet)
+			{			
+				Set tweet = ##class(IRISDemo.Data.Tweets).%New()
+				Set tweet.TwitterId = doPOSTData.id 
+				Set tweet.TwitterUser = doPOSTData.user
+				Set tweet.TwitterText = doPOSTData.text
+				
+				Set tSC = tweet.%Save()
+				$$$ThrowStatusExceptionIfError(tSC, "PersistingTweetException")
+				
+				Do tweet.EvaluateSentiment()
+			}
 			
-			Set tweet = ##class(IRISDemo.Data.Tweets).%New()
-			Set tweet.TwitterId = doPOSTData.id 
-			Set tweet.TwitterUser = doPOSTData.user
-			Set tweet.TwitterText = doPOSTData.text
-			
-			Set tSC = tweet.%Save()
-			$$$ThrowStatusExceptionIfError(tSC, "PersistingTweetException")
-			
-			Do tweet.EvaluateSentiment()
-									
 			// Populating our REST response
-			Set doResponse.sentiment=$Case(tweet.HasNegativeSentiment,0:"positive",1:"negative")			
+			Set doResponse.sentiment=$Case(tweet.Sentiment,0:"neutral",1:"positive",2:"negative")			
 		}
 		Catch (oException)
 		{
