@@ -5,6 +5,8 @@ ROUTINE DEMOMACROS [Type=INC]
 
 #define ThrowSQLExceptionIfError(%Name)	If SQLCODE<0 Do ##class(IRISDemo.Util.ExceptionSupport).ThrowSQLExceptionIfError(SQLCODE, %msg, %Name)
 
+#define ThrowSQLExceptionIfResultError(%oSQLResultStatement, %Name)	If %oSQLResultStatement.%SQLCODE<0 Do ##class(IRISDemo.Util.ExceptionSupport).ThrowSQLExceptionIfError(%oSQLResultStatement.%SQLCODE, %oSQLResultStatement.%Message, %Name)
+
 #define ThrowException(%Name,%Details) Set e = ##class(%Exception.General).%New(%Name, %Name,,%Details) Throw e
 
  //#define SOAPFaultWithException(%e) If %e.%ClassName()="StatusException"	{ Set f = ##class(%SOAP.WebService).MakeStatusFault(%e.Name, %e.Code, %e.AsStatus(), $System) } Else { Set f = ##class(%SOAP.WebService).MakeFault(%e.Name, %e.Code, $System)	} Do ##class(%SOAP.WebService).ReturnFault(f) 
