@@ -1,6 +1,10 @@
 ROUTINE Test
-#Include DEMOMACROS
 
+	// I was using this routine to explore the NLP API. It has no other use whatsoever.
+
+#Include DEMOMACROS
+	
+	
 	Try
 	{
 		#Dim oNLPSQLLister As %iKnow.Source.SQL.Lister
