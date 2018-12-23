@@ -40,7 +40,10 @@ Class IRISDemo.REST.Twitter.Service Extends %CSP.REST
 			// Let's now take the JSON POST data and parse it as a dynamic object so we can use its properties.
 			Set doPOSTData = ##class(%DynamicObject).%FromJSON(%request.Content)
 			
-			//TODO: Verify if the right parameters are present and throw an exception if they aren't
+			//Verify if the right parameters are present and throw an exception if they aren't
+			If doPOSTData.id ="" $$$ThrowException("MissingFieldsException", "id")
+			If doPOSTData.user ="" $$$ThrowException("MissingFieldsException", "user")
+			If doPOSTData.text ="" $$$ThrowException("MissingFieldsException", "text")
 			
 			// Here is the first thing this method does. Let's create a a new record on our
 			// persistent table to store the data. Our persistent table has a trigger that will make sure
