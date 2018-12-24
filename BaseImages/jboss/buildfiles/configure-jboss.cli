@@ -3,7 +3,7 @@ data-source add \
      --name=InterSystemsDS \
      --driver-name=com.intersystems.jdbc.IRISDriver \
      --connection-url=jdbc:IRIS://IRIS_MASTER_HOST:IRIS_MASTER_PORT/IRIS_MASTER_NAMESPACE \
-     --jndi-name=java:jboss/jdbc/InterSystemsDS \
+     --jndi-name=java:/InterSystemsDS \
      --user-name=IRIS_MASTER_USERNAME \
      --password=IRIS_MASTER_PASSWORD \
      --use-ccm=false \
