@@ -6,7 +6,7 @@ Include DEMOMACROS
 Class IRISDemo.SOAP.CallCenterServices Extends %SOAP.WebService
 {
 /// Name of the WebService.
-Parameter SERVICENAME = "CallCenterServices";
+Parameter SERVICENAME = "CallCenterServices"; 
 
 /// SOAP Namespace for the WebService
 Parameter NAMESPACE = "http://twitter.demo";
@@ -16,24 +16,31 @@ Parameter NAMESPACE = "http://twitter.demo";
 /// Namespaces of referenced classes will be used in the WSDL.
 Parameter USECLASSNAMESPACES = 1;
 
-Method CreateTicketForTwitter(pTwitterID As %String, pTwitterUser As %String, pTwitterText As %String(MAXLEN=""), pTwitterSentiment As %String, pTwitterDate As %Date) [ WebMethod ]
+Method CreateTicketForTwitter(pTwitterID As %String, pTwitterUser As %String, pTwitterText As %String(MAXLEN=""), pTwitterSentiment As %String) [ WebMethod ]
 {	
 	Set tSC = $$$OK
 	Try
 	{
 		If pTwitterID="" $$$ThrowException("ParameterIsRequired","pTwitterID")
+		If pTwitterUser="" $$$ThrowException("ParameterIsRequired","pTwitterUser")
+		If pTwitterText="" $$$ThrowException("ParameterIsRequired","pTwitterText")
+		If pTwitterSentiment="" $$$ThrowException("ParameterIsRequired","pTwitterSentiment")
 		
-		//TODO: Guardar dados na tabela para o JBoss ler
+		Set obj = ##class(IRISDemo.Ticket).%New()
+		Set obj.TicketID = pTwitterID
+		Set obj.TicketUser = pTwitterUser
+		Set obj.TicketText = pTwitterText
+		Set obj.TicketFeedback = pTwitterSentiment
+		Set obj.TicketDate = $PIECE($NOW(),",",1)
+
+		Set sc = obj.%Save()
 		
 		//Example for testing %Status error and throwing an exception:
-		//Set tSC = obj.%Save()
-		//$$$ThrowStatusExceptionIfError(tSC, "CouldNotSaveCallcenterTicket")
+		$$$ThrowStatusExceptionIfError(tSC, "CouldNotSaveCallcenterTicket")
 		
 		//Example of testing SQLCODE variable if you are using %SQL.Statement
-		//$$$ThrowSQLExceptionIfError("CouldNotSaveCallcenterTicket")
+		$$$ThrowSQLExceptionIfError("CouldNotSaveCallcenterTicket")
 		
-		//If you want to throw an exception:
-		///$$$ThrowException("ParameterIsRequired","pTwitterID")
 	}
 	Catch (oException)
 	{
