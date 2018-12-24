@@ -17,7 +17,7 @@ public class Ticket implements Serializable {
 
 	@Temporal(TemporalType.DATE)
 	@Column(name="\"TicketDate\"")
-	private Date twitterDate;
+	private Date ticketDate;
 
 	@Column(name="\"TicketID\"")
 	private String ticketID;
@@ -30,6 +30,9 @@ public class Ticket implements Serializable {
 
 	@Column(name="\"TicketUser\"")
 	private String ticketUser;
+	
+	@Column(name="\"TicketResponse\"")
+	private String ticketResponse;
 
 	public Ticket() {
 	}
@@ -42,12 +45,12 @@ public class Ticket implements Serializable {
 		this.id = id;
 	}
 
-	public Date getTwitterDate() {
-		return twitterDate;
+	public Date getTicketDate() {
+		return ticketDate;
 	}
 
-	public void setTwitterDate(Date twitterDate) {
-		this.twitterDate = twitterDate;
+	public void setTicketDate(Date ticketDate) {
+		this.ticketDate = ticketDate;
 	}
 
 	public String getTicketID() {
@@ -80,6 +83,14 @@ public class Ticket implements Serializable {
 
 	public void setTicketUser(String ticketUser) {
 		this.ticketUser = ticketUser;
+	}
+
+	public String getTicketResponse() {
+		return ticketResponse;
+	}
+
+	public void setTicketResponse(String ticketResponse) {
+		this.ticketResponse = ticketResponse;
 	}
 
 	

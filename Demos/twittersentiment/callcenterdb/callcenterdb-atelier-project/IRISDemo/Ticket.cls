@@ -5,6 +5,7 @@ Class IRISDemo.Ticket Extends %Persistent
 	Property TicketText As %String(MAXLEN="");
 	Property TicketFeedback As %String; 
 	Property TicketDate As %Date; 
+	Property TicketResponse As %String(MAXLEN="");
 
 Storage Default
 {
@@ -26,6 +27,9 @@ Storage Default
 </Value>
 <Value name="6">
 <Value>TicketDate</Value>
+</Value>
+<Value name="7">
+<Value>TicketResponse</Value>
 </Value>
 </Data>
 <DataLocation>^IRISDemo.TicketD</DataLocation>
