@@ -13,6 +13,7 @@
 
 # Creating the admin user to enter the management portal:
 $JBOSS_HOME/bin/add-user.sh admin Admin#1234 --silent
+printf "\nYou can use the credentials admin/Admin#1234 to access JBoss Management Portal.\n"
 
 for variable in IRIS_MASTER_HOST IRIS_MASTER_PORT IRIS_MASTER_NAMESPACE IRIS_MASTER_USERNAME IRIS_MASTER_PASSWORD;
 do

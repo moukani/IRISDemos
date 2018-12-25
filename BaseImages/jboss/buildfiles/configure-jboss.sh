@@ -16,6 +16,10 @@ function wait_for_server() {
   done
 }
 
+echo "=> Configuring IRIS Hibernate Dialect..."
+
+sed -i.bak '/<resources>/ a <resource-root path="HibernateInterSystemsIRISDialect.jar"/> ' $JBOSS_HOME/modules/system/layers/base/org/hibernate/main/module.xml
+
 echo "=> Starting WildFly server"
 $JBOSS_HOME/bin/$JBOSS_MODE.sh -c $JBOSS_CONFIG > /dev/null &
 
