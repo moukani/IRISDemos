@@ -85,22 +85,19 @@ Class IRISDemo.Data.Tweets Extends %Persistent
 		
 		If ..Sentiment'=0
 		{
+			// I am using this to avoid persisting an object that hasn't changed.
+			// But I am almost sure %Save is smart enough to detect that by itself
+			// and avoid the work. I should check this in the future.
 			Set ..Sentiment=0
-			Set bChanged=1
+			Set bChanged=1 
 		}
 		
 		// If we don't have an ID, the trigger has never been called, so NLPExternalSourceId will be invalid
 		// This tweet's data is not still on the NLP domain...
 		If ..%Id()="" 
 		{
-			Write !,"Saving ",..TwitterId
-			
 			Set tSC = ..%Save()
 			$$$ThrowStatusExceptionIfError(tSC, "PersistingTweetException")
-		}
-		Else
-		{
-			Write !,"NOT SAVING ",..TwitterId
 		}
 		
 		// The Domain Id is required by most API calls
