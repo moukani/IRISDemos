@@ -12,7 +12,7 @@ services:
     image: amirsamary/irisdemo:twittersentiment_callcenterui
     hostname: callcenterui
     ports:
-    - "9090:8080"   # JBoss
+    - "9090:8080"   # JBoss - Call Center App: http://localhost:9090/app/
     - "9091:9990"   # JBoss Management portal: Username: admin, Password: Admin#1234
     environment:  # Only if you want to use JDBC with IRIS
     - IRIS_MASTER_HOST=callcenterdb # DNS based on the name of the service!
