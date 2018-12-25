@@ -8,6 +8,8 @@ services:
   # It here where a call center employee will see its Workflow inbox
   # and see a task to call/mail someone about a twitter rant.
   callcenterui:
+    depends_on: 
+    - callcenterdb
     build: ./callcenterui
     image: amirsamary/irisdemo:twittersentiment_callcenterui
     hostname: callcenterui
@@ -27,6 +29,8 @@ services:
   # If there is a twitter with "bad sentiment" about our brand out there
   # we will open a ticket on the call center to reach out to that customer.
   twittersrv: 
+    depends_on: 
+    - twittersentiment
     build: 
       context: ./twittersrv
       args:
