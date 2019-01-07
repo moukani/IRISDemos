@@ -4,6 +4,7 @@ Class IRISDemo.Data.SNOMED2ICD Extends %Persistent
 property SNOMEDCode as %String;
 property ICDCode as %String;
 
+
 index SNOMED on SNOMEDCode;
 Storage Default
 {
