@@ -32,10 +32,10 @@ ClassMethod CreateCredentials(pNamespace As %String) As %Status
 		Set tNS=$Namespace
 		ZN pNamespace
 		
-		Set tSC = ##class(Ens.Config.Credentials).SetCredential("BankingCore", "SuperUser", "sys", 1)
+		Set tSC = ##class(Ens.Config.Credentials).SetCredential("TwitterAppUserTokenCredentials", "***", "***", 1)
 		Quit:$System.Status.IsError(tSC)
 		
-		Set tSC = ##class(Ens.Config.Credentials).SetCredential("Datalake", "SuperUser", "sys", 1)
+		Set tSC = ##class(Ens.Config.Credentials).SetCredential("TwitterAppConsumerCredentials", "***", "***", 1)
 		Quit:$System.Status.IsError(tSC)
 	}
 	Catch (oException)
