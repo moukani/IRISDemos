@@ -299,7 +299,7 @@ Class Twitter.API.StreamingConnection  Extends %RegisteredObject
 		
 		If tErrorMessageDetails="" $$$ThrowException("NoErrorInformationReturnedException", "")
 		
-		$$$ThrowException("HTTPStatusErrorException", tErrorMessageDetails)
+		$$$ThrowException("HTTPStatusErrorException", tHttpStatus_": "_..LastHTTPStatusCode_tErrorMessageDetails)
 	}
 
 	/// Implements the chunk based streaming protocol.

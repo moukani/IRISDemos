@@ -1,76 +1,112 @@
 Class Twitter.BS.Streaming.Tweet Extends (%Persistent,%XML.Adaptor)
 {
-	Index idIndex On id [ IdKey ];
+	Index TweetStatusIdIndex On TweetStatusId [ IdKey ];
 	
-	Property "created_at" As %String [ Required ];
+	Property TweetStatusId As %Integer [ Required ];
 	
-	Property id As %Integer [ Required ];
+	Property CreatedAt As %TimeStamp [ Required ];
 	
-	Property text As %String (MAXLEN="") [ Required ];
-
-	Property "in_reply_to_status_id" As %Integer;
+	Property Text As %String (MAXLEN="") [ Required ];
 	
-	Property "in_reply_to_user_id" As %Integer;
+	Property InReplyToStatusId As %Integer;
 	
-	Property "in_reply_to_screen_name" As %String;
+	Property InReplyToUserId As %Integer;
 	
-	Property user As Twitter.BS.Streaming.TwitterUser [ Required ];
+	Property InReplyToScreenName As %String;
 	
-	Property "reply_count" As %Integer;
+	Property User As Twitter.BS.Streaming.TwitterUser [ Required ];
 	
-	Property "retweet_count" As %Integer;
+	Property ReplyCount As %Integer;
 	
-	Property "favorite_count" As %Integer;
+	Property RetweetCount As %Integer;
 	
-	Property entities As Twitter.BS.Streaming.TwitterEntities;
+	Property FavoriteCount As %Integer;
 	
-	Property retweeted As %Boolean;
+	Property QuoteCount As %Integer;
 	
-	Property lang As %String;
+	Property Entities As Twitter.BS.Streaming.TwitterEntities;
 	
-	Property "timestamp_ms" As %Integer;
+	Property Retweeted As %Boolean [ InitialExpression = 0, Required ];
 	
-	Property IRISTimestamp As %TimeStamp;
+	Property Lang As %String;
 	
-	Method "timestamp_msSet"(pVal) As %Status
-	{
-		Set tSC = $$$OK
-		Try
-		{
-			Set ..IRISTimestamp=$ZDateTime(##class(Twitter.Utils).TwitterTimestampInH(pVal),3)
-		}
-		Catch (oException)
-		{
-			Set tSC = oException.AsStatus()
-		}
-		Quit tSC
-	}
-	 
-	ClassMethod CreateFromJSON(pJSONTweet As %Library.DynamicObject) As Twitter.Tweet
+	Property IsRetweet As %Boolean [ InitialExpression = 0, Required ];
+	
+	Property RetweetedStatus As Tweet;
+	
+	ClassMethod CreateFromJSON(pJSONTweet As %Library.DynamicObject) As Twitter.BS.Streaming.Tweet
 	{
 		#Dim iterator As %Iterator.Object
 		
 		Set tweet = ..%New()
-		Set tweet.id = pJSONTweet.id
-		Set tweet."created_at" = pJSONTweet."created_at"
-		Set tweet.text = pJSONTweet.text
-		Set tweet."in_reply_to_status_id" = +pJSONTweet."in_reply_to_status_id"
-		Set tweet."in_reply_to_user_id" = +pJSONTweet."in_reply_to_user_id"
-		Set tweet."in_reply_to_screen_name" = pJSONTweet."in_reply_to_screen_name"
+		Set tweet.TweetStatusId = pJSONTweet.id
+		Set tweet.CreatedAt = $ZDateTime(##class(Twitter.Utils).TwitterTimestampInH(+pJSONTweet."timestamp_ms"),3)
 		
-		Set tweet."reply_count" = +pJSONTweet."reply_count"
-		Set tweet."retweet_count" = +pJSONTweet."retweet_count"
-		Set tweet."favorite_count" = +pJSONTweet."favorite_count"
-		Set tweet.retweeted = +pJSONTweet.retweeted
-		Set tweet.lang = pJSONTweet.lang
-		Set tweet."timestamp_ms" = +pJSONTweet."timestamp_ms"
+		// https://developer.twitter.com/en/docs/tweets/tweet-updates
+		If pJSONTweet.%IsDefined("extended_tweet")
+		{
+			Set tweet.Text = pJSONTweet."extended_tweet"."full_text"
+			
+			Do tweet.Entities.PopulateFromJSON(pJSONTweet."extended_tweet".entities)
+		}
+		Else
+		{
+			If pJSONTweet.%IsDefined("full_text")
+			{
+				Set tweet.Text = pJSONTweet."full_text"
+			}
+			Else
+			{
+				Set tweet.Text = pJSONTweet."text"
+			}
+			
+			Do tweet.Entities.PopulateFromJSON(pJSONTweet.entities)
+		}
 		
-		Do tweet.user.PopulateFromJSON(pJSONTweet.user)
-
-		Do tweet.entities.PopulateFromJSON(pJSONTweet.entities)
+		Do tweet.User.PopulateFromJSON(pJSONTweet.user)
+		
+		Set tweet.InReplyToStatusId = +pJSONTweet."in_reply_to_status_id"
+		Set tweet.InReplyToUserId = +pJSONTweet."in_reply_to_user_id"
+		Set tweet.InReplyToScreenName = pJSONTweet."in_reply_to_screen_name"		
+		Set tweet.ReplyCount = +pJSONTweet."reply_count"
+		Set tweet.RetweetCount = +pJSONTweet."retweet_count"
+		Set tweet.Retweeted = +pJSONTweet.retweeted
+		Set tweet.FavoriteCount = +pJSONTweet."favorite_count"
+		Set tweet.QuoteCount = +pJSONTweet."quote_count"
+		Set tweet.Lang = pJSONTweet.lang
+		
+		Set tweet.IsRetweet = (tweet.RetweetCount>0) 
+		
+		If pJSONTweet.%IsDefined("retweeted_status")
+		{			
+			Set tweet.RetweetedStatus=..%OpenId(pJSONTweet."retweeted_status".id)
+			If tweet.RetweetedStatus=""
+			{
+				Set tweet.RetweetedStatus=..CreateFromJSON(pJSONTweet."retweeted_status")
+			}
+			Else
+			{
+				Do tweet.RetweetedStatus.UpdateRetweetStatisticsFromJSON(pJSONTweet."retweeted_status")
+			}			
+		}
 		
 		Quit tweet
 	}
+	
+	/// We only want to update the retweet statistics
+	Method UpdateRetweetStatisticsFromJSON(pJSONTweet As %Library.DynamicObject)
+	{
+		#Dim iterator As %Iterator.Object
+				
+		Set ..ReplyCount = +pJSONTweet."reply_count"
+		Set ..RetweetCount = +pJSONTweet."retweet_count"
+		Set ..FavoriteCount = +pJSONTweet."favorite_count"
+		Set ..QuoteCount = +pJSONTweet."quote_count"
+		
+		//For some reason, the twitter API won't set this to true on a retweet
+		Set ..Retweeted = 1 //+pJSONTweet.retweeted
+	}
+	
 Storage Default
 {
 <Data name="TweetDefaultData">
@@ -78,46 +114,49 @@ Storage Default
 <Value>%%CLASSNAME</Value>
 </Value>
 <Value name="2">
-<Value>created_at</Value>
+<Value>CreatedAt</Value>
 </Value>
 <Value name="3">
-<Value>text</Value>
+<Value>Text</Value>
 </Value>
 <Value name="4">
-<Value>in_reply_to_status_id</Value>
+<Value>InReplyToStatusId</Value>
 </Value>
 <Value name="5">
-<Value>in_reply_to_user_id</Value>
+<Value>InReplyToUserId</Value>
 </Value>
 <Value name="6">
-<Value>in_reply_to_screen_name</Value>
+<Value>InReplyToScreenName</Value>
 </Value>
 <Value name="7">
-<Value>user</Value>
+<Value>User</Value>
 </Value>
 <Value name="8">
-<Value>reply_count</Value>
+<Value>ReplyCount</Value>
 </Value>
 <Value name="9">
-<Value>retweet_count</Value>
+<Value>RetweetCount</Value>
 </Value>
 <Value name="10">
-<Value>favorite_count</Value>
+<Value>FavoriteCount</Value>
 </Value>
 <Value name="11">
-<Value>entities</Value>
+<Value>QuoteCount</Value>
 </Value>
 <Value name="12">
-<Value>retweeted</Value>
+<Value>Entities</Value>
 </Value>
 <Value name="13">
-<Value>lang</Value>
+<Value>Retweeted</Value>
 </Value>
 <Value name="14">
-<Value>timestamp_ms</Value>
+<Value>Lang</Value>
 </Value>
 <Value name="15">
-<Value>IRISTimestamp</Value>
+<Value>IsRetweet</Value>
+</Value>
+<Value name="16">
+<Value>RetweetedStatus</Value>
 </Value>
 </Data>
 <DataLocation>^Twitter.BS.Streaming.TweetD</DataLocation>
