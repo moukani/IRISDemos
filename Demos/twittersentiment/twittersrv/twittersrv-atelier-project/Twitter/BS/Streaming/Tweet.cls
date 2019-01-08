@@ -75,19 +75,21 @@ Class Twitter.BS.Streaming.Tweet Extends (%Persistent,%XML.Adaptor)
 		Set tweet.QuoteCount = +pJSONTweet."quote_count"
 		Set tweet.Lang = pJSONTweet.lang
 		
-		Set tweet.IsRetweet = (tweet.RetweetCount>0) 
-		
 		If pJSONTweet.%IsDefined("retweeted_status")
-		{			
+		{
+			// This tweet is a retweet
+			Set tweet.IsRetweet = 1
+			
 			Set tweet.RetweetedStatus=..%OpenId(pJSONTweet."retweeted_status".id)
 			If tweet.RetweetedStatus=""
 			{
 				Set tweet.RetweetedStatus=..CreateFromJSON(pJSONTweet."retweeted_status")
+				Set tweet.RetweetedStatus.Retweeted =1
 			}
 			Else
 			{
 				Do tweet.RetweetedStatus.UpdateRetweetStatisticsFromJSON(pJSONTweet."retweeted_status")
-			}			
+			}
 		}
 		
 		Quit tweet
@@ -101,10 +103,7 @@ Class Twitter.BS.Streaming.Tweet Extends (%Persistent,%XML.Adaptor)
 		Set ..ReplyCount = +pJSONTweet."reply_count"
 		Set ..RetweetCount = +pJSONTweet."retweet_count"
 		Set ..FavoriteCount = +pJSONTweet."favorite_count"
-		Set ..QuoteCount = +pJSONTweet."quote_count"
-		
-		//For some reason, the twitter API won't set this to true on a retweet
-		Set ..Retweeted = 1 //+pJSONTweet.retweeted
+		Set ..QuoteCount = +pJSONTweet."quote_count"		
 	}
 	
 Storage Default

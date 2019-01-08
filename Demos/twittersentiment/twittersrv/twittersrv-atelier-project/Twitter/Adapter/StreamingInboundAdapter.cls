@@ -218,17 +218,18 @@ Class Twitter.Adapter.StreamingInboundAdapter Extends Ens.InboundAdapter
 			// We will not disconnect/reconnect to twitter because an error on ProcessInput.
 			If oException.Name'="ProcessInputException"
 			{
+				Set tSC = oException.AsStatus()
+				Do ..Debug("OnTask: "_$System.Status.GetErrorText(tSC))
+
 				If $IsObject(..TwitterStreamingConnection)
 				{
 					Do ..TwitterStreamingConnection.Disconnect()
 					
 					Do ..ComputeBackoffPatternWait()
+					
+					Do ..Debug("Disconnected because of error. Next reconnect attempt will be in "_..CallInterval_" seconds.")
 				}
-			}
-			
-			Set tSC = oException.AsStatus()
-			
-			Do ..Debug("OnTask: "_$System.Status.GetErrorText(tSC))
+			}			
 		}
 		
 		Quit tSC
@@ -318,37 +319,12 @@ Class Twitter.Adapter.StreamingInboundAdapter Extends Ens.InboundAdapter
 		Set ..TwitterStreamingConnection.SSLConfiguration="Twitter"
 		
 		// START STREAMING - This method can throw an exception
-		Try
-		{
-			Do ..TwitterStreamingConnection.StartStreaming()
+		Do ..TwitterStreamingConnection.StartStreaming()
 			
-			// If I didn't get an exception, it is because streaming has started.
-			// So, just in case, let's resent CallInterval to its minimun value so that
-			// OnTask will be called much more often (and allow us to fetch much more tweets)
-			Set ..CallInterval=0.1
-
-		}
-		Catch (oStartStreamingException)
-		{
-			Set tErrorMessage=$System.Status.GetErrorText(oStartStreamingException.AsStatus())
-			Set tErrorMessage="Service has not been able to establish a connection to twitter streaming service: "_tErrorMessage
-
-			// Let's log some debugging details if tracing is ON...
-			//$$$TRACE("Error connecting to twitter. Connection attempt #"_..ConnectionAttempts_"produced the following error: "_tErrorMessage)
-			Do ..Debug("Error connecting to twitter. Connection attempt #"_..ConnectionAttempts_"produced the following error: "_tErrorMessage)
-			
-			Do ..ComputeBackoffPatternWait()
-			
-			Do ..Debug("Next try will be in "_..CallInterval_" seconds.")
-						 
-			If ..CallInterval=..FailureTimeout
-			{			
-				// Let's let Ensemble know of the problem now. 
-				// This will generate an alert.
-				Throw oStartStreamingException
-			}
-			
-		}		
+		// If I didn't get an exception, it is because streaming has started.
+		// So, just in case, let's resent CallInterval to its minimun value so that
+		// OnTask will be called much more often (and allow us to fetch much more tweets)
+		Set ..CallInterval=0.1
 	}
 	
 	/// Implementation of "back-off pattern" as per https://developer.twitter.com/en/docs/tutorials/consuming-streaming-data.html

@@ -295,7 +295,7 @@ Class Twitter.API.StreamingConnection  Extends %RegisteredObject
 		}
 		
 		// We got an error... Let's report it
-		Do ..GetMessage(.tErrorMessageDetails)
+		Do ..GetMessage(.tErrorMessageDetails, $C(10))
 		
 		If tErrorMessageDetails="" $$$ThrowException("NoErrorInformationReturnedException", "")
 		
@@ -305,7 +305,7 @@ Class Twitter.API.StreamingConnection  Extends %RegisteredObject
 	/// Implements the chunk based streaming protocol.
 	/// A message may be split in one or more chunks. This method will only return a message 
 	/// once it has managed to assemble it completely from all its chunks
-	Method GetMessage(Output pOutput As %String)
+	Method GetMessage(Output pOutput As %String, pMessageTerminator As %String = { $C(13,10) })
 	{
 		Set tSC = $$$OK
 		Set pOutput=""
@@ -346,8 +346,10 @@ Class Twitter.API.StreamingConnection  Extends %RegisteredObject
 		Set tData=..Read(iDataLength, .tSC)
 		$$$ThrowStatusExceptionIfError(tSC, "CouldNotReadChunkException")		
 		
+		Set iTermLen=$Length(pMessageTerminator)
+		
 		// Is this the end of a message?
-		If $Extract(tData,*-1,*)'=$C(13,10)
+		If $Extract(tData,*-(iTermLen-1),*)'=pMessageTerminator
 		{
 			// Message is not complete. Must wait for next chunk
 			Set ..CurrentChunk=..CurrentChunk_tData
@@ -355,7 +357,7 @@ Class Twitter.API.StreamingConnection  Extends %RegisteredObject
 		Else
 		{
 			// Message is complete
-			Set pOutput = ..CurrentChunk_$Extract(tData,1,*-2) // We don't need the CRLF 
+			Set pOutput = ..CurrentChunk_$Extract(tData,1,*-iTermLen) // We don't need the CRLF 
 			Set ..CurrentChunk=""
 			
 			If pOutput=""
