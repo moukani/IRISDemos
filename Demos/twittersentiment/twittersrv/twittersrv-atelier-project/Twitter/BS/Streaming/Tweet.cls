@@ -46,31 +46,50 @@ Class Twitter.BS.Streaming.Tweet Extends (%Persistent,%XML.Adaptor)
 		Quit tSC
 	}
 	 
-	ClassMethod CreateFromJSON(pJSONTweet As %Library.DynamicObject) As Twitter.Tweet
+	ClassMethod CreateFromJSON(pJSONTweet As %Library.DynamicObject) As Twitter.BS.Streaming.Tweet
 	{
 		#Dim iterator As %Iterator.Object
 		
 		Set tweet = ..%New()
 		Set tweet.id = pJSONTweet.id
 		Set tweet."created_at" = pJSONTweet."created_at"
-		Set tweet.text = pJSONTweet.text
+		
+		// https://developer.twitter.com/en/docs/tweets/tweet-updates
+		If pJSONTweet.%IsDefined("extended_tweet")
+		{
+			Set tweet.text = pJSONTweet."extended_tweet"."full_text"
+			
+			Do tweet.entities.PopulateFromJSON(pJSONTweet."extended_tweet".entities)
+		}
+		Else
+		{
+			If pJSONTweet.%IsDefined("full_text")
+			{
+				Set tweet.text = pJSONTweet."full_text"
+			}
+			Else
+			{
+				Set tweet.text = pJSONTweet."text"
+			}
+			
+			Do tweet.entities.PopulateFromJSON(pJSONTweet.entities)
+		}
+		
+		Do tweet.user.PopulateFromJSON(pJSONTweet.user)
+		
 		Set tweet."in_reply_to_status_id" = +pJSONTweet."in_reply_to_status_id"
 		Set tweet."in_reply_to_user_id" = +pJSONTweet."in_reply_to_user_id"
-		Set tweet."in_reply_to_screen_name" = pJSONTweet."in_reply_to_screen_name"
-		
+		Set tweet."in_reply_to_screen_name" = pJSONTweet."in_reply_to_screen_name"		
 		Set tweet."reply_count" = +pJSONTweet."reply_count"
 		Set tweet."retweet_count" = +pJSONTweet."retweet_count"
 		Set tweet."favorite_count" = +pJSONTweet."favorite_count"
 		Set tweet.retweeted = +pJSONTweet.retweeted
 		Set tweet.lang = pJSONTweet.lang
 		Set tweet."timestamp_ms" = +pJSONTweet."timestamp_ms"
-		
-		Do tweet.user.PopulateFromJSON(pJSONTweet.user)
 
-		Do tweet.entities.PopulateFromJSON(pJSONTweet.entities)
-		
 		Quit tweet
 	}
+
 Storage Default
 {
 <Data name="TweetDefaultData">
@@ -81,7 +100,7 @@ Storage Default
 <Value>created_at</Value>
 </Value>
 <Value name="3">
-<Value>text</Value>
+<Value>full_text</Value>
 </Value>
 <Value name="4">
 <Value>in_reply_to_status_id</Value>
@@ -118,6 +137,9 @@ Storage Default
 </Value>
 <Value name="15">
 <Value>IRISTimestamp</Value>
+</Value>
+<Value name="16">
+<Value>text</Value>
 </Value>
 </Data>
 <DataLocation>^Twitter.BS.Streaming.TweetD</DataLocation>

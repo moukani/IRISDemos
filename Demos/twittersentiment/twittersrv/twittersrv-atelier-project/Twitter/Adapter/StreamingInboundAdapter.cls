@@ -62,7 +62,9 @@ Class Twitter.Adapter.StreamingInboundAdapter Extends Ens.InboundAdapter
 	/// Upper limit in seconds to the waiting time for the twitter "back-off pattern".
 	/// After this time, we will send a single alert but will keep trying a new connection at every FailureTimeout
 	Property FailureTimeout As %Integer [ InitialExpression = 300 ];
-		
+	
+	Property SentLimitAlert As %Boolean [ Private ];
+	
 	/// Not exposing TwitterAPIFollowString right now. It is not working.
 	Parameter SETTINGS = "TweetsPerCallInterval,TwitterAPITrackString,TwitterAPILanguageString,TwitterAppConsumerCredentials:Basic:credentialsSelector,TwitterAccessTokenCredentials:Basic:credentialsSelector";
 	
@@ -213,9 +215,15 @@ Class Twitter.Adapter.StreamingInboundAdapter Extends Ens.InboundAdapter
 		}
 		Catch (oException)
 		{
-			If $IsObject(..TwitterStreamingConnection)
+			// We will not disconnect/reconnect to twitter because an error on ProcessInput.
+			If oException.Name'="ProcessInputException"
 			{
-				Do ..TwitterStreamingConnection.Disconnect()
+				If $IsObject(..TwitterStreamingConnection)
+				{
+					Do ..TwitterStreamingConnection.Disconnect()
+					
+					Do ..ComputeBackoffPatternWait()
+				}
 			}
 			
 			Set tSC = oException.AsStatus()
@@ -255,6 +263,14 @@ Class Twitter.Adapter.StreamingInboundAdapter Extends Ens.InboundAdapter
 				Set tSC = ..BusinessHost.ProcessInput(pInput, .pOutputIgnored)
 				$$$ThrowStatusExceptionIfError(tSC, "ProcessInputException")
 			}
+			ElseIf message.%IsDefined("limit")
+			{
+				If '..SentLimitAlert
+				{
+					Do ..SendAlert("Limit System Message Received: Your filters have matched more Tweets than its current rate limit allows to be delivered.")
+					Set ..SentLimitAlert=1
+				}
+			}
 			Else
 			{
 				// This is a system message. It can be either an error or a warning. So let's 
@@ -269,7 +285,7 @@ Class Twitter.Adapter.StreamingInboundAdapter Extends Ens.InboundAdapter
 		Set alert=##class(Ens.AlertRequest).%New()
 		If pSystemMessageJSONObj.%GetIterator().%GetNext(.messageType, .message)
 		{
-			Set alert.AlertText="Twitter system message of type "_messageType_": "_message.message
+			Set alert.AlertText="Twitter system message of type "_messageType_": "_message.%ToJSON()
 		}
 		Else
 		{
@@ -317,29 +333,16 @@ Class Twitter.Adapter.StreamingInboundAdapter Extends Ens.InboundAdapter
 			Set tErrorMessage=$System.Status.GetErrorText(oStartStreamingException.AsStatus())
 			Set tErrorMessage="Service has not been able to establish a connection to twitter streaming service: "_tErrorMessage
 
-			// Implementation of "back-off pattern" as per https://developer.twitter.com/en/docs/tutorials/consuming-streaming-data.html
-			// Instead of a busy wait, we will instruct Ensemble to call OnTask again 
-			// not in 0.1 seconds (100ms) but in a number of seconds that is determined by
-			// the attempt #. The twitter "back-off pattern" suggests us that every attempt 
-			// must be made at the exponential sequence 1, 2, 4, 8, 16... up to a "reasonable upper limit".
-			
-			Set ..ConnectionAttempts=..ConnectionAttempts+1
-			
 			// Let's log some debugging details if tracing is ON...
 			//$$$TRACE("Error connecting to twitter. Connection attempt #"_..ConnectionAttempts_"produced the following error: "_tErrorMessage)
 			Do ..Debug("Error connecting to twitter. Connection attempt #"_..ConnectionAttempts_"produced the following error: "_tErrorMessage)
-
-			// Waiting time for next retry is an exponential progression based on ConnectionAttempts
-			Set ..CallInterval=2**..ConnectionAttempts
 			
-			Do ..Debug("Next try will be in "_$Select(..CallInterval>..FailureTimeout:..FailureTimeout, 1:..CallInterval)_" seconds.")
+			Do ..ComputeBackoffPatternWait()
 			
-			// Is the exponential progression above our "reasonable upper limit"?
-			If ..CallInterval>..FailureTimeout
-			{
-				// Let's change the CallInterval to our "reasonable upper limit"
-				Set ..CallInterval=..FailureTimeout 
-								
+			Do ..Debug("Next try will be in "_..CallInterval_" seconds.")
+						 
+			If ..CallInterval=..FailureTimeout
+			{			
 				// Let's let Ensemble know of the problem now. 
 				// This will generate an alert.
 				Throw oStartStreamingException
@@ -347,7 +350,27 @@ Class Twitter.Adapter.StreamingInboundAdapter Extends Ens.InboundAdapter
 			
 		}		
 	}
-
+	
+	/// Implementation of "back-off pattern" as per https://developer.twitter.com/en/docs/tutorials/consuming-streaming-data.html
+	/// Instead of a busy wait, we will instruct Ensemble to call OnTask again 
+	/// not in 0.1 seconds (100ms) but in a number of seconds that is determined by
+	/// the attempt #. The twitter "back-off pattern" suggests us that every attempt 
+	/// must be made at the exponential sequence 1, 2, 4, 8, 16... up to a "reasonable upper limit".
+	Method ComputeBackoffPatternWait()
+	{
+		Set ..ConnectionAttempts=..ConnectionAttempts+1
+				
+		// Waiting time for next retry is an exponential progression based on ConnectionAttempts
+		Set ..CallInterval=2**..ConnectionAttempts
+				
+		// Is the exponential progression above our "reasonable upper limit"?
+		If ..CallInterval>..FailureTimeout
+		{
+			// Let's change the CallInterval to our "reasonable upper limit"
+			Set ..CallInterval=..FailureTimeout
+		}
+	}
+	
 	Method Debug(pMsg)
 	{
 		Set ^twitter.debug($I(^twitter.debug))=pMsg
