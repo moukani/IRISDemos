@@ -19,7 +19,7 @@ ClassMethod LoadTransactionalData(pNamespace As %String) As %Status
 	
 	ZN "%SYS"
 	
-	Quit tSC 
+	Quit tSC
 }
 
 /// This method will create an Interoperability credential meant to be used on Interoperability Productions.
@@ -45,7 +45,7 @@ ClassMethod CreateCredentials(pNamespace As %String) As %Status
 	
 	ZN tNS
 	
-	Quit tSC 
+	Quit tSC
 }
 
 /// You can customize this to run code during docker build
@@ -72,4 +72,5 @@ XData Install [ XMLNamespace = INSTALLER ]
 	
 </Manifest>
 }
+
 }
