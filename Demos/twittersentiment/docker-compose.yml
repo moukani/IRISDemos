@@ -1,0 +1,102 @@
+version: '3.6'
+
+volumes:
+  common_shared:
+
+services:
+  # This will be the call center UI, built on Java/JBoss
+  # It here where a call center employee will see its Workflow inbox
+  # and see a task to call/mail someone about a twitter rant.
+  callcenterui:
+    depends_on: 
+    - callcenterdb
+    build: ./callcenterui
+    image: amirsamary/irisdemo:twittersentiment_callcenterui
+    hostname: callcenterui
+    ports:
+    - "9090:8080"   # JBoss - Call Center App: http://localhost:9090/app/
+    - "9091:9990"   # JBoss Management portal: Username: admin, Password: Admin#1234
+    environment:  # Only if you want to use JDBC with IRIS
+    - IRIS_MASTER_HOST=callcenterdb # DNS based on the name of the service!
+    - IRIS_MASTER_PORT=51773        # IRIS, inside the "composition" network, is listening on this port
+    - IRIS_MASTER_USERNAME=SuperUser 
+    - IRIS_MASTER_PASSWORD=sys 
+    - IRIS_MASTER_NAMESPACE=APP 
+    
+
+  # This is where the Twitter service is running, fetching twitts,
+  # analyzing sentiment, and pushing the data to the twittersentiment.
+  # If there is a twitter with "bad sentiment" about our brand out there
+  # we will open a ticket on the call center to reach out to that customer.
+  twittersrv: 
+    depends_on: 
+    - twittersentiment
+    build: 
+      context: ./twittersrv
+      args:
+      - IRIS_PROJECT_FOLDER_NAME=twittersrv-atelier-project
+    image: amirsamary/irisdemo:twittersentiment_twittersrv
+    command: --key /irislicense/iris.key
+    hostname: twittersrv
+    ports:
+    - "9092:52773" # 52773 is the webserver/management portal port: http://localhost:9092/csp/sys/UtilHome.csp
+    #- "9093:51773" # 51773 is the superserver default port
+    volumes:
+    - type: bind
+      source: ../../IRISLicense/
+      target: /irislicense
+
+  # Here is where we are storing all twitts. Analysts will use this
+  # data to further NLP processing, maitaining the sentiment dictionary, etc.
+  twittersentiment:
+    build: 
+      context: ./twittersentiment
+      args:
+      - IRIS_PROJECT_FOLDER_NAME=twittersentiment-atelier-project
+    image: amirsamary/irisdemo:twittersentiment_twittersentiment
+    command: --key /irislicense/iris.key
+    hostname: twittersentiment
+    ports:
+    - "9094:52773" # 52773 is the webserver/management portal port: http://localhost:9094/csp/sys/UtilHome.csp
+    #- "9095:51773" # 51773 is the superserver default port
+    volumes:
+    - type: bind
+      source: ../../IRISLicense/
+      target: /irislicense
+
+  # This is a JBoss bases application that simulates the callcenter
+  # If a twitter brings a bad sentiment from a customer we know, we will
+  # open a ticket on the call center to reach out to that customer and
+  # do damage control.
+  callcenterdb:
+    build: 
+      context: ./callcenterdb
+      args:
+      - IRIS_PROJECT_FOLDER_NAME=callcenterdb-atelier-project
+    image: amirsamary/irisdemo:twittersentiment_callcenterdb
+    command: --key /irislicense/iris.key
+    hostname: callcenterdb
+    ports:
+    - "9096:52773" # 52773 is the webserver/management portal port: http://localhost:9096/csp/sys/UtilHome.csp
+    - "9097:51773" # 51773 is the superserver default port
+    volumes:
+    - type: bind
+      source: ../../IRISLicense/
+      target: /irislicense
+
+  # # This just simulates the CRM.
+  # crm:
+  #   build: 
+  #     context: ./crm
+  #     args:
+  #     - IRIS_PROJECT_FOLDER_NAME=crm-atelier-project
+  #   image: amirsamary/irisdemo:twittersentiment_crm
+  #   command: --key /irislicense/iris.key
+  #   hostname: crm
+  #   ports:
+  #   - "9098:52773" # 52773 is the webserver/management portal port
+  #   #- "9099:51773" # 51773 is the superserver default port
+  #   volumes:
+  #   - type: bind
+  #     source: ../../IRISLicense/
+  #     target: /irislicense

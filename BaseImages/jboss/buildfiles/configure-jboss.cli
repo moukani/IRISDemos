@@ -1,0 +1,11 @@
+/subsystem=datasources/jdbc-driver=com.intersystems.jdbc.IRISDriver:add(driver-name=com.intersystems.jdbc.IRISDriver,driver-module-name=com.intersystems)
+data-source add \
+     --name=InterSystemsDS \
+     --driver-name=com.intersystems.jdbc.IRISDriver \
+     --connection-url=jdbc:IRIS://IRIS_MASTER_HOST:IRIS_MASTER_PORT/IRIS_MASTER_NAMESPACE \
+     --jndi-name=java:/InterSystemsDS \
+     --user-name=IRIS_MASTER_USERNAME \
+     --password=IRIS_MASTER_PASSWORD \
+     --use-ccm=false \
+     --max-pool-size=25 \
+     --blocking-timeout-wait-millis=5000

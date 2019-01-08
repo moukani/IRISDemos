@@ -233,7 +233,7 @@ Class IRISConfig.InstallerBase [ Abstract ]
 			Set tSC = oDBSYS.%Save()
 			Quit:$System.Status.IsError(tSC)
 						
-			Set tSC = $System.OBJ.Load("/tmp/PMML.xml", "ck")
+			Set tSC = $System.OBJ.Load("/tmp/PMML.xml", "cku")
 			Quit:$System.Status.IsError(tSC)
 
 		}

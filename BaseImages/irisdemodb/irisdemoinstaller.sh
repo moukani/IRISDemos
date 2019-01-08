@@ -29,6 +29,14 @@ printf "\n\nLoading Installer..."
 # it may fail if it hasn't been loaded correctly. 
 printf "%s\n%s\nzn \"%s\"\nSet tSC=\$system.OBJ.Load(\"%s\",\"ck\")\n$VerifySC\n" "$IRIS_USERNAME" "$IRIS_PASSWORD" "%SYS" "/tmp/iris_project/IRISConfig/Installer.cls" | irissession IRIS
 
+# Removing Eclipse/Atelier files so that when we try to load our project we don't get the
+# following error:
+# ERROR #5840: Unable to import file '/tmp/iris_project/.buildpath' as this is not a supported type.ERROR: Service 'twittersrv' failed to build: The command '/bin/sh -c /usr/irissys/demo/irisdemoinstaller.sh' returned a non-zero code: 1
+rm -f /tmp/iris_project/.buildpath
+rm -f /tmp/iris_project/.project
+rm -rf /tmp/iris_project/.settings
+
+# Running the installer...
 printf "\n\nRunning Installer..."
 printf "%s\n%s\n%s\n%s\n" "$IRIS_USERNAME" "$IRIS_PASSWORD" "zn \"%SYS\"" "Do ##class(IRISConfig.Installer).Install()" | irissession IRIS
 
@@ -42,5 +50,6 @@ rm -f $ISC_PACKAGE_INSTALLDIR/mgr/iris.ids
 rm -f $ISC_PACKAGE_INSTALLDIR/mgr/alerts.log
 rm -f $ISC_PACKAGE_INSTALLDIR/mgr/journal/*
 rm -f $ISC_PACKAGE_INSTALLDIR/mgr/messages.log
+rm -f $ISC_PACKAGE_INSTALLDIR/mgr/iris.key
 
 rm -rf /tmp/iris_project
