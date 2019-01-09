@@ -10,7 +10,7 @@ ClassMethod LoadTransactionalData(pNamespace As %String) As %Status
 	{
 		ZN pNamespace
 		
-		//Set tSC = ##class(IRISDemo.DataLoadingUtils).LoadFullDataFromCSVFile("/tmp/training_set.csv")
+		//Set tSC = ##class(IRISDemo.Data.Utils).LoadIndexData("/shared/imb.csv")
 	}
 	Catch (oException)
 	{
