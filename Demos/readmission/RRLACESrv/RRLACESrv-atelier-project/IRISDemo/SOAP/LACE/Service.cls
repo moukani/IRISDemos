@@ -41,5 +41,27 @@ Method Discharge(PatientID as %String,EncounterNumber as %String,EndDate as %Dat
 	}
 	quit tSC
 }
+method Search(PatientID as %String, Lastname as %String, Firstname as %String) as %Stream.GlobalBinary [ WebMethod ]
+{
+	set objStream = ##class(%Stream.GlobalCharacter).%New()
+	
+	set sql = "select PatientID,Lastname,Firstname,Gender,DoB from IRISDemo_Data_Patient.Demographics"
+	set first = 1
+	if PatientID '= "" {
+		set sql = sql _ " where PatientID = '"_PatientID_"'"
+	}
+	else {
+		if Lastname '= "" set sql = sql_" where Lastname %Startswith '"_Lastname_"'", first = 0
+		if Firstname '= "" set sql = sql_" "_$select('first:"and",1:"where")_" Firstname %Startswith '"_Firstname_"'"
+		set sql = sql_" order by Lastname,Firstname"
+	}
+	set objSQL = ##class(%SQL.Statement).%ExecDirect(,sql)
+	while objSQL.%Next() {
+		set data= $listbuild(objSQL.%Get("PatientID"),objSQL.%Get("Lastname"),objSQL.%Get("Firstname"),objSQL.%Get("Gender"),objSQL.%Get("DoB"))
+		do objStream.WriteLine(data)
+	}
+	
+	quit objStream
+}
 
 }

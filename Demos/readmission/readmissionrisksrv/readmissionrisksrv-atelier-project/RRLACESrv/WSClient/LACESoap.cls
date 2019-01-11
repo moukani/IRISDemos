@@ -31,5 +31,8 @@ Method Discharge(PatientID As %String, EncounterNumber As %String, EndDate As %D
 {
  Quit ..WebMethod("Discharge").Invoke($this,"http://tempuri.org/IRISDemo.SOAP.LACE.Service.Discharge",.PatientID,.EncounterNumber,.EndDate,.EndTime,.DischargeLocation)
 }
-
+method Search(PatientID as %String,Lastname as %String,Firstname as %String) as %Stream.GlobalBinary [ Final, ProcedureBlock = 1, SoapBindingStyle = document, SoapBodyUse = literal, WebMethod ]
+{
+	quit ..WebMethod("Search").Invoke($this,"http://tempuri.org/IRISDemo.SOAP.LACE.Service.Search",.PatientID,.Lastname,.Firstname)
+}
 }

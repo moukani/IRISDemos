@@ -20,7 +20,14 @@ Method Discharge(pRequest As RRLACESrv.BO.DischargeRequest, Output pResponse As 
  Set pResponse.DischargeResult=$get(DischargeResult)
  Quit $$$OK
 }
-
+Method Search(pRequest As IRISDemo.Message.PatientSearch.Request, Output pResponse As IRISDemo.Message.PatientSearch.Response) As %Library.Status
+{
+ Set ..Adapter.WebServiceClientClass = "RRLACESrv.WSClient.LACESoap"
+ Set tSC = ..Adapter.InvokeMethod("Search",.SearchResult,pRequest.PatientID,pRequest.Lastname,pRequest.Firstname)  Quit:$$$ISERR(tSC) tSC
+ Set pResponse = ##class(IRISDemo.Message.PatientSearch.Response).%New()
+ do pResponse.SearchResult.CopyFrom(SearchResult)
+ Quit $$$OK
+}
 XData MessageMap
 {
 <MapItems>
@@ -29,6 +36,9 @@ XData MessageMap
 	</MapItem>
 	<MapItem MessageType="RRLACESrv.BO.DischargeRequest">
 		<Method>Discharge</Method>
+	</MapItem>
+	<MapItem MessageType="IRISDemo.Message.PatientSearch.Request">
+		<Method>Search</Method>
 	</MapItem>
 </MapItems>
 }

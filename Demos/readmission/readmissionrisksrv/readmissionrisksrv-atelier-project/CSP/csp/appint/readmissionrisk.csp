@@ -1,0 +1,61 @@
+<html>
+<head>
+
+<title>Readmission Risk Demo</title>
+<script language="cache" runat="server">
+	set showResults = 0
+	if $get(%request.Data("btn_submit",1)) = "Search" {
+		set tSC = ##class(Ens.Director).CreateBusinessService("IRISDemo.BS.PatientSearch.Service",.objService)
+		if tSC {
+			set tSC = objService.ProcessInput(%request,.objResponse)
+			if tSC set showResults = 1
+		}
+	}
+	elseif $get(%request.Data("select",1)) '= "" {
+		set showResults = 2
+	}
+</script>
+<script language="javascript">
+function select_patient(pid)
+{
+	document.location='readmissionrisk.csp?select=1&pid=' + pid;
+}
+</script>
+</head>
+
+<body>
+<csp:if condition=(showResults=0)>
+<form name="SEARCH" method="POST" action="#">
+<table>
+<tr><td>PatientID:</td><td><input type="text" name="PatientID" size="10"></td></tr>
+<tr><td>Last name:</td><td><input type="text" name="Lastname" size="10"></td></tr>
+<tr><td>First name:</td><td><input type="text" name="Firstname" size="10"></td></tr>
+<tr><td colspan="2"><hr></td></tr>
+<tr><td colspan="2"><input type="submit" name="btn_submit" value="Search"></td></tr>
+</table>
+</form>
+<csp:elseif condition=(showResults=1)>
+<table>
+<tr><th>PatientID</th><th>First Name</th><th>Last Name</th><th>Gender</th><th>Dob</th></tr>
+<script language="cache" runat="server">
+	while 'objResponse.SearchResult.AtEnd {
+		set data = objResponse.SearchResult.ReadLine()
+		set pId = $list(data,1)
+		set last = $list(data,2)
+		set first = $list(data,3)
+		set sex = $list(data,4)
+		set dob = $list(data,5)
+		set dob = $zdate(dob,3)
+		&html<<tr><td>#(pId)#</td><td>#(last)#</td><td>#(first)#</td><td>#(sex)#</td><td>#(dob)#</td><td><input type="button" value="Select" onclick="javascript:select_patient(#(pId)#);"></td></tr>>
+	}
+</script>
+</table>
+<csp:else>
+<table>
+<tr><td>PatientID:</td><td>#(%request.Data("pid",1))#</td></tr>
+<tr><td>Admit Date:</td><td><input type="text" name="admit_date" size="12"></td><td><input type="button" value="Admit"></td></tr>
+<tr><td>Discharge Date:</td><td><input type="text" name="discharge_date" size="12"></td><td><input type="button" value="Discharge"></td></tr>
+</table>
+</csp:if>
+</body>
+</html>
