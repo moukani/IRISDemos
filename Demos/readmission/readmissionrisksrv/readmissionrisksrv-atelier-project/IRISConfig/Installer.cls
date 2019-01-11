@@ -10,7 +10,13 @@ ClassMethod LoadTransactionalData(pNamespace As %String) As %Status
 	{
 		ZN pNamespace
 		
-		//Set tSC = ##class(IRISDemo.DataLoadingUtils).LoadWhiteList("/tmp/whitelist.csv")
+		//Setup the credentials that will be needed for the production
+		do ##class(Ens.Config.Credentials).%KillExtent()
+		set obj = ##class(Ens.Config.Credentials).%New()
+		set obj.Password = "sys"
+		set obj.Username = "superuser"
+		set obj.SystemName = "RRLACESrv"
+		set tSC = obj.%Save()
 	}
 	Catch (oException)
 	{

@@ -1,7 +1,7 @@
 Class IRISDemo.Data.Patient.Demographics Extends %Persistent
 {
 
-Property DoB As %Date;
+Property DoB As %Date(FORMAT=3);
 
 Property PatientID As %String[Required];
 
@@ -11,11 +11,13 @@ Property Gender As %String;
 
 Property MaritalStatus As %String;
 
-Property DoD As %Date;
+Property DoD As %Date(FORMAT=3);
 
 Property IsDead As %Boolean [ InitialExpression = 0 ];
-
+property Firstname as %String;
+property Lastname as %String;
 Index PatientID On PatientID [ Unique ];
+index Name on (Lastname,Firstname,Gender);
 
 Storage Default
 {
@@ -43,6 +45,12 @@ Storage Default
 </Value>
 <Value name="8">
 <Value>IsDead</Value>
+</Value>
+<Value name="9">
+<Value>Firstname</Value>
+</Value>
+<Value name="10">
+<Value>Lastname</Value>
 </Value>
 </Data>
 <DataLocation>^IRISDemo.Data68DC.DemographicsD</DataLocation>

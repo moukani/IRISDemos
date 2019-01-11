@@ -1,17 +1,17 @@
-Class IRISDemo.Data.Patient.Encounter Extends %Persistent
+Class IRISDemo.Data.Patient.Encounter Extends (%Persistent,%XML.Adaptor)
 {
 
 Property EncounterType as %String;
 
-Property EndDate As %Date;
+Property EndDate As %Date(FORMAT=3);
 
-Property EndTime As %Time;
+Property EndTime As %Time(FORMAT=2);
 
 Property PatientID As %String[Required];
 
-Property StartDate As %Date[Required];
+Property StartDate As %Date(FORMAT=3)[Required];
 
-Property StartTime As %Time;
+Property StartTime As %Time(FORMAT=2);
 
 Property AdmissionSource As %String;
 

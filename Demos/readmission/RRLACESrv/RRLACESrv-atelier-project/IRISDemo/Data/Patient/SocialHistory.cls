@@ -2,9 +2,9 @@ Class IRISDemo.Data.Patient.SocialHistory Extends %Persistent
 {
 Property Facility As %String;
 
-Property FromDate As %Date;
+Property FromDate As %Date(FORMAT=3);
 
-Property FromTime As %Time;
+Property FromTime As %Time(FORMAT=2);
 
 Property PatientID As %String[Required];
 
@@ -12,9 +12,9 @@ Property SocialHabitCategory As %String;
 
 Property Status As %String;
 
-Property ToDate As %Date;
+Property ToDate As %Date(FORMAT=3);
 
-Property ToTime As %Time;
+Property ToTime As %Time(FORMAT=2);
 
 Property EnteredBy As %String;
 

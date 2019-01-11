@@ -33,6 +33,7 @@ classmethod LoadIndexData(fileName as %String)
 			set objIndex = ##class(IRISDemo.Data.ComorbidityIndex).%New()
 			set objIndex.ICDCode = objRs.Get("ICDCode")
 			set objIndex.Index = objRs.Get("CharlsonComorbidityIndex")
+			set objIndex.Comorbidity = objRs.Get("Comorbidity")
 			do objIndex.%Save()
 			
 			set count = count + 1
@@ -53,6 +54,10 @@ classmethod LoadPatientDemographics(fileName as %String)
 			set obj.PatientID = objRs.Get("PatientID")
 			set obj.PostalCode = objRs.Get("PostalCode")
 			set obj.Gender = objRs.Get("Gender")
+			
+			set obj.Lastname = ##class(%Library.PopulateUtils).LastName()
+			set obj.Firstname = ##class(%Library.PopulateUtils).FirstName($select(obj.Gender="F":2,1:1))
+			
 			do obj.%Save()
 			
 			set count = count + 1
@@ -108,74 +113,6 @@ classmethod LoadPatientEncounters(fileName as %String)
 			write $justify(count,10)
 		}
 	}
-}
-/// L Score - Length of Stay Score<br>
-///  (component of LACE score)<br>
-/// 
-ClassMethod GetLScore(pEncounterID As IRISDemo.Data.Patient.Encounter) As %Integer
-{
-	set objSQL = ##class(%SQL.Statement).%ExecDirect(,"select LOS from IRISDemo_Data_Patient.Encounter where ID = '"_pEncounterID_"'")
-	set tLOS = objSQL.%GetData(1)
-
-	set tLScore = $Select(tLOS<=3 : tLOS, //if LOS less than 3, score is LOS
-	                      tLOS<=6 : 4,    //if LOS between 4 and 6, score is 4
-	                      tLOS<=13: 5,    //if LOS between 7 and 13, score is 5
-	                      tLOS>=14: 7)    //if LOS 14 or higher, score is 7
-	quit tLScore
-}
-
-/// A Score - Acuity Score
-///  (component of LACE score)<br>
-ClassMethod GetAScore(pEncounterID As IRISDemo.Data.Patient.Encounter) As %Integer
-{
-	
-	// Need to determine if this admission is via the emergency dept 
-	// For now, randomly make 20% of vists via Emergency dept
-	set tEmergencyFlag = $random(5)\4  //tEmergencyFlag will the true approximately 20% of the time
-	//
-
-	set tCScore = $select(tEmergencyFlag : 3, // If this an admission via the emergency dept, score is 3
-							           1 : 0) // Otherwise, score is 0           
-	
-	quit tCScore
-}
-
-/// C Score - Comorbidities Score
-///  (component of LACE score)<br>
-ClassMethod GetCScore(pEncounterID As IRISDemo.Data.Patient.Encounter) As %Integer
-{
-	// For now, generate random number between 0 and 15
-	set tTotalScore = $random(16)
-	//
-
-	if tTotalScore<=3 {
-		set tCScore = tTotalScore
-	} else {
-		set tCScore = 5
-	}
-	
-	quit tCScore
-}
-
-/// E Score - Emergency Visits Score
-///  (component of LACE score)<br>
-ClassMethod GetEScore(pEncounterID As IRISDemo.Data.Patient.Encounter) As %Integer
-{
-
-	// tEmergencyVisits is the count of patient visits to emergency dept in the 6 months prior to current admission,
-	// not including visit to emergency dept immediately preceding current admission
-	
-	// For now, generate random number between 0 and 6
-	set tEmergencyVisits = $r(7)
-	//
-
-	if tEmergencyVisits>4 {
-		set tEScore = 4
-	} else {
-		set tEScore = tEmergencyVisits
-	}
-	
-	quit tEScore
 }
 
 }

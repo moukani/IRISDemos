@@ -5,17 +5,17 @@ Property DoseQuantity As %String;
 
 Property Facility As %String;
 
-Property FromDate As %Date;
+Property FromDate As %Date(FORMAT=3);
 
-Property FromTime As %Time;
+Property FromTime As %Time(FORMAT=2);
 
 Property Indication As %String;
 
 Property PatientID As %String[Required];
 
-Property ToDate As %Date;
+Property ToDate As %Date(FORMAT=3);
 
-Property ToTime As %Time;
+Property ToTime As %Time(FORMAT=2);
 
 Property DosageFormCode As %String;
 

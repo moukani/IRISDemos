@@ -3,9 +3,9 @@ Class IRISDemo.Data.Patient.Observation Extends %Persistent
 
 Property Facility As %String;
 
-Property ObservationDate As %Date;
+Property ObservationDate As %Date(FORMAT=3);
 
-Property ObservationTime As %Time;
+Property ObservationTime As %Time(FORMAT=2);
 
 Property ObservationValue As %String;
 

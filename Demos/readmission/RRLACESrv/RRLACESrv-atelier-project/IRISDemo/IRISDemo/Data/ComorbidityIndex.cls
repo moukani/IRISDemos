@@ -2,6 +2,7 @@ Class IRISDemo.Data.ComorbidityIndex Extends %Persistent
 {
 property ICDCode as %String;
 property Index as %Integer;
+property Comorbidity as %String;
 index ICD on ICDCode [ unique];
 Storage Default
 {
@@ -14,6 +15,9 @@ Storage Default
 </Value>
 <Value name="3">
 <Value>Index</Value>
+</Value>
+<Value name="4">
+<Value>Comorbidity</Value>
 </Value>
 </Data>
 <DataLocation>^IRISDemo.Data.Comorbidity1AF1D</DataLocation>
