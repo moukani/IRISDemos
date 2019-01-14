@@ -47,6 +47,8 @@ services:
       target: /shared
 
   hisdb:
+    depends_on:
+      - RRLACESrv
     build:
       context: ./hisdb
       args:
