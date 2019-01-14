@@ -45,6 +45,11 @@ method Search(PatientID as %String, Lastname as %String, Firstname as %String) a
 {
 	set objStream = ##class(%Stream.GlobalCharacter).%New()
 	
+	// Get null string set to char(o) - zero
+	set PatientID = $translate(PatientID,$char(0))
+	set Lastname = $translate(Lastname,$char(0))
+	set Firstname = $translate(Firstname,$char(0))
+	
 	set sql = "select PatientID,Lastname,Firstname,Gender,DoB from IRISDemo_Data_Patient.Demographics"
 	set first = 1
 	if PatientID '= "" {
@@ -55,6 +60,7 @@ method Search(PatientID as %String, Lastname as %String, Firstname as %String) a
 		if Firstname '= "" set sql = sql_" "_$select('first:"and",1:"where")_" Firstname %Startswith '"_Firstname_"'"
 		set sql = sql_" order by Lastname,Firstname"
 	}
+	
 	set objSQL = ##class(%SQL.Statement).%ExecDirect(,sql)
 	while objSQL.%Next() {
 		set data= $listbuild(objSQL.%Get("PatientID"),objSQL.%Get("Lastname"),objSQL.%Get("Firstname"),objSQL.%Get("Gender"),objSQL.%Get("DoB"))

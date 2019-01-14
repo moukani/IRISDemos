@@ -14,6 +14,15 @@
 	elseif $get(%request.Data("select",1)) '= "" {
 		set showResults = 2
 	}
+	elseif $get(%request.Data("btn_admit",1)) {
+		do ..MakeHL7File("A",%request.Data("pid",1),%request.Data("admit_date",1))
+	}
+	elseif $get(%request.Data("btn_discharge",1)) {
+		do ..MakeHL7File("D",%request.Data("pid",1),%request.Data("discharge_date",1))
+	}
+</script>
+<script language="cache" method="MakeHL7File" arguments="type:%String,pid:%String,date:%String" returntype="">
+	do ##class(IRISDemo.Utils).OutputHL7(pid,type,date,"/hl7files/in/")
 </script>
 <script language="javascript">
 function select_patient(pid)
@@ -46,16 +55,19 @@ function select_patient(pid)
 		set sex = $list(data,4)
 		set dob = $list(data,5)
 		set dob = $zdate(dob,3)
-		&html<<tr><td>#(pId)#</td><td>#(last)#</td><td>#(first)#</td><td>#(sex)#</td><td>#(dob)#</td><td><input type="button" value="Select" onclick="javascript:select_patient(#(pId)#);"></td></tr>>
+		&html<<tr><td>#(pId)#</td><td>#(first)#</td><td>#(last)#</td><td>#(sex)#</td><td>#(dob)#</td><td><input type="button" value="Select" onclick="javascript:select_patient(#(pId)#);"></td></tr>>
 	}
 </script>
 </table>
 <csp:else>
+<form name="ADMITDISCHARGE" method="post" action="#">
 <table>
 <tr><td>PatientID:</td><td>#(%request.Data("pid",1))#</td></tr>
-<tr><td>Admit Date:</td><td><input type="text" name="admit_date" size="12"></td><td><input type="button" value="Admit"></td></tr>
-<tr><td>Discharge Date:</td><td><input type="text" name="discharge_date" size="12"></td><td><input type="button" value="Discharge"></td></tr>
+<tr><td>Admit Date:</td><td><input type="text" name="admit_date" size="12"></td><td><input type="submit" name="btn_admit" value="Admit"></td></tr>
+<tr><td>Discharge Date:</td><td><input type="text" name="discharge_date" size="12"></td><td><input type="submit" name="btn_discharge" value="Discharge"></td></tr>
 </table>
+<input type="hidden" name="pid" value="#(%request.Data("pid",1))#">
+</form>
 </csp:if>
 </body>
 </html>

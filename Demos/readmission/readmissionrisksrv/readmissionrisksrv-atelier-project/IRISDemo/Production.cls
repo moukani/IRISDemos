@@ -19,6 +19,11 @@ XData ProductionDefinition
     <Setting Target="Host" Name="Validation"></Setting>
     <Setting Target="Host" Name="BusinessRuleName">IRISDemo.HISHL7v2FileFeedRoutingRule</Setting>
   </Item>
+  <Item Name="RRLACESrv.BO.LACESoap" Category="" ClassName="RRLACESrv.BO.LACESoap" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+    <Setting Target="Adapter" Name="SOAPCredentials">RRLACESrv</Setting>
+  </Item>
+  <Item Name="IRISDemo.BS.PatientSearch.Service" Category="" ClassName="IRISDemo.BS.PatientSearch.Service" PoolSize="0" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+  </Item>
 </Production>
 }
 
