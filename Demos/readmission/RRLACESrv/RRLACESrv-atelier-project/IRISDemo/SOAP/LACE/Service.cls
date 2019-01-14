@@ -26,19 +26,34 @@ Method Admit(PatientID as %String,EncounterNumber as %String,EncounterType as %S
 }
 
 /// Discharge
-Method Discharge(PatientID as %String,EncounterNumber as %String,EndDate as %Date,EndTime as %Time,DischargeLocation as %String) As %Status [ WebMethod ]
+Method Discharge(PatientID as %String,EncounterNumber as %String,EncounterType as %String,AdmissionSource as %String,StartDate as %Date,StartTime as %Time,EndDate as %Date,EndTime as %Time,DischargeLocation as %String) As %Status [ WebMethod ]
 {
 	set tSC = $$$OK
+	
 	set objSQL = ##class(%SQL.Statement).%ExecDirect(,"select ID from IRISDemo_Data_Patient.Encounter where PatientID = '"_PatientID_"' and EncounterNumber = '"_EncounterNumber_"'")
 	if objSQL.%Next() {
 		set obj = ##class(IRISDemo.Data.Patient.Encounter).%OpenId(objSQL.%Get("ID"),,.tSC)
-		if tSC {
-			set obj.EndDate = pInput.EndDate
-			set obj.EndTime = pInput.EndTime
-			set obj.DischargeLocation = DischargeLocation
-			set tSC = obj.%Save()
-		}
 	}
+	else {
+		set obj = ##class(IRISDemo.Data.Patient.Encounter).%New()
+	}
+	
+	// Strip out any empty string set to char(0)
+	set AdmissionSource = $translate(AdmissionSource,$char(0))
+	set DischargeLocation = $translate(DischargeLocation,$char(0))
+	
+	set obj.PatientID = PatientID
+	set obj.EncounterNumber = EncounterNumber
+	set obj.EncounterType = EncounterType
+	set obj.AdmissionSource = AdmissionSource
+	set obj.StartDate = StartDate
+	set obj.StartTime = StartTime
+	set obj.EndDate = EndDate
+	set obj.EndTime = EndTime
+	set obj.DischargeLocation = DischargeLocation
+	set obj.LOS = (EndDate - StartDate) + 1
+	set tSC = obj.%Save()
+
 	quit tSC
 }
 method Search(PatientID as %String, Lastname as %String, Firstname as %String) as %Stream.GlobalBinary [ WebMethod ]

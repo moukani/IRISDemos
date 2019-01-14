@@ -16,6 +16,7 @@ XData DTL [ XMLNamespace = "http://www.intersystems.com/dtl" ]
 <assign value='source.{PV1:AdmissionType}' property='target.EncounterType' action='set' />
 <assign value='$ztimeh($extract(source.{PV1:AdmitDateTime.Time},9,10)_":"_$extract(source.{PV1:AdmitDateTime.Time},11,12)_":"_$extract(source.{PV1:AdmitDateTime.Time},13,14))' property='target.StartTime' action='set' />
 <assign value='"DEMO"' property='target.AdmissionSource' action='set' />
+<assign value='source.{PV1:AdmitSource}' property='target.AdmissionSource' action='set' />
 </transform>
 }
 

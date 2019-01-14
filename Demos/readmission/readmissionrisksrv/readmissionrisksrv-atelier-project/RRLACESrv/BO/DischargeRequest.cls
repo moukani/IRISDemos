@@ -6,7 +6,10 @@ Parameter RESPONSECLASSNAME = "RRLACESrv.BO.DischargeResponse";
 Property PatientID As %String;
 
 Property EncounterNumber As %String;
-
+property EncounterType as %String;
+property AdmissionSource as %String;
+property StartDate as %Date(FORMAT=3);
+property StartTime as %Time(FORMAT=2);
 Property EndDate As %Date(FORMAT=3);
 
 Property EndTime As %Time(FORMAT=2);
@@ -31,6 +34,18 @@ Storage Default
 </Value>
 <Value name="5">
 <Value>DischargeLocation</Value>
+</Value>
+<Value name="6">
+<Value>StartDate</Value>
+</Value>
+<Value name="7">
+<Value>StartTime</Value>
+</Value>
+<Value name="8">
+<Value>EncounterType</Value>
+</Value>
+<Value name="9">
+<Value>AdmissionSource</Value>
 </Value>
 </Data>
 <DefaultData>DischargeRequestDefaultData</DefaultData>

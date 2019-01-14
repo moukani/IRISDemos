@@ -4,6 +4,7 @@
 <title>Readmission Risk Demo</title>
 <script language="cache" runat="server">
 	set showResults = 0
+	set tSC = $$$OK
 	if $get(%request.Data("btn_submit",1)) = "Search" {
 		set tSC = ##class(Ens.Director).CreateBusinessService("IRISDemo.BS.PatientSearch.Service",.objService)
 		if tSC {
@@ -15,10 +16,14 @@
 		set showResults = 2
 	}
 	elseif $get(%request.Data("btn_admit",1)) {
-		do ##class(IRISDemo.Utils).OutputHL7(pid,"A",%request.Data("admit_date",1))
+		set tSC = ##class(IRISDemo.Utils).OutputHL7(pid,"A",%request.Data("admit_date",1))
 	}
 	elseif $get(%request.Data("btn_discharge",1)) {
-		do ##class(IRISDemo.Utils).OutputHL7(pid,"D",%request.Data("admit_date",1))
+		set tSC = ##class(IRISDemo.Utils).OutputHL7(pid,"D",%request.Data("admit_date",1))
+	}
+	if 'tSC {
+		do $system.Status.DecomposeStatus(tSC,.msg)
+		//set 
 	}
 </script>
 <script language="javascript">
