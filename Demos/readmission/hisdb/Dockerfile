@@ -1,4 +1,4 @@
-FROM amirsamary/irisdemo:irisdemodb
+FROM amirsamary/irisdemo:irishealthdemoint
 LABEL maintainer="Phillip Booth <phillip.booth@intersystems.com>"
 
 # Name of the project folder ex.: my-atelier-project
