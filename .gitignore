@@ -14,4 +14,4 @@
 # Demos
 container_runtime
 target/*
-/.metadata/
+**/.metadata/

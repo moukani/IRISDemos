@@ -8,3 +8,5 @@ ADD ./app/ /home/node/app
 # the one that the base image brings.
 # WORKDIR /home/node/app
 RUN npm install
+
+CMD npm start

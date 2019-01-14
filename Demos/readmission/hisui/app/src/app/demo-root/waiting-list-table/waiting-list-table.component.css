@@ -1,0 +1,22 @@
+table {
+  width: 100%;
+
+}
+
+td, th {
+  width: 25%;
+}
+
+tr:hover{
+   cursor: pointer;
+   background: #b4b4b433;
+ }
+
+.mat-elevation-z8 {
+  overflow-y: scroll;
+}
+
+.mat-form-field {
+  font-size: 16px;
+  width: 100%;
+}

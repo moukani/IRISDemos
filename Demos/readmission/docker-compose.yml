@@ -6,9 +6,9 @@ volumes:
 services:
 
   readmissionrisksrv:
-    depends_on: 
+    depends_on:
       - RRLACESrv
-    build: 
+    build:
       context: ./readmissionrisksrv
       args:
       - IRIS_PROJECT_FOLDER_NAME=readmissionrisksrv-atelier-project
@@ -17,7 +17,7 @@ services:
     hostname: readmissionrisksrv
     ports:
     - "9093:51773" # 51773 is the superserver default port
-    - "9092:52773" # 52773 is the webserver/management portal port 
+    - "9092:52773" # 52773 is the webserver/management portal port
     volumes:
     - type: bind
       source: ../../IRISLicense/
@@ -28,7 +28,7 @@ services:
 
 
   RRLACESrv:   # Readmission Risk LACE Service
-    build: 
+    build:
       context: ./RRLACESrv
       args:
       - IRIS_PROJECT_FOLDER_NAME=RRLACESrv-atelier-project
@@ -47,7 +47,7 @@ services:
       target: /shared
 
   hisdb:
-    build: 
+    build:
       context: ./hisdb
       args:
       - IRIS_PROJECT_FOLDER_NAME=hisdb-atelier-project
@@ -56,18 +56,18 @@ services:
     hostname: hisdb
     ports:
     - "9097:51773" # 51773 is the superserver default port
-    - "9096:52773" # 52773 is the webserver/management portal port 
+    - "9096:52773" # 52773 is the webserver/management portal port
     volumes:
     - type: bind
       source: ../../IRISLicense/
       target: /irislicense
 
   hisui:
-    depends_on: 
+    depends_on:
       - hisdb
-    build: 
+    build:
       context: ./hisui
     image: amirsamary/irisdemo:readmission_hisui
     hostname: hisui
     ports:
-    - "9098:4200" # 51773 is the superserver default port
+    - "9098:4200" # Where Nodejs Will be listening

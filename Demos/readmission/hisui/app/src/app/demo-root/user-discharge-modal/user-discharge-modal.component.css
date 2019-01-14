@@ -1,0 +1,25 @@
+.discharge-modal-wrapper{
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  box-sizing: content-box;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.modal-flex-item{
+  padding: 2%;
+  box-sizing: inherit;
+}
+
+.modal-user-icon{
+  font-size: 125px;
+  color: #673ab7;
+}
+
+.selection-button-wrapper{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+}
