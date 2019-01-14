@@ -27,9 +27,9 @@ Method Admit(PatientID As %String, EncounterNumber As %String, EncounterType As 
  Quit ..WebMethod("Admit").Invoke($this,"http://tempuri.org/IRISDemo.SOAP.LACE.Service.Admit",.PatientID,.EncounterNumber,.EncounterType,.StartDate,.StartTime,.AdmissionSource)
 }
 
-Method Discharge(PatientID As %String, EncounterNumber As %String, EndDate As %Date, EndTime As %Time, DischargeLocation As %String) As %xsd.base64Binary [ Final, ProcedureBlock = 1, SoapBindingStyle = document, SoapBodyUse = literal, WebMethod ]
+Method Discharge(PatientID As %String, EncounterNumber As %String,EncounterType as %String, AdmissionSource as %String,StartDate as %Date,StartTime as %Time,EndDate As %Date, EndTime As %Time, DischargeLocation As %String) As %xsd.base64Binary [ Final, ProcedureBlock = 1, SoapBindingStyle = document, SoapBodyUse = literal, WebMethod ]
 {
- Quit ..WebMethod("Discharge").Invoke($this,"http://tempuri.org/IRISDemo.SOAP.LACE.Service.Discharge",.PatientID,.EncounterNumber,.EndDate,.EndTime,.DischargeLocation)
+ Quit ..WebMethod("Discharge").Invoke($this,"http://tempuri.org/IRISDemo.SOAP.LACE.Service.Discharge",.PatientID,.EncounterNumber,.EncounterType,.AdmissionSource,.StartDate,.StartTime,.EndDate,.EndTime,.DischargeLocation)
 }
 method Search(PatientID as %String,Lastname as %String,Firstname as %String) as %Stream.GlobalBinary [ Final, ProcedureBlock = 1, SoapBindingStyle = document, SoapBodyUse = literal, WebMethod ]
 {
