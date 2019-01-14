@@ -15,14 +15,11 @@
 		set showResults = 2
 	}
 	elseif $get(%request.Data("btn_admit",1)) {
-		do ..MakeHL7File("A",%request.Data("pid",1),%request.Data("admit_date",1))
+		do ##class(IRISDemo.Utils).OutputHL7(pid,"A",%request.Data("admit_date",1))
 	}
 	elseif $get(%request.Data("btn_discharge",1)) {
-		do ..MakeHL7File("D",%request.Data("pid",1),%request.Data("discharge_date",1))
+		do ##class(IRISDemo.Utils).OutputHL7(pid,"D",%request.Data("admit_date",1))
 	}
-</script>
-<script language="cache" method="MakeHL7File" arguments="type:%String,pid:%String,date:%String" returntype="">
-	do ##class(IRISDemo.Utils).OutputHL7(pid,type,date,"/hl7files/in/")
 </script>
 <script language="javascript">
 function select_patient(pid)

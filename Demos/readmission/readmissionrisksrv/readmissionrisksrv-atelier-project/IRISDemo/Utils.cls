@@ -1,17 +1,21 @@
 Class IRISDemo.Utils
 {
-classmethod OutputHL7(PatientID as %String,Type as %String,date as %String,directory as %String) as %Status
+classmethod OutputHL7(PatientID as %String,Type as %String,date as %String,directory as %String = "/hl7files/in/") as %Status
 {
+	if PatientID = "" quit $system.Status.Error(5001,"Patient Must be selected")
+	
+	if (Type = "D")&&('$data(^IRISDemo.EncounterNumber(PatientID))) quit $system.Status.Error(5001,"Patient must have an encounter open first")
+	
 	set directory = ##class(%Library.File).NormalizeDirectory(directory)
 	
 	set date = $zdateh(date,3)
 	
 	if Type = "A" {
-	set encNum = $extract($increment(^EncounterNumber(PatientID))+1000,2,4)
+	set encNum = $extract($increment(^IRISDemo.EncounterNumber(PatientID))+1000,2,4)
 		set encNum = "DEMO_"_encNum
 	}
 	else {
-		set encNum = $extract(^EncounterNumber(PatientID)+1000,2,4)
+		set encNum = $extract(^IRISDemo.EncounterNumber(PatientID)+1000,2,4)
 		set encNum = "DEMO_"_encNum
 	}
 	
@@ -22,6 +26,9 @@ classmethod OutputHL7(PatientID as %String,Type as %String,date as %String,direc
 	else {
 		set objMsg.DocType = "2.5:ADT_A03"
 	}
+	
+	set msgCode = $piece($piece(objMsg.DocType,":",2),"_",1)
+	set trgEvent = $piece($piece(objMsg.DocType,":",2),"_",2)
 	
 	do {
 		set objMSH = ##class(EnsLib.HL7.Segment).%New()
@@ -34,8 +41,8 @@ classmethod OutputHL7(PatientID as %String,Type as %String,date as %String,direc
 		set time = $ztime($piece($horolog,",",2))
 		set datetime = date_$translate(time,":")
 		set tSC = objMSH.SetValueAt(datetime,7) if $$$ISERR(tSC) quit
-		set tSC = objMSH.SetValueAt($piece(objMsg.DocType,":",1),9.1) if $$$ISERR(tSC) quit
-		set tSC = objMSH.SetValueAt($piece(objMsg.DocType,":",2),9.2) if $$$ISERR(tSC) quit
+		set tSC = objMSH.SetValueAt(msgCode,9.1) if $$$ISERR(tSC) quit
+		set tSC = objMSH.SetValueAt(trgEvent,9.2) if $$$ISERR(tSC) quit
 		set tSC = objMSH.SetValueAt("2.5",12) if $$$ISERR(tSC) quit
 	
 		set objEVN = ##class(EnsLib.HL7.Segment).%New()
@@ -67,6 +74,9 @@ classmethod OutputHL7(PatientID as %String,Type as %String,date as %String,direc
 	
 	set file = $select(Type="A":"admit",1:"discharge")
 	set file = directory_file_"_"_PatientID_".hl7"
+	// Delete any existing files first
+	do ##class(%Library.File).Delete(file)
+	// Output the file
 	do objMsg.OutputToFile(file)
 	
 	quit tSC
