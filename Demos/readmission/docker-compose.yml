@@ -6,6 +6,8 @@ volumes:
 services:
 
   readmissionrisksrv:
+    depends_on: 
+      - RRLACESrv
     build: 
       context: ./readmissionrisksrv
       args:
@@ -43,3 +45,29 @@ services:
     - type: bind
       source: ./RRLACESrv_data/shared/
       target: /shared
+
+  hisdb:
+    build: 
+      context: ./hisdb
+      args:
+      - IRIS_PROJECT_FOLDER_NAME=hisdb-atelier-project
+    image: amirsamary/irisdemo:readmission_hisdb
+    command: --key /irislicense/iris.key
+    hostname: hisdb
+    ports:
+    - "9097:51773" # 51773 is the superserver default port
+    - "9096:52773" # 52773 is the webserver/management portal port 
+    volumes:
+    - type: bind
+      source: ../../IRISLicense/
+      target: /irislicense
+
+  hisui:
+    depends_on: 
+      - hisdb
+    build: 
+      context: ./hisui
+    image: amirsamary/irisdemo:readmission_hisui
+    hostname: hisui
+    ports:
+    - "9098:4200" # 51773 is the superserver default port
