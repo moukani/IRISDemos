@@ -13,7 +13,16 @@ XData RuleDefinition [ XMLNamespace = "http://www.intersystems.com/rule" ]
 <constraint name="docCategory" value="2.5"></constraint>
 <constraint name="docName" value="ADT_A01"></constraint>
 <when condition="1">
-<send transform="" target="RRLACESrv.BO.LACESoap"></send>
+<send transform="IRISDemo.DTL.HL7Admit" target="RRLACESrv.BO.LACESoap"></send>
+<return></return>
+</when>
+</rule>
+<rule name="" disabled="false">
+<constraint name="source" value="HIS HL7v2 File Feed_Router"></constraint>
+<constraint name="docCategory" value="2.5"></constraint>
+<constraint name="docName" value="ADT_A03"></constraint>
+<when condition="1">
+<send transform="IRISDemo.DTL.HL7Discharge" target="RRLACESrv.BO.LACESoap"></send>
 <return></return>
 </when>
 </rule>
