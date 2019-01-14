@@ -20,13 +20,17 @@ Method Discharge(pRequest As RRLACESrv.BO.DischargeRequest, Output pResponse As 
  Set pResponse.DischargeResult=$get(DischargeResult)
  Quit $$$OK
 }
-Method Search(pRequest As IRISDemo.Message.PatientSearch.Request, Output pResponse As IRISDemo.Message.PatientSearch.Response) As %Library.Status
+method Risk(pRequest as RRLACESrv.BO.RiskRequest, output pResponse as RRLACESrv.BO.RiskResponse) as %Library.Status
 {
- Set ..Adapter.WebServiceClientClass = "RRLACESrv.WSClient.LACESoap"
- Set tSC = ..Adapter.InvokeMethod("Search",.SearchResult,pRequest.PatientID,pRequest.Lastname,pRequest.Firstname)  Quit:$$$ISERR(tSC) tSC
- Set pResponse = ##class(IRISDemo.Message.PatientSearch.Response).%New()
- do pResponse.SearchResult.CopyFrom(SearchResult)
- Quit $$$OK
+	set pResponse = ##class(RRLACESrv.BO.RiskResponse).%New()
+	Set ..Adapter.WebServiceClientClass = "RRLACESrv.WSClient.LACESoap"
+	Set tSC = ..Adapter.InvokeMethod("Risk",.RiskResult,pRequest.PatientID,pRequest.EncounterNumber) if $$$ISERR(tSC) quit
+	set pResponse.RiskScore = $piece(RiskResult,",",1)
+	set pResponse.AScore = $piece(RiskResult,",",2)
+	set pResponse.CScore = $piece(RiskResult,",",3)
+	set pResponse.EScore = $piece(RiskResult,",",4)
+	set pResponse.LScore = $piece(RiskResult,",",5)
+	quit tSC
 }
 XData MessageMap
 {
@@ -37,8 +41,8 @@ XData MessageMap
 	<MapItem MessageType="RRLACESrv.BO.DischargeRequest">
 		<Method>Discharge</Method>
 	</MapItem>
-	<MapItem MessageType="IRISDemo.Message.PatientSearch.Request">
-		<Method>Search</Method>
+	<MapItem MessageType="RRLACESrv.BO.RiskRequest">
+		<Method>Risk</Method>
 	</MapItem>
 </MapItems>
 }

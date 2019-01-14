@@ -56,33 +56,17 @@ Method Discharge(PatientID as %String,EncounterNumber as %String,EncounterType a
 
 	quit tSC
 }
-method Search(PatientID as %String, Lastname as %String, Firstname as %String) as %Stream.GlobalBinary [ WebMethod ]
+Method Risk(PatientID as %String,EncounterNumber as %String) As %String [ WebMethod ]
 {
-	set objStream = ##class(%Stream.GlobalCharacter).%New()
-	
-	// Get null string set to char(o) - zero
-	set PatientID = $translate(PatientID,$char(0))
-	set Lastname = $translate(Lastname,$char(0))
-	set Firstname = $translate(Firstname,$char(0))
-	
-	set sql = "select PatientID,Lastname,Firstname,Gender,DoB from IRISDemo_Data_Patient.Demographics"
-	set first = 1
-	if PatientID '= "" {
-		set sql = sql _ " where PatientID = '"_PatientID_"'"
-	}
-	else {
-		if Lastname '= "" set sql = sql_" where Lastname %Startswith '"_Lastname_"'", first = 0
-		if Firstname '= "" set sql = sql_" "_$select('first:"and",1:"where")_" Firstname %Startswith '"_Firstname_"'"
-		set sql = sql_" order by Lastname,Firstname"
-	}
-	
-	set objSQL = ##class(%SQL.Statement).%ExecDirect(,sql)
-	while objSQL.%Next() {
-		set data= $listbuild(objSQL.%Get("PatientID"),objSQL.%Get("Lastname"),objSQL.%Get("Firstname"),objSQL.%Get("Gender"),objSQL.%Get("DoB"))
-		do objStream.WriteLine(data)
-	}
-	
-	quit objStream
+	//todo - we need to call DeepSee here
+	// For the moment just make up some numbers
+	set LScore = $r(5)+1
+	set AScore = $r(2)
+	set CScore = $r(5)
+	set EScore = $r(3)
+	set RiskScore = LScore + AScore + CScore + EScore
+	set return = RiskScore_","_AScore_","_CScore_","_EScore_","_LScore
+	quit return
 }
 
 }
