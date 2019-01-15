@@ -12,5 +12,5 @@ ARG IRIS_PROJECT_FOLDER_NAME
 ADD ./${IRIS_PROJECT_FOLDER_NAME}/ $IRIS_APP_SOURCEDIR
 
 # Running the installer. This will load the source from our project.
-RUN /usr/irissys/demo/irisdemoinstaller.sh && \
-    rm -f /tmp/export_to_hisdb.csv
+RUN /usr/irissys/demo/irisdemoinstaller.sh 
+    #rm -f /tmp/export_to_hisdb.csv
