@@ -28,11 +28,23 @@ XData BPL [ XMLNamespace = "http://www.intersystems.com/bpl" ]
 <property name='AScore' type='%Integer' instantiate='0' />
 <property name='CScore' type='%Integer' instantiate='0' />
 <property name='EScore' type='%Integer' instantiate='0' />
+<property name='PatientID' type='%String' instantiate='0' >
+<parameters>
+<parameter name='MAXLEN'  value='50' />
+</parameters>
+</property>
+<property name='DischargeLocation' type='%String' instantiate='0' >
+<parameters>
+<parameter name='MAXLEN'  value='50' />
+</parameters>
+</property>
 </context>
 <sequence xend='200' yend='1050' >
 <call name='Discharge patient' target='RRLACESrv.BO.LACESoap' async='0' xpos='200' ypos='250' >
 <request type='RRLACESrv.BO.DischargeRequest' >
 <assign property="callrequest" value="request" action="set" />
+<assign property="context.PatientID" value="request.PatientID" action="set" />
+<assign property="context.DischargeLocation" value="request.DischargeLocation" action="set" />
 </request>
 <response type='RRLACESrv.BO.DischargeResponse' >
 <assign property="context.DischargeResponse" value="callresponse.DischargeResult" action="set" />
@@ -56,8 +68,13 @@ XData BPL [ XMLNamespace = "http://www.intersystems.com/bpl" ]
 </call>
 <if name='Risk Alert?' condition='context.RiskScore&gt;4' xpos='335' ypos='600' xend='335' yend='850' >
 <true>
-<call name='Send Email' target='RRLACESrv.BO.LACESoap' async='0' xpos='470' ypos='750' >
-<request type='Ens.Request' />
+<call name='Send Email' target='IRISDemo.BO.Email.Operation' async='0' xpos='470' ypos='750' >
+<request type='IRISDemo.Message.EmailRequest' >
+<assign property="callrequest.From" value="&quot;IRISDemo&quot;" action="set" />
+<assign property="callrequest.Subject" value="&quot;LACE readmission alert&quot;" action="set" />
+<assign property="callrequest.To" value="&quot;readmission.alert@healthcare.med&quot;" action="set" />
+<assign property="callrequest.MessageText" value="&quot;Patient '&quot;_context.PatientID_&quot;' has just been discharged to '&quot;_context.DischargeLocation_&quot;' and has a &quot;_$select(context.RiskScore&gt;9:&quot;high&quot;,1:&quot;moderate&quot;)_&quot; risk of readmission&quot;_$char(13,10)_&quot;The scores are as follows:&quot;_$char(13,10)_&quot;Risk Score: &quot;_context.RiskScore_$char(13,10)_&quot;'L' Score (Length of stay): &quot;_context.LScore_$char(13,10)_&quot;'A' Score (Acuity): &quot;_context.AScore_$char(13,10)_&quot;'C' Score: &quot;_context.CScore_$char(13,10)_&quot;'E' Score: &quot;_context.EScore" action="set" />
+</request>
 <response type='Ens.Response' />
 </call>
 </true>
@@ -68,8 +85,11 @@ XData BPL [ XMLNamespace = "http://www.intersystems.com/bpl" ]
 </process>
 }
 
+/// BPL Definition
 Storage Default
 {
+<Description>
+<![CDATA[BPL Definition]]></Description>
 <Type>%Storage.Persistent</Type>
 }
 
