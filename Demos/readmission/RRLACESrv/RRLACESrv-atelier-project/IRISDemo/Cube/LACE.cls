@@ -19,9 +19,9 @@ countMeasureCaption="Encounter Count">
 <expression name="EScore" sourceExpression="##class(IRISDemo.Cube.Utils).GetEScore(%source.%ID)" />
 <expression name="LACE" sourceExpression="%expression.LScore+%expression.AScore+%expression.CScore+%expression.EScore" />
 
+<expression name="AgeDischarged" sourceExpression="##class(IRISDemo.Cube.Utils).GetAgeAtDischarge(%source.%ID)" />
 
 
-<measure name="Length Of Stay" displayName="Length Of Stay"  sourceProperty="LOS" type="integer" aggregate="AVG" formatString="##.##"/>
 
 <measure name="LACE Score" displayName="LACE Score" sourceExpression="%expression.LACE" type="integer" aggregate="AVG" factName="MxLACE" formatString="##.##"/>
 <measure name="L Score" displayName="L Score" sourceExpression="%expression.LScore" type="integer" aggregate="AVG" factName="MxLScore" formatString="##.##"/>
@@ -29,8 +29,12 @@ countMeasureCaption="Encounter Count">
 <measure name="C Score" displayName="C Score" sourceExpression="%expression.CScore" type="integer" aggregate="AVG" factName="MxCScore" formatString="##.##"/>
 <measure name="E Score" displayName="E Score" sourceExpression="%expression.EScore" type="integer" aggregate="AVG" factName="MxEScore" formatString="##.##"/>
 
-<measure name="Emergency Count" displayName="Emergency Count" sourceExpression="$s(%expression.AScore=3:1,1:0)" type="integer" aggregate="AVG" factName="MxEmergencyCount" formatString="##"/>
+<measure name="Length Of Stay" displayName="Length Of Stay"  sourceProperty="LOS" type="integer" aggregate="AVG" formatString="##"/>
+<measure name="Emergency Count" displayName="Emergency Count" sourceExpression="$s(%expression.AScore=3:1,1:0)" type="integer" aggregate="SUM" factName="MxEmergencyCount" formatString="##"/>
+<measure name="Age Discharged" displayName="Age Discharged" sourceExpression="%expression.AgeDischarged" type="integer" aggregate="AVG" factName="MxAgeDischarged" formatString="##"/>
 
+
+<measure name="Patient ID"  displayName="Patient ID" sourceProperty="PatientID" type="string" />
 
 <listing name="Listing" 
 fieldList="EncounterNumber,StartDate,LOS" 
@@ -53,6 +57,38 @@ fieldList="EncounterNumber,StartDate,LOS"
 <dimension name="Is Emergency2" displayName="Is Emergency2">
 <hierarchy name="H1">
 <level name="Is Emergency2" displayName="Is Emergency2" sourceExpression='$s(%expression.AScore=3:"Emergency",1:"Not Emergency")' factName="DxIsEmergency2" />
+</hierarchy>
+</dimension>
+
+<dimension name="Discharge Date" displayName="Discharge Date" sourceProperty="EndDate" type="time">
+<hierarchy name="H1">
+<level name="Year Discharged" displayName="Year Discharged" timeFunction="Year" />
+<level name="Month Discharged" displayName="Month Discharged" timeFunction="MonthYear" />
+<level name="Day Discharged" displayName="Day Discharged" timeFunction="DayMonthYear" />
+</hierarchy>
+</dimension>
+
+<dimension name="Discharge Location" displayName="Discharge Location">
+<hierarchy name="H1">
+<level name="Discharge Location" displayName="Discharge Location" sourceProperty="DischargeLocation" />
+</hierarchy>
+</dimension>
+
+<dimension name="Admission Source" displayName="Admission Source">
+<hierarchy name="H1">
+<level name="Admission Source" displayName="Admission Source" sourceExpression='1||##class("AdmissionSource",%source.AdmissionSource)' />
+</hierarchy>
+</dimension>
+
+<dimension name="Encounter Type" displayName="Encounter Type" disabled='true'>
+<hierarchy name="H1">
+<level name="Encounter Type" displayName="Encounter Type" sourceProperty="EncounterType" rangeExpression="E:Emergency;I:Inpatient;O:Outpatient;" />
+</hierarchy>
+</dimension>
+
+<dimension name="Age Discharged" displayName="Age Discharged">
+<hierarchy name="H1">
+<level name="Age Discharged" displayName="Age Discharged" sourceExpression="%expression.AgeDischarged"  />
 </hierarchy>
 </dimension>
 

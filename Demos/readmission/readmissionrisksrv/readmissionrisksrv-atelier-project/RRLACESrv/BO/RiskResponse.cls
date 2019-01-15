@@ -1,10 +1,16 @@
-Class RRLACESrv.BO.RiskResponse extends Ens.Response [ ProcedureBlock ]
+Class RRLACESrv.BO.RiskResponse Extends Ens.Response [ ProcedureBlock ]
 {
-property RiskScore as %Integer;
-property LScore as %Integer;
-property AScore as %Integer;
-property CScore as %Integer;
-property EScore as %Integer;
+
+Property RiskScore As %Integer;
+
+Property LScore As %Integer;
+
+Property AScore As %Integer;
+
+Property CScore As %Integer;
+
+Property EScore As %Integer;
+
 Storage Default
 {
 <Data name="RiskResponseDefaultData">

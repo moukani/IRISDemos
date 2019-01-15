@@ -1,11 +1,11 @@
 Class IRISDemo.Data.Patient.Diagnosis Extends %Persistent
 {
 
-Property OnsetDate As %Date(FORMAT=3);
+Property OnsetDate As %Date(FORMAT = 3);
 
-Property PatientID As %String[Required];
+Property PatientID As %String [ Required ];
 
-Property ToDate As %Date(FORMAT=3);
+Property ToDate As %Date(FORMAT = 3);
 
 Property Code As %String;
 
@@ -15,7 +15,7 @@ Property EnteredBy As %String;
 
 Property Status As %String;
 
-Property EncounterNumber As %String[Required];
+Property EncounterNumber As %String [ Required ];
 
 Property ComorbidityID As %Integer;
 

@@ -16,6 +16,8 @@ Class IRISDemo.Data.Utils
 			set tSC = ..LoadPatientDiagnoses("/tmp/patient_diagnoses.csv") if $$$ISERR(tSC) quit
 			set tSC = ..LoadPatientEncounters("/tmp/patient_encounters.csv") if $$$ISERR(tSC) quit
 			
+			set tSC = ##class(%DeepSee.Utils).%BuildCube("LACE",1,0)
+			
 			write !!,"Loading demo data finished",!!
 		}
 		catch(objException) {
@@ -467,4 +469,22 @@ Class IRISDemo.Data.Utils
 
 		Do oFile.%Close()
 	}
+classmethod AddDischarge()
+{
+	set x=$increment(x),loc(x)="Home"
+	set x=$increment(x),loc(x)="Skilled Nursing Facility"
+	set x=$increment(x),loc(x)="Assisted Living Community"
+	set x=$increment(x),loc(x)="Rehab Hospital"
+	for i = 1:1 {
+		set obj = ##class(IRISDemo.Data.Patient.Encounter).%OpenId(i,,.tSC)
+		if 'tSC quit
+		w $j(i,10)
+		if obj.DischargeLocation = "" {
+			set y=$r(x)+1
+			set loc = loc(y)
+			set obj.DischargeLocation = loc
+			do obj.%Save()
+		}
+	}
+}
 }

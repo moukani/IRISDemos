@@ -24,12 +24,14 @@ XData ProductionDefinition
   </Item>
   <Item Name="IRISDemo.BP.LACE.Process" Category="" ClassName="IRISDemo.BP.LACE.Process" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
   </Item>
-  <Item Name="IRISDemo.BO.Email.Operation" Category="" ClassName="IRISDemo.BO.Email.Operation" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
-  </Item>
   <Item Name="HIS HL7v2 TCP Feed" Category="" ClassName="EnsLib.HL7.Service.TCPService" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
-    <Setting Target="Adapter" Name="Port">9090</Setting>
+    <Setting Target="Adapter" Name="Port">9999</Setting>
     <Setting Target="Host" Name="MessageSchemaCategory">2.5</Setting>
     <Setting Target="Host" Name="TargetConfigNames">HIS HL7v2 File Feed_Router</Setting>
+    <Setting Target="Adapter" Name="LocalInterface">127.0.0.1 (any IPv4)</Setting>
+    <Setting Target="Adapter" Name="ReadTimeout">15</Setting>
+  </Item>
+  <Item Name="IRISDemo.BO.Email.Operation" Category="" ClassName="IRISDemo.BO.Email.Operation" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
   </Item>
 </Production>
 }
