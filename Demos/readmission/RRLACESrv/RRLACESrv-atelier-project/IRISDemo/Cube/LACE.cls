@@ -76,11 +76,11 @@ fieldList="EncounterNumber,StartDate,LOS"
 
 <dimension name="Admission Source" displayName="Admission Source">
 <hierarchy name="H1">
-<level name="Admission Source" displayName="Admission Source" sourceExpression='1||##class("AdmissionSource",%source.AdmissionSource)' />
+<level name="Admission Source" displayName="Admission Source" sourceExpression='##class(%DeepSee.TermList).%Lookup("AdmissionSource",%source.AdmissionSource)' />
 </hierarchy>
 </dimension>
 
-<dimension name="Encounter Type" displayName="Encounter Type" disabled='true'>
+<dimension name="Encounter Type" displayName="Encounter Type">
 <hierarchy name="H1">
 <level name="Encounter Type" displayName="Encounter Type" sourceProperty="EncounterType" rangeExpression="E:Emergency;I:Inpatient;O:Outpatient;" />
 </hierarchy>
