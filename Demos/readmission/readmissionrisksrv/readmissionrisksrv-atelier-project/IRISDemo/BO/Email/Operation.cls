@@ -26,6 +26,7 @@ Method Send(pRequest As IRISDemo.Message.EmailRequest, Output pResponse As Ens.R
 	set objMessage.Subject = pRequest.Subject
 	set objMessage.TextData = pRequest.MessageText
 	set objMessage.To = pRequest.To
+	// Nothing to send it to yet so just ignore
 	//set tSC = ..Adapter.SendMail(objMessage)
 	Quit tSC
 }

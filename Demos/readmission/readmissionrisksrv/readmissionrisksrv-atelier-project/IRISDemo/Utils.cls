@@ -24,27 +24,30 @@ classmethod OutputHL7(PatientID as %String,Type as %String,admitDate as %String,
 	set encNum = "IRISDemo_"_PatientID_"_1"
 	
 	do {
+		// Create the MSH segment
 		set objMSH = ##class(EnsLib.HL7.Segment).%New()
 		set tSC = objMSH.SetValueAt("MSH",0) if $$$ISERR(tSC) quit
 		set tSC = objMSH.SetValueAt("|",1) if $$$ISERR(tSC) quit
 		set tSC = objMSH.SetValueAt("^~\&",2) if $$$ISERR(tSC) quit
 		set tSC = objMSH.SetValueAt("DEMO",3) if $$$ISERR(tSC) quit
 		set tSC = objMSH.SetValueAt("DEMO",4) if $$$ISERR(tSC) quit
-
 		set tSC = objMSH.SetValueAt(dischargeDate,7) if $$$ISERR(tSC) quit
 		set tSC = objMSH.SetValueAt(msgCode,9.1) if $$$ISERR(tSC) quit
 		set tSC = objMSH.SetValueAt(trgEvent,9.2) if $$$ISERR(tSC) quit
 		set tSC = objMSH.SetValueAt("2.5",12) if $$$ISERR(tSC) quit
-	
+
+		// Create the EVN segment
 		set objEVN = ##class(EnsLib.HL7.Segment).%New()
 		set tSC = objEVN.SetValueAt("EVN",0) if $$$ISERR(tSC) quit
 		set tSC = objEVN.SetValueAt(dischargeDate,2) if $$$ISERR(tSC) quit
 		set tSC = objEVN.SetValueAt("EVN",0) if $$$ISERR(tSC) quit
-	
+
+		// Create the PID segment
 		set objPID = ##class(EnsLib.HL7.Segment).%New()
 		set tSC = objPID.SetValueAt("PID",0) if $$$ISERR(tSC) quit
 		set tSC = objPID.SetValueAt(PatientID,2) if $$$ISERR(tSC) quit
 		
+		// Create the PV1 segment
 		set objPV1 = ##class(EnsLib.HL7.Segment).%New()
 		set tSC = objPV1.SetValueAt("PV1",0) if $$$ISERR(tSC) quit
 		set tSC = objPV1.SetValueAt(encounterType,2) if $$$ISERR(tSC) quit
@@ -54,24 +57,33 @@ classmethod OutputHL7(PatientID as %String,Type as %String,admitDate as %String,
 		set tSC = objPV1.SetValueAt(dischargeLocation,37) if $$$ISERR(tSC) quit
 		set tSC = objPV1.SetValueAt(admitDate,44) if $$$ISERR(tSC) quit
 		set tSC = objPV1.SetValueAt(dischargeDate,45) if $$$ISERR(tSC) quit
-		
+
+		// Put the segments into the message
 		set tSC = objMsg.SetSegmentAt(objMSH,1) if $$$ISERR(tSC) quit
 		set tSC = objMsg.SetSegmentAt(objEVN,2) if $$$ISERR(tSC) quit
 		set tSC = objMsg.SetSegmentAt(objPID,3) if $$$ISERR(tSC) quit
 		set tSC = objMsg.SetSegmentAt(objPV1,4) if $$$ISERR(tSC) quit
 	}
 	while 0
-	
-	if Type = "F" {
-		if '$data(directory) set directory = "/hl7files/in/"
-		set file = directory_"IRISDemo.hl7"
-		// Delete any existing files first
-		do ##class(%Library.File).Delete(file)
-		// Output the file
-		do objMsg.OutputToFile(file)
-	}
-	elseif Type = "T" {
-		//todo
+
+	if tSC {
+		// If everything worked so far
+		if Type = "F" {
+			// Create a file
+			if '$data(directory) set directory = "/hl7files/in/"
+			set file = directory_"IRISDemo.hl7"
+			// Delete any existing files first
+			do ##class(%Library.File).Delete(file)
+			// Output the file
+			do objMsg.OutputToFile(file)
+		}
+		elseif Type = "T" {
+			// Output to a TCP port on the readmissionsrisksrv
+			set dev = "|TCP|9090"
+			open dev:("readmissionrisksrv":9090)
+			use dev
+			set tSC = objMsg.OutputToDevice()
+		}
 	}
 	
 	quit tSC

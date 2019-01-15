@@ -1,3 +1,4 @@
+/// Index of comorbities index by ICD code
 Class IRISDemo.Data.ComorbidityIndex Extends %Persistent
 {
 property ICDCode as %String;
