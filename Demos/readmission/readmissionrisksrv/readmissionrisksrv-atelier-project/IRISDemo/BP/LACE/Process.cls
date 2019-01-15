@@ -73,7 +73,7 @@ XData BPL [ XMLNamespace = "http://www.intersystems.com/bpl" ]
 <assign property="callrequest.From" value="&quot;IRISDemo&quot;" action="set" />
 <assign property="callrequest.Subject" value="&quot;LACE readmission alert&quot;" action="set" />
 <assign property="callrequest.To" value="&quot;readmission.alert@healthcare.med&quot;" action="set" />
-<assign property="callrequest.MessageText" value="&quot;Patient '&quot;_context.PatientID_&quot;' has just been discharged to '&quot;_context.DischargeLocation_&quot;' and has a &quot;_$select(context.RiskScore&gt;9:&quot;high&quot;,1:&quot;moderate&quot;)_&quot; risk of readmission&quot;_$char(13,10)_&quot;The scores are as follows:&quot;_$char(13,10)_&quot;Risk Score: &quot;_context.RiskScore_$char(13,10)_&quot;'L' Score (Length of stay): &quot;_context.LScore_$char(13,10)_&quot;'A' Score (Acuity): &quot;_context.AScore_$char(13,10)_&quot;'C' Score: &quot;_context.CScore_$char(13,10)_&quot;'E' Score: &quot;_context.EScore" action="set" />
+<assign property="callrequest.MessageText" value="&quot;Patient '&quot;_context.PatientID_&quot;' has just been discharged to '&quot;_context.DischargeLocation_&quot;' and has a &quot;_$select(context.RiskScore&gt;9:&quot;high&quot;,1:&quot;moderate&quot;)_&quot; risk of readmission&quot;_$char(13,10)_&quot;The scores are as follows:&quot;_$char(13,10)_&quot;Risk Score: &quot;_context.RiskScore_$char(13,10)_&quot;'L' Score (Length of stay): &quot;_context.LScore_$char(13,10)_&quot;'A' Score (Acuity): &quot;_context.AScore_$char(13,10)_&quot;'C' Score (Comorbidity): &quot;_context.CScore_$char(13,10)_&quot;'E' Score (Emergency department visits): &quot;_context.EScore" action="set" />
 </request>
 <response type='Ens.Response' />
 </call>

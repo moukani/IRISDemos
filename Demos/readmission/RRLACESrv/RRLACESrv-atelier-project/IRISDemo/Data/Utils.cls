@@ -15,6 +15,7 @@ Class IRISDemo.Data.Utils
 			set tSC = ..LoadPatientDemographics("/tmp/patient_demographics.csv") if $$$ISERR(tSC) quit
 			set tSC = ..LoadPatientDiagnoses("/tmp/patient_diagnoses.csv") if $$$ISERR(tSC) quit
 			set tSC = ..LoadPatientEncounters("/tmp/patient_encounters.csv") if $$$ISERR(tSC) quit
+			set tSC = ..LoadTermList("/tmp/termlist_admissionsource.csv") if $$$ISERR(tSC) quit
 			
 			set tSC = ##class(%DeepSee.Utils).%BuildCube("LACE",1,0)
 			
@@ -146,7 +147,17 @@ Class IRISDemo.Data.Utils
 		}
 		quit tSC
 	}
-	
+	classmethod LoadTermList(fileName as %String)
+	{
+		try {
+			set tSC = ##class(%DeepSee.TermList).%ImportCSV(fileName,,1)
+		}
+		catch(objException)
+		{
+			set tSC = objException.AsStatus()
+		}
+		quit tSC
+	}
 	/// Pick the patients we want to use on the demo and give them fixed names
 	ClassMethod UpdateDemoPatients() as %Status
 	{
@@ -469,22 +480,4 @@ Class IRISDemo.Data.Utils
 
 		Do oFile.%Close()
 	}
-classmethod AddDischarge()
-{
-	set x=$increment(x),loc(x)="Home"
-	set x=$increment(x),loc(x)="Skilled Nursing Facility"
-	set x=$increment(x),loc(x)="Assisted Living Community"
-	set x=$increment(x),loc(x)="Rehab Hospital"
-	for i = 1:1 {
-		set obj = ##class(IRISDemo.Data.Patient.Encounter).%OpenId(i,,.tSC)
-		if 'tSC quit
-		w $j(i,10)
-		if obj.DischargeLocation = "" {
-			set y=$r(x)+1
-			set loc = loc(y)
-			set obj.DischargeLocation = loc
-			do obj.%Save()
-		}
-	}
-}
 }
