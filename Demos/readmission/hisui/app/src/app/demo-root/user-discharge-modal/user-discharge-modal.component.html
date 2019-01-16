@@ -1,11 +1,3 @@
-<ngx-spinner
-  bdColor="rgba(51,51,51,0.8)"
-  size="medium"
-  color="#673ab7"
-  type="ball-atom">
-  <p style="font-size: 20px; color: white">Discharging {{shallowUserDataCopy.firstName}}</p>>
-</ngx-spinner>
-
 <div class="discharge-modal-wrapper">
   <div class="modal-flex-item user-image-wrapper">
     <i class="material-icons modal-user-icon">account_circle</i>
@@ -19,7 +11,7 @@
   </div>
 
   <div class="modal-flex-item selection-button-wrapper">
-    <button mat-button color="primary" (click)="dischargePatient()">Discharge</button>
+    <button mat-button *ngIf="allowDischarge" color="primary" (click)="dischargePatient()">Discharge</button>
     <button mat-button color="warn" (click)="onNoClick()">Cancel</button>
   </div>
 </div>

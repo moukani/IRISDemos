@@ -17,7 +17,7 @@ export class AdmissionSearchTableComponent implements OnInit, OnChanges {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  displayedColumns: string[] = ['Admission Number', 'First Name', 'Last Name', 'Medical Record Number', 'Specialty', 'Admitted On'];
+  displayedColumns: string[] = ['Admission Number', 'Medical Record Number', 'First Name', 'Last Name', 'Date Of Birth', 'Gender', 'Admitted', 'Discharged', 'Admission Status'];
   dataSource: MatTableDataSource<EMRUser>;
 
   constructor() {
@@ -39,6 +39,7 @@ export class AdmissionSearchTableComponent implements OnInit, OnChanges {
       } else {
         if(propName === 'patientList'){
           this.dataSource = new MatTableDataSource(changedProp.currentValue);
+          this.dataSource.paginator = this.paginator;
           log.push(to);
         }else{
           console.log("Something Else Changed");
