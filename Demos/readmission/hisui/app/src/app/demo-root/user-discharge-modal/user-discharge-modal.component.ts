@@ -10,6 +10,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 
 export interface DialogData {
   user: EMRUser;
+  discharge: any
 }
 
 @Component({
@@ -20,6 +21,7 @@ export interface DialogData {
 export class UserDischargeModalComponent implements OnInit {
 
   shallowUserDataCopy: EMRUser;
+  allowDischarge: boolean;
 
   constructor(
     private spinner: NgxSpinnerService,
@@ -28,7 +30,7 @@ export class UserDischargeModalComponent implements OnInit {
 
       /*Creating a shallow copy for editing in the dialog while still Keeping it as the correct class type*/
       this.shallowUserDataCopy = Object.assign( Object.create( Object.getPrototypeOf(data.user)), data.user)
-
+      this.allowDischarge = this.shallowUserDataCopy.encounterStatus !== "D";
     }
 
   onNoClick(): void {
@@ -36,12 +38,7 @@ export class UserDischargeModalComponent implements OnInit {
   }
 
   dischargePatient(): void {
-    this.spinner.show();
-    setTimeout(() => {
-        /** spinner ends after 5 seconds */
-        this.spinner.hide();
-        this.onNoClick();
-    }, 5000);
+    this.data.discharge(this.shallowUserDataCopy);
   }
 
   ngOnInit() {}

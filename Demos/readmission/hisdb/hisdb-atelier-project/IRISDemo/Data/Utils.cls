@@ -41,9 +41,9 @@ Class IRISDemo.Data.Utils
 			
 			Set objEncounter.Patient=objPatient
 			Set objPatient.DoB=objRs.Get("DoB")
-			Set objPatient.FirstName=objRs.Get("FirstName")
+			Set objPatient.FirstName=objRs.Get("Firstname")
 			Set objPatient.Gender=objRs.Get("Gender")
-			Set objPatient.LastName=objRs.Get("LastName")
+			Set objPatient.LastName=objRs.Get("Lastname")
 			
 			Set tSC = objEncounter.%Save()
 			$$$ThrowStatusExceptionIfError(tSC, "EncounterSaveException")

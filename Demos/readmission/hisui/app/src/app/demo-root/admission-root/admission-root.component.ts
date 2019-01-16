@@ -14,15 +14,14 @@ import {UserDischargeModalComponent} from '../user-discharge-modal/user-discharg
 })
 export class AdmissionRootComponent implements OnInit {
 
-  requestNum = 0;
   userSearchRequest: UserSearchRequest = new UserSearchRequest();
-  dischargeRequest: DischargeRequest = new DischargeRequest();
-  currentlySelectedUser: EMRUser;
+  currentlySelectedUser: EMRUser = this.IPS.getEmpyUser();
   patientList: EMRUser[] = [];
 
   /*Binding any methods that are shared with children so they may be called in the parent context*/
   sharedUserSearch = this.searchPatients.bind(this);
   sharedDialogOpen = this.openDialog.bind(this);
+  sharedDischargePatient = this.dischargePatient.bind(this);
 
   constructor(
     private IPS: IrisPatientService,
@@ -35,25 +34,61 @@ export class AdmissionRootComponent implements OnInit {
     this.currentlySelectedUser = selectedUser;
     const dialogRef = this.dialog.open(UserDischargeModalComponent, {
       width: '400px',
-      data: {user: this.currentlySelectedUser}
+      data: {user: this.currentlySelectedUser, discharge: this.sharedDischargePatient}
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      this.currentlySelectedUser = null;
+      this.currentlySelectedUser = this.IPS.getEmpyUser();
       console.log('The dialog was closed');
       console.log('Currently Selected User', this.currentlySelectedUser);
     });
   }
 
-  searchPatients(): any {
+  searchPatients(): void {
     console.log("searching Users", this.userSearchRequest);
-    if(this.requestNum % 2 === 0){
-      this.patientList = this.IPS.sp1(this.userSearchRequest);
-    }else{
-      this.patientList = this.IPS.sp2(this.userSearchRequest);
-    }
-    this.requestNum ++;
+    this.IPS.searchForUser(
+      this.userSearchRequest.MRN,
+      this.userSearchRequest.firstName,
+      this.userSearchRequest.lastName).subscribe( res =>{
+          try{
+            if(res && res.requestResult && res.encounters){
+              if(res.requestResult.status === "OK"){
+                this.patientList = res.encounters.map(this.IPS.EMRUserBuilder);
+              }
+            }
+          }catch(err){
+            console.log("error transforming encounter data: ", err);
+          }
+        },
+        (err) => {console.log("Error Loading User List: ", err);});
   }
 
+  dischargePatient(patient: EMRUser): void {
+    console.log("dischargingPatient: ", this.currentlySelectedUser);
 
+    const dischargeRequest = new DischargeRequest(
+      patient.firstName,
+      patient.lastName,
+      patient.MRN,
+      patient.encounterNumber);
+
+    this.spinner.show();
+    this.IPS.dischargePatient(dischargeRequest).subscribe(res => {
+      this.spinner.hide();
+      try{
+        if(res && res.requestResult){
+          if(res.requestResult.status === "OK"){
+            this.dialog.closeAll();
+          }
+        }
+      }catch(err){
+        this.spinner.hide();
+        console.log("issue discharing error closing dialog: ", err);
+      }
+    },
+    (err) => {
+      console.log("Error Discharging User: ", err)
+      this.spinner.hide();
+    })
+  }
 }

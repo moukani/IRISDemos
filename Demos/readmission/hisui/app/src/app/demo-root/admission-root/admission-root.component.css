@@ -7,9 +7,10 @@
 .side-form-container{
   grid-column-start: 1;
   grid-column-end: 2;
-  padding: 5%;
+  padding: 8%;
   border-right: 2px solid;
   border-right-color: #673ab7;
+  box-sizing: content-box;
 }
 
 .table-container{

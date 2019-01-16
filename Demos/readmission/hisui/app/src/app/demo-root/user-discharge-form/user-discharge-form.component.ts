@@ -30,8 +30,8 @@ export class UserDischargeFormComponent implements OnInit {
   constructor() {}
 
   ngOnInit() {
-    if(this.user.admissionEndDate === null){
-      this.user.admissionEndDate = new Date();
+    if(this.user.endDate === null){
+      this.user.endDate = new Date();
     }
   }
 
