@@ -19,4 +19,5 @@ RUN /usr/irissys/demo/irisdemoinstaller.sh && \
     rm /tmp/ComorbidityIndexMapping.csv && \
     rm /tmp/patient_demographics.csv && \
     rm /tmp/patient_encounters.csv && \
-    rm /tmp/patient_diagnoses.csv
+    rm /tmp/patient_diagnoses.csv && \
+    rm /tmp/termlist_admissionsource.csv

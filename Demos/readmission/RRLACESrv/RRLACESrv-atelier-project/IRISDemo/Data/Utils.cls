@@ -16,8 +16,9 @@ Class IRISDemo.Data.Utils
 			set tSC = ..LoadPatientDiagnoses("/tmp/patient_diagnoses.csv") if $$$ISERR(tSC) quit
 			set tSC = ..LoadPatientEncounters("/tmp/patient_encounters.csv") if $$$ISERR(tSC) quit
 			set tSC = ..LoadTermList("/tmp/termlist_admissionsource.csv") if $$$ISERR(tSC) quit
+			set tSC = ..UpdateDemoPatients() if $$$ISERR(tSC) quit
 			
-			set tSC = ##class(%DeepSee.Utils).%BuildCube("LACE",1,0)
+			set tSC = ##class(%DeepSee.Utils).%BuildCube("LACE",0,0)
 			
 			write !!,"Loading demo data finished",!!
 		}
@@ -176,7 +177,7 @@ Class IRISDemo.Data.Utils
 			// First - a very sick patient
 			set objPat = ##class(IRISDemo.Data.Patient.Demographics).%New()
 			set objPat.PatientID = "900001"
-			set objPat.DoB = $zdateh("1950-02-03",3)
+			set objPat.DoB = $zdateh("1950-02-03",3) + ..#DATEWINDOW
 			set objPat.PostalCode = "02142"
 			set objPat.Gender = "M"
 			set objPat.Firstname = "Frederick"
@@ -326,7 +327,7 @@ Class IRISDemo.Data.Utils
 			// Now a fairly sick patient
 			set objPat = ##class(IRISDemo.Data.Patient.Demographics).%New()
 			set objPat.PatientID = "900002"
-			set objPat.DoB = $zdateh("1944-07-21",3)
+			set objPat.DoB = $zdateh("1944-07-21",3) + ..#DATEWINDOW
 			set objPat.PostalCode = "02142"
 			set objPat.Gender = "F"
 			set objPat.Firstname = "Katherine"
@@ -342,6 +343,7 @@ Class IRISDemo.Data.Utils
 			set objEnc.EndDate = $zdateh("2018-10-25",3) + ..#DATEWINDOW
 			set objEnc.EndTime = $ztimeh("17:00")
 			set objEnc.AdmissionSource = "ED"
+			set objEnc.DischargeLocation = "Home"
 			set tSC = objEnc.%Save() if $$$ISERR(tSC) quit
 			// Encounter #2
 			set objEnc = ##class(IRISDemo.Data.Patient.Encounter).%New()
@@ -353,6 +355,7 @@ Class IRISDemo.Data.Utils
 			set objEnc.EndDate = $zdateh("2018-11-10",3) + ..#DATEWINDOW
 			set objEnc.EndTime = $ztimeh("17:00")
 			set objEnc.AdmissionSource = "ED"
+			set objEnc.DischargeLocation = "Home"
 			set tSC = objEnc.%Save() if $$$ISERR(tSC) quit
 			set objDgn = ##class(IRISDemo.Data.Patient.Diagnosis).%New()
 			set objDgn.PatientID = objPat.PatientID
@@ -373,6 +376,7 @@ Class IRISDemo.Data.Utils
 			set objEnc.EndDate = $zdateh("2018-11-10",3) + ..#DATEWINDOW
 			set objEnc.EndTime = $ztimeh("17:00")
 			set objEnc.AdmissionSource = "ED"
+			set objEnc.DischargeLocation = "Home"
 			set tSC = objEnc.%Save() if $$$ISERR(tSC) quit
 			set objDgn = ##class(IRISDemo.Data.Patient.Diagnosis).%New()
 			set objDgn.PatientID = objPat.PatientID
@@ -387,7 +391,7 @@ Class IRISDemo.Data.Utils
 			// Now a fairly healthy patient
 			set objPat = ##class(IRISDemo.Data.Patient.Demographics).%New()
 			set objPat.PatientID = "900003"
-			set objPat.DoB = $zdateh("1971-08-18",3)
+			set objPat.DoB = $zdateh("1971-08-18",3) + ..#DATEWINDOW
 			set objPat.PostalCode = "02142"
 			set objPat.Gender = "M"
 			set objPat.Firstname = "James"
@@ -403,6 +407,7 @@ Class IRISDemo.Data.Utils
 			set objEnc.EndDate = $zdateh("2018-09-12",3) + ..#DATEWINDOW
 			set objEnc.EndTime = $ztimeh("17:00")
 			set objEnc.AdmissionSource = "ED"
+			set objEnc.DischargeLocation = "Home"
 			set tSC = objEnc.%Save() if $$$ISERR(tSC) quit
 			set objDgn = ##class(IRISDemo.Data.Patient.Diagnosis).%New()
 			set objDgn.PatientID = objPat.PatientID
@@ -423,6 +428,7 @@ Class IRISDemo.Data.Utils
 			set objEnc.EndDate = $zdateh("2018-11-09",3) + ..#DATEWINDOW
 			set objEnc.EndTime = $ztimeh("17:00")
 			set objEnc.AdmissionSource = "GA"
+			set objEnc.DischargeLocation = "Home"
 			set tSC = objEnc.%Save() if $$$ISERR(tSC) quit
 		}
 		catch(objException)
@@ -440,7 +446,7 @@ Class IRISDemo.Data.Utils
 		#Dim oResultMetadata As %SQL.StatementMetadata
 		#Dim oColumn As %SQL.StatementColumn
 		
-		Do ..UpdateDemoPatients()
+		//Do ..UpdateDemoPatients()
 		
 		set rsEncounters = ##class(%SQL.Statement).%ExecDirect(,"select p.PatientID, p.DoB, p.Firstname, p.Lastname, p.Gender, e. EncounterNumber, e.EncounterType, e.StartDate, e.StartTime, e.EndDate, e.EndTime "_
 																"from IRISDemo_Data_Patient.Encounter e,  "_

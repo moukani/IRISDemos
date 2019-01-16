@@ -108,6 +108,22 @@ ClassMethod GetEScore(pEncounterID As IRISDemo.Data.Patient.Encounter) As %Integ
 }
 classmethod GetAgeAtDischarge(pEncounterID As IRISDemo.Data.Patient.Encounter) As %Integer
 {
-	quit $r(50)+20
+	set age = ""
+	
+	try {
+		set objEnc = ##class(IRISDemo.Data.Patient.Encounter).%OpenId(pEncounterID,0,.tSC) if $$$ISERR(tSC) quit
+		set patientId = objEnc.PatientID
+		set objSQL = ##class(%SQL.Statement).%ExecDirect(,"select ID from IRISDemo_Data_Patient.Demographics where PatientID = '"_patientId_"'")
+		if objSQL.%Next()
+		{
+			set patId = objSQL.%Get("ID")
+			set objPat = ##class(IRISDemo.Data.Patient.Demographics).%OpenId(patId,0,.tSC)
+			set age = $justify((objEnc.EndDate - objPat.DoB)/365.25,0,0)
+		}
+	}
+	catch(objException)
+	{
+	}
+	quit age
 }
 }
