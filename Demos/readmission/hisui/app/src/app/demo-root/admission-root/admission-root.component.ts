@@ -38,7 +38,6 @@ export class AdmissionRootComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      this.currentlySelectedUser = this.IPS.getEmpyUser();
       console.log('The dialog was closed');
       console.log('Currently Selected User', this.currentlySelectedUser);
     });
@@ -54,6 +53,7 @@ export class AdmissionRootComponent implements OnInit {
     });
 
     if (dischargedPatient){
+      dischargedPatient.endDate = new Date();
       dischargedPatient.encounterStatus = "D";
     }
   }
@@ -85,18 +85,21 @@ export class AdmissionRootComponent implements OnInit {
       patient.firstName,
       patient.lastName,
       patient.MRN,
-      patient.encounterNumber);
+      patient.encounterId,
+      patient.dischargeDestination);
 
     this.spinner.show();
+    this.dialog.closeAll();
     this.IPS.dischargePatient(dischargeRequest).subscribe(res => {
-      this.spinner.hide();
       try{
-        if(res && res.requestResult){
-          if(res.requestResult.status === "OK"){
-            this.clearDischargedPatient(patient.encounterNumber);
-            this.dialog.closeAll();
+        setTimeout(() => { /*Adding in so dischrge spinner can display to users*/
+          this.spinner.hide();
+          if(res && res.requestResult){
+            if(res.requestResult.status === "OK"){
+              this.clearDischargedPatient(patient.encounterNumber);
+            }
           }
-        }
+        }, 2000);
       }catch(err){
         this.spinner.hide();
         console.log("issue discharing error closing dialog: ", err);

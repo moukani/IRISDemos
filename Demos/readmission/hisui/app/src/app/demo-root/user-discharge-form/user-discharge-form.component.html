@@ -48,9 +48,9 @@
     </div>
     <div>
       <mat-form-field>
-        <mat-select placeholder="Discharge Type" [compareWith]="compareFn" [(ngModel)]="user.dischargeType" name="dischargeType">
-          <mat-option *ngFor="let dtype of dtypes" [value]="dtype">
-            {{dtype}}
+        <mat-select placeholder="Discharge Type" [compareWith]="compareFn" [(ngModel)]="user.dischargeDestination" name="dischargeType">
+          <mat-option *ngFor="let dtype of dtypes" [value]="dtype.value">
+            {{dtype.viewValue}}
           </mat-option>
         </mat-select>
       </mat-form-field>
