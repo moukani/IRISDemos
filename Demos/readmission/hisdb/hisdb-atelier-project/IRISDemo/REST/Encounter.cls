@@ -66,6 +66,7 @@ Class IRISDemo.REST.Encounter Extends %CSP.REST
 			Set MRN = %request.Get("MRN")
 			Set firstName = %request.Get("firstName")
 			Set lastName = %request.Get("lastName")
+			Set encounterNumber = %request.Get("encounterNumber")
 			
 			// Configuring response type to JSON
 			Set %response.ContentType=..#CONTENTTYPEJSON
@@ -99,6 +100,12 @@ Class IRISDemo.REST.Encounter Extends %CSP.REST
 			If lastName'=""
 			{
 				Set tSQL=tSQL_$Select(bHasWhereClause:" and ",1:" where ")_" Patient->LastName %StartsWith '"_lastName_"'"
+			}
+			
+			Set encounterNumber=$Translate(encounterNumber,"'","")
+			If encounterNumber'=""
+			{
+				Set tSQL=tSQL_$Select(bHasWhereClause:" and ",1:" where ")_" EncounterNumber %StartsWith '"_encounterNumber_"'"
 			}
 			
 			Set oRS = ##class(%SQL.Statement).%ExecDirect(, tSQL)

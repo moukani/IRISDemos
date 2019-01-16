@@ -44,16 +44,31 @@ export class AdmissionRootComponent implements OnInit {
     });
   }
 
+  admissionSort(a: any, b: any): number {
+    return (b.startDate - a.startDate);
+  }
+
+  clearDischargedPatient(encounterNumber: string): void {
+    let dischargedPatient: EMRUser = this.patientList.find( rec =>{
+      return rec.encounterNumber === encounterNumber;
+    });
+
+    if (dischargedPatient){
+      dischargedPatient.encounterStatus = "D";
+    }
+  }
+
   searchPatients(): void {
     console.log("searching Users", this.userSearchRequest);
     this.IPS.searchForUser(
       this.userSearchRequest.MRN,
       this.userSearchRequest.firstName,
-      this.userSearchRequest.lastName).subscribe( res =>{
+      this.userSearchRequest.lastName,
+      this.userSearchRequest.encounterNumber).subscribe( res =>{
           try{
             if(res && res.requestResult && res.encounters){
               if(res.requestResult.status === "OK"){
-                this.patientList = res.encounters.map(this.IPS.EMRUserBuilder);
+                this.patientList = res.encounters.map(this.IPS.EMRUserBuilder).sort(this.admissionSort);
               }
             }
           }catch(err){
@@ -78,6 +93,7 @@ export class AdmissionRootComponent implements OnInit {
       try{
         if(res && res.requestResult){
           if(res.requestResult.status === "OK"){
+            this.clearDischargedPatient(patient.encounterNumber);
             this.dialog.closeAll();
           }
         }

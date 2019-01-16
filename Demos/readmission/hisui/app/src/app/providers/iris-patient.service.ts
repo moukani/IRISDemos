@@ -153,11 +153,12 @@ export class IrisPatientService {
     )
   }
 
-  searchForUser(MRN: string, firstName: string, lastName: string): Observable<any>{
+  searchForUser(MRN: string, firstName: string, lastName: string, encounterNumber: string): Observable<any>{
 
     const header = this.getAuthHeader();
     const params = new HttpParams()
       .set("MRN", MRN || "")
+      .set("encounterNumber", encounterNumber || "")
       .set("firstName", firstName || "")
       .set("lastName", lastName || "")
 

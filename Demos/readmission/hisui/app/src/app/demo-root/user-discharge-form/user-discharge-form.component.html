@@ -32,7 +32,7 @@
     </div>
     <div>
       <mat-form-field>
-        <input matInput [matDatepicker]="picker1" placeholder="Admission Start Date" [(ngModel)]="user.startDate" name="admissionStartDate">
+        <input matInput disabled [matDatepicker]="picker1" placeholder="Admission Start Date" [(ngModel)]="user.startDate" name="admissionStartDate">
         <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
           <mat-datepicker #picker1>
         </mat-datepicker>
