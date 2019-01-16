@@ -18,6 +18,7 @@ export class EMRUser {
   encounterType: string;
   dischargeDestination: string;
   gender: string;
+  encounterId: string;
 
   prettyPrintDate(dateForConversion: Date): string{
 
@@ -45,7 +46,8 @@ export class EMRUser {
     encounterStatus: string,
     encounterType: string,
     dischargeDestination: string,
-    gender: string
+    gender: string,
+    encounterId: string
   ){
     this.firstName = firstName;
     this.lastName = lastName;
@@ -60,6 +62,7 @@ export class EMRUser {
     this.encounterType = encounterType;
     this.dischargeDestination = dischargeDestination;
     this.gender = gender;
+    this.encounterId = encounterId;
   }
 }
 
@@ -84,12 +87,14 @@ export class DischargeRequest {
   lastName: string;
   MRN: string;
   encounterId: string;
+  dischargeDestCode: string;
 
-  constructor(firstName: string, lastName: string, MRN: string, encounterNumber: string){
+  constructor(firstName: string, lastName: string, MRN: string, encounterId: string, dischargeDestCode: string){
     this.firstName = firstName;
     this.lastName = lastName;
     this.MRN = MRN;
-    this.encounterId = encounterNumber;
+    this.encounterId = encounterId;
+    this.dischargeDestCode = dischargeDestCode;
   }
 
 }
@@ -115,12 +120,13 @@ export class IrisPatientService {
       conversionObj.EncounterStatus,
       conversionObj.EncounterType,
       conversionObj.DischargeDestination,
-      conversionObj.Gender
+      conversionObj.Gender,
+      conversionObj.EncounterID
     );
   }
 
   getEmpyUser(): EMRUser {
-    return new EMRUser("", "", "", "","", "", "", "", "", "", "", "", "");
+    return new EMRUser("", "", "", "","", "", "", "", "", "", "", "", "", "");
   }
 
   getAuthHeader(): HttpHeaders{

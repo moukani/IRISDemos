@@ -22,9 +22,9 @@ export class UserDischargeFormComponent implements OnInit {
   ]
 
   dtypes = [
-    "Home",
-    "ICU",
-    "Deceased"
+    {value: '001', viewValue: 'Home'},
+    {value: '002', viewValue: 'ICU'},
+    {value: '003', viewValue: 'Deceased'}
   ]
 
   constructor() {}
