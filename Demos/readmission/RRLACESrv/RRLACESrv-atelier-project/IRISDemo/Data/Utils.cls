@@ -39,7 +39,7 @@ Class IRISDemo.Data.Utils
 			set objRs = ##class(%Library.ResultSet).%New("IRISDemo.Util.FileReader:CSV")
 
 			Set tSC = objRs.Execute(fileName) 
-			$$$ThrowStatusExceptionIfError(tSC, "LoadIndexDataFileException") quit
+			$$$ThrowStatusExceptionIfError(tSC, "LoadIndexDataFileException")
 		
 			While objRs.Next() 
 			{
@@ -54,7 +54,7 @@ Class IRISDemo.Data.Utils
 				set objIndex.ICDCode = objRs.Get("ICDCode")
 				set objIndex.Index = objRs.Get("CharlsonComorbidityIndex")
 				set objIndex.Comorbidity = objRs.Get("Comorbidity")
-				set tSC = objIndex.%Save() if $$$ISERR(tSC) quit
+				do objIndex.%Save() // Don't care about errors here as we will see the same ICD code many times but only need 1. The unique index will take care of this.
 			}
 		}
 		catch(objException)
@@ -70,7 +70,7 @@ Class IRISDemo.Data.Utils
 			set objRs = ##class(%Library.ResultSet).%New("IRISDemo.Util.FileReader:CSV")
 		
 			Set tSC = objRs.Execute(fileName) 
-			$$$ThrowStatusExceptionIfError(tSC, "LoadIndexDataFileException") quit
+			$$$ThrowStatusExceptionIfError(tSC, "LoadIndexDataFileException")
 		
 			While objRs.Next() 
 			{
@@ -99,7 +99,7 @@ Class IRISDemo.Data.Utils
 			set objRs = ##class(%Library.ResultSet).%New("IRISDemo.Util.FileReader:CSV")
 		
 			Set tSC = objRs.Execute(fileName) 
-			$$$ThrowStatusExceptionIfError(tSC, "LoadIndexDataFileException") quit
+			$$$ThrowStatusExceptionIfError(tSC, "LoadIndexDataFileException")
 		
 			While objRs.Next() 
 			{
@@ -125,7 +125,7 @@ Class IRISDemo.Data.Utils
 			set objRs = ##class(%Library.ResultSet).%New("IRISDemo.Util.FileReader:CSV")
 		
 			Set tSC = objRs.Execute(fileName) 
-			$$$ThrowStatusExceptionIfError(tSC, "LoadIndexDataFileException") quit
+			$$$ThrowStatusExceptionIfError(tSC, "LoadIndexDataFileException")
 		
 			While objRs.Next() 
 			{
@@ -138,6 +138,7 @@ Class IRISDemo.Data.Utils
 				if objRs.Get("EndDate") '= "" set obj.EndDate = $zdateh(objRs.Get("EndDate"),3)+..#DATEWINDOW
 				if objRs.Get("EndTime") '= "" set obj.EndTime = $ztimeh(objRs.Get("EndTime"))
 				set obj.AdmissionSource = objRs.Get("AdmissionSource")
+				set obj.DischargeLocation = objRs.Get("DischargeLocation")
 				if (obj.StartDate '= "")&&(obj.EndDate '= "") set obj.LOS = (obj.EndDate - obj.StartDate)
 				set tSC = obj.%Save() if $$$ISERR(tSC) quit
 			}
