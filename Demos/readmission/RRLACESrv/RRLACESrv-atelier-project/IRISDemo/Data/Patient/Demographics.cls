@@ -1,9 +1,9 @@
 Class IRISDemo.Data.Patient.Demographics Extends %Persistent
 {
 
-Property DoB As %Date(FORMAT=3);
+Property DoB As %Date(FORMAT = 3);
 
-Property PatientID As %String[Required];
+Property PatientID As %String [ Required ];
 
 Property PostalCode As %String;
 
@@ -11,13 +11,17 @@ Property Gender As %String;
 
 Property MaritalStatus As %String;
 
-Property DoD As %Date(FORMAT=3);
+Property DoD As %Date(FORMAT = 3);
 
 Property IsDead As %Boolean [ InitialExpression = 0 ];
-property Firstname as %String;
-property Lastname as %String;
+
+Property Firstname As %String;
+
+Property Lastname As %String;
+
 Index PatientID On PatientID [ Unique ];
-index Name on (Lastname,Firstname,Gender);
+
+Index Name On (Lastname, Firstname, Gender);
 
 Storage Default
 {

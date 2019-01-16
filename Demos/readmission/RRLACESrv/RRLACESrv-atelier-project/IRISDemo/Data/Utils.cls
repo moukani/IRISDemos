@@ -15,6 +15,9 @@ Class IRISDemo.Data.Utils
 			set tSC = ..LoadPatientDemographics("/tmp/patient_demographics.csv") if $$$ISERR(tSC) quit
 			set tSC = ..LoadPatientDiagnoses("/tmp/patient_diagnoses.csv") if $$$ISERR(tSC) quit
 			set tSC = ..LoadPatientEncounters("/tmp/patient_encounters.csv") if $$$ISERR(tSC) quit
+			set tSC = ..LoadTermList("/tmp/termlist_admissionsource.csv") if $$$ISERR(tSC) quit
+			
+			set tSC = ##class(%DeepSee.Utils).%BuildCube("LACE",1,0)
 			
 			write !!,"Loading demo data finished",!!
 		}
@@ -144,7 +147,17 @@ Class IRISDemo.Data.Utils
 		}
 		quit tSC
 	}
-	
+	classmethod LoadTermList(fileName as %String)
+	{
+		try {
+			set tSC = ##class(%DeepSee.TermList).%ImportCSV(fileName,,1)
+		}
+		catch(objException)
+		{
+			set tSC = objException.AsStatus()
+		}
+		quit tSC
+	}
 	/// Pick the patients we want to use on the demo and give them fixed names
 	ClassMethod UpdateDemoPatients() as %Status
 	{

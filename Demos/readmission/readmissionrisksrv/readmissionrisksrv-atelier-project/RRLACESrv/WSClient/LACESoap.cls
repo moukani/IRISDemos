@@ -27,12 +27,14 @@ Method Admit(PatientID As %String, EncounterNumber As %String, EncounterType As 
  Quit ..WebMethod("Admit").Invoke($this,"http://tempuri.org/IRISDemo.SOAP.LACE.Service.Admit",.PatientID,.EncounterNumber,.EncounterType,.StartDate,.StartTime,.AdmissionSource)
 }
 
-Method Discharge(PatientID As %String, EncounterNumber As %String,EncounterType as %String, AdmissionSource as %String,StartDate as %Date,StartTime as %Time,EndDate As %Date, EndTime As %Time, DischargeLocation As %String) As %xsd.base64Binary [ Final, ProcedureBlock = 1, SoapBindingStyle = document, SoapBodyUse = literal, WebMethod ]
+Method Discharge(PatientID As %String, EncounterNumber As %String, EncounterType As %String, AdmissionSource As %String, StartDate As %Date, StartTime As %Time, EndDate As %Date, EndTime As %Time, DischargeLocation As %String) As %xsd.base64Binary [ Final, ProcedureBlock = 1, SoapBindingStyle = document, SoapBodyUse = literal, WebMethod ]
 {
  Quit ..WebMethod("Discharge").Invoke($this,"http://tempuri.org/IRISDemo.SOAP.LACE.Service.Discharge",.PatientID,.EncounterNumber,.EncounterType,.AdmissionSource,.StartDate,.StartTime,.EndDate,.EndTime,.DischargeLocation)
 }
-method Risk(PatientID as %String,EncounterNumber as %String) As %String [ Final, ProcedureBlock = 1, SoapBindingStyle = document, SoapBodyUse = literal, WebMethod ]
+
+Method Risk(PatientID As %String, EncounterNumber As %String) As %String [ Final, ProcedureBlock = 1, SoapBindingStyle = document, SoapBodyUse = literal, WebMethod ]
 {
 	quit ..WebMethod("Risk").Invoke($this,"http://tempuri.org/IRISDemo.SOAP.LACE.Service.Risk",.PatientID,.EncounterNumber)
 }
+
 }

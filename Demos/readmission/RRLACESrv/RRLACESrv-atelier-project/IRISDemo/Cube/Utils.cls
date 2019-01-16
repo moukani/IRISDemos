@@ -8,7 +8,6 @@ ClassMethod GetLScore(pEncounterID As IRISDemo.Data.Patient.Encounter) As %Integ
 {
 	// pEncounterID is the ID of the instance (row ID) 
 	set tLOS = 0
-	//set objSQL = ##class(%SQL.Statement).%ExecDirect(,"select LOS from IRISDemo_Data_Patient.Encounter where EncounterNumber = '"_pEncounterID_"'")
 	set objSQL = ##class(%SQL.Statement).%ExecDirect(,"select LOS from IRISDemo_Data_Patient.Encounter where ID = '"_pEncounterID_"'")
 	if objSQL.%Next() set tLOS = objSQL.%GetData(1)
 
@@ -28,7 +27,6 @@ ClassMethod GetAScore(pEncounterID As IRISDemo.Data.Patient.Encounter) As %Integ
 	// Need to determine if this admission is via the emergency dept 
 	// For now we'll take the encounter type but could be a lookup by admission source
 	set tCScore = 0
-	//set objSQL = ##class(%SQL.Statement).%ExecDirect(,"select EncounterType from IRISDemo_Data_Patient.Encounter where EncounterNumber = '"_pEncounterID_"'")
 	set objSQL = ##class(%SQL.Statement).%ExecDirect(,"select EncounterType from IRISDemo_Data_Patient.Encounter where ID = '"_pEncounterID_"'")
 	if objSQL.%Next() if objSQL.%GetData(1) = "E" set tCScore = 3
 
@@ -44,7 +42,6 @@ ClassMethod GetCScore(pEncounterID As IRISDemo.Data.Patient.Encounter) As %Integ
 	set tCScore = 0
 
 	// Get the patient number
-	//set objSQL = ##class(%SQL.Statement).%ExecDirect(,"select PatientID from IRISDemo_Data_Patient.Encounter where EncounterNumber = '"_pEncounterID_"'")
 	set objSQL = ##class(%SQL.Statement).%ExecDirect(,"select PatientID from IRISDemo_Data_Patient.Encounter where ID = '"_pEncounterID_"'")
 	if objSQL.%Next() {
 		set pId = objSQL.%GetData(1)
@@ -90,15 +87,12 @@ ClassMethod GetEScore(pEncounterID As IRISDemo.Data.Patient.Encounter) As %Integ
 	
 	// tEmergencyVisits is the count of patient visits to emergency dept in the 6 months prior to current admission,
 	// not including the current admission
-	
 	set tEScore = 0
-	//set objSQL = ##class(%SQL.Statement).%ExecDirect(,"select PatientID,StartDate from IRISDemo_Data_Patient.Encounter where EncounterNumber = '"_pEncounterID_"'")
 	set objSQL = ##class(%SQL.Statement).%ExecDirect(,"select PatientID,StartDate from IRISDemo_Data_Patient.Encounter where ID = '"_pEncounterID_"'")
 	if objSQL.%Next() {
 		set pId = objSQL.%GetData(1)
 		set eDate = objSQL.%GetData(2)
-		set lDate = $zdate((eDate - 180),3)
-		//set objSQL = ##class(%SQL.Statement).%ExecDirect(,"select count(*) from IRISDemo_Data_Patient.Encounter where PatientID = '"_pId_"' and EncounterNumber<>'"_pEncounterID_"' and EncounterType = 'E' and StartDate>='"_lDate_"'")
+		set lDate = (eDate - 180)
 		set objSQL = ##class(%SQL.Statement).%ExecDirect(,"select count(*) from IRISDemo_Data_Patient.Encounter where PatientID = '"_pId_"' and ID<>'"_pEncounterID_"' and EncounterType = 'E' and StartDate>='"_lDate_"'")
 		if objSQL.%Next() {
 			set tEmergencyVisits = objSQL.%GetData(1)
@@ -112,5 +106,8 @@ ClassMethod GetEScore(pEncounterID As IRISDemo.Data.Patient.Encounter) As %Integ
 	}
 	quit tEScore
 }
-
+classmethod GetAgeAtDischarge(pEncounterID As IRISDemo.Data.Patient.Encounter) As %Integer
+{
+	quit $r(50)+20
+}
 }

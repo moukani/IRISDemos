@@ -1,10 +1,14 @@
-/// Index of comorbities index by ICD code
 Class IRISDemo.Data.ComorbidityIndex Extends %Persistent
 {
-property ICDCode as %String;
-property Index as %Integer;
-property Comorbidity as %String;
-index ICD on ICDCode [ unique];
+
+Property ICDCode As %String;
+
+Property Index As %Integer;
+
+Property Comorbidity As %String;
+
+Index ICD On ICDCode [ Unique ];
+
 Storage Default
 {
 <Data name="ComorbidityIndexDefaultData">

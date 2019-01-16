@@ -9,7 +9,6 @@ Property Subject As %String;
 
 Property MessageText As %String(MAXLEN = "");
 
-
 Storage Default
 {
 <Data name="EmailRequestDefaultData">

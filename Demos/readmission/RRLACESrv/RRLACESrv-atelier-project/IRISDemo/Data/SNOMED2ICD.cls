@@ -1,11 +1,13 @@
 /// Persistent class, keyed on SNOMED code, to map to ICD
 Class IRISDemo.Data.SNOMED2ICD Extends %Persistent
 {
-property SNOMEDCode as %String;
-property ICDCode as %String;
 
+Property SNOMEDCode As %String;
 
-index SNOMED on SNOMEDCode;
+Property ICDCode As %String;
+
+Index SNOMED On SNOMEDCode;
+
 Storage Default
 {
 <Data name="SNOMED2ICDDefaultData">
