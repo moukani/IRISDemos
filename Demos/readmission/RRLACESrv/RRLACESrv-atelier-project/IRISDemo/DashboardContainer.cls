@@ -4,6 +4,7 @@ Class IRISDemo.DashboardContainer Extends %DeepSee.UserLibrary.Container [ Not P
 {
 
 /// Items Exported From Folder Manager.
+/// Items Exported From Folder Manager.
 XData Contents [ XMLNamespace = "http://www.intersystems.com/deepsee" ]
 {
 <items><pivot xmlns="http://www.intersystems.com/deepsee/library" name="Avg LACE by Age" folderName="LACE" title="" description="" keywords="" owner="" shared="true" public="false" locked="false" resource="" timeCreated="2019-01-15T20:01:58.167Z" createdBy="SuperUser" category="" bookCover="" mdx="" cellWidth="120" columnHeaderStyle="" rowHeaderStyle="" cellStyle="" rowLabelSpan="true" columnLabelSpan="true" cellHeight="22" showEmptyRows="false" showEmptyColumns="false" cubeName="LACE" caption="" listing="" listingRows="" showStatus="true" pageSize="100" colorScale="" rowTotals="false" columnTotals="false" rowTotalAgg="sum" columnTotalAgg="sum" rowTotalSource="page" showZebra="false" showRowCaption="true" printTitle="" printSubtitle="" printSubtitleOn="" showUser="" printPageSize="" printOrientation="1" printMarginTop="" printMarginLeft="" printMarginRight="" printMarginBottom="" printLabelWidth="" printCellWidth="" autoExecute="true" previewMode="false" manualMode="false" userMDX="" chartMarginTop="" chartMarginLeft="" chartMarginRight="" chartMarginBottom="" maxRows="" borderLeftCell="" borderRightCell="" borderTopCell="" borderBottomCell="" borderLeftCol="" borderRightCol="" borderTopCol="" borderBottomCol="" borderLeftRow="" borderRightRow="" borderTopRow="" borderBottomRow="" fontFamilyCell="" fontSizeCell="" fontFamilyCol="" fontSizeCol="" fontFamilyRow="" fontSizeRow="" showFilters="" showListingFilters="" showDate="" listingFontSize="" showZebraStripes="" filterTableStyle="" filterTableCaptionStyle="" filterTableItemStyle="" nowDisplayFormat="" measureLocation="columns" hideMeasures="1" backgroundImage="" backgroundOpacity=".12">
@@ -11,7 +12,7 @@ XData Contents [ XMLNamespace = "http://www.intersystems.com/deepsee" ]
   </rowAxisOptions>
   <columnAxisOptions spec="" key="" value="" text="" headEnabled="false" headCount="" filterEnabled="false" filterExpression="" orderEnabled="false" orderExpression="" orderDirection="BDESC" aggEnabled="false" aggFunction="" aggFunctionParm="" levelCaption="" levelFormat="" levelSummary="" levelType="" drillLevel="0" advanced="false" levelStyle="" levelHeaderStyle="" suppress8020="false" drilldownSpec="" enabled="true">
   </columnAxisOptions>
-  <rowLevel spec="[Age Discharged].[H1].[Age Discharged].Members" key="" value="" text="Age Discharged" headEnabled="false" headCount="" filterEnabled="false" filterExpression="" orderEnabled="false" orderExpression="" orderDirection="BDESC" aggEnabled="false" aggFunction="" aggFunctionParm="" levelCaption="" levelFormat="" levelSummary="" levelType="" drillLevel="0" advanced="false" levelStyle="" levelHeaderStyle="" suppress8020="false" drilldownSpec="" enabled="true">
+  <rowLevel spec="[Age Discharged].[H1].[Age Group].Members" key="" value="" text="Age Group" headEnabled="false" headCount="" filterEnabled="false" filterExpression="" orderEnabled="false" orderExpression="" orderDirection="BDESC" aggEnabled="false" aggFunction="" aggFunctionParm="" levelCaption="" levelFormat="" levelSummary="" levelType="" drillLevel="0" advanced="false" levelStyle="" levelHeaderStyle="" suppress8020="false" drilldownSpec="" enabled="true">
   </rowLevel>
   <sqlRestriction></sqlRestriction>
   <measure spec="[Measures].[LACE Score]" key="" value="" text="LACE Score" headEnabled="false" headCount="" filterEnabled="false" filterExpression="" orderEnabled="false" orderExpression="" orderDirection="BDESC" aggEnabled="false" aggFunction="" aggFunctionParm="" levelCaption="" levelFormat="" levelSummary="" levelType="" drillLevel="0" advanced="false" levelStyle="" levelHeaderStyle="" suppress8020="false" drilldownSpec="" enabled="true">
@@ -56,6 +57,7 @@ XData Contents [ XMLNamespace = "http://www.intersystems.com/deepsee" ]
   </widget>
   <widget name="By Age at Discharge" type="pivot" subtype="barChart" subtypeClass="barChart" title="LACE Score by Age" dataSource="LACE/Avg LACE by Age.pivot" dataLink="" drillDownDataSource="" width="200" height="200" sidebarContent="" showSidebar="false" sidebarWidth="" maximized="false" homeRowL="0" homeColL="9" colSpanL="10" rowSpanL="18" showToolbar="true" showToolbarBottomBorder="true" showToolbarOnlyWhenMaximized="false" colorToolbar="#F0F0F0" opacityToolbar="1" backgroundColor="#F0F0F0" opacity="1" theme="" dataColorList="">
     <property name="chartToggle">chart</property>
+    <property name="drillDown">1</property>
     <property name="legendPos">none</property>
     <override name="barChart">{legendVisible:'false',seriesColorsOverride:'rgb(10,92,116)',xAxis:{_type:'axis'},yAxisList:[{_type:'axis'}],chartPivot:true,_type:'barChart'}</override>
     <override name="legend">{hidden:true,legendLabels:'LACE Score',legendPosition:'right',_type:'chartLegend'}</override>
@@ -63,5 +65,4 @@ XData Contents [ XMLNamespace = "http://www.intersystems.com/deepsee" ]
 </dashboard>
 </items>
 }
-
 }

@@ -88,6 +88,7 @@ fieldList="EncounterNumber,StartDate,LOS"
 
 <dimension name="Age Discharged" displayName="Age Discharged">
 <hierarchy name="H1">
+<level name="Age Group" displayName="Age Group" sourceExpression="%expression.AgeDischarged" rangeExpression="[,10]:0-10;[11,20]:11-20;[21,30]:21-30;[31,40]:31-40;[41,50]:41-50;[51,60]:51-60;[61,70]:61-70;[71,]:71+;" />
 <level name="Age Discharged" displayName="Age Discharged" sourceExpression="%expression.AgeDischarged"  />
 </hierarchy>
 </dimension>

@@ -1,17 +1,23 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
+
+import DemoConfig from '../config/demo_config';
 
 export class EMRUser {
   firstName: string;
   lastName: string;
   MRN: string;
-  admissionNumber: string;
-  admissionStartDate: Date;
-  admissionEndDate: Date;
-  specialty: string;
-  dischargeType: string;
-  dischargedBy: string;
+  encounterNumber: string;
+  startDate: Date;
+  startTime: string;
+  endDate: Date;
+  endTime: string;
+  DoB: Date;
+  encounterStatus: string;
+  encounterType: string;
+  dischargeDestination: string;
+  gender: string;
 
   prettyPrintDate(dateForConversion: Date): string{
 
@@ -30,22 +36,30 @@ export class EMRUser {
     firstName: string,
     lastName: string,
     mrn: string,
-    admissionNumber: string,
-    admissionStartDate: Date,
-    admissionEndDate: Date,
-    specialty: string,
-    dischargeType: string,
-    dischargedBy: string
+    encounterNumber: string,
+    startDate: string,
+    startTime: string,
+    endDate: string,
+    endTime: string,
+    dob: string,
+    encounterStatus: string,
+    encounterType: string,
+    dischargeDestination: string,
+    gender: string
   ){
     this.firstName = firstName;
     this.lastName = lastName;
     this.MRN = mrn;
-    this.admissionNumber = admissionNumber;
-    this.admissionStartDate = admissionStartDate;
-    this.admissionEndDate = admissionEndDate;
-    this.specialty = specialty;
-    this.dischargeType = dischargeType;
-    this.dischargedBy = dischargedBy;
+    this.encounterNumber = encounterNumber;
+    this.startDate = new Date(startDate);
+    this.startTime = startTime;
+    this.endDate = new Date(endDate);
+    this.endTime = endTime;
+    this.DoB = new Date(dob);
+    this.encounterStatus = encounterStatus;
+    this.encounterType = encounterType;
+    this.dischargeDestination = dischargeDestination;
+    this.gender = gender;
   }
 }
 
@@ -53,14 +67,14 @@ export class UserSearchRequest {
   firstName: string;
   lastName: string;
   MRN: string;
-  admissionNumber: string;
+  encounterNumber: string;
   admissionDate: Date;
 
   constructor(){
     this.firstName = "";
     this.lastName = "";
     this.MRN = "";
-    this.admissionNumber = "";
+    this.encounterNumber = "";
     this.admissionDate = new Date();
   }
 }
@@ -68,81 +82,17 @@ export class UserSearchRequest {
 export class DischargeRequest {
   firstName: string;
   lastName: string;
-  admissionNumber: string;
-  dischargeDate: Date;
+  MRN: string;
+  encounterId: string;
+
+  constructor(firstName: string, lastName: string, MRN: string, encounterNumber: string){
+    this.firstName = firstName;
+    this.lastName = lastName;
+    this.MRN = MRN;
+    this.encounterId = encounterNumber;
+  }
+
 }
-
-const PatientData1 = [
-  {
-    firstName: "Phillip",
-    lastName: "Booth",
-    MRN: "1",
-    admissionNumber: "1",
-    admissionStartDate: new Date(2018, 0, 8),
-    admissionEndDate: null,
-    specialty: "cardiology",
-    dischargeType: null,
-    dischargedBy: null
-  },
-  {
-    firstName: "Amir",
-    lastName: "Samary",
-    MRN: "2",
-    admissionNumber: "2",
-    admissionStartDate: new Date(2018, 0, 9),
-    admissionEndDate: null,
-    specialty: "podiatry",
-    dischargeType: null,
-    dischargedBy: null
-  },
-  {
-    firstName: "Iain",
-    lastName: "Bray",
-    MRN: "3",
-    admissionNumber: "3",
-    admissionStartDate: new Date(2018, 0, 10),
-    admissionEndDate: null,
-    specialty: "ophthamology",
-    dischargeType: null,
-    dischargedBy: null
-  }
-]
-
-const PatientData2 = [
-  {
-    firstName: "Phillip",
-    lastName: "Booth",
-    MRN: "4",
-    admissionNumber: "4",
-    admissionStartDate: new Date(2018, 0, 9),
-    admissionEndDate: null,
-    specialty: "back",
-    dischargeType: null,
-    dischargedBy: null
-  },
-  {
-    firstName: "Amir",
-    lastName: "Samary",
-    MRN: "5",
-    admissionNumber: "5",
-    admissionStartDate: new Date(2018, 0, 10),
-    admissionEndDate: null,
-    specialty: "hand",
-    dischargeType: null,
-    dischargedBy: null
-  },
-  {
-    firstName: "Iain",
-    lastName: "Bray",
-    MRN: "6",
-    admissionNumber: "6",
-    admissionStartDate: new Date(2018, 0, 11),
-    admissionEndDate: null,
-    specialty: "finger",
-    dischargeType: null,
-    dischargedBy: null
-  }
-]
 
 @Injectable({
   providedIn: 'root'
@@ -151,42 +101,74 @@ export class IrisPatientService {
 
   constructor(private http: HttpClient) { }
 
-  EMRUserBuilder(converisonObj: any): EMRUser{
+  EMRUserBuilder(conversionObj: any): EMRUser{
     return new EMRUser(
-      converisonObj.firstName,
-      converisonObj.lastName,
-      converisonObj.MRN,
-      converisonObj.admissionNumber,
-      converisonObj.admissionStartDate,
-      converisonObj.admissionEndDate,
-      converisonObj.specialty,
-      converisonObj.dischargeType,
-      converisonObj.dischargedBy
+      conversionObj.FirstName,
+      conversionObj.LastName,
+      conversionObj.MRN,
+      conversionObj.EncounterNumber,
+      conversionObj.StartDate,
+      conversionObj.StartTime,
+      conversionObj.EndDate,
+      conversionObj.EndTime,
+      conversionObj.DoB,
+      conversionObj.EncounterStatus,
+      conversionObj.EncounterType,
+      conversionObj.DischargeDestination,
+      conversionObj.Gender
     );
   }
 
-  sp1(usr: UserSearchRequest): any{
-    console.log(usr);
-    let EMRUSerList = PatientData1.map(this.EMRUserBuilder)
-    return EMRUSerList;
+  getEmpyUser(): EMRUser {
+    return new EMRUser("", "", "", "","", "", "", "", "", "", "", "", "");
   }
 
-  sp2(usr: UserSearchRequest): any{
-    console.log(usr);
-    let EMRUSerList = PatientData2.map(this.EMRUserBuilder)
-    return EMRUSerList;
+  getAuthHeader(): HttpHeaders{
+    const header = new HttpHeaders()
+            .set("Authorization", "Basic " + btoa(DemoConfig.CREDENTIALS.userName + ":" + DemoConfig.CREDENTIALS.password));
+
+    return header;
   }
 
-  dis(dr: DischargeRequest): any{
-    console.log(dr);
-    return 1;
+  resetDemo(): Observable<any> {
+    const header = this.getAuthHeader();
+
+    return this.http.get(
+      DemoConfig.URL.resetDemo,
+      {
+          headers: header
+      }
+    )
   }
 
-  /*searchPatients(): Observable<any>{
+  dischargePatient(dischargeObj: DischargeRequest): Observable<any>{
+    const header = this.getAuthHeader();
 
+    return this.http.post(
+      DemoConfig.URL.dischargeUser,
+      dischargeObj,
+      {
+          headers: header
+      }
+    )
   }
 
-  dischargePatient(): Observable<any>{
+  searchForUser(MRN: string, firstName: string, lastName: string, encounterNumber: string): Observable<any>{
 
-  }*/
+    const header = this.getAuthHeader();
+    const params = new HttpParams()
+      .set("MRN", MRN || "")
+      .set("encounterNumber", encounterNumber || "")
+      .set("firstName", firstName || "")
+      .set("lastName", lastName || "")
+
+
+    return this.http.get(
+      DemoConfig.URL.userList,
+      {
+        headers: header,
+        params: params
+      }
+    )
+  }
 }

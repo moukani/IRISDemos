@@ -16,7 +16,7 @@ Class IRISDemo.REST.Encounter Extends %CSP.REST
 		<Routes>
 		  <Route Url="/resetdemo/" Method="GET" Call="ResetDemo"/>
 		  <Route Url="/discharge/" Method="POST" Call="Discharge"/>
-		  <Route Url="/list/" Method="GET" Call="List"/>
+		  <Route Url="/list" Method="GET" Call="List"/>
 		</Routes>
 	}
 	
@@ -54,11 +54,20 @@ Class IRISDemo.REST.Encounter Extends %CSP.REST
 		Quit $$$OK
 	}
 	
-	ClassMethod List(pMRN As %String = "", pFirstName As %String = "", pLastName As %String = "") As %Status
+	ClassMethod List() As %Status
 	{
+		#Dim oRS As %SQL.StatementResult
+		#Dim oResultMetadata As %SQL.StatementMetadata
+		
 		Set tSC = $$$OK
 		Try
 		{
+		
+			Set MRN = %request.Get("MRN")
+			Set firstName = %request.Get("firstName")
+			Set lastName = %request.Get("lastName")
+			Set encounterNumber = %request.Get("encounterNumber")
+			
 			// Configuring response type to JSON
 			Set %response.ContentType=..#CONTENTTYPEJSON
 			
@@ -73,27 +82,34 @@ Class IRISDemo.REST.Encounter Extends %CSP.REST
 			
 			Set bHasWhereClause=0
 			
-			Set pMRN=$Translate(pMRN,"'","")
-			If pMRN'=""
+			Set MRN=$Translate(MRN,"'","")
+			If MRN'=""
 			{
-				Set tSQL=tSQL_" where MRN='"_pMRN_"'"
+				Set tSQL=tSQL_" where Patient->MRN='"_MRN_"'"
 				Set bHasWhereClause=1
 			}
 
-			Set pFirstName=$Translate(pFirstName,"'","")
-			If pFirstName'=""
+			Set firstName=$Translate(firstName,"'","")
+			If firstName'=""
 			{
-				Set tSQL=tSQL_$Select(bHasWhereClause:" and ",1:" where ")_" FirstName %StartsWith '"_pFirstName_"'"
+				Set tSQL=tSQL_$Select(bHasWhereClause:" and ",1:" where ")_" Patient->FirstName %StartsWith '"_firstName_"'"
 				Set bHasWhereClause=1
 			}
 
-			Set pLastName=$Translate(pLastName,"'","")
-			If pLastName'=""
+			Set lastName=$Translate(lastName,"'","")
+			If lastName'=""
 			{
-				Set tSQL=tSQL_$Select(bHasWhereClause:" and ",1:" where ")_" FirstName %StartsWith '"_pLastName_"'"
+				Set tSQL=tSQL_$Select(bHasWhereClause:" and ",1:" where ")_" Patient->LastName %StartsWith '"_lastName_"'"
+			}
+			
+			Set encounterNumber=$Translate(encounterNumber,"'","")
+			If encounterNumber'=""
+			{
+				Set tSQL=tSQL_$Select(bHasWhereClause:" and ",1:" where ")_" EncounterNumber %StartsWith '"_encounterNumber_"'"
 			}
 			
 			Set oRS = ##class(%SQL.Statement).%ExecDirect(, tSQL)
+			$$$ThrowSQLExceptionIfResultError(oRS, "ListSQLException")
 			
 			Set oResultMetadata = oRS.%GetMetadata()
 			
@@ -104,7 +120,19 @@ Class IRISDemo.REST.Encounter Extends %CSP.REST
 				For iCol=1:1:oResultMetadata.columnCount
 				{
 					Set oColumn = oResultMetadata.columns.GetAt(iCol)
-					Set $property(encounter, oColumn.colName)=oRS.%GetData(iCol)
+					
+					If oColumn.clientType=2 //DATE 
+					{
+						Set $property(encounter, oColumn.colName)=$ZDate(oRS.%GetData(iCol), 3)
+					}
+					ElseIf oColumn.clientType=8 //TIME
+					{
+						Set $property(encounter, oColumn.colName)=$ZTime(oRS.%GetData(iCol))
+					}
+					Else
+					{
+						Set $property(encounter, oColumn.colName)=oRS.%GetData(iCol)
+					}
 				}
 				
 				Do response.encounters.%Push(encounter)
