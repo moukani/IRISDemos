@@ -14,13 +14,6 @@ export class AppComponent{
   constructor(private IPS: IrisPatientService){}
 
   resetDemo(): void {
-    this.IPS.resetDemo().subscribe( x => {
-      console.log(x);
-      if(x.requestResult.status === "OK"){
-        window.alert("Demo Reset");
-      }else{
-        window.alert("Error Resetting Demo");
-      }
-    })
+    this.IPS.resetDemo();
   }
 }

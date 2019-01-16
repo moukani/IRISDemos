@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, BehaviorSubject } from 'rxjs';
 
 import DemoConfig from '../config/demo_config';
 
@@ -104,6 +104,10 @@ export class DischargeRequest {
 })
 export class IrisPatientService {
 
+  /*Rxjs property that allows any component to listen to a demo reset message*/
+  private resetDemoController: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  resetDemoEmitter: Observable<boolean> = this.resetDemoController.asObservable();
+
   constructor(private http: HttpClient) { }
 
   EMRUserBuilder(conversionObj: any): EMRUser{
@@ -119,7 +123,7 @@ export class IrisPatientService {
       conversionObj.DoB,
       conversionObj.EncounterStatus,
       conversionObj.EncounterType,
-      conversionObj.DischargeDestination,
+      ("00" + conversionObj.DischargeDestination),
       conversionObj.Gender,
       conversionObj.EncounterID
     );
@@ -136,15 +140,29 @@ export class IrisPatientService {
     return header;
   }
 
-  resetDemo(): Observable<any> {
+  resetDemo(): void {
     const header = this.getAuthHeader();
 
-    return this.http.get(
+    this.http.get(
       DemoConfig.URL.resetDemo,
       {
           headers: header
       }
-    )
+    ).subscribe( resp => {
+      console.log("Resetting Demo: ", resp);
+
+      let result:any  = resp['requestResult'];
+
+      if(result.status === "OK"){
+        this.resetDemoController.next(true);
+      }else{
+        this.resetDemoController.error(true);
+      }
+    },
+    (err) => {
+      console.log(err);
+      this.resetDemoController.error(true);
+    });
   }
 
   dischargePatient(dischargeObj: DischargeRequest): Observable<any>{

@@ -65,6 +65,7 @@ Class IRISDemo.Data.Utils
 			Set objEncounter.EndDate=""
 			Set objEncounter.EndTime=""
 			Set objEncounter.DischargeDestination=""
+			Set objEncounter.EncounterStatus="A"
 			
 			Set tSC = objEncounter.%Save()
 			$$$ThrowStatusExceptionIfError(tSC, "ResetDemoException")

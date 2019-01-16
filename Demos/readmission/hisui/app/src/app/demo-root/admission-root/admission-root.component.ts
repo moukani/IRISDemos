@@ -26,9 +26,27 @@ export class AdmissionRootComponent implements OnInit {
   constructor(
     private IPS: IrisPatientService,
     private spinner: NgxSpinnerService,
-    private dialog: MatDialog) {}
+    private dialog: MatDialog) {
+
+      this.IPS.resetDemoEmitter.subscribe(shouldReset =>{
+        if(shouldReset){
+          this.resetDemo();
+          window.alert("Demo Reset");
+        }
+      },
+      (err) =>{
+        window.alert("Error Resetting Demo");
+      });
+
+    }
 
   ngOnInit() {}
+
+  resetDemo() :void {
+    this.userSearchRequest = new UserSearchRequest();
+    this.currentlySelectedUser = this.IPS.getEmpyUser();
+    this.patientList = [];
+  }
 
   openDialog(selectedUser): void {
     this.currentlySelectedUser = selectedUser;
@@ -88,10 +106,10 @@ export class AdmissionRootComponent implements OnInit {
       patient.encounterId,
       patient.dischargeDestination);
 
-    this.spinner.show();
-    this.dialog.closeAll();
     this.IPS.dischargePatient(dischargeRequest).subscribe(res => {
       try{
+        this.spinner.show();
+        this.dialog.closeAll();
         setTimeout(() => { /*Adding in so dischrge spinner can display to users*/
           this.spinner.hide();
           if(res && res.requestResult){
