@@ -13,7 +13,8 @@ XData DTL [ XMLNamespace = "http://www.intersystems.com/dtl" ]
 <assign value='"IRISDEMOAPP"' property='target.{SendingApplication}' action='set' />
 <assign value='"IRISDEMOFACILITY"' property='target.{SendingFacility}' action='set' />
 <assign value='"READMISSIONRISKAPP"' property='target.{ReceivingApplication}' action='set' />
-<assign value='..CurrentDateTime(%q)' property='target.{DateTimeOfMessage}' action='set' />
+<assign value='..CurrentDateTime("%q")' property='target.{DateTimeOfMessage}' action='set' />
+<assign value='"2.5"' property='target.{VersionID}' action='set' />
 </transform>
 }
 

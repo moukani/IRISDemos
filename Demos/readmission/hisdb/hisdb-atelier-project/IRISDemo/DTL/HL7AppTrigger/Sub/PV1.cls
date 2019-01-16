@@ -9,7 +9,7 @@ Parameter TREATEMPTYREPEATINGFIELDASNULL = 0;
 
 XData DTL [ XMLNamespace = "http://www.intersystems.com/dtl" ]
 {
-<transform sourceClass='IRISDemo.Data.Encounter' targetClass='EnsLib.HL7.Segment' targetDocType='2.5:PV1' create='existing' language='objectscript' >
+<transform sourceClass='IRISDemo.Data.Encounter' targetClass='EnsLib.HL7.Segment' targetDocType='2.5:PV1' create='new' language='objectscript' >
 <assign value='source.EncounterType' property='target.{PatientClass}' action='set' />
 <assign value='source.EncounterType' property='target.{AdmissionType}' action='set' />
 <assign value='source.AdmissionSource' property='target.{AdmitSource}' action='set' />
