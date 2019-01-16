@@ -12,9 +12,13 @@ XData ProductionDefinition
   </Item>
   <Item Name="Java Gateway Service" Category="Datalake" ClassName="EnsLib.JavaGateway.Service" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
   </Item>
-  <Item Name="Readmission Risk Service" Category="" ClassName="EnsLib.HL7.Operation.TCPOperation" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+  <Item Name="Readmission Risk HL7 Service" Category="" ClassName="EnsLib.HL7.Operation.TCPOperation" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
     <Setting Target="Adapter" Name="IPAddress">readmissionrisksrv</Setting>
     <Setting Target="Adapter" Name="Port">9999</Setting>
+  </Item>
+  <Item Name="Application Trigger Service" Category="" ClassName="IRISDemo.BS.AppTrigger.Service" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+  </Item>
+  <Item Name="Application HL7 Trigger Process" Category="" ClassName="IRISDemo.BP.HL7AppTrigger.Process" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
   </Item>
 </Production>
 }
