@@ -1,20 +1,20 @@
 Class IRISDemo.Data.Patient Extends %Persistent
 {
-	Property MRN As %String;
-	
-	Property DoB As %Date;
-	
-	Property FirstName As %String;
-	
-	Property LastName As %String;
-	
-	Property Gender As %String(VALUELIST=",M,F,O", DISPLAYLIST=",Male,Female,Other");
-	
-	Index MRNIndex On MRN [ Unique ];
-	
-	Index FirstNameIndex On FirstName;
-	
-	
+
+Property MRN As %String;
+
+Property DoB As %Date;
+
+Property FirstName As %String;
+
+Property LastName As %String;
+
+Property Gender As %String(DISPLAYLIST = ",Male,Female,Other", VALUELIST = ",M,F,O");
+
+Index MRNIndex On MRN [ Unique ];
+
+Index FirstNameIndex On FirstName; 
+
 Storage Default
 {
 <Data name="PatientDefaultData">

@@ -449,7 +449,7 @@ Class IRISDemo.Data.Utils
 		
 		//Do ..UpdateDemoPatients()
 		
-		set rsEncounters = ##class(%SQL.Statement).%ExecDirect(,"select p.PatientID, p.DoB, p.Firstname, p.Lastname, p.Gender, e. EncounterNumber, e.EncounterType, e.StartDate, e.StartTime, e.EndDate, e.EndTime "_
+		set rsEncounters = ##class(%SQL.Statement).%ExecDirect(,"select p.PatientID, p.DoB, p.Firstname, p.Lastname, p.Gender, e. EncounterNumber, e.EncounterType, e.StartDate, e.StartTime, e.EndDate, e.EndTime, e.AdmissionSource "_
 																"from IRISDemo_Data_Patient.Encounter e,  "_
 																"IRISDemo_Data_Patient.Demographics p "_
 																"where e.PatientID=p.PatientID")

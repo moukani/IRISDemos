@@ -30,7 +30,10 @@ Class Twitter.API.StreamingRequest Extends BaseAPIRequest
 	}	
 
 	Method %OnNew(pConsumerKey As OAuth1.ConsumerKey, pAccessToken As OAuth1.AccessToken) As %Status
-	{		
+	{
+		// Support tweets with more than 140 characters	
+		Do ..Parameters.SetAt("extended","tweet_mode")
+		
 		Quit ##super(pConsumerKey, pAccessToken, "HMACSHA1")
 	}	
 

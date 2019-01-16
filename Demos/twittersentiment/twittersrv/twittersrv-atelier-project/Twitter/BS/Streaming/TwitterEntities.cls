@@ -1,10 +1,10 @@
 Class Twitter.BS.Streaming.TwitterEntities Extends (%SerialObject,%XML.Adaptor)
 {
-	Property hashtags As List Of %String;
+	Property hashtags As List Of %String(MAXLEN="");
 	
-	Property urls As List Of %String;
+	Property urls As List Of %String(MAXLEN="");
 	
-	Property "user_mentions" As List Of %String;
+	Property "user_mentions" As List Of %String(MAXLEN="");
 	
 	Method PopulateFromJSON(pJSON As %Library.DynamicObject)
 	{
