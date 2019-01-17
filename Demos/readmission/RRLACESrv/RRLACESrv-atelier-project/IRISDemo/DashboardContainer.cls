@@ -1,5 +1,4 @@
 Include %DeepSee
-
 Class IRISDemo.DashboardContainer Extends %DeepSee.UserLibrary.Container [ Not ProcedureBlock ]
 {
 
@@ -48,13 +47,13 @@ XData Contents [ XMLNamespace = "http://www.intersystems.com/deepsee" ]
     <property name="legendPos">none</property>
     <override name="legend">{hidden:true,legendLabels:'LACE Score',legendPosition:'right',_type:'chartLegend'}</override>
   </widget>
-  <widget name="By Location" type="pivot" subtype="barChart" subtypeClass="barChart" title="LACE Score by Location" dataSource="LACE/Avg LACE by Discharge Location.pivot" dataLink="" drillDownDataSource="" width="200" height="200" sidebarContent="" showSidebar="false" sidebarWidth="" maximized="false" homeRowL="9" homeColL="0" colSpanL="9" rowSpanL="9" showToolbar="true" showToolbarBottomBorder="true" showToolbarOnlyWhenMaximized="false" colorToolbar="#F0F0F0" opacityToolbar="1" backgroundColor="#F0F0F0" opacity="1" theme="" dataColorList="">
+  <widget name="By Location" type="pivot" subtype="barChart" subtypeClass="barChart" title="LACE Score by Location" dataSource="LACE/Avg LACE by Discharge Location.pivot" dataLink="" drillDownDataSource="" width="200" height="200" sidebarContent="" showSidebar="false" sidebarWidth="" maximized="false" homeRowL="9" homeColL="0" colSpanL="9" rowSpanL="11" showToolbar="true" showToolbarBottomBorder="true" showToolbarOnlyWhenMaximized="false" colorToolbar="#F0F0F0" opacityToolbar="1" backgroundColor="#F0F0F0" opacity="1" theme="" dataColorList="">
     <property name="chartToggle">chart</property>
     <property name="legendPos">none</property>
     <override name="barChart">{legendVisible:'false',seriesColorsOverride:'#8cb37d',xAxis:{_type:'axis'},yAxisList:[{_type:'axis'}],chartPivot:true,_type:'barChart'}</override>
     <override name="legend">{hidden:true,legendLabels:'LACE Score',legendPosition:'right',_type:'chartLegend'}</override>
   </widget>
-  <widget name="By Age at Discharge" type="pivot" subtype="barChart" subtypeClass="barChart" title="LACE Score by Age" dataSource="LACE/Avg LACE by Age.pivot" dataLink="" drillDownDataSource="" width="200" height="200" sidebarContent="" showSidebar="false" sidebarWidth="" maximized="false" homeRowL="0" homeColL="9" colSpanL="10" rowSpanL="18" showToolbar="true" showToolbarBottomBorder="true" showToolbarOnlyWhenMaximized="false" colorToolbar="#F0F0F0" opacityToolbar="1" backgroundColor="#F0F0F0" opacity="1" theme="" dataColorList="">
+  <widget name="By Age at Discharge" type="pivot" subtype="barChart" subtypeClass="barChart" title="LACE Score by Age" dataSource="LACE/Avg LACE by Age.pivot" dataLink="" drillDownDataSource="" width="200" height="200" sidebarContent="" showSidebar="false" sidebarWidth="" maximized="false" homeRowL="0" homeColL="9" colSpanL="11" rowSpanL="20" showToolbar="true" showToolbarBottomBorder="true" showToolbarOnlyWhenMaximized="false" colorToolbar="#F0F0F0" opacityToolbar="1" backgroundColor="#F0F0F0" opacity="1" theme="" dataColorList="">
     <property name="chartToggle">chart</property>
     <property name="drillDown">1</property>
     <property name="legendPos">none</property>
@@ -66,3 +65,4 @@ XData Contents [ XMLNamespace = "http://www.intersystems.com/deepsee" ]
 }
 
 }
+
