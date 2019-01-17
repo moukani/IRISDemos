@@ -40,7 +40,7 @@ XData BPL [ XMLNamespace = "http://www.intersystems.com/bpl" ]
 </property>
 </context>
 <sequence xend='200' yend='1050' >
-<call name='Discharge patient' target='RRLACESrv.BO.LACESoap' async='0' xpos='200' ypos='250' >
+<call name='Discharge patient' target='LACE SOAP Operation' async='0' xpos='200' ypos='250' >
 <request type='RRLACESrv.BO.DischargeRequest' >
 <assign property="callrequest" value="request" action="set" />
 <assign property="context.PatientID" value="request.PatientID" action="set" />
@@ -52,7 +52,7 @@ XData BPL [ XMLNamespace = "http://www.intersystems.com/bpl" ]
 </call>
 <if name='Discharge OK?' condition='context.DischargeResponse=1' xpos='200' ypos='350' xend='200' yend='950' >
 <true>
-<call name='Calculate Risk' target='RRLACESrv.BO.LACESoap' async='0' xpos='335' ypos='500' >
+<call name='Calculate Risk' target='LACE SOAP Operation' async='0' xpos='335' ypos='500' >
 <request type='RRLACESrv.BO.RiskRequest' >
 <assign property="callrequest.PatientID" value="request.PatientID" action="set" />
 <assign property="callrequest.EncounterNumber" value="request.EncounterNumber" action="set" />
@@ -68,7 +68,7 @@ XData BPL [ XMLNamespace = "http://www.intersystems.com/bpl" ]
 </call>
 <if name='Risk Alert?' condition='context.RiskScore&gt;4' xpos='335' ypos='600' xend='335' yend='850' >
 <true>
-<call name='Send Email' target='IRISDemo.BO.Email.Operation' async='0' xpos='470' ypos='750' >
+<call name='Send Email' target='Risk Alert Email Operation' async='0' xpos='470' ypos='750' >
 <request type='IRISDemo.Message.EmailRequest' >
 <assign property="callrequest.From" value="&quot;IRISDemo&quot;" action="set" />
 <assign property="callrequest.Subject" value="&quot;LACE readmission alert&quot;" action="set" />
