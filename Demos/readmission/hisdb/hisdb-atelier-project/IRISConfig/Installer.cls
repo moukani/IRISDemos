@@ -9,8 +9,14 @@ ClassMethod LoadTransactionalData(pNamespace As %String) As %Status
 	Try
 	{
 		ZN pNamespace
-		
+				
 		Do ##class(IRISDemo.Data.Utils).LoadEncounters("/tmp/export_to_hisdb.csv")
+		
+		/// All possible events that were triggered when we loaded the demo data
+		/// must be deleted. 
+		Kill ^IRISDemo.BS.AppTrigger.Service
+		
+		/// The production will be started automatically when this image is started as a normal container.
 	}
 	Catch (oException)
 	{

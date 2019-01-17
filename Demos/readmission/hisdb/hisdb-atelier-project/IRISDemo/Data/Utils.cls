@@ -26,6 +26,7 @@ Class IRISDemo.Data.Utils
 			Set objEncounter.StartTime = objRs.Get("StartTime")
 			Set objEncounter.EndDate = objRs.Get("EndDate")
 			Set objEncounter.EndTime = objRs.Get("EndTime")
+			Set objEncounter.AdmissionSource = objRs.Get("AdmissionSource")
 			
 			// All records coming from RRLACESrv are of patients that have been discharged
 			Set objEncounter.EncounterStatus="D"	//Discharged
@@ -65,6 +66,7 @@ Class IRISDemo.Data.Utils
 			Set objEncounter.EndDate=""
 			Set objEncounter.EndTime=""
 			Set objEncounter.DischargeDestination=""
+			Set objEncounter.EncounterStatus="A"
 			
 			Set tSC = objEncounter.%Save()
 			$$$ThrowStatusExceptionIfError(tSC, "ResetDemoException")
@@ -89,6 +91,7 @@ Class IRISDemo.Data.Utils
 		Set objEncounter.EncounterType = "I" //Inpatient
 		Set objEncounter.StartDate = pStartDate
 		Set objEncounter.StartTime = $Piece($H,",",2)
+		Set objEncounter.AdmissionSource = "Emergency"
 				
 		Set objEncounter.Patient = ##class(IRISDemo.Data.Patient).MRNIndexOpen(pMRN)
 		

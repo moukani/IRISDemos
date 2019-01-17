@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, BehaviorSubject } from 'rxjs';
 
 import DemoConfig from '../config/demo_config';
 
@@ -18,6 +18,7 @@ export class EMRUser {
   encounterType: string;
   dischargeDestination: string;
   gender: string;
+  encounterId: string;
 
   prettyPrintDate(dateForConversion: Date): string{
 
@@ -45,7 +46,8 @@ export class EMRUser {
     encounterStatus: string,
     encounterType: string,
     dischargeDestination: string,
-    gender: string
+    gender: string,
+    encounterId: string
   ){
     this.firstName = firstName;
     this.lastName = lastName;
@@ -60,6 +62,7 @@ export class EMRUser {
     this.encounterType = encounterType;
     this.dischargeDestination = dischargeDestination;
     this.gender = gender;
+    this.encounterId = encounterId;
   }
 }
 
@@ -84,12 +87,14 @@ export class DischargeRequest {
   lastName: string;
   MRN: string;
   encounterId: string;
+  dischargeDestCode: string;
 
-  constructor(firstName: string, lastName: string, MRN: string, encounterNumber: string){
+  constructor(firstName: string, lastName: string, MRN: string, encounterId: string, dischargeDestCode: string){
     this.firstName = firstName;
     this.lastName = lastName;
     this.MRN = MRN;
-    this.encounterId = encounterNumber;
+    this.encounterId = encounterId;
+    this.dischargeDestCode = dischargeDestCode;
   }
 
 }
@@ -98,6 +103,10 @@ export class DischargeRequest {
   providedIn: 'root'
 })
 export class IrisPatientService {
+
+  /*Rxjs property that allows any component to listen to a demo reset message*/
+  private resetDemoController: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  resetDemoEmitter: Observable<boolean> = this.resetDemoController.asObservable();
 
   constructor(private http: HttpClient) { }
 
@@ -114,13 +123,14 @@ export class IrisPatientService {
       conversionObj.DoB,
       conversionObj.EncounterStatus,
       conversionObj.EncounterType,
-      conversionObj.DischargeDestination,
-      conversionObj.Gender
+      ("00" + conversionObj.DischargeDestination),
+      conversionObj.Gender,
+      conversionObj.EncounterID
     );
   }
 
   getEmpyUser(): EMRUser {
-    return new EMRUser("", "", "", "","", "", "", "", "", "", "", "", "");
+    return new EMRUser("", "", "", "","", "", "", "", "", "", "", "", "", "");
   }
 
   getAuthHeader(): HttpHeaders{
@@ -130,15 +140,29 @@ export class IrisPatientService {
     return header;
   }
 
-  resetDemo(): Observable<any> {
+  resetDemo(): void {
     const header = this.getAuthHeader();
 
-    return this.http.get(
+    this.http.get(
       DemoConfig.URL.resetDemo,
       {
           headers: header
       }
-    )
+    ).subscribe( resp => {
+      console.log("Resetting Demo: ", resp);
+
+      let result:any  = resp['requestResult'];
+
+      if(result.status === "OK"){
+        this.resetDemoController.next(true);
+      }else{
+        this.resetDemoController.error(true);
+      }
+    },
+    (err) => {
+      console.log(err);
+      this.resetDemoController.error(true);
+    });
   }
 
   dischargePatient(dischargeObj: DischargeRequest): Observable<any>{
@@ -153,11 +177,12 @@ export class IrisPatientService {
     )
   }
 
-  searchForUser(MRN: string, firstName: string, lastName: string): Observable<any>{
+  searchForUser(MRN: string, firstName: string, lastName: string, encounterNumber: string): Observable<any>{
 
     const header = this.getAuthHeader();
     const params = new HttpParams()
       .set("MRN", MRN || "")
+      .set("encounterNumber", encounterNumber || "")
       .set("firstName", firstName || "")
       .set("lastName", lastName || "")
 

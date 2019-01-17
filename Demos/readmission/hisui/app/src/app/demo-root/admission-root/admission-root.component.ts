@@ -26,9 +26,27 @@ export class AdmissionRootComponent implements OnInit {
   constructor(
     private IPS: IrisPatientService,
     private spinner: NgxSpinnerService,
-    private dialog: MatDialog) {}
+    private dialog: MatDialog) {
+
+      this.IPS.resetDemoEmitter.subscribe(shouldReset =>{
+        if(shouldReset){
+          this.resetDemo();
+          window.alert("Demo Reset");
+        }
+      },
+      (err) =>{
+        window.alert("Error Resetting Demo");
+      });
+
+    }
 
   ngOnInit() {}
+
+  resetDemo() :void {
+    this.userSearchRequest = new UserSearchRequest();
+    this.currentlySelectedUser = this.IPS.getEmpyUser();
+    this.patientList = [];
+  }
 
   openDialog(selectedUser): void {
     this.currentlySelectedUser = selectedUser;
@@ -38,10 +56,24 @@ export class AdmissionRootComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      this.currentlySelectedUser = this.IPS.getEmpyUser();
       console.log('The dialog was closed');
       console.log('Currently Selected User', this.currentlySelectedUser);
     });
+  }
+
+  admissionSort(a: any, b: any): number {
+    return (b.startDate - a.startDate);
+  }
+
+  clearDischargedPatient(encounterNumber: string): void {
+    let dischargedPatient: EMRUser = this.patientList.find( rec =>{
+      return rec.encounterNumber === encounterNumber;
+    });
+
+    if (dischargedPatient){
+      dischargedPatient.endDate = new Date();
+      dischargedPatient.encounterStatus = "D";
+    }
   }
 
   searchPatients(): void {
@@ -49,11 +81,12 @@ export class AdmissionRootComponent implements OnInit {
     this.IPS.searchForUser(
       this.userSearchRequest.MRN,
       this.userSearchRequest.firstName,
-      this.userSearchRequest.lastName).subscribe( res =>{
+      this.userSearchRequest.lastName,
+      this.userSearchRequest.encounterNumber).subscribe( res =>{
           try{
             if(res && res.requestResult && res.encounters){
               if(res.requestResult.status === "OK"){
-                this.patientList = res.encounters.map(this.IPS.EMRUserBuilder);
+                this.patientList = res.encounters.map(this.IPS.EMRUserBuilder).sort(this.admissionSort);
               }
             }
           }catch(err){
@@ -70,17 +103,21 @@ export class AdmissionRootComponent implements OnInit {
       patient.firstName,
       patient.lastName,
       patient.MRN,
-      patient.encounterNumber);
+      patient.encounterId,
+      patient.dischargeDestination);
 
-    this.spinner.show();
     this.IPS.dischargePatient(dischargeRequest).subscribe(res => {
-      this.spinner.hide();
       try{
-        if(res && res.requestResult){
-          if(res.requestResult.status === "OK"){
-            this.dialog.closeAll();
+        this.spinner.show();
+        this.dialog.closeAll();
+        setTimeout(() => { /*Adding in so dischrge spinner can display to users*/
+          this.spinner.hide();
+          if(res && res.requestResult){
+            if(res.requestResult.status === "OK"){
+              this.clearDischargedPatient(patient.encounterNumber);
+            }
           }
-        }
+        }, 2000);
       }catch(err){
         this.spinner.hide();
         console.log("issue discharing error closing dialog: ", err);

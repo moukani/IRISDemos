@@ -22,15 +22,15 @@ export class UserDischargeFormComponent implements OnInit {
   ]
 
   dtypes = [
-    "Home",
-    "ICU",
-    "Deceased"
+    {value: '001', viewValue: 'Home'},
+    {value: '002', viewValue: 'ICU'},
+    {value: '003', viewValue: 'Deceased'}
   ]
 
   constructor() {}
 
   ngOnInit() {
-    if(this.user.endDate === null){
+    if(this.user.endDate === null || this.user.encounterStatus === 'A'){
       this.user.endDate = new Date();
     }
   }

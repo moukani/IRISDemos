@@ -66,6 +66,7 @@ Class IRISDemo.REST.Encounter Extends %CSP.REST
 			Set MRN = %request.Get("MRN")
 			Set firstName = %request.Get("firstName")
 			Set lastName = %request.Get("lastName")
+			Set encounterNumber = %request.Get("encounterNumber")
 			
 			// Configuring response type to JSON
 			Set %response.ContentType=..#CONTENTTYPEJSON
@@ -76,7 +77,7 @@ Class IRISDemo.REST.Encounter Extends %CSP.REST
 			Set response.requestResult={}
 			
 			Set tSQL="select Patient->MRN, Patient->FirstName, Patient->LastName, Patient->Gender, Patient->DoB, "_
-					 "EncounterNumber, EncounterType, StartDate, StartTime, EndDate, EndTime, EncounterStatus, DischargeDestination "_
+					 "ID As EncounterID, EncounterNumber, EncounterType, StartDate, StartTime, EndDate, EndTime, EncounterStatus, DischargeDestination "_
 					 " from IRISDemo_Data.Encounter"
 			
 			Set bHasWhereClause=0
@@ -99,6 +100,12 @@ Class IRISDemo.REST.Encounter Extends %CSP.REST
 			If lastName'=""
 			{
 				Set tSQL=tSQL_$Select(bHasWhereClause:" and ",1:" where ")_" Patient->LastName %StartsWith '"_lastName_"'"
+			}
+			
+			Set encounterNumber=$Translate(encounterNumber,"'","")
+			If encounterNumber'=""
+			{
+				Set tSQL=tSQL_$Select(bHasWhereClause:" and ",1:" where ")_" EncounterNumber %StartsWith '"_encounterNumber_"'"
 			}
 			
 			Set oRS = ##class(%SQL.Statement).%ExecDirect(, tSQL)
@@ -169,7 +176,10 @@ Class IRISDemo.REST.Encounter Extends %CSP.REST
 			Set oEncounter = ##class(IRISDemo.Data.Encounter).%OpenId(request.encounterId)
 			If '$IsObject(oEncounter) $$$ThrowException("EncounterNotFoundException", "encounterId: "_request.encounterId)
 			
-			Do oEncounter.Discharge()
+			Set dischargeDestCode = request.dischargeDestCode
+			If dischargeDestCode ="" $$$ThrowException("DischargeDestinationNotProvidedException", "dischargeDest: "_request.dischargeDestCode)
+			
+			Do oEncounter.Discharge(dischargeDestCode)
 			
 			//
 			// Everything worked out OK!
