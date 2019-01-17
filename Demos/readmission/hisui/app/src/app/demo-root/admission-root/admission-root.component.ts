@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 
 /*Providers*/
 import {IrisPatientService, EMRUser, UserSearchRequest, DischargeRequest} from '../../providers/iris-patient.service';
-import { NgxSpinnerService } from 'ngx-spinner';
 import {MatDialog} from '@angular/material';
 
 import {UserDischargeModalComponent} from '../user-discharge-modal/user-discharge-modal.component';
@@ -17,28 +16,24 @@ export class AdmissionRootComponent implements OnInit {
   userSearchRequest: UserSearchRequest = new UserSearchRequest();
   currentlySelectedUser: EMRUser = this.IPS.getEmpyUser();
   patientList: EMRUser[] = [];
+  hasError: boolean = false;
 
   /*Binding any methods that are shared with children so they may be called in the parent context*/
   sharedUserSearch = this.searchPatients.bind(this);
   sharedDialogOpen = this.openDialog.bind(this);
-  sharedDischargePatient = this.dischargePatient.bind(this);
+  sharedDischargePatient = this.clearDischargedPatient.bind(this);
 
-  constructor(
-    private IPS: IrisPatientService,
-    private spinner: NgxSpinnerService,
-    private dialog: MatDialog) {
-
-      this.IPS.resetDemoEmitter.subscribe(shouldReset =>{
-        if(shouldReset){
-          this.resetDemo();
-          window.alert("Demo Reset");
-        }
-      },
-      (err) =>{
-        window.alert("Error Resetting Demo");
-      });
-
-    }
+  constructor(private IPS: IrisPatientService, private dialog: MatDialog) {
+    this.IPS.resetDemoEmitter.subscribe(shouldReset =>{
+      if(shouldReset){
+        this.resetDemo();
+        window.alert("Demo Reset");
+      }
+    },
+    (err) =>{
+      window.alert("Error Resetting Demo");
+    });
+  }
 
   ngOnInit() {}
 
@@ -94,38 +89,5 @@ export class AdmissionRootComponent implements OnInit {
           }
         },
         (err) => {console.log("Error Loading User List: ", err);});
-  }
-
-  dischargePatient(patient: EMRUser): void {
-    console.log("dischargingPatient: ", this.currentlySelectedUser);
-
-    const dischargeRequest = new DischargeRequest(
-      patient.firstName,
-      patient.lastName,
-      patient.MRN,
-      patient.encounterId,
-      patient.dischargeDestination);
-
-    this.IPS.dischargePatient(dischargeRequest).subscribe(res => {
-      try{
-        this.spinner.show();
-        this.dialog.closeAll();
-        setTimeout(() => { /*Adding in so dischrge spinner can display to users*/
-          this.spinner.hide();
-          if(res && res.requestResult){
-            if(res.requestResult.status === "OK"){
-              this.clearDischargedPatient(patient.encounterNumber);
-            }
-          }
-        }, 2000);
-      }catch(err){
-        this.spinner.hide();
-        console.log("issue discharing error closing dialog: ", err);
-      }
-    },
-    (err) => {
-      console.log("Error Discharging User: ", err)
-      this.spinner.hide();
-    })
   }
 }
