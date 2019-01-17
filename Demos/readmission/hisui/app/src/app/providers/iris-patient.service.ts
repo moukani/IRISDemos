@@ -24,10 +24,20 @@ export class EMRUser {
 
     let output: string = "";
 
+    const addZero = (num) => {
+      let output = num;
+      if(num){
+        if(num.toString().length === 1){
+          output = "0" + num;
+        }
+      }
+      return output;
+    }
+
     if(dateForConversion){
-      output = (dateForConversion.getMonth() + 1) + "/" +
-      dateForConversion.getDate() + "/" +
-      dateForConversion.getFullYear();
+      output = dateForConversion.getFullYear() + "-" +
+      addZero((dateForConversion.getMonth() + 1)) + "-" +
+      addZero(dateForConversion.getDate());
     }
 
     return output;
