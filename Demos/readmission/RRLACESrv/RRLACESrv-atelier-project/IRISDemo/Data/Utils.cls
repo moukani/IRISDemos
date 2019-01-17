@@ -79,9 +79,8 @@ Class IRISDemo.Data.Utils
 				set obj.PatientID = objRs.Get("PatientID")
 				set obj.PostalCode = objRs.Get("PostalCode")
 				set obj.Gender = objRs.Get("Gender")
-			
-				set obj.Lastname = ##class(%Library.PopulateUtils).LastName()
-				set obj.Firstname = ##class(%Library.PopulateUtils).FirstName($select(obj.Gender="F":2,1:1))
+				set obj.Lastname = objRs.Get("Lastname")
+				set obj.Firstname = objRs.Get("Firstname")
 			
 				set tSC = obj.%Save() if $$$ISERR(tSC) quit
 			}
@@ -138,6 +137,7 @@ Class IRISDemo.Data.Utils
 				if objRs.Get("EndDate") '= "" set obj.EndDate = $zdateh(objRs.Get("EndDate"),3)+..#DATEWINDOW
 				if objRs.Get("EndTime") '= "" set obj.EndTime = $ztimeh(objRs.Get("EndTime"))
 				set obj.AdmissionSource = objRs.Get("AdmissionSource")
+				set obj.AdmitReason = objRs.Get("AdmitReason")
 				set obj.DischargeLocation = objRs.Get("DischargeLocation")
 				if (obj.StartDate '= "")&&(obj.EndDate '= "") set obj.LOS = (obj.EndDate - obj.StartDate)
 				set tSC = obj.%Save() if $$$ISERR(tSC) quit

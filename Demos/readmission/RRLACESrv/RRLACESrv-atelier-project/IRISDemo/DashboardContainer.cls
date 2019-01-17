@@ -4,7 +4,6 @@ Class IRISDemo.DashboardContainer Extends %DeepSee.UserLibrary.Container [ Not P
 {
 
 /// Items Exported From Folder Manager.
-/// Items Exported From Folder Manager.
 XData Contents [ XMLNamespace = "http://www.intersystems.com/deepsee" ]
 {
 <items><pivot xmlns="http://www.intersystems.com/deepsee/library" name="Avg LACE by Age" folderName="LACE" title="" description="" keywords="" owner="" shared="true" public="false" locked="false" resource="" timeCreated="2019-01-15T20:01:58.167Z" createdBy="SuperUser" category="" bookCover="" mdx="" cellWidth="120" columnHeaderStyle="" rowHeaderStyle="" cellStyle="" rowLabelSpan="true" columnLabelSpan="true" cellHeight="22" showEmptyRows="false" showEmptyColumns="false" cubeName="LACE" caption="" listing="" listingRows="" showStatus="true" pageSize="100" colorScale="" rowTotals="false" columnTotals="false" rowTotalAgg="sum" columnTotalAgg="sum" rowTotalSource="page" showZebra="false" showRowCaption="true" printTitle="" printSubtitle="" printSubtitleOn="" showUser="" printPageSize="" printOrientation="1" printMarginTop="" printMarginLeft="" printMarginRight="" printMarginBottom="" printLabelWidth="" printCellWidth="" autoExecute="true" previewMode="false" manualMode="false" userMDX="" chartMarginTop="" chartMarginLeft="" chartMarginRight="" chartMarginBottom="" maxRows="" borderLeftCell="" borderRightCell="" borderTopCell="" borderBottomCell="" borderLeftCol="" borderRightCol="" borderTopCol="" borderBottomCol="" borderLeftRow="" borderRightRow="" borderTopRow="" borderBottomRow="" fontFamilyCell="" fontSizeCell="" fontFamilyCol="" fontSizeCol="" fontFamilyRow="" fontSizeRow="" showFilters="" showListingFilters="" showDate="" listingFontSize="" showZebraStripes="" filterTableStyle="" filterTableCaptionStyle="" filterTableItemStyle="" nowDisplayFormat="" measureLocation="columns" hideMeasures="1" backgroundImage="" backgroundOpacity=".12">
@@ -65,4 +64,5 @@ XData Contents [ XMLNamespace = "http://www.intersystems.com/deepsee" ]
 </dashboard>
 </items>
 }
+
 }
