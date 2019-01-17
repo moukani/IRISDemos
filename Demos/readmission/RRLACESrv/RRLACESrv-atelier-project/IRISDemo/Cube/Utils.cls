@@ -93,7 +93,7 @@ ClassMethod GetEScore(pEncounterID As IRISDemo.Data.Patient.Encounter) As %Integ
 		set pId = objSQL.%GetData(1)
 		set eDate = objSQL.%GetData(2)
 		set lDate = (eDate - 180)
-		set objSQL = ##class(%SQL.Statement).%ExecDirect(,"select count(*) from IRISDemo_Data_Patient.Encounter where PatientID = '"_pId_"' and ID<>'"_pEncounterID_"' and EncounterType = 'E' and StartDate>='"_lDate_"'")
+		set objSQL = ##class(%SQL.Statement).%ExecDirect(,"select count(*) from IRISDemo_Data_Patient.Encounter where Patient->PatientID = '"_pId_"' and ID<>'"_pEncounterID_"' and EncounterType = 'E' and StartDate>='"_lDate_"'")
 		if objSQL.%Next() {
 			set tEmergencyVisits = objSQL.%GetData(1)
 			if tEmergencyVisits > 4 {
@@ -110,20 +110,13 @@ classmethod GetAgeAtDischarge(pEncounterID As IRISDemo.Data.Patient.Encounter) A
 {
 	set age = ""
 	
-	try {
-		set objEnc = ##class(IRISDemo.Data.Patient.Encounter).%OpenId(pEncounterID,0,.tSC) if $$$ISERR(tSC) quit
-		set patientId = objEnc.PatientID
-		set objSQL = ##class(%SQL.Statement).%ExecDirect(,"select ID from IRISDemo_Data_Patient.Demographics where PatientID = '"_patientId_"'")
-		if objSQL.%Next()
-		{
-			set patId = objSQL.%Get("ID")
-			set objPat = ##class(IRISDemo.Data.Patient.Demographics).%OpenId(patId,0,.tSC)
-			set age = $justify((objEnc.EndDate - objPat.DoB)/365.25,0,0)
-		}
-	}
-	catch(objException)
+	Try 
 	{
+		set objEnc = ##class(IRISDemo.Data.Patient.Encounter).%OpenId(pEncounterID) 
+		set age = $justify((objEnc.EndDate - objEnc.Patient.DoB)/365.25,0,0)
 	}
+	Catch {	}
+	
 	quit age
 }
 }

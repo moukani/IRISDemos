@@ -7,7 +7,7 @@ Property EndDate As %Date(FORMAT = 3);
 
 Property EndTime As %Time(FORMAT = 2);
 
-Property PatientID As %String [ Required ];
+Property Patient As Demographics [ Required ];
 
 Property StartDate As %Date(FORMAT = 3) [ Required ];
 
@@ -25,7 +25,7 @@ Property LOS As %Integer;
 
 Index Dates On (StartDate, EndDate);
 
-Index PatientID On PatientID;
+Index PatientIndex On Patient;
 
 Index EncounterNumber On EncounterNumber;
 
@@ -45,42 +45,27 @@ Storage Default
 <Value>EndTime</Value>
 </Value>
 <Value name="5">
-<Value>FromDate</Value>
+<Value>Patient</Value>
 </Value>
 <Value name="6">
-<Value>FromTime</Value>
-</Value>
-<Value name="7">
-<Value>Facility</Value>
-</Value>
-<Value name="8">
-<Value>PatientID</Value>
-</Value>
-<Value name="9">
 <Value>StartDate</Value>
 </Value>
-<Value name="10">
+<Value name="7">
 <Value>StartTime</Value>
 </Value>
-<Value name="11">
+<Value name="8">
 <Value>AdmissionSource</Value>
 </Value>
-<Value name="12">
+<Value name="9">
 <Value>AdmitReason</Value>
 </Value>
-<Value name="13">
+<Value name="10">
 <Value>DischargeLocation</Value>
 </Value>
-<Value name="14">
-<Value>EnteredBy</Value>
-</Value>
-<Value name="15">
-<Value>Priority</Value>
-</Value>
-<Value name="16">
+<Value name="11">
 <Value>EncounterNumber</Value>
 </Value>
-<Value name="17">
+<Value name="12">
 <Value>LOS</Value>
 </Value>
 </Data>

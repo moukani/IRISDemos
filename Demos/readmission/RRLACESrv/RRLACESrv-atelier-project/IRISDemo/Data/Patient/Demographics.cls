@@ -19,7 +19,7 @@ Property Firstname As %String;
 
 Property Lastname As %String;
 
-Index PatientID On PatientID [ Unique ];
+Index PatientIDIndex On PatientID [ Unique ];
 
 Index Name On (Lastname, Firstname, Gender);
 

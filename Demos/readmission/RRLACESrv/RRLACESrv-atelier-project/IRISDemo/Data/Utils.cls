@@ -129,7 +129,7 @@ Class IRISDemo.Data.Utils
 			While objRs.Next() 
 			{
 				set obj = ##class(IRISDemo.Data.Patient.Encounter).%New()
-				set obj.PatientID = objRs.Get("PatientID")
+				set obj.Patient = ##class(IRISDemo.Data.Patient.Demographics).PatientIDIndexOpen(objRs.Get("PatientID"))
 				set obj.EncounterNumber = objRs.Get("EncounterNumber")
 				set obj.EncounterType = objRs.Get("EncounterType")
 				if objRs.Get("StartDate") '= "" set obj.StartDate = $zdateh(objRs.Get("StartDate"),3)+..#DATEWINDOW
@@ -172,7 +172,7 @@ Class IRISDemo.Data.Utils
 			// Remove the 3 patients first in case we have the ID numbers in the system
 			for pId = 900001:1:900003 {
 				set objSQL = ##class(%SQL.Statement).%ExecDirect(,"delete from IRISDemo_Data_Patient.Demographics where PatientID ='"_pId_"'")
-				set objSQL = ##class(%SQL.Statement).%ExecDirect(,"delete from IRISDemo_Data_Patient.Encounter where PatientID ='"_pId_"'")
+				set objSQL = ##class(%SQL.Statement).%ExecDirect(,"delete from IRISDemo_Data_Patient.Encounter where Patient->PatientID ='"_pId_"'")
 				set objSQL = ##class(%SQL.Statement).%ExecDirect(,"delete from IRISDemo_Data_Patient.Diagnosis where PatientID ='"_pId_"'")
 			}
 
@@ -187,7 +187,7 @@ Class IRISDemo.Data.Utils
 			set tSC = objPat.%Save() if $$$ISERR(tSC) quit
 			// Encounter #1
 			set objEnc = ##class(IRISDemo.Data.Patient.Encounter).%New()
-			set objEnc.PatientID = objPat.PatientID
+			set objEnc.Patient = objPat
 			set objEnc.EncounterNumber = "9001001"
 			set objEnc.EncounterType = "E"
 			set objEnc.StartDate = ($horolog-170)
@@ -208,7 +208,7 @@ Class IRISDemo.Data.Utils
 			set onset(objDgn.Code) = objDgn.OnsetDate
 			// Encounter #2
 			set objEnc = ##class(IRISDemo.Data.Patient.Encounter).%New()
-			set objEnc.PatientID = objPat.PatientID
+			set objEnc.Patient = objPat
 			set objEnc.EncounterNumber = "9001002"
 			set objEnc.EncounterType = "E"
 			set objEnc.StartDate = ($horolog - 155)
@@ -228,7 +228,7 @@ Class IRISDemo.Data.Utils
 			set tSC = objDgn.%Save() if $$$ISERR(tSC) quit
 			// Encounter #3
 			set objEnc = ##class(IRISDemo.Data.Patient.Encounter).%New()
-			set objEnc.PatientID = objPat.PatientID
+			set objEnc.Patient = objPat
 			set objEnc.EncounterNumber = "9001003"
 			set objEnc.EncounterType = "E"
 			set objEnc.StartDate = ($horolog - 140)
@@ -248,7 +248,7 @@ Class IRISDemo.Data.Utils
 			set tSC = objDgn.%Save() if $$$ISERR(tSC) quit
 			// Encounter #4
 			set objEnc = ##class(IRISDemo.Data.Patient.Encounter).%New()
-			set objEnc.PatientID = objPat.PatientID
+			set objEnc.Patient = objPat
 			set objEnc.EncounterNumber = "9001004"
 			set objEnc.EncounterType = "E"
 			set objEnc.StartDate = ($horolog - 120)
@@ -268,7 +268,7 @@ Class IRISDemo.Data.Utils
 			set tSC = objDgn.%Save() if $$$ISERR(tSC) quit
 			// Encounter #5
 			set objEnc = ##class(IRISDemo.Data.Patient.Encounter).%New()
-			set objEnc.PatientID = objPat.PatientID
+			set objEnc.Patient = objPat
 			set objEnc.EncounterNumber = "9001005"
 			set objEnc.EncounterType = "E"
 			set objEnc.StartDate = ($horolog - 90)
@@ -289,7 +289,7 @@ Class IRISDemo.Data.Utils
 			set onset(objDgn.Code) = objDgn.OnsetDate
 			// Encounter #6
 			set objEnc = ##class(IRISDemo.Data.Patient.Encounter).%New()
-			set objEnc.PatientID = objPat.PatientID
+			set objEnc.Patient = objPat
 			set objEnc.EncounterNumber = "9001006"
 			set objEnc.EncounterType = "E"
 			set objEnc.StartDate = ($horolog - 60)
@@ -309,7 +309,7 @@ Class IRISDemo.Data.Utils
 			set tSC = objDgn.%Save() if $$$ISERR(tSC) quit
 			// Encounter #7
 			set objEnc = ##class(IRISDemo.Data.Patient.Encounter).%New()
-			set objEnc.PatientID = objPat.PatientID
+			set objEnc.Patient = objPat
 			set objEnc.EncounterNumber = "9001007"
 			set objEnc.EncounterType = "E"
 			set objEnc.StartDate = ($horolog - 30)
@@ -339,7 +339,7 @@ Class IRISDemo.Data.Utils
 			set tSC = objPat.%Save() if $$$ISERR(tSC) quit
 			// Encounter #1
 			set objEnc = ##class(IRISDemo.Data.Patient.Encounter).%New()
-			set objEnc.PatientID = objPat.PatientID
+			set objEnc.Patient = objPat
 			set objEnc.EncounterNumber = "9002001"
 			set objEnc.EncounterType = "E"
 			set objEnc.StartDate = ($horolog - 90)
@@ -351,7 +351,7 @@ Class IRISDemo.Data.Utils
 			set tSC = objEnc.%Save() if $$$ISERR(tSC) quit
 			// Encounter #2
 			set objEnc = ##class(IRISDemo.Data.Patient.Encounter).%New()
-			set objEnc.PatientID = objPat.PatientID
+			set objEnc.Patient = objPat
 			set objEnc.EncounterNumber = "9002002"
 			set objEnc.EncounterType = "E"
 			set objEnc.StartDate = ($horolog - 60)
@@ -372,7 +372,7 @@ Class IRISDemo.Data.Utils
 			set tSC = objDgn.%Save() if $$$ISERR(tSC) quit
 			// Encounter #3
 			set objEnc = ##class(IRISDemo.Data.Patient.Encounter).%New()
-			set objEnc.PatientID = objPat.PatientID
+			set objEnc.Patient = objPat
 			set objEnc.EncounterNumber = "9002003"
 			set objEnc.EncounterType = "E"
 			set objEnc.StartDate = ($horolog - 45)
@@ -403,7 +403,7 @@ Class IRISDemo.Data.Utils
 			set tSC = objPat.%Save() if $$$ISERR(tSC) quit
 			// Encounter #1
 			set objEnc = ##class(IRISDemo.Data.Patient.Encounter).%New()
-			set objEnc.PatientID = objPat.PatientID
+			set objEnc.Patient = objPat
 			set objEnc.EncounterNumber = "9003001"
 			set objEnc.EncounterType = "E"
 			set objEnc.StartDate = ($horolog - 120)
@@ -424,7 +424,7 @@ Class IRISDemo.Data.Utils
 			set tSC = objDgn.%Save() if $$$ISERR(tSC) quit
 			// Encounter #2
 			set objEnc = ##class(IRISDemo.Data.Patient.Encounter).%New()
-			set objEnc.PatientID = objPat.PatientID
+			set objEnc.Patient = objPat
 			set objEnc.EncounterNumber = "9003002"
 			set objEnc.EncounterType = "I"
 			set objEnc.StartDate = ($horolog - 60)
@@ -450,10 +450,8 @@ Class IRISDemo.Data.Utils
 		#Dim oResultMetadata As %SQL.StatementMetadata
 		#Dim oColumn As %SQL.StatementColumn
 		
-		set rsEncounters = ##class(%SQL.Statement).%ExecDirect(,"select p.PatientID, p.DoB, p.Firstname, p.Lastname, p.Gender, e. EncounterNumber, e.EncounterType, e.StartDate, e.StartTime, e.EndDate, e.EndTime, e.AdmissionSource "_
-																"from IRISDemo_Data_Patient.Encounter e,  "_
-																"IRISDemo_Data_Patient.Demographics p "_
-																"where e.PatientID=p.PatientID")
+		set rsEncounters = ##class(%SQL.Statement).%ExecDirect(,"select Patient->PatientID, Patient->DoB, Patient->Firstname, Patient->Lastname, Patient->Gender, EncounterNumber, EncounterType, StartDate, StartTime, EndDate, EndTime, AdmissionSource "_
+																"from IRISDemo_Data_Patient.Encounter")
 		
 		$$$ThrowSQLExceptionIfResultError(rsEncounters, "SelectPatientsForExportException")
 		

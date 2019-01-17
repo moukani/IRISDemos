@@ -34,7 +34,7 @@ countMeasureCaption="Encounter Count">
 <measure name="Age Discharged" displayName="Age Discharged" sourceExpression="%expression.AgeDischarged" type="integer" aggregate="AVG" factName="MxAgeDischarged" formatString="##"/>
 
 
-<measure name="Patient ID"  displayName="Patient ID" sourceProperty="PatientID" type="string" />
+<measure name="Patient ID"  displayName="Patient ID" sourceProperty="Patient.PatientID" type="string" />
 
 <listing name="Listing" 
 fieldList="EncounterNumber,StartDate,LOS" 
