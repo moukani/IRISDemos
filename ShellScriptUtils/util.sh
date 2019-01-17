@@ -62,6 +62,40 @@ function green() {
     printf "${GREEN}"
 }
 
+function checkContainer() {
+
+    printfY "\nChecking service $service...\n"
+    if docker logs $container --tail 30 2>&1 | grep -E '(PROTECT|Shutting down the system)'
+    then
+        docker logs $container --tail 30 2>&1 | grep -E '(PROTECT|Shutting down the system)'
+        
+        printfR "\nFound PROTECT error on service $service. Restarting this container...\n"
+        docker-compose restart $service
+        sleep 10
+
+        checkContainer
+    fi
+}
+
+function startAndCheckContainers()
+{
+    printfY "\nCreating containers...\n"
+    docker-compose up --no-start
+
+    printfY "\nStarting containers...\n"
+    docker-compose start
+    sleep 15
+
+    demoname=${PWD##*/}
+
+    for container in `docker-compose ps | grep $demoname | awk '{print $1}'`
+    do
+        service=$(echo $container | cut -d'_' -f 2)
+        checkContainer
+    done
+
+    printfG "\n\n ALL services started!\n\n"
+}
 # Can receive one parameter with the docker registry to log in to.
 function dockerLogin() {
     printf "\n\nDocker Credentials:\n"

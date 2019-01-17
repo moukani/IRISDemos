@@ -106,7 +106,7 @@
 			
 			function openLACEBI()
 			{
-				window_open('http://localhost:9094/csp/appint/_DeepSee.UserPortal.DashboardViewer.zen?DASHBOARD=LACE/LACE%20Scores.dashboard&DASHBOARD=LACE/LACE%20Scores.dashboard&DASHBOARD=LACE/LACE%20Scores.dashboard&DASHBOARD=LACE/LACE%20Scores.dashboard&DASHBOARD=LACE/LACE%20Scores.dashboard&DASHBOARD=LACE/LACE%20Scores.dashboard&DASHBOARD=LACE/LACE%20Scores.dashboard&DASHBOARD=LACE/LACE%20Scores.dashboard&DASHBOARD=LACE/LACE%20Scores.dashboard&NAMESPACE=APPINT&IRISUserName=SuperUser&IRISPassword=sys')
+				window_open('http://localhost:9094/csp/appint/_DeepSee.UserPortal.DashboardViewer.zen?DASHBOARD=LACE/LACE%20Scores.dashboard&$NAMESPACE=APPINT&IRISUserName=SuperUser&IRISPassword=sys')
 			}
 			
 			function openMessageTrace()
