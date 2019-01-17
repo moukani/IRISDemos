@@ -41,10 +41,7 @@ services:
     - type: bind
       source: ../../IRISLicense/
       target: /irislicense
-    - type: bind
-      source: ./RRLACESrv_data/shared/
-      target: /shared
-
+      
   hisdb:
     depends_on:
       - RRLACESrv

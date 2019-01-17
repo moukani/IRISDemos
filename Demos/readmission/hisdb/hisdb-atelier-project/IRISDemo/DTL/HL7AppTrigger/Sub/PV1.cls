@@ -14,7 +14,7 @@ XData DTL [ XMLNamespace = "http://www.intersystems.com/dtl" ]
 <assign value='source.EncounterType' property='target.{AdmissionType}' action='set' />
 <assign value='source.AdmissionSource' property='target.{AdmitSource}' action='set' />
 <assign value='source.EncounterNumber' property='target.{VisitNumber}' action='set' />
-<assign value='"Hospitalization"' property='target.{DischargedtoLocation}' action='set' />
+<assign value='source.DischargeDestination.Description' property='target.{DischargedtoLocation}' action='set' />
 <assign value='..ConvertDateTime(source.StartDate_","_source.StartTime,"%q(3)","%q")' property='target.{AdmitDateTime}' action='set' />
 <assign value='..ConvertDateTime(source.EndDate_","_source.EndTime,"%q(3)","%q")' property='target.{DischargeDateTime()}' action='set' />
 </transform>
