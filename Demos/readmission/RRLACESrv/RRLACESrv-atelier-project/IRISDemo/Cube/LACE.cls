@@ -9,7 +9,7 @@ XData Cube [ XMLNamespace = "http://www.intersystems.com/deepsee" ]
 <cube name="LACE" 
 caption="LACE"
 defaultListing="Listing"
-nullReplacement="Not Specified"
+nullReplacement="Self Discharge"
 sourceClass="IRISDemo.Data.Patient.Encounter"
 countMeasureCaption="Encounter Count">
 

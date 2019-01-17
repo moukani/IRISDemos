@@ -4,7 +4,7 @@ Class IRISDemo.Data.Utils
 {
 	/// We will be adding this to all clinical dates so that the LACE score will
 	/// be correctly computed in 6 months from now.
-	Parameter DATEWINDOW = { $Horolog-$ZDateH("2018-12-01",3) };
+	Parameter DATEWINDOW = { $Horolog-$ZDateH("2017-04-01",3) };
 	
 	classmethod LoadDemoData() as %Status
 	{
@@ -139,6 +139,7 @@ Class IRISDemo.Data.Utils
 				set obj.AdmissionSource = objRs.Get("AdmissionSource")
 				set obj.AdmitReason = objRs.Get("AdmitReason")
 				set obj.DischargeLocation = objRs.Get("DischargeLocation")
+				if $length(obj.DischargeLocation) < 4 set obj.DischargeLocation = "Home"
 				if (obj.StartDate '= "")&&(obj.EndDate '= "") set obj.LOS = (obj.EndDate - obj.StartDate)
 				set tSC = obj.%Save() if $$$ISERR(tSC) quit
 			}
@@ -189,9 +190,9 @@ Class IRISDemo.Data.Utils
 			set objEnc.PatientID = objPat.PatientID
 			set objEnc.EncounterNumber = "9001001"
 			set objEnc.EncounterType = "E"
-			set objEnc.StartDate = $zdateh("2018-07-01",3) + ..#DATEWINDOW
+			set objEnc.StartDate = ($horolog-170)
 			set objEnc.StartTime = $ztimeh("10:00")
-			set objEnc.EndDate = $zdateh("2018-07-09",3) + ..#DATEWINDOW
+			set objEnc.EndDate = (objEnc.StartDate + 3)
 			set objEnc.EndTime = $ztimeh("17:00")
 			set objEnc.AdmissionSource = "ED"
 			set tSC = objEnc.%Save() if $$$ISERR(tSC) quit
@@ -201,17 +202,18 @@ Class IRISDemo.Data.Utils
 			set objDgn.Code = "698591006"
 			set objDgn.Description = "Renal disease"
 			set objDgn.CodingStandard = "SNOMED"
-			set objDgn.OnsetDate = $zdateh("2018-07-01",3) + ..#DATEWINDOW
+			set objDgn.OnsetDate = objEnc.StartDate
 			set objDgn.Status = "A"
 			set tSC = objDgn.%Save() if $$$ISERR(tSC) quit
+			set onset(objDgn.Code) = objDgn.OnsetDate
 			// Encounter #2
 			set objEnc = ##class(IRISDemo.Data.Patient.Encounter).%New()
 			set objEnc.PatientID = objPat.PatientID
 			set objEnc.EncounterNumber = "9001002"
 			set objEnc.EncounterType = "E"
-			set objEnc.StartDate = $zdateh("2018-07-21",3) + ..#DATEWINDOW
+			set objEnc.StartDate = ($horolog - 155)
 			set objEnc.StartTime = $ztimeh("09:30")
-			set objEnc.EndDate = $zdateh("2018-07-29",3) + ..#DATEWINDOW
+			set objEnc.EndDate = (objEnc.StartDate + 4)
 			set objEnc.EndTime = $ztimeh("17:00")
 			set objEnc.AdmissionSource = "ED"
 			set tSC = objEnc.%Save() if $$$ISERR(tSC) quit
@@ -221,7 +223,7 @@ Class IRISDemo.Data.Utils
 			set objDgn.Code = "698591006"
 			set objDgn.Description = "Renal disease"
 			set objDgn.CodingStandard = "SNOMED"
-			set objDgn.OnsetDate = $zdateh("2018-07-01",3) + ..#DATEWINDOW
+			set objDgn.OnsetDate = onset(objDgn.Code)
 			set objDgn.Status = "A"
 			set tSC = objDgn.%Save() if $$$ISERR(tSC) quit
 			// Encounter #3
@@ -229,9 +231,9 @@ Class IRISDemo.Data.Utils
 			set objEnc.PatientID = objPat.PatientID
 			set objEnc.EncounterNumber = "9001003"
 			set objEnc.EncounterType = "E"
-			set objEnc.StartDate = $zdateh("2018-08-13",3) + ..#DATEWINDOW
+			set objEnc.StartDate = ($horolog - 140)
 			set objEnc.StartTime = $ztimeh("10:00")
-			set objEnc.EndDate = $zdateh("2018-08-17",3) + ..#DATEWINDOW
+			set objEnc.EndDate = (objEnc.StartDate + 6)
 			set objEnc.EndTime = $ztimeh("17:00")
 			set objEnc.AdmissionSource = "ED"
 			set tSC = objEnc.%Save() if $$$ISERR(tSC) quit
@@ -241,7 +243,7 @@ Class IRISDemo.Data.Utils
 			set objDgn.Code = "698591006"
 			set objDgn.Description = "Renal disease"
 			set objDgn.CodingStandard = "SNOMED"
-			set objDgn.OnsetDate = $zdateh("2018-07-01",3) + ..#DATEWINDOW
+			set objDgn.OnsetDate = onset(objDgn.Code)
 			set objDgn.Status = "A"
 			set tSC = objDgn.%Save() if $$$ISERR(tSC) quit
 			// Encounter #4
@@ -249,9 +251,9 @@ Class IRISDemo.Data.Utils
 			set objEnc.PatientID = objPat.PatientID
 			set objEnc.EncounterNumber = "9001004"
 			set objEnc.EncounterType = "E"
-			set objEnc.StartDate = $zdateh("2018-08-24",3) + ..#DATEWINDOW
+			set objEnc.StartDate = ($horolog - 120)
 			set objEnc.StartTime = $ztimeh("10:00")
-			set objEnc.EndDate = $zdateh("2018-08-31",3) + ..#DATEWINDOW
+			set objEnc.EndDate = (objEnc.StartDate + 5)
 			set objEnc.EndTime = $ztimeh("17:00")
 			set objEnc.AdmissionSource = "ED"
 			set tSC = objEnc.%Save() if $$$ISERR(tSC) quit
@@ -261,7 +263,7 @@ Class IRISDemo.Data.Utils
 			set objDgn.Code = "698591006"
 			set objDgn.Description = "Renal disease"
 			set objDgn.CodingStandard = "SNOMED"
-			set objDgn.OnsetDate = $zdateh("2018-07-01",3) + ..#DATEWINDOW
+			set objDgn.OnsetDate = onset(objDgn.Code)
 			set objDgn.Status = "A"
 			set tSC = objDgn.%Save() if $$$ISERR(tSC) quit
 			// Encounter #5
@@ -269,9 +271,9 @@ Class IRISDemo.Data.Utils
 			set objEnc.PatientID = objPat.PatientID
 			set objEnc.EncounterNumber = "9001005"
 			set objEnc.EncounterType = "E"
-			set objEnc.StartDate = $zdateh("2018-10-16",3) + ..#DATEWINDOW
+			set objEnc.StartDate = ($horolog - 90)
 			set objEnc.StartTime = $ztimeh("10:00")
-			set objEnc.EndDate = $zdateh("2018-10-25",3) + ..#DATEWINDOW
+			set objEnc.EndDate = (objEnc.StartDate + 4)
 			set objEnc.EndTime = $ztimeh("17:00")
 			set objEnc.AdmissionSource = "ED"
 			set tSC = objEnc.%Save() if $$$ISERR(tSC) quit
@@ -281,17 +283,18 @@ Class IRISDemo.Data.Utils
 			set objDgn.Code = "59278001"
 			set objDgn.Description = "Diabetes with chronic complication"
 			set objDgn.CodingStandard = "SNOMED"
-			set objDgn.OnsetDate = $zdateh("2018-10-16",3) + ..#DATEWINDOW
+			set objDgn.OnsetDate = objEnc.StartDate
 			set objDgn.Status = "A"
 			set tSC = objDgn.%Save() if $$$ISERR(tSC) quit
+			set onset(objDgn.Code) = objDgn.OnsetDate
 			// Encounter #6
 			set objEnc = ##class(IRISDemo.Data.Patient.Encounter).%New()
 			set objEnc.PatientID = objPat.PatientID
 			set objEnc.EncounterNumber = "9001006"
 			set objEnc.EncounterType = "E"
-			set objEnc.StartDate = $zdateh("2018-11-08",3) + ..#DATEWINDOW
+			set objEnc.StartDate = ($horolog - 60)
 			set objEnc.StartTime = $ztimeh("10:00")
-			set objEnc.EndDate = $zdateh("2018-11-10",3) + ..#DATEWINDOW
+			set objEnc.EndDate = (objEnc.StartDate + 2)
 			set objEnc.EndTime = $ztimeh("17:00")
 			set objEnc.AdmissionSource = "ED"
 			set tSC = objEnc.%Save() if $$$ISERR(tSC) quit
@@ -301,7 +304,7 @@ Class IRISDemo.Data.Utils
 			set objDgn.Code = "698591006"
 			set objDgn.Description = "Renal disease"
 			set objDgn.CodingStandard = "SNOMED"
-			set objDgn.OnsetDate = $zdateh("2018-07-01",3) + ..#DATEWINDOW
+			set objDgn.OnsetDate = onset(objDgn.Code)
 			set objDgn.Status = "A"
 			set tSC = objDgn.%Save() if $$$ISERR(tSC) quit
 			// Encounter #7
@@ -309,9 +312,9 @@ Class IRISDemo.Data.Utils
 			set objEnc.PatientID = objPat.PatientID
 			set objEnc.EncounterNumber = "9001007"
 			set objEnc.EncounterType = "E"
-			set objEnc.StartDate = $zdateh("2018-12-06",3) + ..#DATEWINDOW
+			set objEnc.StartDate = ($horolog - 30)
 			set objEnc.StartTime = $ztimeh("10:00")
-			set objEnc.EndDate = $zdateh("2018-12-21",3) + ..#DATEWINDOW
+			set objEnc.EndDate = (objEnc.StartDate + 3)
 			set objEnc.EndTime = $ztimeh("17:00")
 			set objEnc.AdmissionSource = "ED"
 			set tSC = objEnc.%Save() if $$$ISERR(tSC) quit
@@ -321,7 +324,7 @@ Class IRISDemo.Data.Utils
 			set objDgn.Code = "22846003"
 			set objDgn.Description = "Moderate or severe liver disease"
 			set objDgn.CodingStandard = "SNOMED"
-			set objDgn.OnsetDate = $zdateh("2018-12-12",3) + ..#DATEWINDOW
+			set objDgn.OnsetDate = objEnc.StartDate
 			set objDgn.Status = "A"
 			set tSC = objDgn.%Save() if $$$ISERR(tSC) quit
 			
@@ -339,9 +342,9 @@ Class IRISDemo.Data.Utils
 			set objEnc.PatientID = objPat.PatientID
 			set objEnc.EncounterNumber = "9002001"
 			set objEnc.EncounterType = "E"
-			set objEnc.StartDate = $zdateh("2018-10-16",3) + ..#DATEWINDOW
+			set objEnc.StartDate = ($horolog - 90)
 			set objEnc.StartTime = $ztimeh("10:00")
-			set objEnc.EndDate = $zdateh("2018-10-25",3) + ..#DATEWINDOW
+			set objEnc.EndDate = (objEnc.StartDate + 9)
 			set objEnc.EndTime = $ztimeh("17:00")
 			set objEnc.AdmissionSource = "ED"
 			set objEnc.DischargeLocation = "Home"
@@ -351,9 +354,9 @@ Class IRISDemo.Data.Utils
 			set objEnc.PatientID = objPat.PatientID
 			set objEnc.EncounterNumber = "9002002"
 			set objEnc.EncounterType = "E"
-			set objEnc.StartDate = $zdateh("2018-11-08",3) + ..#DATEWINDOW
+			set objEnc.StartDate = ($horolog - 60)
 			set objEnc.StartTime = $ztimeh("10:00")
-			set objEnc.EndDate = $zdateh("2018-11-10",3) + ..#DATEWINDOW
+			set objEnc.EndDate = (objEnc.StartDate + 2)
 			set objEnc.EndTime = $ztimeh("17:00")
 			set objEnc.AdmissionSource = "ED"
 			set objEnc.DischargeLocation = "Home"
@@ -364,7 +367,7 @@ Class IRISDemo.Data.Utils
 			set objDgn.Code = "233843008"
 			set objDgn.Description = "Myocardial infarction"
 			set objDgn.CodingStandard = "SNOMED"
-			set objDgn.OnsetDate = $zdateh("2018-12-06",3) + ..#DATEWINDOW
+			set objDgn.OnsetDate = objEnc.StartDate
 			set objDgn.Status = "A"
 			set tSC = objDgn.%Save() if $$$ISERR(tSC) quit
 			// Encounter #3
@@ -372,9 +375,9 @@ Class IRISDemo.Data.Utils
 			set objEnc.PatientID = objPat.PatientID
 			set objEnc.EncounterNumber = "9002003"
 			set objEnc.EncounterType = "E"
-			set objEnc.StartDate = $zdateh("2018-11-08",3) + ..#DATEWINDOW
+			set objEnc.StartDate = ($horolog - 45)
 			set objEnc.StartTime = $ztimeh("10:00")
-			set objEnc.EndDate = $zdateh("2018-11-10",3) + ..#DATEWINDOW
+			set objEnc.EndDate = (objEnc.StartDate + 2)
 			set objEnc.EndTime = $ztimeh("17:00")
 			set objEnc.AdmissionSource = "ED"
 			set objEnc.DischargeLocation = "Home"
@@ -385,7 +388,7 @@ Class IRISDemo.Data.Utils
 			set objDgn.Code = "87555007"
 			set objDgn.Description = "Cerebrovascular disease"
 			set objDgn.CodingStandard = "SNOMED"
-			set objDgn.OnsetDate = $zdateh("2018-12-12",3) + ..#DATEWINDOW
+			set objDgn.OnsetDate = objEnc.StartDate
 			set objDgn.Status = "A"
 			set tSC = objDgn.%Save() if $$$ISERR(tSC) quit
 			
@@ -403,9 +406,9 @@ Class IRISDemo.Data.Utils
 			set objEnc.PatientID = objPat.PatientID
 			set objEnc.EncounterNumber = "9003001"
 			set objEnc.EncounterType = "E"
-			set objEnc.StartDate = $zdateh("2018-09-16",3) + ..#DATEWINDOW
+			set objEnc.StartDate = ($horolog - 120)
 			set objEnc.StartTime = $ztimeh("10:00")
-			set objEnc.EndDate = $zdateh("2018-09-12",3) + ..#DATEWINDOW
+			set objEnc.EndDate = (objEnc.StartDate + 4)
 			set objEnc.EndTime = $ztimeh("17:00")
 			set objEnc.AdmissionSource = "ED"
 			set objEnc.DischargeLocation = "Home"
@@ -416,7 +419,7 @@ Class IRISDemo.Data.Utils
 			set objDgn.Code = "233843008"
 			set objDgn.Description = "Myocardial infarction"
 			set objDgn.CodingStandard = "SNOMED"
-			set objDgn.OnsetDate = $zdateh("2018-12-06",3) + ..#DATEWINDOW
+			set objDgn.OnsetDate = objEnc.StartDate
 			set objDgn.Status = "A"
 			set tSC = objDgn.%Save() if $$$ISERR(tSC) quit
 			// Encounter #2
@@ -424,9 +427,9 @@ Class IRISDemo.Data.Utils
 			set objEnc.PatientID = objPat.PatientID
 			set objEnc.EncounterNumber = "9003002"
 			set objEnc.EncounterType = "I"
-			set objEnc.StartDate = $zdateh("2018-11-08",3) + ..#DATEWINDOW
+			set objEnc.StartDate = ($horolog - 60)
 			set objEnc.StartTime = $ztimeh("10:00")
-			set objEnc.EndDate = $zdateh("2018-11-09",3) + ..#DATEWINDOW
+			set objEnc.EndDate = (objEnc.StartDate + 2)
 			set objEnc.EndTime = $ztimeh("17:00")
 			set objEnc.AdmissionSource = "GA"
 			set objEnc.DischargeLocation = "Home"
