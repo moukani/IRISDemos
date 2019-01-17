@@ -10,3 +10,6 @@
 [submodule "BaseImages/jboss/buildfiles/quickstarts-java"]
 	path = BaseImages/jboss/buildfiles/quickstarts-java
 	url = https://github.com/intersystems/quickstarts-java/
+[submodule "Demos/readmission/readmissionrisksrv/html/image-map-resizer"]
+	path = Demos/readmission/readmissionrisksrv/html/image-map-resizer
+	url = https://github.com/davidjbradshaw/image-map-resizer

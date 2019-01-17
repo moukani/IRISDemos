@@ -24,7 +24,7 @@ Class IRISDemo.Data.Utils
 		}
 		catch(objException) {
 			set tSC = objException.AsStatus()
-		}
+		} 
 
 		quit tSC
 	}
@@ -449,8 +449,6 @@ Class IRISDemo.Data.Utils
 		#Dim rsEncounters As %SQL.StatementResult
 		#Dim oResultMetadata As %SQL.StatementMetadata
 		#Dim oColumn As %SQL.StatementColumn
-		
-		//Do ..UpdateDemoPatients()
 		
 		set rsEncounters = ##class(%SQL.Statement).%ExecDirect(,"select p.PatientID, p.DoB, p.Firstname, p.Lastname, p.Gender, e. EncounterNumber, e.EncounterType, e.StartDate, e.StartTime, e.EndDate, e.EndTime, e.AdmissionSource "_
 																"from IRISDemo_Data_Patient.Encounter e,  "_

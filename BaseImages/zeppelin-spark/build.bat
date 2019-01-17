@@ -1,6 +1,6 @@
 @ECHO OFF
 
-for %%I in (.) do set CurrDirName=%%~nxI
-set IMAGE_NAME=amirsamary/irisdemo:%CurrDirName%
+REM for %%I in (.) do set CurrDirName=%%~nxI
+REM set IMAGE_NAME=amirsamary/irisdemo:%CurrDirName%
 
-docker build -t %IMAGE_NAME% .
+REM docker build -t %IMAGE_NAME% .
