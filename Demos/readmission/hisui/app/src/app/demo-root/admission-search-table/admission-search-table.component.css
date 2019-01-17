@@ -3,7 +3,11 @@ table {
 }
 
 td, th {
-  width: 11.11%;
+  width: 9.6%;
+}
+
+td.cdk-column-Admission-Number, td.cdk-column-Admission-Number{
+  width: 13%;
 }
 
 tr:hover{
