@@ -7,7 +7,7 @@
 		<meta http-equiv="expires" content="0" />
 		<meta http-equiv="pragma" content="no-cache" />
 
-		<title>IRIS Payment Fraud Prevention Demo</title>
+		<title>IRIS for Health Readmission Risk Demo</title>
 		
 		<script language="javascript">
 		/*
@@ -38,7 +38,7 @@
 			var callNumber=0
 			var timeout = function () { return ++callNumber*time };
 
-				openSparkMaster();
+				//openSparkMaster();
 				
 				/*
 				A timeout between each opened tab is necessary for Safari.
@@ -48,21 +48,19 @@
 				windows again and all the tabs will be opened, one every second, on a new tab.
 				*/
 				
-				setTimeout("openZeppelin()", timeout());
+				setTimeout("openHISdb()", timeout());
 				
-				setTimeout("openMessageTrace()", timeout());
+				setTimeout("openIFHint()", timeout());
 				
-				setTimeout("openPOS()", timeout());
+				setTimeout("openIFHintRoutingRule()", timeout());
 				
-				setTimeout("openBusinessRule()", timeout());
+				setTimeout("openIFHintDTL()", timeout());
 				
-				setTimeout("openDataLookup()", timeout());
+				setTimeout("openLACEBI()", timeout());
 				
-				setTimeout("openDataTransformation()", timeout());
+				//setTimeout("openBusinessProcess()", timeout());
 				
-				setTimeout("openBusinessProcess()", timeout());
-				
-				setTimeout("openProduction()", timeout());
+				//setTimeout("openProduction()", timeout());
 			}
 			
 			function window_open(url)
@@ -72,34 +70,34 @@
 				winReference.parent.focus();
 			}
 			
-			function openPOS()
+			function openHISUI()
 			{
-				window_open('http://localhost:9099');
+				window_open('http://localhost:9098');
 			}
 			
-			function openProduction()
+			function openHISdb()
 			{
-				window_open('EnsPortal.ProductionConfig.zen?$NAMESPACE=APPINT&IRISUserName=SuperUser&IRISPassword=sys');
+				window_open('http://localhost:9096/csp/appint/EnsPortal.ProductionConfig.zen?$NAMESPACE=APPINT&IRISUserName=SuperUser&IRISPassword=sys');
 			}
 			
-			function openBusinessProcess()
+			function openIFHint()
 			{
-				window_open('EnsPortal.BPLEditor.zen?NAMESPACE=APPINT&BP=BankingSrv.BP.Transaction.AIProcess.bpl&IRISUserName=SuperUser&IRISPassword=sys')
+				window_open('http://localhost:9092/csp/appint/EnsPortal.ProductionConfig.zen?$NAMESPACE=APPINT&IRISUserName=SuperUser&IRISPassword=sys')
 			}
 			
-			function openDataTransformation()
+			function openIFHintRoutingRule()
 			{
-				window_open('EnsPortal.DTLEditor.zen?NAMESPACE=APPINT&DT=BankingSrv.DTL.BuildFeatures.DTL&IRISUserName=SuperUser&IRISPassword=sys')
+				window_open('http://localhost:9092/csp/appint/EnsPortal.RuleEditor.zen?RULE=IRISDemo.HISHL7v2FileFeedRoutingRule&IRISUserName=SuperUser&IRISPassword=sys')
 			}
 			
-			function openDataLookup()
+			function openIFHintDTL()
 			{
-				window_open('EnsPortal.LookupSettings.zen?LookupTable=Merchant_Category_Feature.lut&NAMESPACE=APPINT&IRISUserName=SuperUser&IRISPassword=sys')
+				window_open('http://localhost:9092/csp/appint/EnsPortal.DTLEditor.zen?DT=IRISDemo.DTL.HL7Discharge.dtl&NAMESPACE=APPINT&IRISUserName=SuperUser&IRISPassword=sys')
 			}
 			
-			function openBusinessRule()
+			function openLACEBI()
 			{
-				window_open('EnsPortal.RuleEditor.zen?RULE=BankingSrv.Rule.AIRule&NAMESPACE=APPINT&IRISUserName=SuperUser&IRISPassword=sys')
+				window_open('http://localhost:9094/csp/appint/_DeepSee.UserPortal.DashboardViewer.zen?DASHBOARD=LACE/LACE%20Scores.dashboard&DASHBOARD=LACE/LACE%20Scores.dashboard&DASHBOARD=LACE/LACE%20Scores.dashboard&DASHBOARD=LACE/LACE%20Scores.dashboard&DASHBOARD=LACE/LACE%20Scores.dashboard&DASHBOARD=LACE/LACE%20Scores.dashboard&DASHBOARD=LACE/LACE%20Scores.dashboard&DASHBOARD=LACE/LACE%20Scores.dashboard&DASHBOARD=LACE/LACE%20Scores.dashboard&NAMESPACE=APPINT&IRISUserName=SuperUser&IRISPassword=sys')
 			}
 			
 			function openMessageTrace()
@@ -191,35 +189,38 @@
 		</center>
 		
 		<map name="image-map">
-		    <area alt="Point of Sale" title="Point of Sale" href="javascript:openPOS()" coords="56,259,257,479" shape="rect">
-		    <area alt="IRIS Interoperability" title="IRIS Interoperability" href="javascript:openProduction()" coords="436,249,655,482" shape="rect">
-		    <area alt="IRIS Data Lake" title="IRIS Data Lake" href="javascript:openDatalake()" coords="1056,261,1315,578" shape="rect">
-		    <area alt="Zeppelin Notebook" title="Zeppelin Notebook" href="javascript:openZeppelin()" coords="1543,225,1781,416" shape="rect">
-		    <area alt="Zeppelin Spark App UI" href="javascript:openZeppelinSparkUI()" coords="1750,500,1880,520" shape="rect">
-		    <area alt="Spark Cluster" href="javascript:openSparkMaster()" coords="1750,550,1880,580" shape="rect">
+		    <area alt="HIS UI" title="HIS UI" href="javascript:openHISUI()" coords="56,259,257,479" shape="rect">
+		    <area alt="HIS IRIS Database" title="HIS IRIS Database" href="javascript:openHISdb()" coords="436,249,655,482" shape="rect">
+		    <area alt="IRIS for Health Interoperability" title="IRIS for Health Interoperability" href="javascript:openIFHint()" coords="1056,261,1315,578" shape="rect">
+		    <area alt="IRIS for Health Routing Rule" title="IRIS for Health Routing Rule" href="javascript:openIFHintRoutingRule()" coords="1543,225,1781,416" shape="rect">
+		    <area alt="IRIS for Health Data Transformation" title="IRIS for Health Data Transformation" href="javascript:openIFHintDTL()" coords="1750,500,1880,520" shape="rect">
+		    <area alt="LACE BI" title="LACE BI" href="javascript:openLACEBI()" coords="1750,550,1880,580" shape="rect">
+		    <!--
 		    <area alt="Open Current PMML" title="Open Current PMML" href="javascript:openPMML()" coords="436,700,655,850" shape="rect">
+		    -->
 		</map>
 		
 		<table width="100%" style="text-align: center; background-color: #b7c8e2;">
 			<tr>
 				<td><input ID="BTNALL" type="button" class="Button" value="Open All Windows" onclick="openWindows()"/></td>
-				<td><input type="button" class="Button" value="1 - Open Production" onclick="openProduction()"/></td>
-				<td><input type="button" class="Button" value="2 - Open Business Process" onclick="openBusinessProcess()"/></td>
-				<td><input type="button" class="Button" value="3 - Open Data Transformation" onclick="openDataTransformation()"/></td>
-				<td><input type="button" class="Button" value="4 - Open Data Lookup" onclick="openDataLookup()"/></td>
-				<td><input type="button" class="Button" value="5 - Open Business Rule" onclick="openBusinessRule()"/></td>
-				<td><input type="button" class="Button" value="6 - Open POS Simulator" onclick="openPOS()"/></td>
+				<td><input type="button" class="Button" value="1 - Open HIS UI" onclick="openHISUI()"/></td>
+				<td><input type="button" class="Button" value="2 - Open HIS Database" onclick="openHISdb()"/></td>
+				<td><input type="button" class="Button" value="3 - Open Interoperability" onclick="openIFHint()"/></td>
+				<td><input type="button" class="Button" value="4 - Open Routing Rule" onclick="openIFHintRoutingRule()"/></td>
+				<td><input type="button" class="Button" value="5 - Open Data Transfromation" onclick="openIFHintDTL()"/></td>
+				<td><input type="button" class="Button" value="6 - Open LACE BI" onclick="openLACEBI()"/></td>
 			</tr>
 			<tr>
 				<td>&nbsp;</td>
 			</tr>
 			<tr>
-				
+				<!--
 				<td><input type="button" class="Button" value="7 - Open Message Trace" onclick="openMessageTrace()"/></td>
 				<td><input type="button" class="Button" value="8 - Open Zeppelin" onclick="openZeppelin()"/></td>
 				<td><input type="button" class="Button" value="9 - Open Spark Master" onclick="openSparkMaster()"/></td>
 				<td><input type="button" class="Button" value="10 - Open PMML Test Page" onclick="openPMMLTestPage()"/></td>
 				<td><input type="button" class="Button" value="11 - Open PMML" onclick="openPMML()"/></td>
+				-->
 				<td><input type="button" class="Button" value="Show Instructions" onclick="openInstructions()" id="instructionsbtn"/></td>
 			</tr>
 		</table>
