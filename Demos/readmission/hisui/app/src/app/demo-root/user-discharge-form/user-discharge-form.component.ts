@@ -12,15 +12,6 @@ export class UserDischargeFormComponent implements OnInit {
 
   @Input() user: EMRUser;
 
-  specialties = [
-    "Back",
-    "Hand",
-    "Finger",
-    "Cardiology",
-    "Podiatry",
-    "Ophthamology"
-  ]
-
   dtypes = [
     {value: '001', viewValue: 'Home'},
     {value: '002', viewValue: 'ICU'},
@@ -32,6 +23,7 @@ export class UserDischargeFormComponent implements OnInit {
   ngOnInit() {
     if(this.user.endDate === null || this.user.encounterStatus === 'A'){
       this.user.endDate = new Date();
+      this.user.dischargeDestination = "001";
     }
   }
 
