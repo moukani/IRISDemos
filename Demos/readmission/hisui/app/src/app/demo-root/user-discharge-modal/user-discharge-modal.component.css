@@ -23,3 +23,12 @@
   justify-content: space-around;
   align-items: center;
 }
+
+.error-message-wrapper{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  background-color: #f0ebf9;
+  font-family: Roboto,"Helvetica Neue",sans-serif;
+}
