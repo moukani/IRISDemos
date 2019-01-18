@@ -48,6 +48,28 @@ Class IRISConfig.Installer Extends IRISConfig.InstallerBase
 			<Arg name="pNamespace" Value="${Namespace}"/>
 		</Invoke>
 		
+		<Var Name="Password" Value="jsmith123!"/>
+		<User Username="jsmith" Fullname="John Smith" Enabled="true" Roles="AppRole" PasswordVar="Password"/>
+		
+		<Invoke Class="IRISConfig.Installer" Method="AddWFRole" CheckStatus="true">
+			<Arg name="pNamespace" Value="${Namespace}"/>
+			<Arg name="pRoleName" Value="Care Team"/>
+		</Invoke>
+		
+		<Invoke Class="IRISConfig.Installer" Method="AddWFUser" CheckStatus="true">
+			<Arg name="pNamespace" Value="${Namespace}"/>
+			<Arg name="pUserName" Value="jsmith"/>
+			<Arg name="pFullName" Value="John Smith"/>
+			<Arg name="pRoleName" Value="Care Team"/>
+		</Invoke>
+	
+		<Invoke Class="IRISConfig.Installer" Method="AddWFUser" CheckStatus="true">
+			<Arg name="pNamespace" Value="${Namespace}"/>
+			<Arg name="pUserName" Value="SuperUser"/>
+			<Arg name="pFullName" Value="Jane Smith"/>
+			<Arg name="pRoleName" Value="Care Team"/>
+		</Invoke>
+
 	</Manifest>
 	}
 	
