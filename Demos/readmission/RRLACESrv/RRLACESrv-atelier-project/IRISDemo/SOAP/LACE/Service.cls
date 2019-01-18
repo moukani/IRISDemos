@@ -17,7 +17,13 @@ Method Admit(PatientID as %String,EncounterNumber as %String,EncounterType as %S
 {
 	try {
 		set obj = ##class(IRISDemo.Data.Patient.Encounter).%New()
-		set obj.PatientID = PatientID
+		set objPatient = ##class(IRISDemo.Data.Patient.Demographics).PatientIDIndexOpen(PatientID)
+		If objPatient=""
+		{
+			set objPatient = ##class(IRISDemo.Data.Patient.Demographics).%New()
+			Set objPatient.PatientID = PatientID
+		}
+		Set obj.Patient = objPatient
 		set obj.EncounterNumber = EncounterNumber
 		set obj.EncounterType = EncounterType
 		set obj.StartDate = StartDate
@@ -44,21 +50,29 @@ Method Discharge(PatientID as %String,EncounterNumber as %String,EncounterType a
 {
 	set tSC = $$$OK
 	try {
-		set objSQL = ##class(%SQL.Statement).%ExecDirect(,"select ID from IRISDemo_Data_Patient.Encounter where PatientID = '"_PatientID_"' and EncounterNumber = '"_EncounterNumber_"'")
-		if objSQL.%Next() {
+		set objSQL = ##class(%SQL.Statement).%ExecDirect(,"select ID from IRISDemo_Data_Patient.Encounter where Patient->PatientID = '"_PatientID_"' and EncounterNumber = '"_EncounterNumber_"'")
+		if objSQL.%Next() 
+		{
 			set obj = ##class(IRISDemo.Data.Patient.Encounter).%OpenId(objSQL.%Get("ID"),,.tSC)
 		}
-		else {
+		else 
+		{
 			set obj = ##class(IRISDemo.Data.Patient.Encounter).%New()
+			set obj.EncounterNumber = EncounterNumber
+			
+			set objPatient = ##class(IRISDemo.Data.Patient.Demographics).PatientIDIndexOpen(PatientID)
+			If objPatient=""
+			{
+				set objPatient = ##class(IRISDemo.Data.Patient.Demographics).%New()
+				Set objPatient.PatientID = PatientID
+			}
+			Set obj.Patient = objPatient
 		}
 
 	
 		// Strip out any empty string set to char(0)
 		set AdmissionSource = $translate(AdmissionSource,$char(0))
 		set DischargeLocation = $translate(DischargeLocation,$char(0))
-	
-		set obj.PatientID = PatientID
-		set obj.EncounterNumber = EncounterNumber
 		set obj.EncounterType = EncounterType
 		set obj.AdmissionSource = AdmissionSource
 		set obj.StartDate = StartDate
