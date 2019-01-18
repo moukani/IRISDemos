@@ -21,13 +21,22 @@ Parameter SETTINGS = "SMTPServer,SMTPPort,Credentials";
 Method Send(pRequest As IRISDemo.BO.Email.EmailMessage, Output pResponse As Ens.Response) As %Status
 {
 	set tSC = $$$OK
-	set objMessage = ##class(%Net.MailMessage).%New()
-	set objMessage.From = pRequest.From
-	set objMessage.Subject = pRequest.Subject
-	set objMessage.TextData = pRequest.MessageText
-	set objMessage.To = pRequest.To
-	// Nothing to send it to yet so just ignore
-	//set tSC = ..Adapter.SendMail(objMessage)
+	Try
+	{
+		set objMessage = ##class(%Net.MailMessage).%New()
+		set objMessage.From = pRequest.From
+		set objMessage.Subject = pRequest.Subject
+		set objMessage.TextData = pRequest.MessageText
+		set objMessage.To = pRequest.To
+		
+		// Nothing to send it to yet so just ignore
+		//set tSC = ..Adapter.SendMail(objMessage)
+	}
+	Catch (oException)
+	{
+		Set tSC = oException.AsStatus()
+	}
+	
 	Quit tSC
 }
 
