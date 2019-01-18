@@ -47,7 +47,7 @@ ClassMethod ThrowStatusExceptionIfError(pSC As %Status, pExceptionName As %Strin
 
 ClassMethod ThrowSQLExceptionIfError(pSQLCODE As %Status, pMsg As %String, pExceptionName As %String)
 {
-	Quit:SQLCODE>=0
+	Quit:pSQLCODE>=0
 	
 	//Let's create a simple sql exception first
 	Set sqlException = ##class(%Exception.SQL).CreateFromSQLCODE(pSQLCODE, pMsg) 

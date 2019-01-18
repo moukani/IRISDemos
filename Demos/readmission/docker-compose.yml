@@ -91,7 +91,7 @@ services:
     - IRIS_MASTER_PORT=51773 
     - IRIS_MASTER_USERNAME=SuperUser 
     - IRIS_MASTER_PASSWORD=sys 
-    - IRIS_MASTER_NAMESPACE=APP 
+    - IRIS_MASTER_NAMESPACE=APPINT
 
   sparkmaster:
     depends_on: 
@@ -101,11 +101,11 @@ services:
     environment:
       SPARK_NODE_TYPE: Master
       SPARK_PUBLIC_DNS: localhost
-      IRIS_MASTER_HOST: datalake # DNS based on the name of the service!
-      IRIS_MASTER_PORT: 51773 
-      IRIS_MASTER_USERNAME: SuperUser 
-      IRIS_MASTER_PASSWORD: sys 
-      IRIS_MASTER_NAMESPACE: APP 
+      IRIS_MASTER_HOST: RRLACESrv
+      IRIS_MASTER_PORT: 51773
+      IRIS_MASTER_USERNAME: SuperUser
+      IRIS_MASTER_PASSWORD: sys
+      IRIS_MASTER_NAMESPACE: APPINT
     ports:
       - 4040:4040
       - 6066:6066
@@ -120,11 +120,11 @@ services:
     image: amirsamary/irisdemo:spark-iris
     hostname: worker1
     environment:
-      IRIS_MASTER_HOST: datalake # DNS based on the name of the service!
-      IRIS_MASTER_PORT: 51773 
-      IRIS_MASTER_USERNAME: SuperUser 
-      IRIS_MASTER_PASSWORD: sys 
-      IRIS_MASTER_NAMESPACE: APP 
+      IRIS_MASTER_HOST: RRLACESrv
+      IRIS_MASTER_PORT: 51773
+      IRIS_MASTER_USERNAME: SuperUser
+      IRIS_MASTER_PASSWORD: sys
+      IRIS_MASTER_NAMESPACE: APPINT
 
       SPARK_NODE_TYPE: Worker
       SPARK_WORKER_CORES: 1
@@ -143,11 +143,11 @@ services:
     image: amirsamary/irisdemo:spark-iris
     hostname: worker2
     environment:
-      IRIS_MASTER_HOST: datalake # DNS based on the name of the service!
-      IRIS_MASTER_PORT: 51773 
-      IRIS_MASTER_USERNAME: SuperUser 
-      IRIS_MASTER_PASSWORD: sys 
-      IRIS_MASTER_NAMESPACE: APP 
+      IRIS_MASTER_HOST: RRLACESrv
+      IRIS_MASTER_PORT: 51773
+      IRIS_MASTER_USERNAME: SuperUser
+      IRIS_MASTER_PASSWORD: sys
+      IRIS_MASTER_NAMESPACE: APPINT
 
       SPARK_NODE_TYPE: Worker
       SPARK_WORKER_CORES: 1

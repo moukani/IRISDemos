@@ -26,11 +26,11 @@ ClassMethod GetAScore(pEncounterID As IRISDemo.Data.Patient.Encounter) As %Integ
 	
 	// Need to determine if this admission is via the emergency dept 
 	// For now we'll take the encounter type but could be a lookup by admission source
-	set tCScore = 0
+	set tAScore = 0
 	set objSQL = ##class(%SQL.Statement).%ExecDirect(,"select EncounterType from IRISDemo_Data_Patient.Encounter where ID = '"_pEncounterID_"'")
-	if objSQL.%Next() if objSQL.%GetData(1) = "E" set tCScore = 3
+	if objSQL.%Next() if objSQL.%GetData(1) = "E" set tAScore = 3
 
-	quit tCScore
+	quit tAScore
 }
 
 /// C Score - Comorbidities Score
@@ -42,7 +42,7 @@ ClassMethod GetCScore(pEncounterID As IRISDemo.Data.Patient.Encounter) As %Integ
 	set tCScore = 0
 
 	// Get the patient number
-	set objSQL = ##class(%SQL.Statement).%ExecDirect(,"select PatientID from IRISDemo_Data_Patient.Encounter where ID = '"_pEncounterID_"'")
+	set objSQL = ##class(%SQL.Statement).%ExecDirect(,"select Patient->PatientID from IRISDemo_Data_Patient.Encounter where ID = '"_pEncounterID_"'")
 	if objSQL.%Next() {
 		set pId = objSQL.%GetData(1)
 		// Get all the diagnoses for this patient
@@ -88,7 +88,7 @@ ClassMethod GetEScore(pEncounterID As IRISDemo.Data.Patient.Encounter) As %Integ
 	// tEmergencyVisits is the count of patient visits to emergency dept in the 6 months prior to current admission,
 	// not including the current admission
 	set tEScore = 0
-	set objSQL = ##class(%SQL.Statement).%ExecDirect(,"select PatientID,StartDate from IRISDemo_Data_Patient.Encounter where ID = '"_pEncounterID_"'")
+	set objSQL = ##class(%SQL.Statement).%ExecDirect(,"select Patient->PatientID,StartDate from IRISDemo_Data_Patient.Encounter where ID = '"_pEncounterID_"'")
 	if objSQL.%Next() {
 		set pId = objSQL.%GetData(1)
 		set eDate = objSQL.%GetData(2)

@@ -65,6 +65,20 @@ function green() {
 function checkContainer() {
 
     printfY "\nChecking service $service...\n"
+    if docker logs $container --tail 30 2>&1 | grep 'errors during journal rollback'
+    then
+        docker logs $container --tail 30 2>&1 | grep 'errors during journal rollback'
+        
+        printfR "\nFound unrecoverable error on service $service. Try building the service again...\n"
+
+        docker rmi -f ${PWD##*/}_$service
+        docker-compose build $service
+        docker-compose start $service
+        sleep 10
+
+        checkContainer
+    fi
+
     if docker logs $container --tail 30 2>&1 | grep -E '(PROTECT|Shutting down the system)'
     then
         docker logs $container --tail 30 2>&1 | grep -E '(PROTECT|Shutting down the system)'
