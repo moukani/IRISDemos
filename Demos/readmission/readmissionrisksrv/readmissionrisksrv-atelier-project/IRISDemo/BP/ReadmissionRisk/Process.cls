@@ -3,14 +3,6 @@ Class IRISDemo.BP.ReadmissionRisk.Process Extends Ens.BusinessProcessBPL
 {
 
 /// BPL Definition
-Storage Default
-{
-<Description>
-<![CDATA[BPL Definition]]></Description>
-<Type>%Storage.Persistent</Type>
-}
-
-/// BPL Definition
 XData BPL [ XMLNamespace = "http://www.intersystems.com/bpl" ]
 {
 <process language='objectscript' request='RRLACESrv.BO.DischargeRequest' response='Ens.Response' height='2000' width='2000' >
@@ -91,7 +83,7 @@ XData BPL [ XMLNamespace = "http://www.intersystems.com/bpl" ]
 <response type='EnsLib.Workflow.TaskResponse' />
 </call>
 <call name='Alert Care Team' target='Risk Alert Email Operation' async='0' xpos='470' ypos='950' >
-<request type='IRISDemo.Message.EmailRequest' >
+<request type='IRISDemo.BO.Email.EmailMessage' >
 <assign property="callrequest.From" value="&quot;IRISDemo&quot;" action="set" />
 <assign property="callrequest.Subject" value="&quot;LACE readmission alert&quot;" action="set" />
 <assign property="callrequest.To" value="&quot;readmission.alert@healthcare.med&quot;" action="set" />
@@ -112,6 +104,14 @@ XData BPL [ XMLNamespace = "http://www.intersystems.com/bpl" ]
 </if>
 </sequence>
 </process>
+}
+
+/// BPL Definition
+Storage Default
+{
+<Description>
+<![CDATA[BPL Definition]]></Description>
+<Type>%Storage.Persistent</Type>
 }
 
 }

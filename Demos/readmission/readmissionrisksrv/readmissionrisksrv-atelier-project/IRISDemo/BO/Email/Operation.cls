@@ -18,7 +18,7 @@ Property Credentials As %String;
 
 Parameter SETTINGS = "SMTPServer,SMTPPort,Credentials";
 
-Method Send(pRequest As IRISDemo.Message.EmailRequest, Output pResponse As Ens.Response) As %Status
+Method Send(pRequest As IRISDemo.BO.Email.EmailMessage, Output pResponse As Ens.Response) As %Status
 {
 	set tSC = $$$OK
 	set objMessage = ##class(%Net.MailMessage).%New()
@@ -34,7 +34,7 @@ Method Send(pRequest As IRISDemo.Message.EmailRequest, Output pResponse As Ens.R
 XData MessageMap
 {
 <MapItems>
-	<MapItem MessageType="Ens.Request"> 
+	<MapItem MessageType="IRISDemo.BO.Email.EmailMessage"> 
 		<Method>Send</Method>
 	</MapItem>
 </MapItems>
