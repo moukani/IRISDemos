@@ -111,7 +111,11 @@ Class IRISDemo.Data.Utils
 		{
 			set obj = ##class(IRISDemo.Data.Patient.Encounter).%New()
 			set obj.Patient = ##class(IRISDemo.Data.Patient.Demographics).PatientIDIndexOpen(objRs.Get("PatientID"))
-			$$$ThrowException("LoadPatientEncountersPatientNotFoundException", "PatientID: "_objRs.Get("PatientID"))
+			If obj.Patient=""
+			{
+				// Skip this encounter. There is no patient for it.
+				Continue
+			}
 			
 			set obj.EncounterNumber = objRs.Get("EncounterNumber")
 			set obj.EncounterType = objRs.Get("EncounterType")
