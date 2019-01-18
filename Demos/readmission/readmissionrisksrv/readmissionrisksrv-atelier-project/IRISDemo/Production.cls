@@ -13,8 +13,6 @@ XData ProductionDefinition
   <Item Name="LACE SOAP Operation" Category="" ClassName="RRLACESrv.BO.LACESoap" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
     <Setting Target="Adapter" Name="SOAPCredentials">RRLACESrv</Setting>
   </Item>
-  <Item Name="LACE Risk Process" Category="" ClassName="IRISDemo.BP.LACE.Process" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
-  </Item>
   <Item Name="HIS HL7v2 TCP Feed" Category="" ClassName="EnsLib.HL7.Service.TCPService" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
     <Setting Target="Adapter" Name="Port">9999</Setting>
     <Setting Target="Host" Name="MessageSchemaCategory">2.5</Setting>
@@ -24,6 +22,8 @@ XData ProductionDefinition
   <Item Name="Risk Alert Email Operation" Category="" ClassName="IRISDemo.BO.Email.Operation" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
   </Item>
   <Item Name="Care Team" Category="" ClassName="EnsLib.Workflow.Operation" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+  </Item>
+  <Item Name="Readmission Risk Process" Category="" ClassName="IRISDemo.BP.ReadmissionRisk.Process" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
   </Item>
 </Production>
 }
