@@ -6,440 +6,458 @@ Class IRISDemo.Data.Utils
 	/// be correctly computed in 6 months from now.
 	Parameter DATEWINDOW = { $Horolog-$ZDateH("2017-04-01",3) };
 	
-	classmethod LoadDemoData() as %Status
+	Classmethod LoadDemoData()
 	{
-		set tSC = $$$OK
-		try {
-			write !!,"Loading demo data",!
-			set tSC = ..LoadIndexData("/tmp/ComorbidityIndexMapping.csv") if $$$ISERR(tSC) quit
-			set tSC = ..LoadPatientDemographics("/tmp/patient_demographics.csv") if $$$ISERR(tSC) quit
-			set tSC = ..LoadPatientDiagnoses("/tmp/patient_diagnoses.csv") if $$$ISERR(tSC) quit
-			set tSC = ..LoadPatientEncounters("/tmp/patient_encounters.csv") if $$$ISERR(tSC) quit
-			set tSC = ..LoadTermList("/tmp/termlist_admissionsource.csv") if $$$ISERR(tSC) quit
-			set tSC = ..UpdateDemoPatients() if $$$ISERR(tSC) quit
-			
-			set tSC = ##class(%DeepSee.Utils).%BuildCube("LACE",0,0)
-			
-			write !!,"Loading demo data finished",!!
-		}
-		catch(objException) {
-			set tSC = objException.AsStatus()
-		} 
-
-		quit tSC
+		Write !!,"Loading demo data",!
+		Do ..LoadIndexData("/tmp/ComorbidityIndexMapping.csv")
+		
+		Do ..LoadPatientDemographics("/tmp/patient_demographics.csv")
+		
+		Do ..LoadPatientDiagnoses("/tmp/patient_diagnoses.csv")
+		
+		Do ..LoadPatientEncounters("/tmp/patient_encounters.csv")
+		
+		Do ..LoadTermList("/tmp/termlist_admissionsource.csv")
+		
+		Do ..UpdateDemoPatients()
+		
+		Set tSC = ##class(%DeepSee.Utils).%BuildCube("LACE",0,0)
+		$$$ThrowStatusExceptionIfError(tSC, "BuildLACECubeException")
+		
+		write !!,"Loading demo data finished",!!
 	}
 	
-	classmethod LoadIndexData(fileName as %String) as %Status
+	Classmethod LoadIndexData(fileName as %String)
 	{
-		#Dim objRs As %Library.ResultSet
-		try {
-			set tSC = ##class(IRISDemo.Data.SNOMED2ICD).%KillExtent() if $$$ISERR(tSC) quit
-			set tSC = ##class(IRISDemo.Data.ComorbidityIndex).%KillExtent() if $$$ISERR(tSC) quit
+		Set objRs = ##class(%Library.ResultSet).%New("IRISDemo.Util.FileReader:CSV")
+
+		Set tSC = objRs.Execute(fileName) 
+		$$$ThrowStatusExceptionIfError(tSC, "LoadIndexDataFileException")
 	
-			set objRs = ##class(%Library.ResultSet).%New("IRISDemo.Util.FileReader:CSV")
-
-			Set tSC = objRs.Execute(fileName) 
-			$$$ThrowStatusExceptionIfError(tSC, "LoadIndexDataFileException")
-		
-			While objRs.Next() 
-			{
-				// Mapping from SNOMED to ICD
-				set objMapping = ##class(IRISDemo.Data.SNOMED2ICD).%New()
-				set objMapping.SNOMEDCode = objRs.Get("SNOMEDCode")
-				set objMapping.ICDCode = objRs.Get("ICDCode")
-				set tSC = objMapping.%Save() if $$$ISERR(tSC) quit
-			
-				// Setup comorbidity index values for ICD codes
-				set objIndex = ##class(IRISDemo.Data.ComorbidityIndex).%New()
-				set objIndex.ICDCode = objRs.Get("ICDCode")
-				set objIndex.Index = objRs.Get("CharlsonComorbidityIndex")
-				set objIndex.Comorbidity = objRs.Get("Comorbidity")
-				do objIndex.%Save() // Don't care about errors here as we will see the same ICD code many times but only need 1. The unique index will take care of this.
-			}
-		}
-		catch(objException)
+		While objRs.Next() 
 		{
-			set tSC = objException.AsStatus()
+			// Mapping from SNOMED to ICD
+			Set objMapping = ##class(IRISDemo.Data.SNOMED2ICD).%New()
+			Set objMapping.SNOMEDCode = objRs.Get("SNOMEDCode")
+			Set objMapping.ICDCode = objRs.Get("ICDCode")
+			Set tSC = objMapping.%Save()
+			$$$ThrowStatusExceptionIfError(tSC, "SNOMED2ICDMappingSaveException")
+		
+			// Setup comorbidity index values for ICD codes
+			Set objIndex = ##class(IRISDemo.Data.ComorbidityIndex).%New()
+			Set objIndex.ICDCode = objRs.Get("ICDCode")
+			Set objIndex.Index = objRs.Get("CharlsonComorbidityIndex")
+			Set objIndex.Comorbidity = objRs.Get("Comorbidity")
+			do objIndex.%Save() // Don't care about errors here as we will see the same ICD code many times but only need 1. The unique index will take care of this.
 		}
-		quit tSC
-	}
-	classmethod LoadPatientDemographics(fileName as %String) as %Status
-	{
-		try {
-			set tSC = ##class(IRISDemo.Data.Patient.Demographics).%KillExtent() if $$$ISERR(tSC) quit
-			set objRs = ##class(%Library.ResultSet).%New("IRISDemo.Util.FileReader:CSV")
-		
-			Set tSC = objRs.Execute(fileName) 
-			$$$ThrowStatusExceptionIfError(tSC, "LoadIndexDataFileException")
-		
-			While objRs.Next() 
-			{
-				set obj = ##class(IRISDemo.Data.Patient.Demographics).%New()
-				if objRs.Get("DoB") '= "" set obj.DoB = $zdateh(objRs.Get("DoB"),3)+..#DATEWINDOW
-				set obj.PatientID = objRs.Get("PatientID")
-				set obj.PostalCode = objRs.Get("PostalCode")
-				set obj.Gender = objRs.Get("Gender")
-				set obj.Lastname = objRs.Get("Lastname")
-				set obj.Firstname = objRs.Get("Firstname")
-			
-				set tSC = obj.%Save() if $$$ISERR(tSC) quit
-			}
-		}
-		catch(objException) {
-			set tSC = objException.AsStatus()
-		}
-
-		quit tSC
-	}
-	classmethod LoadPatientDiagnoses(fileName as %String) as %Status
-	{
-		do {
-			set tSC = ##class(IRISDemo.Data.Patient.Diagnosis).%KillExtent() if $$$ISERR(tSC) quit
-			set objRs = ##class(%Library.ResultSet).%New("IRISDemo.Util.FileReader:CSV")
-		
-			Set tSC = objRs.Execute(fileName) 
-			$$$ThrowStatusExceptionIfError(tSC, "LoadIndexDataFileException")
-		
-			While objRs.Next() 
-			{
-				set obj = ##class(IRISDemo.Data.Patient.Diagnosis).%New()
-				set obj.PatientID = objRs.Get("PatientID")
-				set obj.EncounterNumber = objRs.Get("EncounterNumber")
-				set obj.Code = objRs.Get("Code")
-				set obj.Description = objRs.Get("Description")
-				set obj.CodingStandard = objRs.Get("CodingStandard")
-				if objRs.Get("OnsetDate") '= "" set obj.OnsetDate = $zdateh(objRs.Get("OnsetDate"),3)+..#DATEWINDOW
-				if objRs.Get("ToDate") '= "" set obj.ToDate = $zdate(objRs.Get("ToDate"),3)+..#DATEWINDOW
-				set obj.Status = objRs.Get("Status")
-				set tSC = obj.%Save() if $$$ISERR(tSC) quit
-			}
-		} while 0
-		quit tSC
 	}
 	
-	classmethod LoadPatientEncounters(fileName as %String) as %Status
+	Classmethod LoadPatientDemographics(fileName as %String)
 	{
-		try {
-			set tSC = ##class(IRISDemo.Data.Patient.Encounter).%KillExtent() if $$$ISERR(tSC) quit
-			set objRs = ##class(%Library.ResultSet).%New("IRISDemo.Util.FileReader:CSV")
-		
-			Set tSC = objRs.Execute(fileName) 
-			$$$ThrowStatusExceptionIfError(tSC, "LoadIndexDataFileException")
-		
-			While objRs.Next() 
-			{
-				set obj = ##class(IRISDemo.Data.Patient.Encounter).%New()
-				set obj.Patient = ##class(IRISDemo.Data.Patient.Demographics).PatientIDIndexOpen(objRs.Get("PatientID"))
-				set obj.EncounterNumber = objRs.Get("EncounterNumber")
-				set obj.EncounterType = objRs.Get("EncounterType")
-				if objRs.Get("StartDate") '= "" set obj.StartDate = $zdateh(objRs.Get("StartDate"),3)+..#DATEWINDOW
-				if objRs.Get("StartTime") '= "" set obj.StartTime = $ztimeh(objRs.Get("StartTime"))
-				if objRs.Get("EndDate") '= "" set obj.EndDate = $zdateh(objRs.Get("EndDate"),3)+..#DATEWINDOW
-				if objRs.Get("EndTime") '= "" set obj.EndTime = $ztimeh(objRs.Get("EndTime"))
-				set obj.AdmissionSource = objRs.Get("AdmissionSource")
-				set obj.AdmitReason = objRs.Get("AdmitReason")
-				set obj.DischargeLocation = objRs.Get("DischargeLocation")
-				if $length(obj.DischargeLocation) < 4 set obj.DischargeLocation = "Home"
-				if (obj.StartDate '= "")&&(obj.EndDate '= "") set obj.LOS = (obj.EndDate - obj.StartDate)
-				set tSC = obj.%Save() if $$$ISERR(tSC) quit
-			}
-		}
-		catch(objException)
+		Set objRs = ##class(%Library.ResultSet).%New("IRISDemo.Util.FileReader:CSV")
+	
+		Set tSC = objRs.Execute(fileName) 
+		$$$ThrowStatusExceptionIfError(tSC, "LoadPatientDemographicsFileException")
+	
+		While objRs.Next() 
 		{
-			set tSC = objException.AsStatus()
+			Set obj = ##class(IRISDemo.Data.Patient.Demographics).%New()
+			
+			If objRs.Get("DoB") '= "" Set obj.DoB = $zdateh(objRs.Get("DoB"),3)+..#DATEWINDOW
+			Set obj.PatientID = objRs.Get("PatientID")
+			Set obj.PostalCode = objRs.Get("PostalCode")
+			Set obj.Gender = objRs.Get("Gender")
+			Set obj.Lastname = objRs.Get("Lastname")
+			Set obj.Firstname = objRs.Get("Firstname")
+		
+			Set tSC = obj.%Save()
+			$$$ThrowStatusExceptionIfError(tSC, "PatientDemographicsSaveException")
 		}
-		quit tSC
 	}
-	classmethod LoadTermList(fileName as %String)
+	
+	Classmethod LoadPatientDiagnoses(fileName as %String)
 	{
-		try {
-			set tSC = ##class(%DeepSee.TermList).%ImportCSV(fileName,,1)
-		}
-		catch(objException)
+		set objRs = ##class(%Library.ResultSet).%New("IRISDemo.Util.FileReader:CSV")
+	
+		Set tSC = objRs.Execute(fileName) 
+		$$$ThrowStatusExceptionIfError(tSC, "LoadPatientDiagnosesFileException")
+	
+		While objRs.Next() 
 		{
-			set tSC = objException.AsStatus()
+			Set obj = ##class(IRISDemo.Data.Patient.Diagnosis).%New()
+			
+			Set obj.PatientID = objRs.Get("PatientID")
+			Set obj.EncounterNumber = objRs.Get("EncounterNumber")
+			Set obj.Code = objRs.Get("Code")
+			Set obj.Description = objRs.Get("Description")
+			Set obj.CodingStandard = objRs.Get("CodingStandard")
+			If objRs.Get("OnsetDate") '= "" set obj.OnsetDate = $zdateh(objRs.Get("OnsetDate"),3)+..#DATEWINDOW
+			If objRs.Get("ToDate") '= "" set obj.ToDate = $zdate(objRs.Get("ToDate"),3)+..#DATEWINDOW
+			Set obj.Status = objRs.Get("Status")
+			
+			Set tSC = obj.%Save()
+			$$$ThrowStatusExceptionIfError(tSC, "DiagnosisSaveException")
 		}
-		quit tSC
 	}
+	
+	Classmethod LoadPatientEncounters(fileName as %String)
+	{
+		Set objRs = ##class(%Library.ResultSet).%New("IRISDemo.Util.FileReader:CSV")
+	
+		Set tSC = objRs.Execute(fileName) 
+		$$$ThrowStatusExceptionIfError(tSC, "LoadPatientEncountersFileException")
+	
+		While objRs.Next() 
+		{
+			set obj = ##class(IRISDemo.Data.Patient.Encounter).%New()
+			set obj.Patient = ##class(IRISDemo.Data.Patient.Demographics).PatientIDIndexOpen(objRs.Get("PatientID"))
+			$$$ThrowException("LoadPatientEncountersPatientNotFoundException", "PatientID: "_objRs.Get("PatientID"))
+			
+			set obj.EncounterNumber = objRs.Get("EncounterNumber")
+			set obj.EncounterType = objRs.Get("EncounterType")
+			if objRs.Get("StartDate") '= "" set obj.StartDate = $zdateh(objRs.Get("StartDate"),3)+..#DATEWINDOW
+			if objRs.Get("StartTime") '= "" set obj.StartTime = $ztimeh(objRs.Get("StartTime"))
+			if objRs.Get("EndDate") '= "" set obj.EndDate = $zdateh(objRs.Get("EndDate"),3)+..#DATEWINDOW
+			if objRs.Get("EndTime") '= "" set obj.EndTime = $ztimeh(objRs.Get("EndTime"))
+			set obj.AdmissionSource = objRs.Get("AdmissionSource")
+			set obj.AdmitReason = objRs.Get("AdmitReason")
+			set obj.DischargeLocation = objRs.Get("DischargeLocation")
+			if $length(obj.DischargeLocation) < 4 set obj.DischargeLocation = "Home"
+			if (obj.StartDate '= "")&&(obj.EndDate '= "") set obj.LOS = (obj.EndDate - obj.StartDate)
+			
+			Set tSC = obj.%Save()
+			$$$ThrowStatusExceptionIfError(tSC, "LoadPatientEncountersSaveException")
+		}
+	}
+
+	Classmethod LoadTermList(fileName as %String)
+	{
+		Set tSC = ##class(%DeepSee.TermList).%ImportCSV(fileName,,1)
+		$$$ThrowStatusExceptionIfError(tSC, "LoadTermListException")
+	}
+	
 	/// Pick the patients we want to use on the demo and give them fixed names
-	ClassMethod UpdateDemoPatients() as %Status
+	ClassMethod UpdateDemoPatients()
 	{
 		#dim objPat as IRISDemo.Data.Patient.Demographics
 		#dim objEnc as IRISDemo.Data.Patient.Encounter
 		#dim objDgn as IRISDemo.Data.Patient.Diagnosis
 		
-		try {
-			// Remove the 3 patients first in case we have the ID numbers in the system
-			for pId = 900001:1:900003 {
-				set objSQL = ##class(%SQL.Statement).%ExecDirect(,"delete from IRISDemo_Data_Patient.Demographics where PatientID ='"_pId_"'")
-				set objSQL = ##class(%SQL.Statement).%ExecDirect(,"delete from IRISDemo_Data_Patient.Encounter where Patient->PatientID ='"_pId_"'")
-				set objSQL = ##class(%SQL.Statement).%ExecDirect(,"delete from IRISDemo_Data_Patient.Diagnosis where PatientID ='"_pId_"'")
-			}
+		// Remove the 3 patients first in case we have the ID numbers in the system
+		for pId = 900001:1:900003 {
+			set objSQL = ##class(%SQL.Statement).%ExecDirect(,"delete from IRISDemo_Data_Patient.Demographics where PatientID ='"_pId_"'")
+			set objSQL = ##class(%SQL.Statement).%ExecDirect(,"delete from IRISDemo_Data_Patient.Encounter where Patient->PatientID ='"_pId_"'")
+			set objSQL = ##class(%SQL.Statement).%ExecDirect(,"delete from IRISDemo_Data_Patient.Diagnosis where PatientID ='"_pId_"'")
+		}
 
-			// First - a very sick patient
-			set objPat = ##class(IRISDemo.Data.Patient.Demographics).%New()
-			set objPat.PatientID = "900001"
-			set objPat.DoB = $zdateh("1950-02-03",3) + ..#DATEWINDOW
-			set objPat.PostalCode = "02142"
-			set objPat.Gender = "M"
-			set objPat.Firstname = "Frederick"
-			set objPat.Lastname = "Masters"
-			set tSC = objPat.%Save() if $$$ISERR(tSC) quit
-			// Encounter #1
-			set objEnc = ##class(IRISDemo.Data.Patient.Encounter).%New()
-			set objEnc.Patient = objPat
-			set objEnc.EncounterNumber = "9001001"
-			set objEnc.EncounterType = "E"
-			set objEnc.StartDate = ($horolog-170)
-			set objEnc.StartTime = $ztimeh("10:00")
-			set objEnc.EndDate = (objEnc.StartDate + 3)
-			set objEnc.EndTime = $ztimeh("17:00")
-			set objEnc.AdmissionSource = "ED"
-			set tSC = objEnc.%Save() if $$$ISERR(tSC) quit
-			set objDgn = ##class(IRISDemo.Data.Patient.Diagnosis).%New()
-			set objDgn.PatientID = objPat.PatientID
-			set objDgn.EncounterNumber = objEnc.EncounterNumber
-			set objDgn.Code = "698591006"
-			set objDgn.Description = "Renal disease"
-			set objDgn.CodingStandard = "SNOMED"
-			set objDgn.OnsetDate = objEnc.StartDate
-			set objDgn.Status = "A"
-			set tSC = objDgn.%Save() if $$$ISERR(tSC) quit
-			set onset(objDgn.Code) = objDgn.OnsetDate
-			// Encounter #2
-			set objEnc = ##class(IRISDemo.Data.Patient.Encounter).%New()
-			set objEnc.Patient = objPat
-			set objEnc.EncounterNumber = "9001002"
-			set objEnc.EncounterType = "E"
-			set objEnc.StartDate = ($horolog - 155)
-			set objEnc.StartTime = $ztimeh("09:30")
-			set objEnc.EndDate = (objEnc.StartDate + 4)
-			set objEnc.EndTime = $ztimeh("17:00")
-			set objEnc.AdmissionSource = "ED"
-			set tSC = objEnc.%Save() if $$$ISERR(tSC) quit
-			set objDgn = ##class(IRISDemo.Data.Patient.Diagnosis).%New()
-			set objDgn.PatientID = objPat.PatientID
-			set objDgn.EncounterNumber = objEnc.EncounterNumber
-			set objDgn.Code = "698591006"
-			set objDgn.Description = "Renal disease"
-			set objDgn.CodingStandard = "SNOMED"
-			set objDgn.OnsetDate = onset(objDgn.Code)
-			set objDgn.Status = "A"
-			set tSC = objDgn.%Save() if $$$ISERR(tSC) quit
-			// Encounter #3
-			set objEnc = ##class(IRISDemo.Data.Patient.Encounter).%New()
-			set objEnc.Patient = objPat
-			set objEnc.EncounterNumber = "9001003"
-			set objEnc.EncounterType = "E"
-			set objEnc.StartDate = ($horolog - 140)
-			set objEnc.StartTime = $ztimeh("10:00")
-			set objEnc.EndDate = (objEnc.StartDate + 6)
-			set objEnc.EndTime = $ztimeh("17:00")
-			set objEnc.AdmissionSource = "ED"
-			set tSC = objEnc.%Save() if $$$ISERR(tSC) quit
-			set objDgn = ##class(IRISDemo.Data.Patient.Diagnosis).%New()
-			set objDgn.PatientID = objPat.PatientID
-			set objDgn.EncounterNumber = objEnc.EncounterNumber
-			set objDgn.Code = "698591006"
-			set objDgn.Description = "Renal disease"
-			set objDgn.CodingStandard = "SNOMED"
-			set objDgn.OnsetDate = onset(objDgn.Code)
-			set objDgn.Status = "A"
-			set tSC = objDgn.%Save() if $$$ISERR(tSC) quit
-			// Encounter #4
-			set objEnc = ##class(IRISDemo.Data.Patient.Encounter).%New()
-			set objEnc.Patient = objPat
-			set objEnc.EncounterNumber = "9001004"
-			set objEnc.EncounterType = "E"
-			set objEnc.StartDate = ($horolog - 120)
-			set objEnc.StartTime = $ztimeh("10:00")
-			set objEnc.EndDate = (objEnc.StartDate + 5)
-			set objEnc.EndTime = $ztimeh("17:00")
-			set objEnc.AdmissionSource = "ED"
-			set tSC = objEnc.%Save() if $$$ISERR(tSC) quit
-			set objDgn = ##class(IRISDemo.Data.Patient.Diagnosis).%New()
-			set objDgn.PatientID = objPat.PatientID
-			set objDgn.EncounterNumber = objEnc.EncounterNumber
-			set objDgn.Code = "698591006"
-			set objDgn.Description = "Renal disease"
-			set objDgn.CodingStandard = "SNOMED"
-			set objDgn.OnsetDate = onset(objDgn.Code)
-			set objDgn.Status = "A"
-			set tSC = objDgn.%Save() if $$$ISERR(tSC) quit
-			// Encounter #5
-			set objEnc = ##class(IRISDemo.Data.Patient.Encounter).%New()
-			set objEnc.Patient = objPat
-			set objEnc.EncounterNumber = "9001005"
-			set objEnc.EncounterType = "E"
-			set objEnc.StartDate = ($horolog - 90)
-			set objEnc.StartTime = $ztimeh("10:00")
-			set objEnc.EndDate = (objEnc.StartDate + 4)
-			set objEnc.EndTime = $ztimeh("17:00")
-			set objEnc.AdmissionSource = "ED"
-			set tSC = objEnc.%Save() if $$$ISERR(tSC) quit
-			set objDgn = ##class(IRISDemo.Data.Patient.Diagnosis).%New()
-			set objDgn.PatientID = objPat.PatientID
-			set objDgn.EncounterNumber = objEnc.EncounterNumber
-			set objDgn.Code = "59278001"
-			set objDgn.Description = "Diabetes with chronic complication"
-			set objDgn.CodingStandard = "SNOMED"
-			set objDgn.OnsetDate = objEnc.StartDate
-			set objDgn.Status = "A"
-			set tSC = objDgn.%Save() if $$$ISERR(tSC) quit
-			set onset(objDgn.Code) = objDgn.OnsetDate
-			// Encounter #6
-			set objEnc = ##class(IRISDemo.Data.Patient.Encounter).%New()
-			set objEnc.Patient = objPat
-			set objEnc.EncounterNumber = "9001006"
-			set objEnc.EncounterType = "E"
-			set objEnc.StartDate = ($horolog - 60)
-			set objEnc.StartTime = $ztimeh("10:00")
-			set objEnc.EndDate = (objEnc.StartDate + 2)
-			set objEnc.EndTime = $ztimeh("17:00")
-			set objEnc.AdmissionSource = "ED"
-			set tSC = objEnc.%Save() if $$$ISERR(tSC) quit
-			set objDgn = ##class(IRISDemo.Data.Patient.Diagnosis).%New()
-			set objDgn.PatientID = objPat.PatientID
-			set objDgn.EncounterNumber = objEnc.EncounterNumber
-			set objDgn.Code = "698591006"
-			set objDgn.Description = "Renal disease"
-			set objDgn.CodingStandard = "SNOMED"
-			set objDgn.OnsetDate = onset(objDgn.Code)
-			set objDgn.Status = "A"
-			set tSC = objDgn.%Save() if $$$ISERR(tSC) quit
-			// Encounter #7
-			set objEnc = ##class(IRISDemo.Data.Patient.Encounter).%New()
-			set objEnc.Patient = objPat
-			set objEnc.EncounterNumber = "9001007"
-			set objEnc.EncounterType = "E"
-			set objEnc.StartDate = ($horolog - 30)
-			set objEnc.StartTime = $ztimeh("10:00")
-			set objEnc.EndDate = (objEnc.StartDate + 3)
-			set objEnc.EndTime = $ztimeh("17:00")
-			set objEnc.AdmissionSource = "ED"
-			set tSC = objEnc.%Save() if $$$ISERR(tSC) quit
-			set objDgn = ##class(IRISDemo.Data.Patient.Diagnosis).%New()
-			set objDgn.PatientID = objPat.PatientID
-			set objDgn.EncounterNumber = objEnc.EncounterNumber
-			set objDgn.Code = "22846003"
-			set objDgn.Description = "Moderate or severe liver disease"
-			set objDgn.CodingStandard = "SNOMED"
-			set objDgn.OnsetDate = objEnc.StartDate
-			set objDgn.Status = "A"
-			set tSC = objDgn.%Save() if $$$ISERR(tSC) quit
-			
-			// Now a fairly sick patient
-			set objPat = ##class(IRISDemo.Data.Patient.Demographics).%New()
-			set objPat.PatientID = "900002"
-			set objPat.DoB = $zdateh("1944-07-21",3) + ..#DATEWINDOW
-			set objPat.PostalCode = "02142"
-			set objPat.Gender = "F"
-			set objPat.Firstname = "Katherine"
-			set objPat.Lastname = "Smith"
-			set tSC = objPat.%Save() if $$$ISERR(tSC) quit
-			// Encounter #1
-			set objEnc = ##class(IRISDemo.Data.Patient.Encounter).%New()
-			set objEnc.Patient = objPat
-			set objEnc.EncounterNumber = "9002001"
-			set objEnc.EncounterType = "E"
-			set objEnc.StartDate = ($horolog - 90)
-			set objEnc.StartTime = $ztimeh("10:00")
-			set objEnc.EndDate = (objEnc.StartDate + 9)
-			set objEnc.EndTime = $ztimeh("17:00")
-			set objEnc.AdmissionSource = "ED"
-			set objEnc.DischargeLocation = "Home"
-			set tSC = objEnc.%Save() if $$$ISERR(tSC) quit
-			// Encounter #2
-			set objEnc = ##class(IRISDemo.Data.Patient.Encounter).%New()
-			set objEnc.Patient = objPat
-			set objEnc.EncounterNumber = "9002002"
-			set objEnc.EncounterType = "E"
-			set objEnc.StartDate = ($horolog - 60)
-			set objEnc.StartTime = $ztimeh("10:00")
-			set objEnc.EndDate = (objEnc.StartDate + 2)
-			set objEnc.EndTime = $ztimeh("17:00")
-			set objEnc.AdmissionSource = "ED"
-			set objEnc.DischargeLocation = "Home"
-			set tSC = objEnc.%Save() if $$$ISERR(tSC) quit
-			set objDgn = ##class(IRISDemo.Data.Patient.Diagnosis).%New()
-			set objDgn.PatientID = objPat.PatientID
-			set objDgn.EncounterNumber = objEnc.EncounterNumber
-			set objDgn.Code = "233843008"
-			set objDgn.Description = "Myocardial infarction"
-			set objDgn.CodingStandard = "SNOMED"
-			set objDgn.OnsetDate = objEnc.StartDate
-			set objDgn.Status = "A"
-			set tSC = objDgn.%Save() if $$$ISERR(tSC) quit
-			// Encounter #3
-			set objEnc = ##class(IRISDemo.Data.Patient.Encounter).%New()
-			set objEnc.Patient = objPat
-			set objEnc.EncounterNumber = "9002003"
-			set objEnc.EncounterType = "E"
-			set objEnc.StartDate = ($horolog - 45)
-			set objEnc.StartTime = $ztimeh("10:00")
-			set objEnc.EndDate = (objEnc.StartDate + 2)
-			set objEnc.EndTime = $ztimeh("17:00")
-			set objEnc.AdmissionSource = "ED"
-			set objEnc.DischargeLocation = "Home"
-			set tSC = objEnc.%Save() if $$$ISERR(tSC) quit
-			set objDgn = ##class(IRISDemo.Data.Patient.Diagnosis).%New()
-			set objDgn.PatientID = objPat.PatientID
-			set objDgn.EncounterNumber = objEnc.EncounterNumber
-			set objDgn.Code = "87555007"
-			set objDgn.Description = "Cerebrovascular disease"
-			set objDgn.CodingStandard = "SNOMED"
-			set objDgn.OnsetDate = objEnc.StartDate
-			set objDgn.Status = "A"
-			set tSC = objDgn.%Save() if $$$ISERR(tSC) quit
-			
-			// Now a fairly healthy patient
-			set objPat = ##class(IRISDemo.Data.Patient.Demographics).%New()
-			set objPat.PatientID = "900003"
-			set objPat.DoB = $zdateh("1971-08-18",3) + ..#DATEWINDOW
-			set objPat.PostalCode = "02142"
-			set objPat.Gender = "M"
-			set objPat.Firstname = "James"
-			set objPat.Lastname = "Davidson"
-			set tSC = objPat.%Save() if $$$ISERR(tSC) quit
-			// Encounter #1
-			set objEnc = ##class(IRISDemo.Data.Patient.Encounter).%New()
-			set objEnc.Patient = objPat
-			set objEnc.EncounterNumber = "9003001"
-			set objEnc.EncounterType = "E"
-			set objEnc.StartDate = ($horolog - 120)
-			set objEnc.StartTime = $ztimeh("10:00")
-			set objEnc.EndDate = (objEnc.StartDate + 4)
-			set objEnc.EndTime = $ztimeh("17:00")
-			set objEnc.AdmissionSource = "ED"
-			set objEnc.DischargeLocation = "Home"
-			set tSC = objEnc.%Save() if $$$ISERR(tSC) quit
-			set objDgn = ##class(IRISDemo.Data.Patient.Diagnosis).%New()
-			set objDgn.PatientID = objPat.PatientID
-			set objDgn.EncounterNumber = objEnc.EncounterNumber
-			set objDgn.Code = "233843008"
-			set objDgn.Description = "Myocardial infarction"
-			set objDgn.CodingStandard = "SNOMED"
-			set objDgn.OnsetDate = objEnc.StartDate
-			set objDgn.Status = "A"
-			set tSC = objDgn.%Save() if $$$ISERR(tSC) quit
-			// Encounter #2
-			set objEnc = ##class(IRISDemo.Data.Patient.Encounter).%New()
-			set objEnc.Patient = objPat
-			set objEnc.EncounterNumber = "9003002"
-			set objEnc.EncounterType = "I"
-			set objEnc.StartDate = ($horolog - 60)
-			set objEnc.StartTime = $ztimeh("10:00")
-			set objEnc.EndDate = (objEnc.StartDate + 2)
-			set objEnc.EndTime = $ztimeh("17:00")
-			set objEnc.AdmissionSource = "GA"
-			set objEnc.DischargeLocation = "Home"
-			set tSC = objEnc.%Save() if $$$ISERR(tSC) quit
-		}
-		catch(objException)
-		{
-			set tSC = objException.AsStatus()
-		}
-		quit tSC
+		// First - a very sick patient
+		set objPat = ##class(IRISDemo.Data.Patient.Demographics).%New()
+		set objPat.PatientID = "900001"
+		set objPat.DoB = $zdateh("1950-02-03",3) + ..#DATEWINDOW
+		set objPat.PostalCode = "02142"
+		set objPat.Gender = "M"
+		set objPat.Firstname = "Frederick"
+		set objPat.Lastname = "Masters"
+		Set tSC = objPat.%Save()
+		$$$ThrowStatusExceptionIfError(tSC, "UpdateDemoPatientsSavePatientException")
+
+		// Encounter #1
+		set objEnc = ##class(IRISDemo.Data.Patient.Encounter).%New()
+		set objEnc.Patient = objPat
+		set objEnc.EncounterNumber = "9001001"
+		set objEnc.EncounterType = "E"
+		set objEnc.StartDate = ($horolog-170)
+		set objEnc.StartTime = $ztimeh("10:00")
+		set objEnc.EndDate = (objEnc.StartDate + 3)
+		set objEnc.EndTime = $ztimeh("17:00")
+		set objEnc.AdmissionSource = "ED"
+		Set tSC = objEnc.%Save() 
+		$$$ThrowStatusExceptionIfError(tSC, "UpdateDemoPatientsSaveEncounterException")
+		
+		set objDgn = ##class(IRISDemo.Data.Patient.Diagnosis).%New()
+		set objDgn.PatientID = objPat.PatientID
+		set objDgn.EncounterNumber = objEnc.EncounterNumber
+		set objDgn.Code = "698591006"
+		set objDgn.Description = "Renal disease"
+		set objDgn.CodingStandard = "SNOMED"
+		set objDgn.OnsetDate = objEnc.StartDate
+		set objDgn.Status = "A"
+		Set tSC = objDgn.%Save()
+		$$$ThrowStatusExceptionIfError(tSC, "UpdateDemoPatientsSaveDiagnosisException")
+
+		
+		set onset(objDgn.Code) = objDgn.OnsetDate
+		
+		// Encounter #2
+		set objEnc = ##class(IRISDemo.Data.Patient.Encounter).%New()
+		set objEnc.Patient = objPat
+		set objEnc.EncounterNumber = "9001002"
+		set objEnc.EncounterType = "E"
+		set objEnc.StartDate = ($horolog - 155)
+		set objEnc.StartTime = $ztimeh("09:30")
+		set objEnc.EndDate = (objEnc.StartDate + 4)
+		set objEnc.EndTime = $ztimeh("17:00")
+		set objEnc.AdmissionSource = "ED"
+		Set tSC = objEnc.%Save() 
+		$$$ThrowStatusExceptionIfError(tSC, "UpdateDemoPatientsSaveEncounterException")
+		
+		set objDgn = ##class(IRISDemo.Data.Patient.Diagnosis).%New()
+		set objDgn.PatientID = objPat.PatientID
+		set objDgn.EncounterNumber = objEnc.EncounterNumber
+		set objDgn.Code = "698591006"
+		set objDgn.Description = "Renal disease"
+		set objDgn.CodingStandard = "SNOMED"
+		set objDgn.OnsetDate = onset(objDgn.Code)
+		set objDgn.Status = "A"
+		Set tSC = objDgn.%Save() 
+		$$$ThrowStatusExceptionIfError(tSC, "UpdateDemoPatientsSaveDiagnosisException")
+
+		// Encounter #3
+		set objEnc = ##class(IRISDemo.Data.Patient.Encounter).%New()
+		set objEnc.Patient = objPat
+		set objEnc.EncounterNumber = "9001003"
+		set objEnc.EncounterType = "E"
+		set objEnc.StartDate = ($horolog - 140)
+		set objEnc.StartTime = $ztimeh("10:00")
+		set objEnc.EndDate = (objEnc.StartDate + 6)
+		set objEnc.EndTime = $ztimeh("17:00")
+		set objEnc.AdmissionSource = "ED"
+		Set tSC = objEnc.%Save() 
+		$$$ThrowStatusExceptionIfError(tSC, "UpdateDemoPatientsSaveEncounterException")
+
+		set objDgn = ##class(IRISDemo.Data.Patient.Diagnosis).%New()
+		set objDgn.PatientID = objPat.PatientID
+		set objDgn.EncounterNumber = objEnc.EncounterNumber
+		set objDgn.Code = "698591006"
+		set objDgn.Description = "Renal disease"
+		set objDgn.CodingStandard = "SNOMED"
+		set objDgn.OnsetDate = onset(objDgn.Code)
+		set objDgn.Status = "A"
+		Set tSC = objDgn.%Save()
+		$$$ThrowStatusExceptionIfError(tSC, "UpdateDemoPatientsSaveDiagnosisException")
+
+		// Encounter #4
+		set objEnc = ##class(IRISDemo.Data.Patient.Encounter).%New()
+		set objEnc.Patient = objPat
+		set objEnc.EncounterNumber = "9001004"
+		set objEnc.EncounterType = "E"
+		set objEnc.StartDate = ($horolog - 120)
+		set objEnc.StartTime = $ztimeh("10:00")
+		set objEnc.EndDate = (objEnc.StartDate + 5)
+		set objEnc.EndTime = $ztimeh("17:00")
+		set objEnc.AdmissionSource = "ED"
+		Set tSC = objEnc.%Save() 
+		$$$ThrowStatusExceptionIfError(tSC, "UpdateDemoPatientsSaveEncounterException")
+
+		set objDgn = ##class(IRISDemo.Data.Patient.Diagnosis).%New()
+		set objDgn.PatientID = objPat.PatientID
+		set objDgn.EncounterNumber = objEnc.EncounterNumber
+		set objDgn.Code = "698591006"
+		set objDgn.Description = "Renal disease"
+		set objDgn.CodingStandard = "SNOMED"
+		set objDgn.OnsetDate = onset(objDgn.Code)
+		set objDgn.Status = "A"
+		Set tSC = objDgn.%Save() 
+		$$$ThrowStatusExceptionIfError(tSC, "UpdateDemoPatientsSaveDiagnosisException")
+
+		// Encounter #5
+		set objEnc = ##class(IRISDemo.Data.Patient.Encounter).%New()
+		set objEnc.Patient = objPat
+		set objEnc.EncounterNumber = "9001005"
+		set objEnc.EncounterType = "E"
+		set objEnc.StartDate = ($horolog - 90)
+		set objEnc.StartTime = $ztimeh("10:00")
+		set objEnc.EndDate = (objEnc.StartDate + 4)
+		set objEnc.EndTime = $ztimeh("17:00")
+		set objEnc.AdmissionSource = "ED"
+		Set tSC = objEnc.%Save() 
+		$$$ThrowStatusExceptionIfError(tSC, "UpdateDemoPatientsSaveEncounterException")
+
+		set objDgn = ##class(IRISDemo.Data.Patient.Diagnosis).%New()
+		set objDgn.PatientID = objPat.PatientID
+		set objDgn.EncounterNumber = objEnc.EncounterNumber
+		set objDgn.Code = "59278001"
+		set objDgn.Description = "Diabetes with chronic complication"
+		set objDgn.CodingStandard = "SNOMED"
+		set objDgn.OnsetDate = objEnc.StartDate
+		set objDgn.Status = "A"
+		Set tSC = objDgn.%Save()
+		$$$ThrowStatusExceptionIfError(tSC, "UpdateDemoPatientsSaveDiagnosisException")
+
+		set onset(objDgn.Code) = objDgn.OnsetDate
+		
+		// Encounter #6
+		set objEnc = ##class(IRISDemo.Data.Patient.Encounter).%New()
+		set objEnc.Patient = objPat
+		set objEnc.EncounterNumber = "9001006"
+		set objEnc.EncounterType = "E"
+		set objEnc.StartDate = ($horolog - 60)
+		set objEnc.StartTime = $ztimeh("10:00")
+		set objEnc.EndDate = (objEnc.StartDate + 2)
+		set objEnc.EndTime = $ztimeh("17:00")
+		set objEnc.AdmissionSource = "ED"
+		Set tSC = objEnc.%Save() 
+		$$$ThrowStatusExceptionIfError(tSC, "UpdateDemoPatientsSaveEncounterException")
+
+		set objDgn = ##class(IRISDemo.Data.Patient.Diagnosis).%New()
+		set objDgn.PatientID = objPat.PatientID
+		set objDgn.EncounterNumber = objEnc.EncounterNumber
+		set objDgn.Code = "698591006"
+		set objDgn.Description = "Renal disease"
+		set objDgn.CodingStandard = "SNOMED"
+		set objDgn.OnsetDate = onset(objDgn.Code)
+		set objDgn.Status = "A"
+		Set tSC = objDgn.%Save()
+		$$$ThrowStatusExceptionIfError(tSC, "UpdateDemoPatientsSaveDiagnosisException")
+
+		// Encounter #7
+		set objEnc = ##class(IRISDemo.Data.Patient.Encounter).%New()
+		set objEnc.Patient = objPat
+		set objEnc.EncounterNumber = "9001007"
+		set objEnc.EncounterType = "E"
+		set objEnc.StartDate = ($horolog - 30)
+		set objEnc.StartTime = $ztimeh("10:00")
+		set objEnc.EndDate = (objEnc.StartDate + 3)
+		set objEnc.EndTime = $ztimeh("17:00")
+		set objEnc.AdmissionSource = "ED"
+		Set tSC = objEnc.%Save() 
+		$$$ThrowStatusExceptionIfError(tSC, "UpdateDemoPatientsSaveEncounterException")
+
+		set objDgn = ##class(IRISDemo.Data.Patient.Diagnosis).%New()
+		set objDgn.PatientID = objPat.PatientID
+		set objDgn.EncounterNumber = objEnc.EncounterNumber
+		set objDgn.Code = "22846003"
+		set objDgn.Description = "Moderate or severe liver disease"
+		set objDgn.CodingStandard = "SNOMED"
+		set objDgn.OnsetDate = objEnc.StartDate
+		set objDgn.Status = "A"
+		Set tSC = objDgn.%Save() 
+		$$$ThrowStatusExceptionIfError(tSC, "UpdateDemoPatientsSaveDiagnosisException")
+		
+		// Now a fairly sick patient
+		set objPat = ##class(IRISDemo.Data.Patient.Demographics).%New()
+		set objPat.PatientID = "900002"
+		set objPat.DoB = $zdateh("1944-07-21",3) + ..#DATEWINDOW
+		set objPat.PostalCode = "02142"
+		set objPat.Gender = "F"
+		set objPat.Firstname = "Katherine"
+		set objPat.Lastname = "Smith"
+		Set tSC = objPat.%Save()
+		$$$ThrowStatusExceptionIfError(tSC, "UpdateDemoPatientsSavePatientException")
+
+		// Encounter #1
+		set objEnc = ##class(IRISDemo.Data.Patient.Encounter).%New()
+		set objEnc.Patient = objPat
+		set objEnc.EncounterNumber = "9002001"
+		set objEnc.EncounterType = "E"
+		set objEnc.StartDate = ($horolog - 90)
+		set objEnc.StartTime = $ztimeh("10:00")
+		set objEnc.EndDate = (objEnc.StartDate + 9)
+		set objEnc.EndTime = $ztimeh("17:00")
+		set objEnc.AdmissionSource = "ED"
+		set objEnc.DischargeLocation = "Home"
+		Set tSC = objEnc.%Save() 
+		$$$ThrowStatusExceptionIfError(tSC, "UpdateDemoPatientsSaveEncounterException")
+
+		// Encounter #2
+		set objEnc = ##class(IRISDemo.Data.Patient.Encounter).%New()
+		set objEnc.Patient = objPat
+		set objEnc.EncounterNumber = "9002002"
+		set objEnc.EncounterType = "E"
+		set objEnc.StartDate = ($horolog - 60)
+		set objEnc.StartTime = $ztimeh("10:00")
+		set objEnc.EndDate = (objEnc.StartDate + 2)
+		set objEnc.EndTime = $ztimeh("17:00")
+		set objEnc.AdmissionSource = "ED"
+		set objEnc.DischargeLocation = "Home"
+		Set tSC = objEnc.%Save() 
+		$$$ThrowStatusExceptionIfError(tSC, "UpdateDemoPatientsSaveEncounterException")
+
+		set objDgn = ##class(IRISDemo.Data.Patient.Diagnosis).%New()
+		set objDgn.PatientID = objPat.PatientID
+		set objDgn.EncounterNumber = objEnc.EncounterNumber
+		set objDgn.Code = "233843008"
+		set objDgn.Description = "Myocardial infarction"
+		set objDgn.CodingStandard = "SNOMED"
+		set objDgn.OnsetDate = objEnc.StartDate
+		set objDgn.Status = "A"
+		Set tSC = objDgn.%Save() 
+		$$$ThrowStatusExceptionIfError(tSC, "UpdateDemoPatientsSaveDiagnosisException")
+
+		// Encounter #3
+		set objEnc = ##class(IRISDemo.Data.Patient.Encounter).%New()
+		set objEnc.Patient = objPat
+		set objEnc.EncounterNumber = "9002003"
+		set objEnc.EncounterType = "E"
+		set objEnc.StartDate = ($horolog - 45)
+		set objEnc.StartTime = $ztimeh("10:00")
+		set objEnc.EndDate = (objEnc.StartDate + 2)
+		set objEnc.EndTime = $ztimeh("17:00")
+		set objEnc.AdmissionSource = "ED"
+		set objEnc.DischargeLocation = "Home"
+		Set tSC = objEnc.%Save() 
+		$$$ThrowStatusExceptionIfError(tSC, "UpdateDemoPatientsSaveEncounterException")
+
+		set objDgn = ##class(IRISDemo.Data.Patient.Diagnosis).%New()
+		set objDgn.PatientID = objPat.PatientID
+		set objDgn.EncounterNumber = objEnc.EncounterNumber
+		set objDgn.Code = "87555007"
+		set objDgn.Description = "Cerebrovascular disease"
+		set objDgn.CodingStandard = "SNOMED"
+		set objDgn.OnsetDate = objEnc.StartDate
+		set objDgn.Status = "A"
+		Set tSC = objDgn.%Save()
+		$$$ThrowStatusExceptionIfError(tSC, "UpdateDemoPatientsSaveDiagnosisException")
+		
+		// Now a fairly healthy patient
+		set objPat = ##class(IRISDemo.Data.Patient.Demographics).%New()
+		set objPat.PatientID = "900003"
+		set objPat.DoB = $zdateh("1971-08-18",3) + ..#DATEWINDOW
+		set objPat.PostalCode = "02142"
+		set objPat.Gender = "M"
+		set objPat.Firstname = "James"
+		set objPat.Lastname = "Davidson"
+		Set tSC = objPat.%Save() 
+		$$$ThrowStatusExceptionIfError(tSC, "UpdateDemoPatientsSavePatientException")
+
+		// Encounter #1
+		set objEnc = ##class(IRISDemo.Data.Patient.Encounter).%New()
+		set objEnc.Patient = objPat
+		set objEnc.EncounterNumber = "9003001"
+		set objEnc.EncounterType = "E"
+		set objEnc.StartDate = ($horolog - 120)
+		set objEnc.StartTime = $ztimeh("10:00")
+		set objEnc.EndDate = (objEnc.StartDate + 4)
+		set objEnc.EndTime = $ztimeh("17:00")
+		set objEnc.AdmissionSource = "ED"
+		set objEnc.DischargeLocation = "Home"
+		Set tSC = objEnc.%Save()
+		$$$ThrowStatusExceptionIfError(tSC, "UpdateDemoPatientsSaveEncounterException")
+
+		set objDgn = ##class(IRISDemo.Data.Patient.Diagnosis).%New()
+		set objDgn.PatientID = objPat.PatientID
+		set objDgn.EncounterNumber = objEnc.EncounterNumber
+		set objDgn.Code = "233843008"
+		set objDgn.Description = "Myocardial infarction"
+		set objDgn.CodingStandard = "SNOMED"
+		set objDgn.OnsetDate = objEnc.StartDate
+		set objDgn.Status = "A"
+		Set tSC = objDgn.%Save() 
+		$$$ThrowStatusExceptionIfError(tSC, "UpdateDemoPatientsSaveDiagnosisException")
+
+		// Encounter #2
+		set objEnc = ##class(IRISDemo.Data.Patient.Encounter).%New()
+		set objEnc.Patient = objPat
+		set objEnc.EncounterNumber = "9003002"
+		set objEnc.EncounterType = "I"
+		set objEnc.StartDate = ($horolog - 60)
+		set objEnc.StartTime = $ztimeh("10:00")
+		set objEnc.EndDate = (objEnc.StartDate + 2)
+		set objEnc.EndTime = $ztimeh("17:00")
+		set objEnc.AdmissionSource = "GA"
+		set objEnc.DischargeLocation = "Home"
+		Set tSC = objEnc.%Save() 
+		$$$ThrowStatusExceptionIfError(tSC, "UpdateDemoPatientsSaveEncounterException")
 
 	}
 	
@@ -452,7 +470,6 @@ Class IRISDemo.Data.Utils
 		
 		set rsEncounters = ##class(%SQL.Statement).%ExecDirect(,"select Patient->PatientID, Patient->DoB, Patient->Firstname, Patient->Lastname, Patient->Gender, EncounterNumber, EncounterType, StartDate, StartTime, EndDate, EndTime, AdmissionSource "_
 																"from IRISDemo_Data_Patient.Encounter")
-		
 		$$$ThrowSQLExceptionIfResultError(rsEncounters, "SelectPatientsForExportException")
 		
 		Set oFile = ##class(%Library.File).%New("/tmp/export_to_hisdb.csv")
