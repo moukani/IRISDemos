@@ -208,7 +208,7 @@
 		    <area alt="Health Information System" title="Health Information System" href="javascript:openHISUI()" coords="294,382,31,215" shape="rect">
 		    <area alt="HIS Database and Integration" title="HIS Database and Integration" href="javascript:openHISdb()" coords="202,391,386,507" shape="rect">
 		    <area alt="Readmission Risk Production" title="Readmission Risk Production" href="javascript:openIFHint()" coords="720,353,974,405" shape="rect">
-		    <area alt="Message Viewer" title="Message Viewer" href="Message Viewer" coords="725,414,937,462" shape="rect">
+		    <area alt="Message Viewer" title="Message Viewer" href="javascript:openMessageTrace()" coords="725,414,937,462" shape="rect">
 		    <area alt="Workflow Inbox" title="Workflow Inbox" href="javascript:openWFInbox()" coords="884,472,714,521" shape="rect">
 		    <area alt="Workflow Inbox" title="Workflow Inbox" href="javascript:openWFInbox()" coords="747,749,865,890" shape="rect">
 		    <area alt="Dashboard" title="Dashboard" href="javascript:openLACEBI()" coords="1157,303,1387,472" shape="rect">
