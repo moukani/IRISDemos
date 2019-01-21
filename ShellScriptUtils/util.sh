@@ -109,7 +109,11 @@ function startAndCheckContainers()
     done
 
     printfG "\n\n ALL services started!\n\n"
+    printfG "Use \n\n"
+    printfY "\tdocker-compose stop\n\n"
+    printfG "to stop the demo."
 }
+
 # Can receive one parameter with the docker registry to log in to.
 function dockerLogin() {
     printf "\n\nDocker Credentials:\n"

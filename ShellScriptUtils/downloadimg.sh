@@ -5,7 +5,8 @@
 # Parameters
 #
 OLDTAG=2018.2.0.389.0
-TAG=2018.2.0-stable
+TAG=2019.1.0-stable
+QUAYTAG=2019.1.0S.111.0
 
 source ./util.sh
 
@@ -19,13 +20,14 @@ printfY "\n\nLoggin into docker.iscinternal.com (VPN Required!) to download newe
 dockerLogin docker.iscinternal.com
 
 printfY "\n\nPulling images...\n"
-for image in icm iris arbiter webgateway;
+#for image in icm iris arbiter webgateway;
+for image in iris;
 do
-    docker pull docker.iscinternal.com/intersystems/$image:$TAG
+    docker pull docker.iscinternal.com/intersystems/$image:$QUAYTAG
     if [ $? -eq 0 ]; then 
-        printfG "\nPull of docker.iscinternal.com/intersystems/$image:$TAG succesful. \n"
+        printfG "\nPull of docker.iscinternal.com/intersystems/$image:$QUAYTAG succesful. \n"
     else
-        printfR "\nPull of docker.iscinternal.com/intersystems/$image:$TAG failed. \n"
+        printfR "\nPull of docker.iscinternal.com/intersystems/$image:$QUAYTAG failed. \n"
         exit 0
     fi
 done
@@ -43,13 +45,14 @@ printfY "\n\nEnter with your credentials on docker hub so we can upload the imag
 dockerLogin
 
 printfY "\n\Tagging images...\n"
-for image in icm iris arbiter webgateway;
+#for image in icm iris arbiter webgateway;
+for image in iris;
 do
-    docker tag docker.iscinternal.com/intersystems/$image:$TAG amirsamary/irisdemo:$image.$TAG
+    docker tag docker.iscinternal.com/intersystems/$image:$QUAYTAG amirsamary/irisdemo:$image.$TAG
     if [ $? -eq 0 ]; then 
-        printfG "\Tagging of docker.iscinternal.com/intersystems/$image:$TAG as amirsamary/irisdemo:$image.$TAG successful\n"
+        printfG "\Tagging of docker.iscinternal.com/intersystems/$image:$QUAYTAG as amirsamary/irisdemo:$image.$TAG successful\n"
     else
-        printfR "\Tagging of docker.iscinternal.com/intersystems/$image:$TAG as amirsamary/irisdemo:$image.$TAG failed\n"
+        printfR "\Tagging of docker.iscinternal.com/intersystems/$image:$QUAYTAG as amirsamary/irisdemo:$image.$TAG failed\n"
         exit 0
     fi
 done
@@ -63,7 +66,8 @@ else
 fi
 
 printfY "\n\Uploading images...\n"
-for image in icm iris arbiter webgateway;
+for image in iris;
+#for image in icm iris arbiter webgateway;
 do
     docker push amirsamary/irisdemo:$image.$TAG
     if [ $? -eq 0 ]; then 

@@ -12,4 +12,5 @@ git submodule update
 printfY "\n\nRUNNING...\n"
 docker-compose stop
 docker-compose rm -f
-docker-compose up
+
+startAndCheckContainers

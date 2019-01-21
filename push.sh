@@ -1,6 +1,6 @@
 #!/bin/bash
-source ../ShellScriptUtils/util.sh
-source ../ShellScriptUtils/buildandpush.sh
+source ./ShellScriptUtils/util.sh
+source ./ShellScriptUtils/buildandpush.sh
 
 printfG "\nPushing Base Images"
 cd ./BaseImages

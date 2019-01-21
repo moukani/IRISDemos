@@ -2,7 +2,7 @@
 # They were deleted on 2018.2 and were neessary for iKnow Portals to work
 FROM amirsamary/irisdemo:iris.2018.1.1-stable
 
-FROM amirsamary/irisdemo:iris.2018.2.0-stable
+FROM amirsamary/irisdemo:iris.2019.1.0-stable
 LABEL maintainer="Amir Samary <amir.samary@intersystems.com>"
 
 # Copy deleted files from 2018.1.1 into 2018.2:
