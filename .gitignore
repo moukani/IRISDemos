@@ -14,3 +14,7 @@
 # Demos
 container_runtime
 target/*
+/Demos/twittersentiment/callcenterui/.classpath
+/Demos/twittersentiment/callcenterui/callcenterbusiness-eclipse-project/.classpath
+/Demos/twittersentiment/callcenterui/callcenterbusiness-eclipse-project/.gitignore
+/Demos/timesheet/irisdialect/.gitignore

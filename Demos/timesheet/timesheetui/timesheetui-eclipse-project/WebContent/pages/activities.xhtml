@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+
+<h:body>
+
+	<ui:composition template="/WEB-INF/template/template.xhtml">
+
+		<ui:define name="content">
+
+			<p:panel header="Activities" style="margin-bottom:20px">
+
+				<div class="ui-fluid">
+
+					<p:panelGrid columns="4" layout="grid"
+						styleClass="ui-panelgrid-blank">
+						<p:commandButton value="New" icon="fa fa-fw fa-file-o"
+							action="#{activityController.reset}" update="form" />
+						<p:commandButton value="Save" icon="fa fa-fw fa-save"
+							action="#{activityController.merge}" update="form, tblActivities" />
+						<p:commandButton value="Delete" icon="fa fa-fw fa-eraser"
+							action="#{activityController.delete}" update="form, tblActivities" />
+						<p:commandButton value="List" icon="fa fa-fw fa-list"
+							action="#{activityController.list}" update="form, tblActivities" />
+					</p:panelGrid>
+
+					<p:spacer height="10" />
+
+
+					<p:panelGrid columns="2"
+						columnClasses="ui-grid-col-2,ui-grid-col-10" layout="grid"
+						styleClass="ui-panelgrid-blank">
+
+						<p:outputLabel for="txtTitle" value="Title" />
+						<p:inputText id="txtTitle" value="#{activityController.activity.title}" />
+						
+						<p:outputLabel for="selProject" value="Project" />
+						<p:selectOneMenu id="selProject" value="#{activityController.activity.project.id}">
+							<f:selectItem/>
+							<f:selectItems value="#{projectController.projectList}" var="p" itemValue="#{p.id}" itemLabel="#{p.name}" />
+						</p:selectOneMenu>
+						
+						<p:outputLabel for="selActivityType" value="Activity Type" />
+						<p:selectOneMenu id="selActivityType" value="#{activityController.activity.activityType.id}">
+							<f:selectItem/>
+							<f:selectItems value="#{activityTypeController.activityTypeList}" var="a" itemValue="#{a.id}" itemLabel="#{a.name}" />
+						</p:selectOneMenu>
+						
+						<p:outputLabel for="chkCompleted" value="Completed" />
+						<p:selectBooleanCheckbox id="chkCompleted" value="#{activityController.activity.completed}" />
+
+					</p:panelGrid>
+					
+					<p:dataTable id="tblActivities" selectionMode="single" var="activity"
+						rows="10" paginator="true"
+						paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+						rowsPerPageTemplate="5,10,15" value="#{activityController.activities}"
+						reflow="true" style="margin-top:20px" rowKey="#{activity.id}">
+						
+						<f:facet name="header">Activity List</f:facet>
+						
+						<p:ajax event="rowSelect" listener="#{activityController.onRowSelect}"
+							update="form" />
+						
+						<p:column headerText="Title">
+							<h:outputText value="#{activity.title}" />
+						</p:column>
+						
+						<p:column headerText="Project">
+							<h:outputText value="#{activity.project.name}" />
+						</p:column>
+						
+						<p:column headerText="Activity Type">
+							<h:outputText value="#{activity.activityType.name}" />
+						</p:column>
+
+					</p:dataTable>
+					
+					
+				</div>
+
+			</p:panel>
+
+		</ui:define>
+
+	</ui:composition>
+
+</h:body>
+
+</html>

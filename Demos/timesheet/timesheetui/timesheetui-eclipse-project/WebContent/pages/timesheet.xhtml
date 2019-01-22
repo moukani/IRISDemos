@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+
+<h:body>
+
+	<ui:composition template="/WEB-INF/template/template.xhtml">
+
+		<ui:define name="content">
+
+			<p:panel header="Timesheet - #{userController.userSession.name}"
+				style="margin-bottom:20px">
+
+				<div class="ui-fluid">
+
+					<p:panelGrid columns="4" layout="grid"
+						styleClass="ui-panelgrid-blank">
+						<p:commandButton value="New" icon="fa fa-fw fa-file-o"
+							action="#{timesheetController.reset}" update="form" />
+						<p:commandButton value="Save" icon="fa fa-fw fa-save"
+							action="#{timesheetController.merge}" update="form, tblTimesheet" />
+						<p:commandButton value="Delete" icon="fa fa-fw fa-eraser"
+							action="#{timesheetController.delete}"
+							update="form, tblTimesheet" />
+						<p:commandButton value="List" icon="fa fa-fw fa-list"
+							action="#{timesheetController.list}" update="form, tblTimesheet" />
+					</p:panelGrid>
+
+					<p:spacer height="10" />
+					
+					<p:panelGrid columns="4"
+						columnClasses="ui-grid-col-2, ui-grid-col-3, ui-grid-col-2, ui-grid-col-5"
+						layout="grid" styleClass="ui-panelgrid-blank">
+
+						<p:outputLabel for="selProject" value="Project" />
+						<p:selectOneMenu id="selProject"
+							value="#{timesheetController.workItem.activity.project.id}">
+							<p:ajax listener="#{timesheetController.onProjectChange}" update="selActivity" />
+							<f:selectItem/>
+							<f:selectItems value="#{timesheetController.projectList}" var="p"
+								itemLabel="#{p.name}" itemValue="#{p.id}" />
+						</p:selectOneMenu>
+						
+						
+						<p:outputLabel for="selActivityType" value="Activity Type" />
+						<p:selectOneMenu id="selActivityType"
+							value="#{timesheetController.workItem.activity.activityType.id}">
+							<p:ajax listener="#{timesheetController.onActivityTypeChange}" update="selActivity" />
+							<f:selectItem/>
+							<f:selectItems value="#{timesheetController.activityTypeList}" var="a"
+								itemLabel="#{a.name}" itemValue="#{a.id}" />
+						</p:selectOneMenu>
+						
+						
+						
+					</p:panelGrid>
+
+					<p:panelGrid columns="2"
+						columnClasses="ui-grid-col-2, ui-grid-col-10"
+						layout="grid" styleClass="ui-panelgrid-blank">
+
+						<p:outputLabel for="selActivity" value="Activity" />
+						<p:selectOneMenu id="selActivity"
+							value="#{timesheetController.workItem.activity.id}">
+							<f:selectItem/>
+							<f:selectItems value="#{timesheetController.activities}" var="a"
+								itemLabel="#{a.title}" itemValue="#{a.id}" />
+						</p:selectOneMenu>
+
+					</p:panelGrid>
+					
+					<p:panelGrid columns="2"
+						columnClasses="ui-grid-col-2, ui-grid-col-10"
+						layout="grid" styleClass="ui-panelgrid-blank">
+
+						<p:outputLabel for="txtNotes" value="Notes" />
+						<p:inputTextarea id="txtNotes"
+							value="#{timesheetController.workItem.notes}" />
+
+					</p:panelGrid>
+					
+					
+					<p:panelGrid columns="6"
+						columnClasses="ui-grid-col-2,ui-grid-col-3,ui-grid-col-1,ui-grid-col-3,ui-grid-col-1,ui-grid-col-2"
+						layout="grid" styleClass="ui-panelgrid-blank">
+
+						<p:outputLabel for="txtStartDate" value="Start" />
+						<p:calendar showOn="button" pattern="yyyy-MM-dd HH:mm" locale="us"
+							id="txtStartDate"
+							value="#{timesheetController.workItem.workStartDate}" />
+
+						<p:outputLabel for="txtEndDate" value="End" />
+						<p:calendar showOn="button" pattern="yyyy-MM-dd HH:mm" locale="us"
+							id="txtEndDate"
+							value="#{timesheetController.workItem.workEndDate}" />
+
+						<p:outputLabel for="txtEffort" value="Effort" />
+						<p:inputText id="txtEffort"
+							value="#{timesheetController.workItem.effort}" />
+
+					</p:panelGrid>
+					
+					<p:panelGrid columns="2"
+						columnClasses="ui-grid-col-2, ui-grid-col-10"
+						layout="grid" styleClass="ui-panelgrid-blank">
+
+						<p:outputLabel for="selClearAll" value="Clear All fields" />
+						<p:selectBooleanCheckbox id="selClearAll" 
+							value="#{timesheetController.clearAll}">
+							<p:ajax update="form" process="@this"/>
+						</p:selectBooleanCheckbox>
+
+					</p:panelGrid>
+
+					<p:dataTable id="tblTimesheet" selectionMode="single" var="workItem"
+						rows="10" paginator="true"
+						paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+						rowsPerPageTemplate="5,10,15" value="#{timesheetController.workItems}"
+						reflow="true" style="margin-top:20px" rowKey="#{workItem.id}">
+						
+						<f:facet name="header">
+							<h:outputText value="Timesheet" />
+						</f:facet>
+						
+						<p:ajax event="rowSelect"
+							listener="#{timesheetController.onRowSelect}" update="form" />
+						
+						<p:column headerText="Project">
+							<h:outputText value="#{workItem.activity.project.name}" />
+						</p:column>
+						
+						<p:column headerText="Activity">
+							<h:outputText value="#{workItem.activity.title}" />
+						</p:column>
+
+						<p:column headerText="Start" width="100">
+							<h:outputText value="#{workItem.workStartDate}">
+								<f:convertDateTime pattern="yyyy-MM-dd hh:mm" />
+							</h:outputText>
+						</p:column>
+
+						<p:column headerText="End" width="100">
+							<h:outputText value="#{workItem.workEndDate}">
+								<f:convertDateTime pattern="yyyy-MM-dd hh:mm" />
+							</h:outputText>
+						</p:column>
+
+						<p:column headerText="Effort" width="40">
+							<h:outputText value="#{workItem.effort}" />
+						</p:column>
+
+					</p:dataTable>
+
+				</div>
+
+			</p:panel>
+
+		</ui:define>
+
+	</ui:composition>
+
+</h:body>
+
+</html>

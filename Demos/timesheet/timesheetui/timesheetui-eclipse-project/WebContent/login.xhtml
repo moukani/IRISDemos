@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<h:outputStylesheet library="css" name="layout.css" />
+</h:head>
+
+<h:body>
+	<h:form id="form">
+		<p:growl id="messages" showDetail="true" sticky="true" />
+
+
+		<p:panel header="Login" style="width: 360px; margin: 10% auto 10% auto;">
+
+			
+				<p:panelGrid columns="2" 
+					styleClass="ui-panelgrid-blank">
+					<p:commandButton value="Login" icon="fa fa-fw fa-play"
+						action="#{userController.login}" update="messages" />
+					<p:commandButton value="Reset" icon="fa fa-fw fa-close"
+						action="#{userController.reset}" />
+				</p:panelGrid>
+
+				<p:spacer height="10" />
+
+
+				<p:panelGrid columns="2"
+					columnClasses="ui-grid-col-2,ui-grid-col-10" 
+					styleClass="ui-panelgrid-blank">
+
+					<p:outputLabel for="txtEmail" value="E-mail" />
+					<p:inputText id="txtEmail" size="40"
+						value="#{userController.userSession.email}" />
+
+					<p:outputLabel for="txtPassword" value="Password" />
+					<p:password id="txtPassword"
+						value="#{userController.userSession.password}" />
+
+				</p:panelGrid>
+
+			
+		</p:panel>
+
+	</h:form>
+
+</h:body>
+
+</html>

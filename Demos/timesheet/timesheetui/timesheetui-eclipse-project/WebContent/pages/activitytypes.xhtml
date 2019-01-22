@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+
+<h:body>
+
+	<ui:composition template="/WEB-INF/template/template.xhtml">
+
+		<ui:define name="content">
+
+			<p:panel header="Activities Types" style="margin-bottom:20px">
+
+				<div class="ui-fluid">
+
+					<p:panelGrid columns="4" layout="grid"
+						styleClass="ui-panelgrid-blank">
+						<p:commandButton value="New" icon="fa fa-fw fa-file-o"
+							action="#{activityTypeController.reset}" update="form" />
+						<p:commandButton value="Save" icon="fa fa-fw fa-save"
+							action="#{activityTypeController.merge}" update="form, tblActivityTypes" />
+						<p:commandButton value="Delete" icon="fa fa-fw fa-eraser"
+							action="#{activityTypeController.delete}" update="form, tblActivityTypes" />
+						<p:commandButton value="List" icon="fa fa-fw fa-list"
+							action="#{activityTypeController.list}" update="form, tblActivityTypes" />
+					</p:panelGrid>
+
+					<p:spacer height="10" />
+
+
+					<p:panelGrid columns="2"
+						columnClasses="ui-grid-col-2,ui-grid-col-10" layout="grid"
+						styleClass="ui-panelgrid-blank">
+
+						<p:outputLabel for="txtName" value="Name" />
+						<p:inputText id="txtName" value="#{activityTypeController.activityType.name}" />
+
+						<p:outputLabel for="txtDescription" value="Description" />
+						<p:inputTextarea id="txtDescription" value="#{activityTypeController.activityType.description}" />
+
+					</p:panelGrid>
+					
+					<p:dataTable id="tblActivityTypes" selectionMode="single" var="activityType"
+						rows="10" paginator="true"
+						paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+						rowsPerPageTemplate="5,10,15" value="#{activityTypeController.activityTypes}"
+						reflow="true" style="margin-top:20px" rowKey="#{activityType.id}">
+						
+						<f:facet name="header">Activity Type List</f:facet>
+						
+						<p:ajax event="rowSelect" listener="#{activityTypeController.onRowSelect}"
+							update="form" />
+						
+						<p:column headerText="Name">
+							<h:outputText value="#{activityType.name}" />
+						</p:column>
+
+						<p:column headerText="Description">
+							<h:outputText value="#{activityType.description}" />
+						</p:column>
+
+					</p:dataTable>
+					
+					
+				</div>
+
+			</p:panel>
+
+		</ui:define>
+
+	</ui:composition>
+
+</h:body>
+
+</html>

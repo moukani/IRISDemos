@@ -1,0 +1,43 @@
+version: '3.6'
+
+volumes:
+  common_shared:
+
+services:
+  # This will be the timesheet UI, built on Java/JBoss
+  # It here where developers teams can see and mantain your tasks and projects
+  timesheetui:
+    depends_on: 
+    - timesheetdb
+    build: ./timesheetui
+    image: amirsamary/irisdemo:timesheet_timesheetui
+    hostname: timesheetui
+    ports:
+    - "9090:8080"   # JBoss - Call Center App: http://localhost:9090/app/
+    - "9091:9990"   # JBoss Management portal: Username: admin, Password: Admin#1234
+    environment:  # Only if you want to use JDBC with IRIS
+    - IRIS_MASTER_HOST=timesheetdb # DNS based on the name of the service!
+    - IRIS_MASTER_PORT=51773        # IRIS, inside the "composition" network, is listening on this port
+    - IRIS_MASTER_USERNAME=SuperUser 
+    - IRIS_MASTER_PASSWORD=sys 
+    - IRIS_MASTER_NAMESPACE=APP 
+    
+  # This is IRIS database and DeepSee application that stores and analyses the timesheet data
+  timesheetdb:
+    build: 
+      context: ./timesheetdb
+      args:
+      - IRIS_PROJECT_FOLDER_NAME=timesheet-atelier-project
+    image: amirsamary/irisdemo:timesheet_timesheetdb
+    command: --key /irislicense/iris.key
+    hostname: timesheetdb
+    ports:
+    - "9094:52773" # 52773 is the webserver/management portal port: http://localhost:9094/csp/sys/UtilHome.csp
+    - "9095:51773" # 51773 is the superserver default port
+    volumes:
+    - type: bind
+      source: ../../IRISLicense/
+      target: /irislicense
+
+
+

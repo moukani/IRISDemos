@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+
+<h:body>
+
+	<ui:composition template="/WEB-INF/template/template.xhtml">
+
+		<ui:define name="content">
+
+			<p:panel header="Members" style="margin-bottom:20px">
+
+				<div class="ui-fluid">
+
+					<p:panelGrid columns="4" layout="grid"
+						styleClass="ui-panelgrid-blank">
+						<p:commandButton value="New" icon="fa fa-fw fa-file-o"
+							action="#{memberController.reset}" update="form" />
+						<p:commandButton value="Save" icon="fa fa-fw fa-save"
+							action="#{memberController.merge}" update="form, tblMember" />
+						<p:commandButton value="Delete" icon="fa fa-fw fa-eraser"
+							action="#{memberController.delete}" update="form, tblMember" />
+						<p:commandButton value="List" icon="fa fa-fw fa-list"
+							action="#{memberController.list}" update="form, tblMember" />
+					</p:panelGrid>
+
+					<p:spacer height="10" />
+
+
+					<p:panelGrid columns="2"
+						columnClasses="ui-grid-col-2,ui-grid-col-10" layout="grid"
+						styleClass="ui-panelgrid-blank">
+
+						<p:outputLabel for="txtName" value="Name" />
+						<p:inputText id="txtName" value="#{memberController.member.name}" />
+
+						<p:outputLabel for="txtEmail" value="E-mail" />
+						<p:inputText id="txtEmail" value="#{memberController.member.email}" />
+						
+						<p:outputLabel for="txtCost" value="Cost" />
+						<p:inputText id="txtCost" value="#{memberController.member.cost}" />
+						
+						<p:outputLabel for="txtPassword" value="Password" />
+						<p:password id="txtPassword" value="#{memberController.member.password}"/>
+
+						<p:outputLabel for="chkManager" value="Manager" />
+						<p:selectBooleanCheckbox id="chkManager" value="#{memberController.member.isManager}"/>
+						
+						<p:outputLabel for="selTeams" value="Teams" />
+						<p:selectManyCheckbox id="selTeams"
+							value="#{memberController.member.teams}" layout="responsive"
+							columns="3">
+							<f:selectItems value="#{teamController.teamList}" var="team" itemLabel="#{team.name}" itemValue="#{team}" />
+							<f:converter converterId="teamConverter"/>
+							<f:attribute name="collectionType" value="java.util.LinkedHashSet" />
+						</p:selectManyCheckbox>
+
+					</p:panelGrid>
+					
+					<p:dataTable id="tblMember" 
+							selectionMode="single" var="member" rows="10" paginator="true"
+                         	paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                         	rowsPerPageTemplate="5,10,15" value="#{memberController.members}" reflow="true"
+							style="margin-top:20px" rowKey="#{member.id}">
+							
+						<f:facet name="header">Member List</f:facet>
+						
+						<p:ajax event="rowSelect" listener="#{memberController.onRowSelect}"
+							update="form" />
+						
+						<p:column headerText="Name">
+							<h:outputText value="#{member.name}" />
+						</p:column>
+
+						<p:column headerText="E-mail">
+							<h:outputText value="#{member.email}" />
+						</p:column>
+						
+						<p:column headerText="Cost">
+							<h:outputText value="#{member.cost}" />
+						</p:column>
+
+					</p:dataTable>
+					
+					
+				</div>
+
+			</p:panel>
+
+		</ui:define>
+
+	</ui:composition>
+
+</h:body>
+
+</html>

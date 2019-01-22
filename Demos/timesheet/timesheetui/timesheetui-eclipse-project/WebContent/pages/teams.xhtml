@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+
+<h:body>
+
+	<ui:composition template="/WEB-INF/template/template.xhtml">
+
+		<ui:define name="content">
+
+			<p:panel header="Teams" style="margin-bottom:20px">
+
+				<div class="ui-fluid">
+
+					<p:panelGrid columns="4" layout="grid"
+						styleClass="ui-panelgrid-blank">
+						<p:commandButton value="New" icon="fa fa-fw fa-file-o"
+							action="#{teamController.reset}" update="form" />
+						<p:commandButton value="Save" icon="fa fa-fw fa-save"
+							action="#{teamController.merge}" update="form, tblTeam" />
+						<p:commandButton value="Delete" icon="fa fa-fw fa-eraser"
+							action="#{teamController.delete}" update="form, tblTeam" />
+						<p:commandButton value="List" icon="fa fa-fw fa-list"
+							action="#{teamController.list}" update="form, tblTeam" />
+					</p:panelGrid>
+
+					<p:spacer height="10" />
+
+					<p:panelGrid columns="2"
+						columnClasses="ui-grid-col-2,ui-grid-col-10" layout="grid"
+						styleClass="ui-panelgrid-blank">
+
+						<p:outputLabel for="txtName" value="Name" />
+						<p:inputText id="txtName" value="#{teamController.team.name}" />
+
+						<p:outputLabel for="txtDescription" value="Description" />
+						<p:inputTextarea id="txtDescription" rows="7" cols="10"
+							value="#{teamController.team.description}" />
+
+
+					</p:panelGrid>
+
+
+					<p:dataTable id="tblTeam" selectionMode="single" var="team"
+						rows="10" paginator="true"
+						paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+						rowsPerPageTemplate="5,10,15" value="#{teamController.teams}"
+						reflow="true" style="margin-top:20px" rowKey="#{team.id}">
+						
+						<f:facet name="header">Team List</f:facet>
+						
+						<p:ajax event="rowSelect" listener="#{teamController.onRowSelect}"
+							update="form" />
+						
+						<p:column headerText="Name">
+							<h:outputText value="#{team.name}" />
+						</p:column>
+
+						<p:column headerText="Description">
+							<h:outputText value="#{team.description}" />
+						</p:column>
+
+					</p:dataTable>
+
+				</div>
+
+			</p:panel>
+
+		</ui:define>
+
+	</ui:composition>
+
+</h:body>
+
+</html>
