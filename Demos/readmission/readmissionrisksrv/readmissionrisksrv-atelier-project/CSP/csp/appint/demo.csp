@@ -78,7 +78,7 @@
 			
 			function openIFHintBP()
 			{
-				window_open('EnsPortal.BPLEditor.zen?BP=IRISDemo.BP.LACE.Process.bpl&$NAMESPACE=APPINT&IRISUserName=SuperUser&IRISPassword=sys')
+				window_open('EnsPortal.BPLEditor.zen?BP=IRISDemo.BP.ReadmissionRisk.Process.bpl&$NAMESPACE=APPINT&IRISUserName=SuperUser&IRISPassword=sys')
 			}
 
 			function openHISUI()
@@ -171,6 +171,7 @@
 				{
 					btn.value = 'Hide Instructions';
 					instructions.hidden=false;
+					instructions.scrollIntoView(true);
 				}
 				else
 				{
@@ -264,83 +265,94 @@
 			button again.</p> 
 			
 			<p>
-			You will be left on the tab you should start with. You should clik each tab and explain what is it 
-			accordingly to the followin script:</p>
+			You will be left on the tab you should start with. You should click each tab and explain what is it 
+			accordingly to the following script:</p>
 			
 			<ol>
-				<li>
-					On the production tab, explain what services, processes and operations are.</li>
+				<li>On the production tab, explain what services, processes and operations are.</li>
 					<ul>
-						<li>Click on the green circle of the business service that receives the transaction from the POS. 
-						    Call their attention to the dependency on the Business Process.</li>
-						<li>Click on the green circle of the business process. Show them how the other dependencies are shown by IRIS. 
-						    Explain that this process is taking the transaction and calling the ML model to evaluate if 
-						    it is a fraudulent transaction.</li>
-						<li>If it is, the process will call customer services to see if the customer has white listed that transaction.
-						</li>
-						<li>If it has, the process will continue and process the transaction with the core banking system using SOAP</li>
-						<li>If the transaction was considered fraudulent and it wasn't white listed, we will block it.</li>
 						<li>
-							Show them that the Business Process is also storing the signal on a normalized data lake that is implemented with IRIS.
-							This is done through JDBC. This allows our data scientists to compute new models based on recent transactional data, already
-							aggregated, anytime they want, without asking for CSV files from anyone (and without compromising the security of the organization). 
+							Click on the green circle of the business service that receives the HL7 message from the HIS. 
+						    Talk about the fact that all messages are sent to a message router.
+						</li>
+					</ul>
+				<li>At this point you can click on the 2nd tab (Rule Editor) and show them what happens to the incoming messages.</li>
+					<ul>
+						<li>The Rule Editor currently deals with 2 message types.</li>
+						<li>The first type (ADT_A01) deals with a patient being admitted. It is transformed into a different message type and then sent to the LACE operation</li>
+						<li>The 2nd type (ADT_A03) deals with a patient being discharged. It is transformed and then sent to the Business Process.</li>
+					</ul>
+				<li>You should now click on the 3rd tab (Data Transformation) and show the transformation of the HL7 message to the internal message type</li>
+					<ul>
+						<li>Click on the images to at the top left to show the different displays in terms of diagrams and action lists</li>
+						<li> Also click on a line and show the right hand panel with its ability to edit the action item</li>
+					</ul>
+				<li>Now go back to the first tab (Production Configuration) and click on the green circle of the File Router</li>
+					<ul>
+						<li>You will  see that one of the lines connects with the Readmission Risk Process</li>
+					</ul>
+				<li>You should now click on the 4th browser tab (Business Process)</li>
+					<ul>
+						<li>You will now see the BPL. Explain that the business processes can be created graphically and work down the logic steps showing what is happening.</li>
+						<li>You should also click on some of the logic diagrams and show the details on the right hand pane for easy editing</li>
+						<li>
+							Show them how complex processes can be designed in a low code aproach that is easy to understand and to maintain. 
+							Synchronous and Asynchronous activities, calling business rules, data transformations, initiating human workflows, sending alerts, all can be easily designed here.
+						</li>
+					</ul>
+				<li>
+					Clicking on the 5th tab (Message Viewer), you can explain that at the moment the system is 'empty' and that nothing has happened.
+					This step is to prove that this is 'real' and that nothing has been pre-loaded.
+				</li>
+				<li>Now click on the 6th tab (Readmission UI)
+					<ul>
+						<li>This is an application written in Angular 6 that connects to an instance of IRIS for Health via REST services. It is created to act as a 'dummy' HIS application</li>
+						<li>You can select one of the following patients:</li>
+						<ul>
+							<li>MRN: 900001, Frederick Masters</li>
+							<li>MRN: 900002, Katherine Smith</li>
+							<li>MRN: 900003, James Davidson</li>
+						</ul>
+						<li>You will see that each patient has an open episode. Click on that line in the display.</li>
+						<li>The discharge date defaults to today. Click on 'Discharge'</li>
+					</ul>
+				<li>You can now return to the Message Viewer tab (#5) and click on the 'Search' button to refresh the display. A new line appears showing input for an HL7 message.</li>
+					<ul>
+						<li>Click on this new line. The right hand frame will show four tabs: Header, Body, Contents, Trace</li>
+						<ul>
+							<li>Header: the message header showing the types of message, the timestamps and where the message was sent</li>
+							<li>Body: The first line of the HL7 message (MSH segment) broken down into its parts</li>
+							<li>
+								Contents: The full display of the HL7 message.
+								 Hovering the mouse over each part will show you its definition in the HL7 library.
+								  Clicking on any part will open up a new tab showing the relevant HL7 structure.
+							</li>
+							<li>
+								Trace: this will show you the trace of the components used by processing the message.
+								 Click on 'View Full Trace' to show a new browser tab with the trace
+							</li>
+						</ul>
+						<li>
+							Click on each box on the left and look at the display of the contents on the right. 
+							Explain how easy it is to see what is happening and to be able to debug and test.
+							Note that the green circle under the Feed Router will show you which rule has been met. (rule#2)
+							You can return to the Rule Editor page if you wish to show that rule.
 						</li>
 					</ul>
 				</li>
-
-				<li>Now show the Business Process tab. Show them how complex processes can be designed in a low code aproach that is
-					easy to understand and to maintain. Synchronous and Asynchronous activities, calling business rules, data transformations, initiating human workflows, sending alerts, 
-					all can be easily designed here.</li>
-				<li>Call their attention to the DTL actitivity. Change to the Data Transformation tab and show them how
-					a typical data transformation is built. Data from the transaction is being mapped to the Machine Learning model message.
-					Show that on this simple DTL, there are Lookup tables that transform strings into a vector of numbers that our ML model
-					expects to receive. 
-				</li>
-				<li>Jump to the Lookup table tab and show them the lookup table. We may simplify this by allowing this lookup table to be
-				    embedded on the PMML in the future.</li>
-				<li>Go back to the process tab. Click their attention to the "Call ML Model" activity. Here we are calling the PMML model that was
-				    imported from the Data Science team.</li>
-				<li>Show them that after the call we evaluate the ML results with a Business Rule. Jump to the Business Rule
-					tab and show them how it can be used not only to evaluate the result of the ML model but also to add additional
- 	 				hard coded business rules and ALSO to combine the results of two or more ML models. This is just one way of combining
-					the results of ML models. Sometimes, on the same Business Process, you can use the result of a model as the input to a second
-					model as well.</li> 
-				<li>Finish reviewing the Business Process with them quickly now. Jump to the message trace tab. Tell them that here is
-					where they can query our audit logs. Click on the last message just to leave it checked.</li>
-				<li>Jump to the POS simulator tab now. Enter with the number 10 on the keypad. Click on the wifi symbol on the POS machine to
-					swipe your card. Wait a second and you should see the result of the transaction. The transaction should be approved
-				</li>
-					
-				<li>Jump back to the message trace tab. Click on the refresh button on the IRIS UI. Show them that a new transaction came in.
-					Show them the visual trace. This is one of the most important screens! Explore this trace with them. Governance. 
-					Auditing. Evidence for solving conflictive problems. Tell them that they can choose to store as many months or 
-					years of message as they need. Tell them that we have a message bank component 
-					that allows them to keep their production systems small (and stateless) while keeping with all the messages 
-					on a message bank that is searchable and allow you to resend messages if necessary. Focus on the concepts that
-					you think are important for this customer.</li>
-					
-				<li>Show that we called the PMML model and we got a probability of fraud of only 10%. The business rule decided
-				that this threshold doesn't represent a threat and that is why the transaction 
-				was processed immediately. Tell them that we will see where that PMML model came from soon.</li>
-				<li>Now jump back to the POS simulator. Refresh the entire tab and execute a new transaction of US$ 1000. This 
-				transaction should be declined.</li> 
-				<li>Go back to the message trace tab and refresh it using IRIS UI to show that a new transaction just came in.
-				Show that the probability of fraud was much higher now and that the business rule decided that this is definitely a
-				fraudulent transaction. We called customer services and this transaction wasn't white listed by our customer. 
-				That's it! This is a fraudulent transaction!</li>
+				<li>The next tab is 'Workflow' (TODO)</li>
 				<li>
-					Now go to the Zeppelin tab and show them how we built the model. You will find there two notebooks:
+					The last tab is the display of the dashboards from the BI showing the LACE risk scores by 3 different categories.
+					At the top left is a 'filter' box (Month discharged) which can be changed to increase/decrease the range.
 					<ul>
-						<li>Notebook 1 - Introduction: Just show how you can access data on IRIS using JDBC, Scala with Spark and Scala with Python</li>
-						<li>Notebook 2 - Building the Models (Scala): Show how the model was built. You can try running the notebooks. 
-							There is a PLAY button on the top of the screen that runs all the code on a notebook. If you have problems 
-							running it, you may try giving more memory to your Docker Machine.</li>
-						<li>If you run the model, you will notice that PMML files will be generated. The production on iotmon will consume these PMML files.</li>
-						<li>You may want to disable the business service that consumes the PMML file so you may be able to open them and show the XML of 
-						one of them. The folder is under git/Demos/mobilebanking/common_shared/pmml/</li>
-						<li>You can also click on button 10 and 11 on the main demo screen to see the PMML and test it. You don't need to run the Zeppelin notebook to use these buttons.</li>
+						<li>On the right hand graph (LACE by Age), click on one of the bars (e.g. 11-20)</li>
+						<li>Now click on the down pointing arrow at the top of the frame. This will drill down into the data to show per year</li>
+						<li>Click on the image at the top left of the frame (3 dots and 3 lines). This will change the display to show the actual numbers</li>
+						<li>Each age has an arrow to the left of it. Clicking on this will allow 'drilling-up'</li>
+						<li>Clicking on the graph image at the top will return the display to a bar chart</li>
 					</ul>
 				</li>
+				<li>Spark, Zeppelin and ML (TODO)</li>
 			</ol>
 		</div>
 		
