@@ -12,6 +12,6 @@ git submodule update
 printfY "\nBUILDING...\n"
 docker-compose stop
 docker-compose rm -f
-rm -rf ./advanced_analytics/shared/zeppelin/conf
-rm -rf ./advanced_analytics/shared/zeppelin/logs
+sudo rm -rf ./advanced_analytics/shared/zeppelin/conf
+sudo rm -rf ./advanced_analytics/shared/zeppelin/logs
 docker-compose build
