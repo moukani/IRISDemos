@@ -6,7 +6,7 @@
 #
 OLDTAG=2019.1.0.361.0
 TAG=2019.1.0-stable
-QUAYTAG=2019.1.0.361.0
+QUAYTAG=2019.1.0S.111.0
 
 source ./util.sh
 

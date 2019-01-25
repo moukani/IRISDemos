@@ -57,9 +57,9 @@ XData Install [ XMLNamespace = INSTALLER ]
 		<Arg name="pNamespace" Value="${Namespace}"/>
 	</Invoke>
 	
-	<Log Text="Fixing PMML" Level="0"/>
+	<!--Not required on 2019.1 Log Text="Fixing PMML" Level="0"/>
 	<Invoke Class="IRISConfig.Installer" Method="FixPMML" CheckStatus="true">
-	</Invoke>
+	</Invoke-->
 	
 </Manifest>
 }

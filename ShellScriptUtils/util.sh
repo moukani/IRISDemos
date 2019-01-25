@@ -62,6 +62,64 @@ function green() {
     printf "${GREEN}"
 }
 
+function checkContainer() {
+
+    printfY "\nChecking if service $service has been started properly...\n"
+
+    if docker logs $container --tail 30 2>&1 | grep 'errors during journal rollback'
+    then
+        docker logs $container --tail 30 2>&1 | grep 'errors during journal rollback'
+        
+        printfR "\nFound unrecoverable error on service $service. Trying to building the service again...\n"
+
+        docker rmi -f ${PWD##*/}_$service
+        docker-compose build $service
+        docker-compose start $service
+        printfR "\nService $service has been rebuilt and started. Waiting 10 seconds before checking for its health again...\n"
+        sleep 10
+
+        checkContainer
+    fi
+
+    if docker logs $container --tail 30 2>&1 | grep -E '(PROTECT|Shutting down the system)'
+    then
+        docker logs $container --tail 30 2>&1 | grep -E '(PROTECT|Shutting down the system)'
+        
+        printfR "\nFound PROTECT error on service $service. Restarting this container...\n"
+        docker-compose restart $service
+        printfR "\nService $service has been restarted. Waiting 10 seconds before checking for its health again...\n"
+        sleep 10
+
+        checkContainer
+    fi
+}
+
+function startAndCheckContainers()
+{
+    printfY "\nCreating containers...\n"
+    docker-compose up --no-start
+
+    printfY "\nStarting containers...\n"
+    docker-compose start
+    printfY "\nAll containers are starting. Waiting 15 seconds before checking if containers have started properly...\n"
+    sleep 15
+
+    demoname=${PWD##*/}
+
+    for container in `docker-compose ps | grep $demoname | awk '{print $1}'`
+    do
+        service=$(echo $container | cut -d'_' -f 2)
+        checkContainer
+    done
+
+    printfG "\n\nALL services started!\n\n"
+    printfG "To stop the demo, use: \n\n"
+    printfY "\tdocker-compose stop\n\n"
+    printfG "To restart the demo use:\n\n"
+    printfY "\trun.sh\n\n"
+    printfG "The run script will make sure that the containers have started correctly and restart any individual container that may be presenting issues. So, please. avoid using \"docker-compose up\" or \"docker-compose start\" directly.\n\n"
+}
+
 # Can receive one parameter with the docker registry to log in to.
 function dockerLogin() {
     printf "\n\nDocker Credentials:\n"

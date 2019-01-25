@@ -9,7 +9,8 @@ printfY "\nUpdating sub modules...\n"
 git submodule init
 git submodule update
 
-printfY "\n\nRUNNING...\n"
+printfY "\n\nStopping and deleting previous containers...\n"
 docker-compose stop
 docker-compose rm -f
-docker-compose up
+
+startAndCheckContainers

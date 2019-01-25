@@ -6,14 +6,8 @@ FROM amirsamary/irisdemo:irishealth.2019.1.0-stable
 LABEL maintainer="Amir Samary <amir.samary@intersystems.com>"
 
 # Copy deleted files from 2018.1.1 into 2018.2:
-COPY --from=0 /usr/irissys/csp/broker/jquery-2.0.3.min.js /usr/irissys/csp/broker
-RUN mkdir /usr/irissys/csp/broker/bootstrap-3-3-5 && \
-    mkdir /usr/irissys/csp/broker/bootstrap-3-3-5/dist && \
-    mkdir /usr/irissys/csp/broker/bootstrap-3-3-5/dist/js && \
-    mkdir /usr/irissys/csp/broker/bootstrap-3-3-5/dist/css
-
-COPY --from=0 /usr/irissys/csp/broker/bootstrap-3-3-5/dist/js/bootstrap.min.js /usr/irissys/csp/broker/bootstrap-3-3-5/dist/js/
-COPY --from=0 /usr/irissys/csp/broker/bootstrap-3-3-5/dist/css/bootstrap.min.css /usr/irissys/csp/broker/bootstrap-3-3-5/dist/css/
+COPY --from=0 --chown=root:irisusr /usr/irissys/csp/broker/jquery-2.0.3.min.js /usr/irissys/csp/broker
+COPY --from=0 --chown=root:irisusr /usr/irissys/csp/broker/bootstrap-3-3-5/ /usr/irissys/csp/broker/bootstrap-3-3-5/
 
 # Name of the project folder ex.: irisdemodb-atelier-project
 ARG IRIS_PROJECT_FOLDER_NAME
