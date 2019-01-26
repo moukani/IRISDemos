@@ -6,20 +6,55 @@ XData Domain [ XMLNamespace = "http://www.intersystems.com/iknow" ]
 <domain name="TwitterAnalytics" disabled="false" allowCustomUpdates="true">
 <parameter name="DefaultConfig" value="TwitterAnalytics.Configuration" isList="false" />
 <data dropBeforeBuild="true">
-<table listname="TableTwitter" batchMode="true" disabled="false" listerClass="%iKnow.Source.SQL.Lister" tableName="IRISDemo_Data.Tweets" idField="ID" groupField="ID" dataFields="TwitterText" metadataColumns="TwitterText,TwitterUser,TwitterId" metadataFields="TwitterText,TwitterUser,TwitterID">
-<parameter value="SELECT ID __idField, ID __groupField, TwitterText,TwitterText,TwitterUser,TwitterId FROM IRISDemo_Data.Tweets" isList="false" />
+<table listname="TableTwitter" batchMode="true" disabled="false" listerClass="%iKnow.Source.SQL.Lister" tableName="IRISDemo_Data.Tweets" idField="TweetStatusId" groupField="UserScreenName" dataFields="Text" metadataColumns="TweetStatusId,UserScreenName,RetweetCount,ReplyCount,IsRetweet" metadataFields="TweetStatusId,UserScreenName,RetweetCount,ReplyCount,IsRetweet">
+<parameter value="SELECT __idField, UserScreenName __groupField, Text, TweetStatusId,UserScreenName,RetweetCount,ReplyCount,IsRetweet FROM IRISDemo_Data.Tweets" isList="false" />
 <parameter value="__idField" isList="false" />
 <parameter value="__groupField" isList="false" />
-<parameter value="TwitterText" isList="true" />
-<parameter value="TwitterText,TwitterUser,TwitterId" isList="true" />
-<parameter value="TwitterText,TwitterUser,TwitterID" isList="true" />
+<parameter value="Text" isList="true" />
+<parameter value="TweetStatusId,UserScreenName,RetweetCount,ReplyCount,IsRetweet" isList="true" />
+<parameter value="TweetStatusId,UserScreenName,RetweetCount,ReplyCount,IsRetweet" isList="true" />
 </table>
 </data>
-<matching disabled="false" dropBeforeBuild="true" autoExecute="true" ignoreDictionaryErrors="true" />
+<matching disabled="false" dropBeforeBuild="true" autoExecute="true" ignoreDictionaryErrors="true">
+<dictionary name="BusinessMatchingDictionary" language="en" disabled="false">
+<item name="phone" uri="uri:phone" disabled="false">
+<term string="iphone" language="en" disabled="false" />
+<term string="phone" language="en" disabled="false" />
+<term string="mobile" language="en" disabled="false" />
+<term string="mobile device" language="en" disabled="false" />
+</item>
+<item name="battery" uri="uri:battery" disabled="false">
+	<term string="battery" language="en" disabled="false"/>
+	<term string="battery life" language="en" disabled="false"/>
+</item>
+<item name="screen" uri="uri:screen" disabled="false">
+	<term string="touch screen" language="en" disabled="false"/>
+	<term string="screen" language="en" disabled="false"/>
+</item>
+<item name="voice" uri="uri:voice" disabled="false">
+	<term string="voice" language="en" disabled="false"/>
+	<term string="voice quality" language="en" disabled="false"/>
+</item>
+<item name="notebook" uri="uri:notebook" disabled="false">
+<term string="mac" language="en" disabled="false" />
+<term string="macbook pro" language="en" disabled="false" />
+<term string="mac pro" language="en" disabled="false" />
+<term string="notebook" language="en" disabled="false" />
+</item>
+<item name="appletv" uri="uri:appletv" disabled="false">
+<term string="apple tv" language="en" disabled="false" />
+<term string="appletv" language="en" disabled="false" />
+<term string="set top box" language="en" disabled="false" />
+<term string="set-top box" language="en" disabled="false" />
+</item>
+</dictionary>
+</matching>
 <metadata>
-<field name="TwitterText" operators="=" dataType="STRING" storage="0" caseSensitive="false" disabled="false" />
-<field name="TwitterUser" operators="=" dataType="STRING" storage="0" caseSensitive="false" disabled="false" />
-<field name="TwitterID" operators="=" dataType="NUMBER" storage="0" caseSensitive="false" disabled="false" />
+<field name="UserScreenName" operators="=" dataType="STRING" storage="0" caseSensitive="false" disabled="false" />
+<field name="TweetStatusId" operators="=" dataType="NUMBER" storage="0" caseSensitive="false" disabled="false" />
+<field name="RetweetCount" operators="=,&lt;,&lt;=,&gt;,&gt;=" dataType="NUMBER" storage="0" caseSensitive="false" disabled="false" />
+<field name="ReplyCount" operators="=,&lt;,&lt;=,&gt;,&gt;=" dataType="NUMBER" storage="0" caseSensitive="false" disabled="false" />
+<field name="IsRetweet" operators="=" dataType="NUMBER" storage="0" caseSensitive="false" disabled="false" />
 </metadata>
 <configuration name="TwitterAnalytics.Configuration" detectLanguage="false" languages="en" userDictionary="TwitterAnalytics.Dictionary#1" summarize="true" maxConceptLength="0" />
 <userDictionary name="TwitterAnalytics.Dictionary#1">

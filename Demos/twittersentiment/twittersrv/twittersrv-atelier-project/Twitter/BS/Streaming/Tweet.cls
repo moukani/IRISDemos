@@ -2,7 +2,7 @@ Class Twitter.BS.Streaming.Tweet Extends (%Persistent,%XML.Adaptor)
 {
 	Index TweetStatusIdIndex On TweetStatusId [ IdKey ];
 	
-	Property TweetStatusId As %Integer [ Required ];
+	Property TweetStatusId As %BigInt [ Required ];
 	
 	Property CreatedAt As %TimeStamp [ Required ];
 	
@@ -28,7 +28,7 @@ Class Twitter.BS.Streaming.Tweet Extends (%Persistent,%XML.Adaptor)
 	
 	Property Retweeted As %Boolean [ InitialExpression = 0, Required ];
 	
-	Property Lang As %String;
+	Property Language As %String;
 	
 	Property IsRetweet As %Boolean [ InitialExpression = 0, Required ];
 	
@@ -73,7 +73,7 @@ Class Twitter.BS.Streaming.Tweet Extends (%Persistent,%XML.Adaptor)
 		Set tweet.Retweeted = +pJSONTweet.retweeted
 		Set tweet.FavoriteCount = +pJSONTweet."favorite_count"
 		Set tweet.QuoteCount = +pJSONTweet."quote_count"
-		Set tweet.Lang = pJSONTweet.lang
+		Set tweet.Language = pJSONTweet.lang
 		
 		If pJSONTweet.%IsDefined("retweeted_status")
 		{
@@ -106,6 +106,8 @@ Class Twitter.BS.Streaming.Tweet Extends (%Persistent,%XML.Adaptor)
 		Set ..QuoteCount = +pJSONTweet."quote_count"		
 	}
 	
+
+
 Storage Default
 {
 <Data name="TweetDefaultData">
@@ -149,7 +151,7 @@ Storage Default
 <Value>Retweeted</Value>
 </Value>
 <Value name="14">
-<Value>Lang</Value>
+<Value>Language</Value>
 </Value>
 <Value name="15">
 <Value>IsRetweet</Value>
