@@ -17,7 +17,7 @@ Parameter HandleCorsRequest = 1;
 
 XData UrlMap
 {
-  <Routes>
+<Routes>
     <Map Prefix="/transaction" Forward="BankingSrv.BS.Transaction.Service"/>
     <Map Prefix="/whitelist" Forward="WhiteList.BS.Service"/>
   </Routes>

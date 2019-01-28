@@ -1,13 +1,13 @@
-Class IRISDemo.BO.Email.EmailMessage Extends (%Persistent,Ens.Request)
+Class IRISDemo.BO.Email.EmailMessage Extends (%Persistent, Ens.Request)
 {
 
-	Property From As %String;
-	
-	Property To As %String;
-	
-	Property Subject As %String;
-	
-	Property MessageText As %String(MAXLEN = "");
+Property From As %String;
+
+Property To As %String;
+
+Property Subject As %String;
+
+Property MessageText As %String(MAXLEN = "");
 
 Storage Default
 {

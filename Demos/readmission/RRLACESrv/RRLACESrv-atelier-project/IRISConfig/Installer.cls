@@ -1,4 +1,4 @@
-Include %occInclude 
+Include %occInclude
 
 Class IRISConfig.Installer Extends IRISConfig.InstallerBase
 {
@@ -19,7 +19,7 @@ ClassMethod LoadTransactionalData(pNamespace As %String) As %Status
 	
 	ZN "%SYS"
 	
-	Quit tSC 
+	Quit tSC
 }
 
 ClassMethod ExportPatients(pNamespace As %String) As %Status
@@ -38,7 +38,7 @@ ClassMethod ExportPatients(pNamespace As %String) As %Status
 	
 	ZN "%SYS"
 	
-	Quit tSC 
+	Quit tSC
 }
 
 /// You can customize this to run code during docker build
@@ -65,4 +65,5 @@ XData Install [ XMLNamespace = INSTALLER ]
 
 </Manifest>
 }
+
 }

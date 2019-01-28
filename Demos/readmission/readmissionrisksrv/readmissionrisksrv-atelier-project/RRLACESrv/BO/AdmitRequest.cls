@@ -9,9 +9,9 @@ Property EncounterNumber As %String;
 
 Property EncounterType As %String;
 
-Property StartDate As %Date(FORMAT=3);
+Property StartDate As %Date(FORMAT = 3);
 
-Property StartTime As %Time(FORMAT=2);
+Property StartTime As %Time(FORMAT = 2);
 
 Property AdmissionSource As %String;
 

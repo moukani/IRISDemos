@@ -1,4 +1,5 @@
 Include %DeepSee
+
 Class IRISDemo.DashboardContainer Extends %DeepSee.UserLibrary.Container [ Not ProcedureBlock ]
 {
 
@@ -65,4 +66,3 @@ XData Contents [ XMLNamespace = "http://www.intersystems.com/deepsee" ]
 }
 
 }
-

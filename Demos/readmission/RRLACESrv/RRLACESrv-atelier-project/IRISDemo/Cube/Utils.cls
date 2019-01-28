@@ -106,7 +106,8 @@ ClassMethod GetEScore(pEncounterID As IRISDemo.Data.Patient.Encounter) As %Integ
 	}
 	quit tEScore
 }
-classmethod GetAgeAtDischarge(pEncounterID As IRISDemo.Data.Patient.Encounter) As %Integer
+
+ClassMethod GetAgeAtDischarge(pEncounterID As IRISDemo.Data.Patient.Encounter) As %Integer
 {
 	set age = ""
 	
@@ -119,4 +120,5 @@ classmethod GetAgeAtDischarge(pEncounterID As IRISDemo.Data.Patient.Encounter) A
 	
 	quit age
 }
+
 }
