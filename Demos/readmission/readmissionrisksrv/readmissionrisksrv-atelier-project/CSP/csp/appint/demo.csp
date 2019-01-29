@@ -64,9 +64,13 @@
 				
 				setTimeout("openIFHint()", timeout());
 				
-				//setTimeout("openBusinessProcess()", timeout());
+				setTimeout("openHSDBMessageTrace()", timeout());
+
+				setTimeout("openHSDBPIDSubDTL()", timeout());
 				
-				//setTimeout("openProduction()", timeout());
+				setTimeout("openHSDBADTA03DTL()", timeout());
+				
+				setTimeout("openHSDBProduction()", timeout());				
 			}
 			
 			function window_open(url)
@@ -94,6 +98,26 @@
 			function openIFHint()
 			{
 				window_open('EnsPortal.ProductionConfig.zen?$NAMESPACE=APPINT&IRISUserName=SuperUser&IRISPassword=sys')
+			}
+
+			function openHSDBProduction()
+			{
+				window_open('http://localhost:9096/csp/appint/EnsPortal.ProductionConfig.zen?$NAMESPACE=APPINT&IRISUserName=SuperUser&IRISPassword=sys')
+			}
+
+			function openHSDBADTA03DTL()
+			{
+				window_open('http://localhost:9096/csp/appint/EnsPortal.DTLEditor.zen?DT=IRISDemo.DTL.HL7AppTrigger.ADTA03.dtl&IRISUserName=SuperUser&IRISPassword=sys')
+			}
+			
+			function openHSDBPIDSubDTL()
+			{
+				window_open('http://localhost:9096/csp/appint/EnsPortal.DTLEditor.zen?DT=IRISDemo.DTL.HL7AppTrigger.Sub.PID.dtl&IRISUserName=SuperUser&IRISPassword=sys')
+			}
+
+			function openHSDBMessageTrace()
+			{
+				window_open('http://localhost:9096/csp/appint/EnsPortal.MessageViewer.zen?$NAMESPACE=APPINT&$NAMESPACE=APPINT&IRISUserName=SuperUser&IRISPassword=sys')
 			}
 			
 			function openIFHintRoutingRule()

@@ -2,11 +2,11 @@ Include %occInclude
 
 Class IRISConfig.Installer Extends IRISConfig.InstallerBase
 {
-	
-	/// This method will create an Interoperability credential meant to be used on Interoperability Productions.
-	/// It will use the standard SuperUser/sys password for demos.
-	ClassMethod CreateCredentials(pNamespace As %String) As %Status
-	{
+
+/// This method will create an Interoperability credential meant to be used on Interoperability Productions.
+/// It will use the standard SuperUser/sys password for demos.
+ClassMethod CreateCredentials(pNamespace As %String) As %Status
+{
 		Set tSC = $$$OK
 		Try
 		{
@@ -24,12 +24,12 @@ Class IRISConfig.Installer Extends IRISConfig.InstallerBase
 		ZN tNS
 		
 		Quit tSC
-	}
-	
-	/// You can customize this to run code during docker build
-	XData Install [ XMLNamespace = INSTALLER ]
-	{
-	<Manifest>
+}
+
+/// You can customize this to run code during docker build
+XData Install [ XMLNamespace = INSTALLER ]
+{
+<Manifest>
 		<Log Text="Configuring credentials..." Level="0"/>
 		<Invoke Class="IRISConfig.Installer" Method="CreateCredentials" CheckStatus="true">
 			<Arg name="pNamespace" Value="${Namespace}"/>
@@ -71,6 +71,6 @@ Class IRISConfig.Installer Extends IRISConfig.InstallerBase
 		</Invoke>
 
 	</Manifest>
-	}
-	
+}
+
 }

@@ -2,12 +2,13 @@ Include DEMOMACROS
 
 Class IRISDemo.Data.Utils
 {
-	/// We will be adding this to all clinical dates so that the LACE score will
-	/// be correctly computed in 6 months from now.
-	Parameter DATEWINDOW = { $Horolog-$ZDateH("2017-04-01",3) };
-	
-	Classmethod LoadDemoData()
-	{
+
+/// We will be adding this to all clinical dates so that the LACE score will
+/// be correctly computed in 6 months from now.
+Parameter DATEWINDOW = {$Horolog-$ZDateH("2017-04-01",3)};
+
+ClassMethod LoadDemoData()
+{
 		Write !!,"Loading demo data",!
 		Do ..LoadIndexData("/tmp/ComorbidityIndexMapping.csv")
 		
@@ -25,10 +26,10 @@ Class IRISDemo.Data.Utils
 		$$$ThrowStatusExceptionIfError(tSC, "BuildLACECubeException")
 		
 		write !!,"Loading demo data finished",!!
-	}
-	
-	Classmethod LoadIndexData(fileName as %String)
-	{
+}
+
+ClassMethod LoadIndexData(fileName As %String)
+{
 		Set objRs = ##class(%Library.ResultSet).%New("IRISDemo.Util.FileReader:CSV")
 
 		Set tSC = objRs.Execute(fileName) 
@@ -50,10 +51,10 @@ Class IRISDemo.Data.Utils
 			Set objIndex.Comorbidity = objRs.Get("Comorbidity")
 			do objIndex.%Save() // Don't care about errors here as we will see the same ICD code many times but only need 1. The unique index will take care of this.
 		}
-	}
-	
-	Classmethod LoadPatientDemographics(fileName as %String)
-	{
+}
+
+ClassMethod LoadPatientDemographics(fileName As %String)
+{
 		Set objRs = ##class(%Library.ResultSet).%New("IRISDemo.Util.FileReader:CSV")
 	
 		Set tSC = objRs.Execute(fileName) 
@@ -73,10 +74,10 @@ Class IRISDemo.Data.Utils
 			Set tSC = obj.%Save()
 			$$$ThrowStatusExceptionIfError(tSC, "PatientDemographicsSaveException")
 		}
-	}
-	
-	Classmethod LoadPatientDiagnoses(fileName as %String)
-	{
+}
+
+ClassMethod LoadPatientDiagnoses(fileName As %String)
+{
 		set objRs = ##class(%Library.ResultSet).%New("IRISDemo.Util.FileReader:CSV")
 	
 		Set tSC = objRs.Execute(fileName) 
@@ -98,10 +99,10 @@ Class IRISDemo.Data.Utils
 			Set tSC = obj.%Save()
 			$$$ThrowStatusExceptionIfError(tSC, "DiagnosisSaveException")
 		}
-	}
-	
-	Classmethod LoadPatientEncounters(fileName as %String)
-	{
+}
+
+ClassMethod LoadPatientEncounters(fileName As %String)
+{
 		Set objRs = ##class(%Library.ResultSet).%New("IRISDemo.Util.FileReader:CSV")
 	
 		Set tSC = objRs.Execute(fileName) 
@@ -132,17 +133,17 @@ Class IRISDemo.Data.Utils
 			Set tSC = obj.%Save()
 			$$$ThrowStatusExceptionIfError(tSC, "LoadPatientEncountersSaveException")
 		}
-	}
+}
 
-	Classmethod LoadTermList(fileName as %String)
-	{
+ClassMethod LoadTermList(fileName As %String)
+{
 		Set tSC = ##class(%DeepSee.TermList).%ImportCSV(fileName,,1)
 		$$$ThrowStatusExceptionIfError(tSC, "LoadTermListException")
-	}
-	
-	/// Pick the patients we want to use on the demo and give them fixed names
-	ClassMethod UpdateDemoPatients()
-	{
+}
+
+/// Pick the patients we want to use on the demo and give them fixed names
+ClassMethod UpdateDemoPatients()
+{
 		#dim objPat as IRISDemo.Data.Patient.Demographics
 		#dim objEnc as IRISDemo.Data.Patient.Encounter
 		#dim objDgn as IRISDemo.Data.Patient.Diagnosis
@@ -175,6 +176,7 @@ Class IRISDemo.Data.Utils
 		set objEnc.EndDate = (objEnc.StartDate + 3)
 		set objEnc.EndTime = $ztimeh("17:00")
 		set objEnc.AdmissionSource = "ED"
+		set objEnc.DischargeLocation = "Home"
 		Set tSC = objEnc.%Save() 
 		$$$ThrowStatusExceptionIfError(tSC, "UpdateDemoPatientsSaveEncounterException")
 		
@@ -202,6 +204,7 @@ Class IRISDemo.Data.Utils
 		set objEnc.EndDate = (objEnc.StartDate + 4)
 		set objEnc.EndTime = $ztimeh("17:00")
 		set objEnc.AdmissionSource = "ED"
+		set objEnc.DischargeLocation = "Home"
 		Set tSC = objEnc.%Save() 
 		$$$ThrowStatusExceptionIfError(tSC, "UpdateDemoPatientsSaveEncounterException")
 		
@@ -226,6 +229,7 @@ Class IRISDemo.Data.Utils
 		set objEnc.EndDate = (objEnc.StartDate + 6)
 		set objEnc.EndTime = $ztimeh("17:00")
 		set objEnc.AdmissionSource = "ED"
+		set objEnc.DischargeLocation = "Home"
 		Set tSC = objEnc.%Save() 
 		$$$ThrowStatusExceptionIfError(tSC, "UpdateDemoPatientsSaveEncounterException")
 
@@ -250,6 +254,7 @@ Class IRISDemo.Data.Utils
 		set objEnc.EndDate = (objEnc.StartDate + 5)
 		set objEnc.EndTime = $ztimeh("17:00")
 		set objEnc.AdmissionSource = "ED"
+		set objEnc.DischargeLocation = "Home"
 		Set tSC = objEnc.%Save() 
 		$$$ThrowStatusExceptionIfError(tSC, "UpdateDemoPatientsSaveEncounterException")
 
@@ -274,6 +279,7 @@ Class IRISDemo.Data.Utils
 		set objEnc.EndDate = (objEnc.StartDate + 4)
 		set objEnc.EndTime = $ztimeh("17:00")
 		set objEnc.AdmissionSource = "ED"
+		set objEnc.DischargeLocation = "Home"
 		Set tSC = objEnc.%Save() 
 		$$$ThrowStatusExceptionIfError(tSC, "UpdateDemoPatientsSaveEncounterException")
 
@@ -300,6 +306,7 @@ Class IRISDemo.Data.Utils
 		set objEnc.EndDate = (objEnc.StartDate + 2)
 		set objEnc.EndTime = $ztimeh("17:00")
 		set objEnc.AdmissionSource = "ED"
+		set objEnc.DischargeLocation = "Home"
 		Set tSC = objEnc.%Save() 
 		$$$ThrowStatusExceptionIfError(tSC, "UpdateDemoPatientsSaveEncounterException")
 
@@ -324,6 +331,7 @@ Class IRISDemo.Data.Utils
 		set objEnc.EndDate = (objEnc.StartDate + 3)
 		set objEnc.EndTime = $ztimeh("17:00")
 		set objEnc.AdmissionSource = "ED"
+		set objEnc.DischargeLocation = "Home"
 		Set tSC = objEnc.%Save() 
 		$$$ThrowStatusExceptionIfError(tSC, "UpdateDemoPatientsSaveEncounterException")
 
@@ -462,11 +470,10 @@ Class IRISDemo.Data.Utils
 		set objEnc.DischargeLocation = "Home"
 		Set tSC = objEnc.%Save() 
 		$$$ThrowStatusExceptionIfError(tSC, "UpdateDemoPatientsSaveEncounterException")
+}
 
-	}
-	
-	ClassMethod ExportPatients()
-	{
+ClassMethod ExportPatients()
+{
 		#Dim oFile As %Library.File
 		#Dim rsEncounters As %SQL.StatementResult
 		#Dim oResultMetadata As %SQL.StatementMetadata
@@ -506,5 +513,6 @@ Class IRISDemo.Data.Utils
 		}
 
 		Do oFile.%Close()
-	}
+}
+
 }

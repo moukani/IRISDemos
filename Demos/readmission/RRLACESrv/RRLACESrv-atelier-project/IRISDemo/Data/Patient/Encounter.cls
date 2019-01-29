@@ -25,7 +25,7 @@ Property LOS As %Integer;
 
 Index Dates On (StartDate, EndDate);
 
-Index PatientIndex On Patient; 
+Index PatientIndex On Patient;
 
 Index EncounterNumber On EncounterNumber;
 
