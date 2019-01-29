@@ -63,7 +63,7 @@ export class UserDischargeModalComponent implements OnInit {
               this.hasError = true;
             }
           }
-        }, 2000);
+        }, 3000);
       }catch(err){
         this.spinner.hide();
         console.log("issue discharing error closing dialog: ", err);

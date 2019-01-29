@@ -15,7 +15,8 @@ import {
   MatPaginatorModule,
   MatSortModule,
   MatIconModule,
-  MatDialogModule
+  MatDialogModule,
+  MatCheckboxModule
 } from '@angular/material';
 
 @NgModule({
@@ -35,7 +36,8 @@ import {
     MatPaginatorModule,
     MatSortModule,
     MatIconModule,
-    MatDialogModule
+    MatDialogModule,
+    MatCheckboxModule
   ],
   exports:[
     MatSidenavModule,
@@ -51,7 +53,8 @@ import {
     MatPaginatorModule,
     MatSortModule,
     MatIconModule,
-    MatDialogModule
+    MatDialogModule,
+    MatCheckboxModule
   ]
 })
 export class CustomMaterialModule { }

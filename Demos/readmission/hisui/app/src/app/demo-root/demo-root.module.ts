@@ -16,8 +16,13 @@ import {IrisPatientService} from '../providers/iris-patient.service';
 
 /*Uniform angualr spinners*/
 import { NgxSpinnerModule } from 'ngx-spinner';
+//import { ChartCommonModule } from '@swimlane/ngx-charts/release/common/chart-common.module';
+//import { PieChartModule } from '@swimlane/ngx-charts/release/pie-chart/pie-chart.module';
+import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { UserDischargeFormComponent } from './user-discharge-form/user-discharge-form.component';
 import { WaitingListTableComponent } from './waiting-list-table/waiting-list-table.component';
+import { WorkflowRootComponent } from './workflow-root/workflow-root.component';
+import { WorkflowTableComponent } from './workflow-table/workflow-table.component';
 
 @NgModule({
   declarations: [
@@ -29,13 +34,18 @@ import { WaitingListTableComponent } from './waiting-list-table/waiting-list-tab
     UserDischargeModalComponent,
     UserDischargeFormComponent,
     WaitingListTableComponent,
-    AnalyticsRootComponent
+    AnalyticsRootComponent,
+    WorkflowRootComponent,
+    WorkflowTableComponent
   ],
   imports: [
     CommonModule,
     CustomMaterialModule,
     FormsModule,
-    NgxSpinnerModule
+    NgxSpinnerModule,
+    NgxChartsModule
+    //ChartCommonModule,
+    //PieChartModule
   ],
   exports: [
     ContentContainerComponent,
