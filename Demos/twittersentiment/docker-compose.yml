@@ -1,4 +1,4 @@
-version: '3.6'
+version: '2.4'
 
 volumes:
   common_shared:
@@ -13,6 +13,8 @@ services:
     build: ./callcenterui
     image: amirsamary/irisdemo:twittersentiment_callcenterui
     hostname: callcenterui
+    restart: on-failure
+    cpu_percent: 25
     ports:
     - "9090:8080"   # JBoss - Call Center App: http://localhost:9090/app/
     - "9091:9990"   # JBoss Management portal: Username: admin, Password: Admin#1234
@@ -38,6 +40,8 @@ services:
     image: amirsamary/irisdemo:twittersentiment_twittersrv
     command: --key /irislicense/iris.key
     hostname: twittersrv
+    restart: on-failure
+    cpu_percent: 25
     ports:
     - "9092:52773" # 52773 is the webserver/management portal port: http://localhost:9092/csp/sys/UtilHome.csp
     #- "9093:51773" # 51773 is the superserver default port
@@ -56,6 +60,8 @@ services:
     image: amirsamary/irisdemo:twittersentiment_twittersentiment
     command: --key /irislicense/iris.key
     hostname: twittersentiment
+    restart: on-failure
+    cpu_percent: 25
     ports:
     - "9094:52773" # 52773 is the webserver/management portal port: http://localhost:9094/csp/sys/UtilHome.csp
     #- "9095:51773" # 51773 is the superserver default port
@@ -76,6 +82,8 @@ services:
     image: amirsamary/irisdemo:twittersentiment_callcenterdb
     command: --key /irislicense/iris.key
     hostname: callcenterdb
+    restart: on-failure
+    cpu_percent: 25
     ports:
     - "9096:52773" # 52773 is the webserver/management portal port: http://localhost:9096/csp/sys/UtilHome.csp
     - "9097:51773" # 51773 is the superserver default port
