@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { IrisWorkflowService } from '../../providers/iris-workflow.service';
 
 @Component({
   selector: 'app-content-container',
@@ -7,9 +8,14 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ContentContainerComponent implements OnInit {
 
-  constructor() { }
+  constructor(private IWS: IrisWorkflowService) { }
 
   ngOnInit() {
   }
 
+  onTabChange(event: any): void {
+    if(event && event.tab && event.tab.textLabel === "Workflow"){
+      this.IWS.emitChange(true);
+    }
+  }
 }

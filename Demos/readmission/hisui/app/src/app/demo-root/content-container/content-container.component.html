@@ -1,5 +1,5 @@
 <div class="content-wrapper">
-  <mat-tab-group>
+  <mat-tab-group (selectedTabChange)="onTabChange($event)">
     <mat-tab label="Admissions">
       <app-admission-root></app-admission-root>
     </mat-tab>

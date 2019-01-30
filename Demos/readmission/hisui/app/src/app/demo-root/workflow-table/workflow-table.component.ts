@@ -133,7 +133,6 @@ export class WorkflowTableComponent implements OnInit {
   }
 
   completeTask(row: any){
-    debugger;
     this.IWS.completeTask(row.taskId, row.followUpResponse).subscribe(res => {
       this.processResponse(res);
     },
