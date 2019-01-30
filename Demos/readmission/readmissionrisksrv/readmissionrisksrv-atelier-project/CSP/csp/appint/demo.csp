@@ -32,7 +32,7 @@
 		}
 		*/
 		
-		function openWindows()
+		function openWindows(allWindows)
 		{
 			var time=1000;
 			var callNumber=0
@@ -64,13 +64,16 @@
 				
 				setTimeout("openIFHint()", timeout());
 				
-				setTimeout("openHSDBMessageTrace()", timeout());
-
-				setTimeout("openHSDBPIDSubDTL()", timeout());
-				
-				setTimeout("openHSDBADTA03DTL()", timeout());
-				
-				setTimeout("openHSDBProduction()", timeout());				
+				if (allWindows)
+				{
+					setTimeout("openHSDBMessageTrace()", timeout());
+	
+					setTimeout("openHSDBPIDSubDTL()", timeout());
+					
+					setTimeout("openHSDBADTA03DTL()", timeout());
+					
+					setTimeout("openHSDBProduction()", timeout());
+				}			
 			}
 			
 			function window_open(url)
@@ -245,14 +248,18 @@
 		
 		<table width="100%" style="text-align: center; background-color: #b7c8e2;">
 			<tr>
-				<td><input ID="BTNALL" type="button" class="Button" value="Open All Windows" onclick="openWindows()"/></td>
+				<td><input ID="BTNALL" type="button" class="Button" value="Long Demo" onclick="openWindows(true)"/></td>
+				<td><input ID="BTNALL" type="button" class="Button" value="Short Demo" onclick="openWindows(false)"/></td>
+				<td><input type="button" class="Button" value="Show Instructions" onclick="openInstructions()" id="instructionsbtn"/></td>
+			</tr>
+			<!--
 				<td><input type="button" class="Button" value="1 - Open HIS UI" onclick="openHISUI()"/></td>
 				<td><input type="button" class="Button" value="2 - Open HIS Database" onclick="openHISdb()"/></td>
 				<td><input type="button" class="Button" value="3 - Open Interoperability" onclick="openIFHint()"/></td>
 				<td><input type="button" class="Button" value="4 - Open Routing Rule" onclick="openIFHintRoutingRule()"/></td>
 				<td><input type="button" class="Button" value="5 - Open Data Transfromation" onclick="openIFHintDTL()"/></td>
 				<td><input type="button" class="Button" value="6 - Open LACE BI" onclick="openLACEBI()"/></td>
-			</tr>
+			</tr-->
 			<tr>
 				<td>&nbsp;</td>
 			</tr>
@@ -264,7 +271,7 @@
 				<td><input type="button" class="Button" value="10 - Open PMML Test Page" onclick="openPMMLTestPage()"/></td>
 				<td><input type="button" class="Button" value="11 - Open PMML" onclick="openPMML()"/></td>
 				-->
-				<td><input type="button" class="Button" value="Show Instructions" onclick="openInstructions()" id="instructionsbtn"/></td>
+				
 			</tr>
 		</table>
 	
@@ -283,10 +290,9 @@
 		
 			<p>Explain what they are going to see using the image on this page.</p>
 			
-			<p>Click on open all windows. Many tabs will be opened for you. If many tabs hasn't been opened for you or
-			just a single tab has been opened, check to see if your browser has blocked your popups. 
-			If it has, tell it to allow popups and close any tab that has been opened before trying clickin on the <b>Open All Windows</b> 
-			button again.</p> 
+			<p>Click on either <b>Short Demo</b> or <b>Long Demo</b> button to open the right windows so you can do the demo. Many tabs will be opened for you. 
+			If many tabs hasn't been opened for you or just a single tab has been opened, check to see if your browser has blocked your popups. 
+			If it has, tell it to allow popups and close any tab that has been opened before trying clickin on the button again.</p> 
 			
 			<p>
 			You will be left on the tab you should start with. You should click each tab and explain what is it 
@@ -364,10 +370,13 @@
 						</li>
 					</ul>
 				</li>
-				<li>The next tab is 'Workflow' (TODO)</li>
+				<li>The next tab is 'Workflow'. You can show the ticket open, take it and take an action (.i.e: Called The Patient). You can go
+				back to the message trace you opened and refresh it. You can show that the trace has been updated with the response from the workflow. 
+				You can also show the workflow by clicking on the Workflow tab on the EMR UI.</li>
 				<li>
 					The last tab is the display of the dashboards from the BI showing the LACE risk scores by 3 different categories.
-					At the top left is a 'filter' box (Month discharged) which can be changed to increase/decrease the range.
+					At the top left is a 'filter' box (Month discharged) which can be changed to increase/decrease the range. This dashboard can also
+					be opened from the Dashboard tab on the EMR UI:
 					<ul>
 						<li>On the right hand graph (LACE by Age), click on one of the bars (e.g. 11-20)</li>
 						<li>Now click on the down pointing arrow at the top of the frame. This will drill down into the data to show per year</li>
