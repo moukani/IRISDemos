@@ -1,4 +1,4 @@
-version: '3.6'
+version: '2.4'
 
 volumes:
   common_shared:
@@ -17,6 +17,8 @@ services:
     image: amirsamary/irisdemo:mobilebanking_bankingtrnsrv
     command: --key /irislicense/iris.key
     hostname: bankingtrnsrv
+    restart: on-failure
+    cpu_percent: 25
     ports:
     # 51773 is the superserver default port
     - "9093:51773"
@@ -46,6 +48,8 @@ services:
     image: amirsamary/irisdemo:mobilebanking_datalake
     command: --key /irislicense/iris.key
     hostname: datalake
+    restart: on-failure
+    cpu_percent: 25
     ports:
     # 51773 is the superserver default port
     - "9095:51773"
@@ -73,6 +77,8 @@ services:
     image: amirsamary/irisdemo:mobilebanking_bankingcore
     command: --key /irislicense/iris.key
     hostname: bankingcore
+    restart: on-failure
+    cpu_percent: 25
     ports:
     # 51773 is the superserver default port
     - "9091:51773"
@@ -94,6 +100,8 @@ services:
       - sparkmaster
     build: ./advanced_analytics
     image: amirsamary/irisdemo:mobilebanking_advancedanalytics
+    restart: on-failure
+    cpu_percent: 25
     ports:
     - "9096:9090"   # Zeppelin
     - 4141:4040     # Zeppelin Spark UI
@@ -118,6 +126,7 @@ services:
       - bankingtrnsrv
     image: amirsamary/irisdemo:spark-iris
     hostname: sparkmaster # Must be always sparkmaster
+    cpu_percent: 25
     environment:
       SPARK_NODE_TYPE: Master
       SPARK_PUBLIC_DNS: localhost
@@ -141,6 +150,7 @@ services:
       - sparkmaster
     image: amirsamary/irisdemo:spark-iris
     hostname: worker1
+    cpu_percent: 25
     environment:
       IRIS_MASTER_HOST: datalake # DNS based on the name of the service!
       IRIS_MASTER_PORT: 51773 
@@ -166,6 +176,7 @@ services:
       - sparkmaster
     image: amirsamary/irisdemo:spark-iris
     hostname: worker2
+    cpu_percent: 25
     environment:
       IRIS_MASTER_HOST: datalake # DNS based on the name of the service!
       IRIS_MASTER_PORT: 51773 
@@ -190,6 +201,7 @@ services:
   pos:
     build: ./pos
     image: amirsamary/irisdemo:mobilebanking_pos
+    cpu_percent: 25
     ports:
       - "9099:4200"
     #user: "node"

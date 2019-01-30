@@ -1,4 +1,4 @@
-version: '3.6'
+version: '2.4'
 
 volumes:
   common_shared:
@@ -6,8 +6,6 @@ volumes:
 services:
 
   readmissionrisksrv:
-    depends_on:
-      - RRLACESrv
     build:
       context: ./readmissionrisksrv
       args:
@@ -15,6 +13,8 @@ services:
     image: amirsamary/irisdemo:readmission_readmissionrisksrv
     command: --key /irislicense/iris.key
     hostname: readmissionrisksrv
+    restart: on-failure
+    cpu_percent: 25
     ports:
     - "9093:51773" # 51773 is the superserver default port
     - "9092:52773" # 52773 is the webserver/management portal port
@@ -27,6 +27,8 @@ services:
       target: /hl7files
 
   RRLACESrv:   # Readmission Risk LACE Service
+    depends_on:
+      - readmissionrisksrv
     build:
       context: ./RRLACESrv
       args:
@@ -34,6 +36,8 @@ services:
     image: amirsamary/irisdemo:readmission_RRLACESrv
     command: --key /irislicense/iris.key
     hostname: RRLACESrv
+    restart: on-failure
+    cpu_percent: 25
     ports:
     - "9095:51773" # 51773 is the superserver default port
     - "9094:52773" # 52773 is the webserver/management portal port
@@ -52,6 +56,8 @@ services:
     image: amirsamary/irisdemo:readmission_hisdb
     command: --key /irislicense/iris.key
     hostname: hisdb
+    restart: on-failure
+    cpu_percent: 25
     ports:
     - "9097:51773" # 51773 is the superserver default port
     - "9096:52773" # 52773 is the webserver/management portal port
@@ -65,6 +71,8 @@ services:
       - hisdb
     build:
       context: ./hisui
+    restart: on-failure
+    cpu_percent: 25
     image: amirsamary/irisdemo:readmission_hisui
     hostname: hisui
     ports:
@@ -72,10 +80,10 @@ services:
 
   advancedanalytics:
     depends_on: 
-      - sparkmaster
-      - RRLACESrv
+      - hisui
     build: ./advanced_analytics
     image: amirsamary/irisdemo:mobilebanking_advancedanalytics
+    cpu_percent: 25
     ports:
     - "10000:9090"     # Zeppelin
     - "10001:4040"     # Zeppelin Spark UI
@@ -95,9 +103,10 @@ services:
 
   sparkmaster:
     depends_on: 
-      - RRLACESrv
+      - advancedanalytics
     image: amirsamary/irisdemo:spark-iris
     hostname: sparkmaster # Must be always sparkmaster
+    cpu_percent: 25
     environment:
       SPARK_NODE_TYPE: Master
       SPARK_PUBLIC_DNS: localhost
@@ -119,6 +128,7 @@ services:
       - sparkmaster
     image: amirsamary/irisdemo:spark-iris
     hostname: worker1
+    cpu_percent: 25
     environment:
       IRIS_MASTER_HOST: RRLACESrv
       IRIS_MASTER_PORT: 51773
@@ -139,9 +149,10 @@ services:
 
   worker2:
     depends_on: 
-      - sparkmaster
+      - worker1
     image: amirsamary/irisdemo:spark-iris
     hostname: worker2
+    cpu_percent: 25
     environment:
       IRIS_MASTER_HOST: RRLACESrv
       IRIS_MASTER_PORT: 51773
