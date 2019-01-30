@@ -66,44 +66,9 @@ services:
       source: ../../IRISLicense/
       target: /irislicense
 
-  hisui:
-    depends_on:
-      - hisdb
-    build:
-      context: ./hisui
-    restart: on-failure
-    cpu_percent: 25
-    image: amirsamary/irisdemo:readmission_hisui
-    hostname: hisui
-    ports:
-    - "9098:4200" # Where Nodejs Will be listening
-
-  advancedanalytics:
-    depends_on: 
-      - hisui
-    build: ./advanced_analytics
-    image: amirsamary/irisdemo:mobilebanking_advancedanalytics
-    cpu_percent: 25
-    ports:
-    - "10000:9090"     # Zeppelin
-    - "10001:4040"     # Zeppelin Spark UI
-    volumes:
-    - common_shared:/common_shared   # The production will be looking into this folder for new PMML files
-                                       # that will be sent by the advancedanalytics service.
-    - type: bind
-      source: ./advanced_analytics/shared/
-      target: /shared
-
-    environment:
-    - IRIS_MASTER_HOST=RRLACESrv # DNS based on the name of the service!
-    - IRIS_MASTER_PORT=51773 
-    - IRIS_MASTER_USERNAME=SuperUser 
-    - IRIS_MASTER_PASSWORD=sys 
-    - IRIS_MASTER_NAMESPACE=APPINT
-
   sparkmaster:
     depends_on: 
-      - advancedanalytics
+      - hisdb
     image: amirsamary/irisdemo:spark-iris
     hostname: sparkmaster # Must be always sparkmaster
     cpu_percent: 25
@@ -138,7 +103,7 @@ services:
 
       SPARK_NODE_TYPE: Worker
       SPARK_WORKER_CORES: 1
-      SPARK_WORKER_MEMORY: 1g   # You can give more memory to your work if you are getting errors when using Spark
+      SPARK_WORKER_MEMORY: 256m   # You can give more memory to your work if you are getting errors when using Spark
       SPARK_WORKER_PORT: 8881
       SPARK_WORKER_WEBUI_PORT: 8081
       SPARK_PUBLIC_DNS: localhost
@@ -147,27 +112,62 @@ services:
     volumes:
     - common_shared:/common_shared   # Shared between all spark nodes. Good place to place a file we are working with.  
 
-  # To reduce the occurrence of <PROTECT> errors
-  # worker2:
-  #   depends_on: 
-  #     - worker1
-  #   image: amirsamary/irisdemo:spark-iris
-  #   hostname: worker2
-  #   cpu_percent: 25
-  #   environment:
-  #     IRIS_MASTER_HOST: RRLACESrv
-  #     IRIS_MASTER_PORT: 51773
-  #     IRIS_MASTER_USERNAME: SuperUser
-  #     IRIS_MASTER_PASSWORD: sys
-  #     IRIS_MASTER_NAMESPACE: APPINT
+  To reduce the occurrence of <PROTECT> errors
+  worker2:
+    depends_on: 
+      - worker1
+    image: amirsamary/irisdemo:spark-iris
+    hostname: worker2
+    cpu_percent: 25
+    environment:
+      IRIS_MASTER_HOST: RRLACESrv
+      IRIS_MASTER_PORT: 51773
+      IRIS_MASTER_USERNAME: SuperUser
+      IRIS_MASTER_PASSWORD: sys
+      IRIS_MASTER_NAMESPACE: APPINT
 
-  #     SPARK_NODE_TYPE: Worker
-  #     SPARK_WORKER_CORES: 1
-  #     SPARK_WORKER_MEMORY: 1g   # You can give more memory to your work if you are getting errors when using Spark
-  #     SPARK_WORKER_PORT: 8882
-  #     SPARK_WORKER_WEBUI_PORT: 8082
-  #     SPARK_PUBLIC_DNS: localhost
-  #   ports:
-  #     - 8082:8082   # Spark Worker Portal
-  #   volumes:
-  #   - common_shared:/common_shared   # Shared between all spark nodes. Good place to place a file we are working with.
+      SPARK_NODE_TYPE: Worker
+      SPARK_WORKER_CORES: 1
+      SPARK_WORKER_MEMORY: 256m   # You can give more memory to your work if you are getting errors when using Spark
+      SPARK_WORKER_PORT: 8882
+      SPARK_WORKER_WEBUI_PORT: 8082
+      SPARK_PUBLIC_DNS: localhost
+    ports:
+      - 8082:8082   # Spark Worker Portal
+    volumes:
+    - common_shared:/common_shared   # Shared between all spark nodes. Good place to place a file we are working with.
+
+  hisui:
+    depends_on:
+      - worker2
+    build:
+      context: ./hisui
+    restart: on-failure
+    cpu_percent: 25
+    image: amirsamary/irisdemo:readmission_hisui
+    hostname: hisui
+    ports:
+    - "9098:4200" # Where Nodejs Will be listening
+
+  advancedanalytics:
+    depends_on: 
+      - hisui
+    build: ./advanced_analytics
+    image: amirsamary/irisdemo:mobilebanking_advancedanalytics
+    cpu_percent: 25
+    ports:
+    - "10000:9090"     # Zeppelin
+    - "10001:4040"     # Zeppelin Spark UI
+    volumes:
+    - common_shared:/common_shared   # The production will be looking into this folder for new PMML files
+                                       # that will be sent by the advancedanalytics service.
+    - type: bind
+      source: ./advanced_analytics/shared/
+      target: /shared
+
+    environment:
+    - IRIS_MASTER_HOST=RRLACESrv # DNS based on the name of the service!
+    - IRIS_MASTER_PORT=51773 
+    - IRIS_MASTER_USERNAME=SuperUser 
+    - IRIS_MASTER_PASSWORD=sys 
+    - IRIS_MASTER_NAMESPACE=APPINT
