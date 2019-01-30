@@ -112,7 +112,6 @@ services:
     volumes:
     - common_shared:/common_shared   # Shared between all spark nodes. Good place to place a file we are working with.  
 
-  To reduce the occurrence of <PROTECT> errors
   worker2:
     depends_on: 
       - worker1
