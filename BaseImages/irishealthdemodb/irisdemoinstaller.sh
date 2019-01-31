@@ -29,7 +29,7 @@ printf "\n\nLoading Installer..."
 # it may fail if it hasn't been loaded correctly. 
 printf "%s\n%s\nzn \"%s\"\nSet tSC=\$system.OBJ.Load(\"%s\",\"ck\")\n$VerifySC\n" "$IRIS_USERNAME" "$IRIS_PASSWORD" "%SYS" "/tmp/iris_project/IRISConfig/Installer.cls" | irissession IRIS
  
- # Removing Eclipse/Atelier files so that when we try to load our project we don't get the
+# Removing Eclipse/Atelier files so that when we try to load our project we don't get the
 # following error:
 # ERROR #5840: Unable to import file '/tmp/iris_project/.buildpath' as this is not a supported type.ERROR: Service 'twittersrv' failed to build: The command '/bin/sh -c /usr/irissys/demo/irisdemoinstaller.sh' returned a non-zero code: 1
 rm -f /tmp/iris_project/.buildpath
@@ -40,7 +40,7 @@ printf "\n\nRunning Installer..."
 printf "%s\n%s\n%s\n%s\n" "$IRIS_USERNAME" "$IRIS_PASSWORD" "zn \"%SYS\"" "Do ##class(IRISConfig.Installer).Install()" | irissession IRIS
 
 printf "\n\nCleaning up..."
-printf "%s\n%s\n%s\n%s\n%s\n%s\n" "$IRIS_USERNAME" "$IRIS_PASSWORD" "zn \"%SYS\"" "do INT^JRNSTOP" "kill ^%SYS(\"Journal\")" "Halt" | irissession IRIS
+printf "%s\n%s\n%s\n%s\n%s\n%s\n" "$IRIS_USERNAME" "$IRIS_PASSWORD" "zn \"%SYS\"" "do INT^JRNSTOP" "kill ^%SYS(\"Journal\") kill ^SYS(\"NODE\") Halt" | irissession IRIS
 
 iris stop iris quietly
 

@@ -44,3 +44,5 @@ RUN /usr/irissys/demo/irisdemobaseinstaller.sh
 # Running the base installer
 ADD ./irisdemoinstaller.sh /usr/irissys/demo/irisdemoinstaller.sh
 RUN /usr/irissys/demo/irisdemoinstaller.sh
+
+HEALTHCHECK --interval=5s CMD /irisHealth.sh || exit 1
