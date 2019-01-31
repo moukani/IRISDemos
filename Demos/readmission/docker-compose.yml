@@ -28,7 +28,9 @@ services:
 
   RRLACESrv:   # Readmission Risk LACE Service
     depends_on:
-      - readmissionrisksrv
+      readmissionrisksrv:
+        condition: service_healthy
+
     build:
       context: ./RRLACESrv
       args:
@@ -48,7 +50,8 @@ services:
       
   hisdb:
     depends_on:
-      - RRLACESrv
+      RRLACESrv:
+        condition: service_healthy
     build:
       context: ./hisdb
       args:
@@ -68,7 +71,8 @@ services:
 
   hisui:
     depends_on:
-      - hisdb
+      hisdb:
+        condition: service_healthy
     build:
       context: ./hisui
     restart: on-failure
@@ -80,7 +84,8 @@ services:
 
   advancedanalytics:
     depends_on: 
-      - hisui
+      hisdb:
+        condition: service_healthy
     build: ./advanced_analytics
     image: amirsamary/irisdemo:mobilebanking_advancedanalytics
     cpu_percent: 25
@@ -103,7 +108,7 @@ services:
 
   sparkmaster:
     depends_on: 
-      - advancedanalytics
+    - advancedanalytics
     image: amirsamary/irisdemo:spark-iris
     hostname: sparkmaster # Must be always sparkmaster
     cpu_percent: 25
@@ -149,7 +154,7 @@ services:
 
   worker2:
     depends_on: 
-      - worker1
+      - sparkmaster
     image: amirsamary/irisdemo:spark-iris
     hostname: worker2
     cpu_percent: 25
