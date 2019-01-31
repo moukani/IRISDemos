@@ -76,7 +76,7 @@ XData BPL [ XMLNamespace = "http://www.intersystems.com/bpl" ]
 <request type='EnsLib.Workflow.TaskRequest' >
 <assign property="callrequest.%Message" value="context.AlertMessage" action="set" />
 <assign property="callrequest.%Subject" value="&quot;Patient at Risk of Readmission&quot;" action="set" />
-<assign property="callrequest.%Actions" value="&quot;Visisted the Patient,Called the Patient&quot;" action="set" />
+<assign property="callrequest.%Actions" value="&quot;Visited the Patient,Called the Patient&quot;" action="set" />
 <assign property="callrequest.%FormFields" value="&quot;PatientID,DischargeLocation,RiskScore&quot;" action="set" />
 <assign property="callrequest.%FormValues" value="request.PatientID_&quot;,&quot;_request.DischargeLocation_&quot;,&quot;_context.RiskScore" action="set" />
 </request>
