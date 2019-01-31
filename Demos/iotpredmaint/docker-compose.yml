@@ -31,8 +31,8 @@ services:
 
   iotmon:
     depends_on:
-    - sparkmaster
-    - archivedb
+      archivedb:
+        condition: service_healthy
     build: 
       context: ./iotmon
       args:
@@ -63,6 +63,10 @@ services:
     image: amirsamary/irisdemo:spark-iris
     hostname: sparkmaster # Must be always sparkmaster
     cpu_percent: 25
+    depends_on:
+      iotmon:
+        condition: service_healthy
+
     environment:
       SPARK_NODE_TYPE: Master
       SPARK_PUBLIC_DNS: localhost
@@ -106,8 +110,6 @@ services:
     volumes:
       - common_shared:/common_shared   # Shared between all spark nodes. Good place to place a file we are working with.
                                        # that will be sent by the advancedanalytics service.
-
-
   worker2:
     depends_on:
     - sparkmaster
