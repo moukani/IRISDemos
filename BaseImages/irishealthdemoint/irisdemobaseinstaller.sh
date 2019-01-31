@@ -22,6 +22,12 @@
 # From now on, any error should interrupt the script
 set -e
 
+printf "\n Configuring alternate journal directory..."
+sed -i "s/AlternateDirectory=.*/AlternateDirectory=\/usr\/irissys\/mgr\/journal2\//" /usr/irissys/iris.cpf
+mkdir /usr/irissys/mgr/journal2/ 
+chown root:irisusr /usr/irissys/mgr/journal2
+chmod g+w /usr/irissys/mgr/journal2
+
 printf "\nLoading base installer...\n"
 
 iris start iris
