@@ -5,17 +5,17 @@ Property DoseQuantity As %String;
 
 Property Facility As %String;
 
-Property FromDate As %Date(FORMAT=3);
+Property FromDate As %Date(FORMAT = 3);
 
-Property FromTime As %Time(FORMAT=2);
+Property FromTime As %Time(FORMAT = 2);
 
 Property Indication As %String;
 
-Property PatientID As %String[Required];
+Property PatientID As %String [ Required ];
 
-Property ToDate As %Date(FORMAT=3);
+Property ToDate As %Date(FORMAT = 3);
 
-Property ToTime As %Time(FORMAT=2);
+Property ToTime As %Time(FORMAT = 2);
 
 Property DosageFormCode As %String;
 
@@ -33,7 +33,7 @@ Property RouteCode As %String;
 
 Property RouteDescription As %String;
 
-Property EncounterNumber As %String[Required];
+Property EncounterNumber As %String [ Required ];
 
 Index Facility On Facility;
 

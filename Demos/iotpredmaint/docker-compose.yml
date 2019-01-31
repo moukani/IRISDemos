@@ -1,4 +1,4 @@
-version: '3.6'
+version: '2.4'
 
 volumes:
   common_shared:
@@ -12,6 +12,8 @@ services:
     image: amirsamary/irisdemo:iotpredmaint_archivedb
     command: --key /irislicense/iris.key
     hostname: archivedb
+    restart: on-failure
+    cpu_percent: 25
     ports:
     # 51773 is the superserver default port
     - "9093:51773"
@@ -29,8 +31,8 @@ services:
 
   iotmon:
     depends_on:
-    - sparkmaster
-    - archivedb
+      archivedb:
+        condition: service_healthy
     build: 
       context: ./iotmon
       args:
@@ -38,6 +40,8 @@ services:
     image: amirsamary/irisdemo:iotpredmaint_iotmon
     command: --key /irislicense/iris.key
     hostname: iotmon
+    restart: on-failure
+    cpu_percent: 25
     ports:
     # 51773 is the superserver default port
     - "9095:51773"
@@ -58,6 +62,11 @@ services:
   sparkmaster:
     image: amirsamary/irisdemo:spark-iris
     hostname: sparkmaster # Must be always sparkmaster
+    cpu_percent: 25
+    depends_on:
+      iotmon:
+        condition: service_healthy
+
     environment:
       SPARK_NODE_TYPE: Master
       SPARK_PUBLIC_DNS: localhost
@@ -80,6 +89,7 @@ services:
     - sparkmaster
     image: amirsamary/irisdemo:spark-iris
     hostname: worker1
+    cpu_percent: 25
     environment:
       IRIS_MASTER_HOST: archivedb # DNS based on the name of the service!
       IRIS_MASTER_PORT: 51773 
@@ -100,13 +110,12 @@ services:
     volumes:
       - common_shared:/common_shared   # Shared between all spark nodes. Good place to place a file we are working with.
                                        # that will be sent by the advancedanalytics service.
-
-
   worker2:
     depends_on:
     - sparkmaster
     image: amirsamary/irisdemo:spark-iris
     hostname: worker2
+    cpu_percent: 25
     environment:
       IRIS_MASTER_HOST: archivedb # DNS based on the name of the service!
       IRIS_MASTER_PORT: 51773 
@@ -132,6 +141,7 @@ services:
     depends_on:
     - sparkmaster
     image: amirsamary/irisdemo:zeppelin
+    cpu_percent: 25
     ports:
     - "9096:9090"   # Zeppelin
     - 4141:4040     # Zeppelin Spark UI

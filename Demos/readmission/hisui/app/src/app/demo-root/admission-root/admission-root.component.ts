@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 
 /*Providers*/
 import {IrisPatientService, EMRUser, UserSearchRequest, DischargeRequest} from '../../providers/iris-patient.service';
+import { IrisWorkflowService } from '../../providers/iris-workflow.service';
 import {MatDialog} from '@angular/material';
 
 import {UserDischargeModalComponent} from '../user-discharge-modal/user-discharge-modal.component';
@@ -23,16 +24,19 @@ export class AdmissionRootComponent implements OnInit {
   sharedDialogOpen = this.openDialog.bind(this);
   sharedDischargePatient = this.clearDischargedPatient.bind(this);
 
-  constructor(private IPS: IrisPatientService, private dialog: MatDialog) {
-    this.IPS.resetDemoEmitter.subscribe(shouldReset =>{
-      if(shouldReset){
-        this.resetDemo();
-        window.alert("Demo Reset");
-      }
-    },
-    (err) =>{
-      window.alert("Error Resetting Demo");
-    });
+  constructor(
+    private IWS: IrisWorkflowService,
+    private IPS: IrisPatientService,
+    private dialog: MatDialog) {
+      this.IPS.resetDemoEmitter.subscribe(shouldReset =>{
+        if(shouldReset){
+          this.resetDemo();
+          window.alert("Demo Reset");
+        }
+      },
+      (err) =>{
+        window.alert("Error Resetting Demo");
+      });
   }
 
   ngOnInit() {}
@@ -41,6 +45,7 @@ export class AdmissionRootComponent implements OnInit {
     this.userSearchRequest = new UserSearchRequest();
     this.currentlySelectedUser = this.IPS.getEmpyUser();
     this.patientList = [];
+    this.IWS.clearTasks();
   }
 
   openDialog(selectedUser): void {
@@ -69,6 +74,7 @@ export class AdmissionRootComponent implements OnInit {
       dischargedPatient.endDate = new Date();
       dischargedPatient.encounterStatus = "D";
     }
+    this.IWS.emitChange(true);
   }
 
   searchPatients(): void {

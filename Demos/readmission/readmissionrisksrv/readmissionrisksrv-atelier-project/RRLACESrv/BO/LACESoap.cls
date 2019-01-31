@@ -20,7 +20,8 @@ Method Discharge(pRequest As RRLACESrv.BO.DischargeRequest, Output pResponse As 
  Set pResponse.DischargeResult=$get(DischargeResult)
  Quit $$$OK
 }
-method Risk(pRequest as RRLACESrv.BO.RiskRequest, output pResponse as RRLACESrv.BO.RiskResponse) as %Library.Status
+
+Method Risk(pRequest As RRLACESrv.BO.RiskRequest, Output pResponse As RRLACESrv.BO.RiskResponse) As %Library.Status
 {
 	set pResponse = ##class(RRLACESrv.BO.RiskResponse).%New()
 	Set ..Adapter.WebServiceClientClass = "RRLACESrv.WSClient.LACESoap"
@@ -32,6 +33,7 @@ method Risk(pRequest as RRLACESrv.BO.RiskRequest, output pResponse as RRLACESrv.
 	set pResponse.LScore = $piece(RiskResult,",",5)
 	quit tSC
 }
+
 XData MessageMap
 {
 <MapItems>

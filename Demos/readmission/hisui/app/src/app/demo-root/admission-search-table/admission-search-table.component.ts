@@ -39,6 +39,7 @@ export class AdmissionSearchTableComponent implements OnInit, OnChanges {
       } else {
         if(propName === 'patientList'){
           this.dataSource = new MatTableDataSource(changedProp.currentValue);
+          this.dataSource.sort = this.sort;
           this.dataSource.paginator = this.paginator;
           log.push(to);
         }else{

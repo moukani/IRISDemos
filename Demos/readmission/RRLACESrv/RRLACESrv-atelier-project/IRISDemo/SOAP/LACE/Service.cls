@@ -1,5 +1,5 @@
 /// IRISDemo.SOAP.LACE.Service
-Class IRISDemo.SOAP.LACE.Service Extends %SOAP.WebService [ Language= objectscript, ProcedureBlock ]
+Class IRISDemo.SOAP.LACE.Service Extends %SOAP.WebService [ Language = objectscript, ProcedureBlock ]
 {
 
 /// Name of the WebService.
@@ -13,7 +13,7 @@ Parameter NAMESPACE = "http://tempuri.org";
 Parameter USECLASSNAMESPACES = 1;
 
 /// Admit patient (new encounter)
-Method Admit(PatientID as %String,EncounterNumber as %String,EncounterType as %String, StartDate As %Date, StartTime As %Time, AdmissionSource As %String) As %Status [ WebMethod ]
+Method Admit(PatientID As %String, EncounterNumber As %String, EncounterType As %String, StartDate As %Date, StartTime As %Time, AdmissionSource As %String) As %Status [ WebMethod ]
 {
 	try {
 		set obj = ##class(IRISDemo.Data.Patient.Encounter).%New()
@@ -46,7 +46,7 @@ Method Admit(PatientID as %String,EncounterNumber as %String,EncounterType as %S
 }
 
 /// Discharge
-Method Discharge(PatientID as %String,EncounterNumber as %String,EncounterType as %String,AdmissionSource as %String,StartDate as %Date,StartTime as %Time,EndDate as %Date,EndTime as %Time,DischargeLocation as %String) As %Status [ WebMethod ]
+Method Discharge(PatientID As %String, EncounterNumber As %String, EncounterType As %String, AdmissionSource As %String, StartDate As %Date, StartTime As %Time, EndDate As %Date, EndTime As %Time, DischargeLocation As %String) As %Status [ WebMethod ]
 {
 	set tSC = $$$OK
 	try {
@@ -95,7 +95,8 @@ Method Discharge(PatientID as %String,EncounterNumber as %String,EncounterType a
 	}
 	quit tSC
 }
-Method Risk(PatientID as %String,EncounterNumber as %String) As %String [ WebMethod ]
+
+Method Risk(PatientID As %String, EncounterNumber As %String) As %String [ WebMethod ]
 {
 	set return = ""
 	try {
