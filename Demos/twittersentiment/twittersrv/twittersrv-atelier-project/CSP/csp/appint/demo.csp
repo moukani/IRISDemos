@@ -48,6 +48,8 @@
 				
 				setTimeout("openCallCenterUI()", timeout());
 				
+				setTimeout("openNLPDomainArchitect()", timeout());
+				
 				setTimeout("openMessageTrace()", timeout());
 
 				setTimeout("openBusinessProcess()", timeout());
@@ -106,9 +108,14 @@
 				window_open('http://localhost:9094/csp/APP/_iKnow.UI.KnowledgePortal.zen?$NAMESPACE=APP&domain=1&IRISUserName=SuperUser&IRISPassword=sys');
 			}
 
-			function openNLPIndexingResults()
+			function openNLPDomainArchitect()
 			{
-				window_open('http://localhost:9094/csp/app/_iKnow.UI.IndexingResults.zen?$NAMESPACE=APP&$NAMESPACE=APP&IRISUserName=SuperUser&IRISPassword=sys');
+				window_open('http://localhost:9094/csp/app/_iKnow.UI.Architect.zen?$NAMESPACE=APP&DOMAIN=IRISDemo.NLP.Twitter.TwitterAnalytics&IRISUserName=SuperUser&IRISPassword=sys');
+			}
+			
+			function openCallcenterDB()
+			{
+				window_open('http://localhost:9096/csp/sys/exp/%25CSP.UI.Portal.SQL.Home.zen?$NAMESPACE=APP&$NAMESPACE=APP&IRISUserName=SuperUser&IRISPassword=sys')
 			}
 			
 			function on_load()
@@ -165,13 +172,14 @@
 		</center>
 		
 		<map name="image-map">
-		    <area alt="Point of Sale" title="Point of Sale" href="javascript:openPOS()" coords="56,259,257,479" shape="rect">
-		    <area alt="IRIS Interoperability" title="IRIS Interoperability" href="javascript:openProduction()" coords="436,249,655,482" shape="rect">
-		    <area alt="IRIS Data Lake" title="IRIS Data Lake" href="javascript:openDatalake()" coords="1056,261,1315,578" shape="rect">
-		    <area alt="Zeppelin Notebook" title="Zeppelin Notebook" href="javascript:openZeppelin()" coords="1543,225,1781,416" shape="rect">
-		    <area alt="Zeppelin Spark App UI" href="javascript:openZeppelinSparkUI()" coords="1750,500,1880,520" shape="rect">
-		    <area alt="Twitter Applications Page" title="Twitter Applications Page" href="javascript:openTwitterDeveloperAppsPage()" coords="436,700,655,850" shape="rect">
-		    <area alt="JBoss Console" title="JBoss Console" href="javascript:openJBossConsole()" coords="436,700,655,850" shape="rect">
+		    <area target="" alt="Twitter Connector" title="Twitter Connector" href="javascript:openProduction()" coords="838,331,497,377" shape="rect">
+		    <area target="" alt="Sentiment Analysis Process" title="Sentiment Analysis Process" href="javascript:openBusinessProcess()" coords="836,387,500,434" shape="rect">
+		    <area target="" alt="Message Tracing" title="Message Tracing" href="javascript:openMessageTrace()" coords="836,448,502,494" shape="rect">
+		    <area target="" alt="NLP Domain Architect" title="NLP Domain Architect" href="javascript:openNLPDomainArchitect()" coords="1552,457,1217,503" shape="rect">
+		    <area target="" alt="NLP Domain Explorer" title="NLP Domain Explorer" href="javascript:openNLPDomainExplorer()" coords="1552,514,1217,555" shape="rect">
+		    <area target="" alt="Callcenter UI" title="Callcenter UI" href="javascript:openCallCenterUI()" coords="1920,215,1694,259" shape="rect">
+		    <area target="" alt="JBoss Management Console" title="JBoss Management Console" href="javascript:openJBossConsole()" coords="1924,288,1615,332" shape="rect">
+		    <area target="" alt="Callcenter IRIS DB" title="Callcenter IRIS DB" href="javascript:openCallcenterDB()" coords="1918,363,1643,411" shape="rect">
 		</map>
 		
 		<table width="100%" style="text-align: center; background-color: #b7c8e2;">

@@ -16,7 +16,7 @@ Parameter NAMESPACE = "http://twitter.demo";
 /// Namespaces of referenced classes will be used in the WSDL.
 Parameter USECLASSNAMESPACES = 1;
 
-Method CreateTicketForTwitter(pTwitterID As %String, pTwitterUser As %String, pTwitterText As %String(MAXLEN=""), pTwitterSentiment As %String) [ WebMethod ]
+Method CreateTicketForTwitter(pTwitterID As %String, pTwitterUser As %String, pTwitterText As %String(MAXLEN=""), pTwitterSentiment As %String, pTwitterDate As %Date) [ WebMethod ]
 {	
 	Set tSC = $$$OK
 	Try
@@ -25,22 +25,17 @@ Method CreateTicketForTwitter(pTwitterID As %String, pTwitterUser As %String, pT
 		If pTwitterUser="" $$$ThrowException("ParameterIsRequired","pTwitterUser")
 		If pTwitterText="" $$$ThrowException("ParameterIsRequired","pTwitterText")
 		If pTwitterSentiment="" $$$ThrowException("ParameterIsRequired","pTwitterSentiment")
+		If pTwitterDate="" $$$ThrowException("ParameterIsRequired","pTwitterDate")
 		
 		Set obj = ##class(IRISDemo.Ticket).%New()
 		Set obj.TicketID = pTwitterID
 		Set obj.TicketUser = pTwitterUser
 		Set obj.TicketText = pTwitterText
 		Set obj.TicketFeedback = pTwitterSentiment
-		Set obj.TicketDate = $PIECE($NOW(),",",1)
+		Set obj.TicketDate = pTwitterDate
 
 		Set sc = obj.%Save()
-		
-		//Example for testing %Status error and throwing an exception:
 		$$$ThrowStatusExceptionIfError(tSC, "CouldNotSaveCallcenterTicket")
-		
-		//Example of testing SQLCODE variable if you are using %SQL.Statement
-		$$$ThrowSQLExceptionIfError("CouldNotSaveCallcenterTicket")
-		
 	}
 	Catch (oException)
 	{

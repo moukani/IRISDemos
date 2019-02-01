@@ -23,6 +23,10 @@ XData ProductionDefinition
     <Setting Target="Adapter" Name="Credentials">SentimentAnalytics</Setting>
     <Setting Target="Adapter" Name="HTTPPort">52773</Setting>
   </Item>
+  <Item Name="Call Center Operations" Category="" ClassName="CallCenter.BO.CallCenterServicesSoap" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+    <Setting Target="Adapter" Name="WebServiceURL">http://callcenterdb:52773/csp/app/soap/IRISDemo.SOAP.CallCenterServices.cls</Setting>
+    <Setting Target="Adapter" Name="SOAPCredentials">Callcenter</Setting>
+  </Item>
 </Production>
 }
 
