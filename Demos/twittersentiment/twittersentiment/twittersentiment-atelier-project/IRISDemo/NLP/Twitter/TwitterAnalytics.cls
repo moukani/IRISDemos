@@ -5,6 +5,7 @@ XData Domain [ XMLNamespace = "http://www.intersystems.com/iknow" ]
 {
 <domain name="TwitterAnalytics" disabled="false" allowCustomUpdates="true">
 <parameter name="DefaultConfig" value="TwitterAnalytics.Configuration" isList="false" />
+<parameter name="$$$IKPIGNOREEMPTYBATCH" value="1" />
 <data dropBeforeBuild="true">
 <table listname="TableTwitter" batchMode="true" disabled="false" listerClass="%iKnow.Source.SQL.Lister" tableName="IRISDemo_Data.Tweets" idField="TweetStatusId" groupField="UserScreenName" dataFields="Text" metadataColumns="TweetStatusId,UserScreenName,RetweetCount,ReplyCount,IsRetweet" metadataFields="TweetStatusId,UserScreenName,RetweetCount,ReplyCount,IsRetweet">
 <parameter value="SELECT __idField, UserScreenName __groupField, Text, TweetStatusId,UserScreenName,RetweetCount,ReplyCount,IsRetweet FROM IRISDemo_Data.Tweets" isList="false" />

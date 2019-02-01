@@ -18,9 +18,5 @@ docker-compose rm -f
 printfY "\nCopying iris.key license to the context of twittersentiment image (we should rewrite this in order this is not necessary)...\n"
 cp ../../IRISLicense/iris.key ./twittersentiment/
 
-printfY "\nRemoving zeppelin configuration (you may be required to enter with your sudo password)...\n"
-sudo rm -rf ./advanced_analytics/shared/zeppelin/conf
-sudo rm -rf ./advanced_analytics/shared/zeppelin/logs
-
 printfY "\nBuilding new images...\n"
 docker-compose build

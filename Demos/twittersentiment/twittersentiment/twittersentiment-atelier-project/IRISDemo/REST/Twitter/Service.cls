@@ -95,7 +95,7 @@ Class IRISDemo.REST.Twitter.Service Extends %CSP.REST
 				Do doResponse.scoreByBusinessTerm.%Push(term)
 			}
 			
-						
+			Set doResponse.CallResult.Status="OK"
 		}
 		Catch (oException)
 		{

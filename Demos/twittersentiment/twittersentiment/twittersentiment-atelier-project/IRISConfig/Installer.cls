@@ -1,4 +1,4 @@
-Include %occInclude
+Include (%occInclude,%IKPublic)
 
 Class IRISConfig.Installer Extends IRISConfig.InstallerBase
 {
@@ -32,12 +32,14 @@ ClassMethod BuildNLPDomain(pNamespace As %String) As %Status
 		// Add a dummy source to the domain so that the %Build() will also process the matching dictionary 
 		// instead of returning with the error "ERROR #8015: Nothing to process" and leaving the
 		// matching dictionary unprocessed.
+		/*
 		Set tweet = ##class(IRISDemo.Data.Tweets).%New()
 		Set tweet.TweetStatusId = 1 
 		Set tweet.UserScreenName = "dummyuser"
 		Set tweet.Text = "Dummy text"		
 		Set tSC = tweet.%Save()
 		Quit:$System.Status.IsError(tSC)
+		*/
 		
 		// Now we can build the domain to get the matching dictionary working (just compiling the domain class 
 		// isn't enough) without getting an ERROR #8015: Nothing to process
@@ -45,7 +47,7 @@ ClassMethod BuildNLPDomain(pNamespace As %String) As %Status
 		Quit:$System.Status.IsError(tSC)
 		
 		// We don't need that dummy source anymore
-		Set tSC = ##class(IRISDemo.Data.Tweets).%DeleteId(tweet.%Id())
+		//Set tSC = ##class(IRISDemo.Data.Tweets).%DeleteId(tweet.%Id())
 		
 	}
 	Catch (oException)
