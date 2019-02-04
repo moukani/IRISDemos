@@ -73,44 +73,45 @@ function checkContainer() {
         printfR "\nFound unrecoverable error on service $service. Trying to building the service again...\n"
 
         docker rmi -f ${PWD##*/}_$service
+        printfR "\nRebuilding $service ....\n"
         docker-compose build $service
-        docker-compose start $service
-        printfR "\nService $service has been rebuilt and started. Waiting 10 seconds before checking for its health again...\n"
-        sleep 10
 
-        checkContainer
+        printfR "\nStarting the this and all the other services that haven't started before...\n"
+        startContainers
     fi
 
-    if docker logs $container --tail 30 2>&1 | grep -E '(PROTECT|Shutting down the system)'
+    if docker logs $container --tail 30 2>&1 | grep -E '(PROTECT|Shutting down the system|2 Preserving journal files)'
     then
-        docker logs $container --tail 30 2>&1 | grep -E '(PROTECT|Shutting down the system)'
+        docker logs $container --tail 30 2>&1 | grep -E '(PROTECT|Shutting down the system|2 Preserving journal files)'
         
-        printfR "\nFound PROTECT error on service $service. Restarting this container...\n"
-        docker-compose restart $service
-        printfR "\nService $service has been restarted. Waiting 10 seconds before checking for its health again...\n"
-        sleep 10
+        printfR "\nFound error on service $service. Stopping this container...\n"
+        docker-compose stop $service
 
-        checkContainer
+        printfR "\nStarting the this and all the other services that haven't started before...\n"
+        startContainers
     fi
 }
 
-function startAndCheckContainers()
-{
-    printfY "\nCreating containers...\n"
-    docker-compose up --no-start
-
-    printfY "\nStarting containers...\n"
+function startContainers() {
+    printfY "\nStarting containers (BE PATIENT! WE WILL FIX THE CONTAINERS THAT ARE PREVENTING FULL STARTUP)...\n"
     docker-compose start
-    printfY "\nAll containers are starting. Waiting 15 seconds before checking if containers have started properly...\n"
+    
+    printfY "\nWaiting 15 seconds before checking if containers have started properly...\n"
     sleep 15
 
     demoname=${PWD##*/}
-
     for container in `docker-compose ps | grep $demoname | awk '{print $1}'`
     do
         service=$(echo $container | cut -d'_' -f 2)
         checkContainer
     done
+}
+function startAndCheckContainers()
+{
+    printfY "\nCreating containers...\n"
+    docker-compose up --no-start
+
+    startContainers
 
     printfG "\n\nALL services started!\n\n"
     printfG "To stop the demo, use: \n\n"
