@@ -37,6 +37,13 @@ ClassMethod CreateCredentials(pNamespace As %String) As %Status
 		
 		Set tSC = ##class(Ens.Config.Credentials).SetCredential("TwitterAppConsumerCredentials", "***", "***", 1)
 		Quit:$System.Status.IsError(tSC)
+		
+		Set tSC = ##class(Ens.Config.Credentials).SetCredential("SentimentAnalytics", "SuperUser", "sys", 1)
+		Quit:$System.Status.IsError(tSC)
+
+		Set tSC = ##class(Ens.Config.Credentials).SetCredential("Callcenter", "SuperUser", "sys", 1)
+		Quit:$System.Status.IsError(tSC)
+
 	}
 	Catch (oException)
 	{

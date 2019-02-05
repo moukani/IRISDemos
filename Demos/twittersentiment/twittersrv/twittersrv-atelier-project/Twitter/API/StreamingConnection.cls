@@ -1,41 +1,44 @@
 Include DEMOMACROS
-Class Twitter.API.StreamingConnection  Extends %RegisteredObject
+
+Class Twitter.API.StreamingConnection Extends %RegisteredObject
 {
-	Property Server As %String;
-	
-	Property URLPath As %String;
-	
-	Property SSLConfiguration As %String [ InitialExpression = "Twitter" ];
-	
-	Property Port As %String [ InitialExpression = 443 ];
-	
-	Property ContentType As %String [ InitialExpression = "application/x-www-form-urlencoded" ];
-	
-	Property UserAgent As %String [ InitialExpression = "InterSystems IRIS Twitter Streaming Demo Adapter 1.0" ];
-	
-	Property StreamingRequest As StreamingRequest;
-	
-	Parameter MODE As %String = "SCDW";
-	
-	Parameter TERMINATORS As %String = { $Char(13,10) };
+
+Property Server As %String;
+
+Property URLPath As %String;
+
+Property SSLConfiguration As %String [ InitialExpression = "Twitter" ];
+
+Property Port As %String [ InitialExpression = 443 ];
+
+Property ContentType As %String [ InitialExpression = "application/x-www-form-urlencoded" ];
+
+Property UserAgent As %String [ InitialExpression = "InterSystems IRIS Twitter Streaming Demo Adapter 1.0" ];
+
+Property StreamingRequest As StreamingRequest;
+
+Parameter MODE As %String = "SCDW";
+
+Parameter TERMINATORS As %String = {$Char(13,10)};
+
+Property Timeout As %Integer [ InitialExpression = 5 ];
+
+Property Connected As %Boolean [ InitialExpression = 0, Private ];
+
+Property LastHTTPStatusCode As %String;
+
+Property CurrentChunk As %String(MAXLEN = "") [ Private ];
+
+Property Device As %String [ Private ];
+
+Property OldIO As %String [ Private ];
+
+/// Controls if we have started the streaming connection or not.
+Property StreamingStarted As %Boolean [ InitialExpression = 0 ];
+
+Method %OnNew(pStreamingRequest As StreamingRequest) As %Status
+{
 		
-	Property Timeout As %Integer [ InitialExpression = 5 ];
-	
-	Property Connected As %Boolean [ InitialExpression = 0, Private ];
-	
-	Property LastHTTPStatusCode As %String;
-	
-	Property CurrentChunk As %String(MAXLEN="") [ Private ];
-	
-	Property Device As %String [ Private ];
-	
-	Property OldIO As %String [ Private ];
-	
-	/// Controls if we have started the streaming connection or not.
-	Property StreamingStarted As %Boolean [ InitialExpression = 0 ];
-	
-	Method %OnNew(pStreamingRequest As StreamingRequest) As %Status
-	{		
 		Set ..URLPath = pStreamingRequest.URLPath
 		Set ..Server = pStreamingRequest.APIServer
 		Set ..Port = pStreamingRequest.APIPort
@@ -44,10 +47,10 @@ Class Twitter.API.StreamingConnection  Extends %RegisteredObject
 		Set tSC = ##class(Twitter.Utils).CheckSSLConfiguration(..SSLConfiguration)
 		
 		Quit tSC
-	}	
-	
-	Method Connect() [ Private, Internal ]
-	{
+}
+
+Method Connect() [ Internal, Private ]
+{
 		Set tSC = $$$OK
 		Try
 		{
@@ -74,18 +77,18 @@ Class Twitter.API.StreamingConnection  Extends %RegisteredObject
 			Do ..Disconnect()
 			
 			Throw oException
-		}		
-	}
-	
-	Method %OnClose() As %Status
-	{
+		}
+}
+
+Method %OnClose() As %Status
+{
 		Do ..Disconnect()
 		
 		Quit $$$OK
-	}
-	
-	Method Disconnect()
-	{
+}
+
+Method Disconnect()
+{
 		Try
 		{			
 			If ..Device'=""
@@ -113,15 +116,15 @@ Class Twitter.API.StreamingConnection  Extends %RegisteredObject
 		Set ..StreamingStarted=0
 		
 		If (..OldIO'="") && ($IO'= ..OldIO) Use ..OldIO
-	}
-	
-	Method Debug(pMsg)
-	{
+}
+
+Method Debug(pMsg)
+{
 		Set ^twitter.debug($I(^twitter.debug))=pMsg
-	}
-	
-	Method OutputHeadersAndBody() [ Private, Internal ]
-	{
+}
+
+Method OutputHeadersAndBody() [ Internal, Private ]
+{
 		// Can't use $$$TRACE here because it changes the current device
 		// and, for some reason, it interferes with sending the data to Twitter
 		//$$$TRACE("** SENDING HTTP HEADERS TO START CONNECTION")
@@ -179,10 +182,10 @@ Class Twitter.API.StreamingConnection  Extends %RegisteredObject
 		
 		//$$$TRACE("** REQUEST SENT")
 		Do ..Debug("** REQUEST SENT")
-	}
-	
-	Method StartStreaming()
-	{
+}
+
+Method StartStreaming()
+{
 		Try
 		{
 			Do ..StreamingRequest.Sign()
@@ -200,20 +203,20 @@ Class Twitter.API.StreamingConnection  Extends %RegisteredObject
 			Do ..Disconnect()
 			
 			Throw oException
-		}		
-	}
-		
-	/// This method assumes that you have Use of the TCP device already
-	Method WriteLine(pData As %String = "")
-	{
+		}
+}
+
+/// This method assumes that you have Use of the TCP device already
+Method WriteLine(pData As %String = "")
+{
 		Write pData,!
 		// Can't use $$$TRACE here.
 		//$$$TRACE(">> "_pData)
 		Do ..Debug(">> "_pData)
-	}
-	
-	Method ReadLine(Output pSC As %Status, pTimedOut As %Boolean = 0) As %String [ Private, Internal ]
-	{
+}
+
+Method ReadLine(Output pSC As %Status, pTimedOut As %Boolean = 0) As %String [ Internal, Private ]
+{
 		Set pSC = $$$OK
 		
 		Set tLine=""
@@ -238,10 +241,10 @@ Class Twitter.API.StreamingConnection  Extends %RegisteredObject
 		Use ..OldIO
 		
 		Quit tLine
-	}
-	
-	Method Read(pNumberOfBytesToRead As %Integer, Output pSC As %Status) As %String [ Private, Internal ]
-	{
+}
+
+Method Read(pNumberOfBytesToRead As %Integer, Output pSC As %Status) As %String [ Internal, Private ]
+{
 		Set pSC = $$$OK
 		
 		Set tLine=""
@@ -264,10 +267,10 @@ Class Twitter.API.StreamingConnection  Extends %RegisteredObject
 		Use ..OldIO
 		
 		Quit tLine
-	}
-	
-	Method ParseResponse() [ Private, Internal ]
-	{
+}
+
+Method ParseResponse() [ Internal, Private ]
+{
 		Set tSC = $$$OK
 		
 		//$$$TRACE("** PARSING RESPONSE")
@@ -300,13 +303,13 @@ Class Twitter.API.StreamingConnection  Extends %RegisteredObject
 		If tErrorMessageDetails="" $$$ThrowException("NoErrorInformationReturnedException", "")
 		
 		$$$ThrowException("HTTPStatusErrorException", tHttpStatus_": "_..LastHTTPStatusCode_tErrorMessageDetails)
-	}
+}
 
-	/// Implements the chunk based streaming protocol.
-	/// A message may be split in one or more chunks. This method will only return a message 
-	/// once it has managed to assemble it completely from all its chunks
-	Method GetMessage(Output pOutput As %String, pMessageTerminator As %String = { $C(13,10) })
-	{
+/// Implements the chunk based streaming protocol.
+/// A message may be split in one or more chunks. This method will only return a message 
+/// once it has managed to assemble it completely from all its chunks
+Method GetMessage(Output pOutput As %String, pMessageTerminator As %String = { $C(13,10)})
+{
 		Set tSC = $$$OK
 		Set pOutput=""
 		
@@ -365,6 +368,6 @@ Class Twitter.API.StreamingConnection  Extends %RegisteredObject
 				Do ..Debug("KEEP ALIVE RECEIVED (2)")
 			}
 		}
-	}
-	
+}
+
 }

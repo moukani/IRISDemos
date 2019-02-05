@@ -13,6 +13,7 @@ ROUTINE Test
 		
 		Kill ^IRISDemo.Data.TweetsD 
 		Kill ^IRISDemo.Data.TweetsI
+		/*
 		Set tSC=$System.iKnow.DropData("TwitterAnalytics",0,0)
 		$$$ThrowStatusExceptionIfError(tSC, "NLPDropDataException")
 		
@@ -36,7 +37,7 @@ ROUTINE Test
 		
 		&SQL(insert into IRISDemo_Data.Tweets (TwitterId, TwitterText, TwitterUser) values (7, 'I love this company! I wish they had a better customer services though.', 'user6'))
 		$$$ThrowSQLExceptionIfError("PopulateTweetsException")
-		
+		*/
 		Set tDomainId = ##class(%SYSTEM.iKnow).GetDomainId("TwitterAnalytics")
 		If tDomainId="" $$$ThrowException("NLPDomainNotFoundException", "TwitterAnalytics") 
 		

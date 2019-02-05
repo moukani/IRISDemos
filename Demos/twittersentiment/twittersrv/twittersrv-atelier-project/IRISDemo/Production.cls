@@ -17,6 +17,16 @@ XData ProductionDefinition
   </Item>
   <Item Name="Evaluate Tweet Process" Category="" ClassName="IRISDemo.BP.EvaluateTweet.Process" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
   </Item>
+  <Item Name="Twitter Sentiment Operation" Category="" ClassName="Sentiment.BO.Twitter.Operation" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="true" Schedule="">
+    <Setting Target="Adapter" Name="HTTPServer">twittersentiment</Setting>
+    <Setting Target="Adapter" Name="URL">/csp/app/rest/twittersentiment/</Setting>
+    <Setting Target="Adapter" Name="Credentials">SentimentAnalytics</Setting>
+    <Setting Target="Adapter" Name="HTTPPort">52773</Setting>
+  </Item>
+  <Item Name="Call Center Operations" Category="" ClassName="CallCenter.BO.CallCenterServicesSoap" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+    <Setting Target="Adapter" Name="WebServiceURL">http://callcenterdb:52773/csp/app/soap/IRISDemo.SOAP.CallCenterServices.cls</Setting>
+    <Setting Target="Adapter" Name="SOAPCredentials">Callcenter</Setting>
+  </Item>
 </Production>
 }
 

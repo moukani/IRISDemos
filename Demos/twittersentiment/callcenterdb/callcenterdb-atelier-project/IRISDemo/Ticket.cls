@@ -1,10 +1,15 @@
 Class IRISDemo.Ticket Extends %Persistent
 {
 	Property TicketID As %String; 
-	Property TicketUser As %String;  
+	
+	Property TicketUser As %String;
+	  
 	Property TicketText As %String(MAXLEN="");
-	Property TicketFeedback As %String; 
-	Property TicketDate As %Date; 
+	
+	Property TicketFeedback As %String;
+	 
+	Property TicketDate As %Date;
+	 
 	Property TicketResponse As %String(MAXLEN="");
 
 Storage Default

@@ -6,8 +6,6 @@ volumes:
 services:
 
   bankingtrnsrv:
-    depends_on: 
-      - bankingcore
     # environment:
     # - ISC_DATA_DIRECTORY=/shared/iris
     build: 
@@ -41,6 +39,9 @@ services:
   datalake:
     # environment:
     # - ISC_DATA_DIRECTORY=/shared/iris
+    depends_on:
+      bankingtrnsrv:
+        condition: service_healthy
     build: 
       context: ./normalized_datalake
       args:
@@ -77,6 +78,9 @@ services:
     image: amirsamary/irisdemo:mobilebanking_bankingcore
     command: --key /irislicense/iris.key
     hostname: bankingcore
+    depends_on:
+      datalake:
+        condition: service_healthy
     restart: on-failure
     cpu_percent: 25
     ports:
@@ -96,8 +100,9 @@ services:
     - bankingcore-tier
 
   advancedanalytics:
-    depends_on: 
-      - sparkmaster
+    depends_on:
+      bankingcore:
+        condition: service_healthy
     build: ./advanced_analytics
     image: amirsamary/irisdemo:mobilebanking_advancedanalytics
     restart: on-failure
@@ -123,7 +128,7 @@ services:
 
   sparkmaster:
     depends_on: 
-      - bankingtrnsrv
+      - advancedanalytics
     image: amirsamary/irisdemo:spark-iris
     hostname: sparkmaster # Must be always sparkmaster
     cpu_percent: 25
@@ -201,6 +206,9 @@ services:
   pos:
     build: ./pos
     image: amirsamary/irisdemo:mobilebanking_pos
+    depends_on:
+      bankingcore:
+        condition: service_healthy
     cpu_percent: 25
     ports:
       - "9099:4200"

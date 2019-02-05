@@ -41,21 +41,36 @@ Class IRISDemo.REST.Twitter.Service Extends %CSP.REST
 			Set doPOSTData = ##class(%DynamicObject).%FromJSON(%request.Content)
 			
 			//Verify if the right parameters are present and throw an exception if they aren't
-			If doPOSTData.id ="" $$$ThrowException("MissingFieldsException", "id")
-			If doPOSTData.user ="" $$$ThrowException("MissingFieldsException", "user")
-			If doPOSTData.text ="" $$$ThrowException("MissingFieldsException", "text")
+			If doPOSTData.TweetStatusId ="" $$$ThrowException("MissingFieldsException", "TweetStatusId")
+			If doPOSTData.CreatedAt ="" $$$ThrowException("MissingFieldsException", "CreatedAt")
+			If doPOSTData.Text ="" $$$ThrowException("MissingFieldsException", "Text")
+			If doPOSTData.UserScreenName ="" $$$ThrowException("MissingFieldsException", "UserScreenName")
+			If doPOSTData.RetweetCount ="" $$$ThrowException("MissingFieldsException", "RetweetCount")
+			If doPOSTData.Language ="" $$$ThrowException("MissingFieldsException", "Language")
+			If doPOSTData.ReplyCount ="" $$$ThrowException("MissingFieldsException", "ReplyCount")
+			If doPOSTData.IsRetweet ="" $$$ThrowException("MissingFieldsException", "IsRetweet")
+			
+			If doPOSTData.IsRetweet
+			{
+				If doPOSTData.RetweetedStatusId ="" $$$ThrowException("MissingFieldsException", "RetweetedStatusId")
+			}
 			
 			// Here is the first thing this method does. Let's create a a new record on our
 			// persistent table to store the data. Our persistent table has a trigger that will make sure
 			// that the tweet data will be kept in sync with the NLP Domain
 			
-			Set tweet = ##class(IRISDemo.Data.Tweets).OpenByTweetId(doPOSTData.id)
+			Set tweet = ##class(IRISDemo.Data.Tweets).OpenByTweetId(doPOSTData.TweetStatusId)
 			If '$IsObject(tweet)
 			{			
 				Set tweet = ##class(IRISDemo.Data.Tweets).%New()
-				Set tweet.TwitterId = doPOSTData.id 
-				Set tweet.TwitterUser = doPOSTData.user
-				Set tweet.TwitterText = doPOSTData.text
+				Set tweet.TweetStatusId = doPOSTData.TweetStatusId 
+				Set tweet.UserScreenName = doPOSTData.UserScreenName
+				Set tweet.Text = doPOSTData.Text
+				Set tweet.RetweetCount = doPOSTData.RetweetCount
+				Set tweet.Language = doPOSTData.Language
+				Set tweet.ReplyCount = doPOSTData.ReplyCount
+				Set tweet.IsRetweet = doPOSTData.IsRetweet
+				Set tweet.RetweetedStatusId = doPOSTData.RetweetedStatusId
 				
 				Set tSC = tweet.%Save()
 				$$$ThrowStatusExceptionIfError(tSC, "PersistingTweetException")
@@ -64,7 +79,23 @@ Class IRISDemo.REST.Twitter.Service Extends %CSP.REST
 			}
 			
 			// Populating our REST response
-			Set doResponse.sentiment=$Case(tweet.Sentiment,0:"neutral",1:"positive",2:"negative")			
+			Set doResponse.sentimentScore=tweet.SentimentScore
+			Set doResponse.scoreByBusinessTerm=[]
+			
+			Set tTerm=""
+			For
+			{
+				Do tweet.SentimentScorePerBusinessTerm.GetNext(.tTerm)
+				Quit:tTerm=""
+
+				Set term = {}
+				Set term.term=tTerm
+				Set term.score=tweet.SentimentScorePerBusinessTerm.GetAt(tTerm)				
+				
+				Do doResponse.scoreByBusinessTerm.%Push(term)
+			}
+			
+			Set doResponse.CallResult.Status="OK"
 		}
 		Catch (oException)
 		{

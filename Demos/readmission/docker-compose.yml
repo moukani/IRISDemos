@@ -28,7 +28,9 @@ services:
 
   RRLACESrv:   # Readmission Risk LACE Service
     depends_on:
-      - readmissionrisksrv
+      readmissionrisksrv:
+        condition: service_healthy
+
     build:
       context: ./RRLACESrv
       args:
@@ -48,7 +50,8 @@ services:
       
   hisdb:
     depends_on:
-      - RRLACESrv
+      RRLACESrv:
+        condition: service_healthy
     build:
       context: ./hisdb
       args:
@@ -66,9 +69,46 @@ services:
       source: ../../IRISLicense/
       target: /irislicense
 
+  hisui:
+    depends_on:
+      hisdb:
+        condition: service_healthy
+    build:
+      context: ./hisui
+    restart: on-failure
+    cpu_percent: 25
+    image: amirsamary/irisdemo:readmission_hisui
+    hostname: hisui
+    ports:
+    - "9098:4200" # Where Nodejs Will be listening
+
+  advancedanalytics:
+    depends_on: 
+      hisdb:
+        condition: service_healthy
+    build: ./advanced_analytics
+    image: amirsamary/irisdemo:mobilebanking_advancedanalytics
+    cpu_percent: 25
+    ports:
+    - "10000:9090"     # Zeppelin
+    - "10001:4040"     # Zeppelin Spark UI
+    volumes:
+    - common_shared:/common_shared   # The production will be looking into this folder for new PMML files
+                                       # that will be sent by the advancedanalytics service.
+    - type: bind
+      source: ./advanced_analytics/shared/
+      target: /shared
+
+    environment:
+    - IRIS_MASTER_HOST=RRLACESrv # DNS based on the name of the service!
+    - IRIS_MASTER_PORT=51773 
+    - IRIS_MASTER_USERNAME=SuperUser 
+    - IRIS_MASTER_PASSWORD=sys 
+    - IRIS_MASTER_NAMESPACE=APPINT
+
   sparkmaster:
     depends_on: 
-      - hisdb
+    - advancedanalytics
     image: amirsamary/irisdemo:spark-iris
     hostname: sparkmaster # Must be always sparkmaster
     cpu_percent: 25
@@ -114,7 +154,7 @@ services:
 
   worker2:
     depends_on: 
-      - worker1
+      - sparkmaster
     image: amirsamary/irisdemo:spark-iris
     hostname: worker2
     cpu_percent: 25
@@ -135,38 +175,3 @@ services:
       - 8082:8082   # Spark Worker Portal
     volumes:
     - common_shared:/common_shared   # Shared between all spark nodes. Good place to place a file we are working with.
-
-  hisui:
-    depends_on:
-      - worker2
-    build:
-      context: ./hisui
-    restart: on-failure
-    cpu_percent: 25
-    image: amirsamary/irisdemo:readmission_hisui
-    hostname: hisui
-    ports:
-    - "9098:4200" # Where Nodejs Will be listening
-
-  advancedanalytics:
-    depends_on: 
-      - hisui
-    build: ./advanced_analytics
-    image: amirsamary/irisdemo:mobilebanking_advancedanalytics
-    cpu_percent: 25
-    ports:
-    - "10000:9090"     # Zeppelin
-    - "10001:4040"     # Zeppelin Spark UI
-    volumes:
-    - common_shared:/common_shared   # The production will be looking into this folder for new PMML files
-                                       # that will be sent by the advancedanalytics service.
-    - type: bind
-      source: ./advanced_analytics/shared/
-      target: /shared
-
-    environment:
-    - IRIS_MASTER_HOST=RRLACESrv # DNS based on the name of the service!
-    - IRIS_MASTER_PORT=51773 
-    - IRIS_MASTER_USERNAME=SuperUser 
-    - IRIS_MASTER_PASSWORD=sys 
-    - IRIS_MASTER_NAMESPACE=APPINT
