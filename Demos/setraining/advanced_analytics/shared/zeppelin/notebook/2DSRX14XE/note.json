@@ -1,0 +1,1402 @@
+{
+  "paragraphs": [
+    {
+      "text": "%md\n# 1- Getting the data from InterSystems IRIS",
+      "user": "anonymous",
+      "dateUpdated": "Nov 8, 2018 5:59:32 PM",
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/markdown",
+        "editorHide": true,
+        "results": {},
+        "enabled": false
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003ch1\u003e1- Getting the data from InterSystems IRIS\u003c/h1\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1537296780458_-819621574",
+      "id": "20180918-171747_1379008521",
+      "dateCreated": "Sep 18, 2018 6:53:00 PM",
+      "dateStarted": "Oct 9, 2018 3:48:15 PM",
+      "dateFinished": "Oct 9, 2018 3:48:15 PM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "Introduction",
+      "text": "%md \n\nThis notebook has been created having Scala as the standard programming language. \n\nBut we still need to use %spark magic to have a spark context automatically created for us.",
+      "user": "anonymous",
+      "dateUpdated": "Jan 17, 2019 10:48:39 PM",
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/markdown",
+        "editorHide": true,
+        "title": true,
+        "results": {},
+        "enabled": false
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003cp\u003eThis notebook has been created having Scala as the standard programming language. \u003c/p\u003e\n\u003cp\u003eBut we still need to use %spark magic to have a spark context automatically created for us.\u003c/p\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1537296780459_-820006323",
+      "id": "20180913-200826_991580137",
+      "dateCreated": "Sep 18, 2018 6:53:00 PM",
+      "dateStarted": "Jan 17, 2019 10:48:36 PM",
+      "dateFinished": "Jan 17, 2019 10:48:36 PM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "Importing required libraries",
+      "text": "%spark\n\n// So we can access IRIS!\nimport com.intersystems.spark._\n\nimport spark.implicits._\n\nimport org.apache.spark.sql.DataFrame\n\nimport org.apache.spark.sql.functions._\n\n// For calculating Chi2 - Should try to convert this to pure Spark ML instead of using mllib\nimport org.apache.spark.mllib.linalg._\nimport org.apache.spark.mllib.stat._\n\n// Transformers to prepare the features for training\nimport org.apache.spark.ml.feature.VectorAssembler\nimport org.apache.spark.ml.feature.VectorIndexer\n\n// This will help us to pick the best features on our pipeline accordingly to Chi2\nimport org.apache.spark.ml.feature.ChiSqSelector\n\n// Parameter grid and cross validators to allow us to automatically run estimators with \n// different parameters and validate which configuration is best for our data\nimport org.apache.spark.ml.tuning.ParamGridBuilder\nimport org.apache.spark.ml.tuning.CrossValidator\n\n// Algorithms (Estimators) to train our models (Transformers)\nimport org.apache.spark.ml.classification.RandomForestClassifier\nimport org.apache.spark.ml.classification.DecisionTreeClassifier\n\n// To Evaluate the model against the test data\nimport org.apache.spark.ml.evaluation.MulticlassClassificationEvaluator\nimport org.apache.spark.ml.evaluation.BinaryClassificationEvaluator\n\n// Models\nimport org.apache.spark.ml.PipelineModel\nimport org.apache.spark.ml.classification.RandomForestClassificationModel\nimport org.apache.spark.ml.classification.DecisionTreeClassificationModel\n\n// Pipepeline to connect transformers and estimators \nimport org.apache.spark.ml.Pipeline\n\n// So we can export our final model to PMML\nimport com.intersystems.spark.ml._\nimport org.jpmml.sparkml._\nimport java.io.File\n",
+      "user": "anonymous",
+      "dateUpdated": "Jan 18, 2019 1:14:16 AM",
+      "config": {
+        "editorSetting": {
+          "language": "text",
+          "editOnDblClick": false
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/text",
+        "title": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "import com.intersystems.spark._\nimport spark.implicits._\nimport org.apache.spark.sql.DataFrame\nimport org.apache.spark.sql.functions._\nimport org.apache.spark.mllib.linalg._\nimport org.apache.spark.mllib.stat._\nimport org.apache.spark.ml.feature.VectorAssembler\nimport org.apache.spark.ml.feature.VectorIndexer\nimport org.apache.spark.ml.feature.ChiSqSelector\nimport org.apache.spark.ml.tuning.ParamGridBuilder\nimport org.apache.spark.ml.tuning.CrossValidator\nimport org.apache.spark.ml.classification.RandomForestClassifier\nimport org.apache.spark.ml.classification.DecisionTreeClassifier\nimport org.apache.spark.ml.evaluation.MulticlassClassificationEvaluator\nimport org.apache.spark.ml.evaluation.BinaryClassificationEvaluator\nimport org.apache.spark.ml.PipelineModel\nimport org.apache.spark.ml.classification.RandomForestClassificationModel\nimport org.apache.spark.ml.classification.DecisionTreeClassificationModel\nimport org.apache.spark.ml.Pipeline\nimport com.intersystems.spark.ml._\nimport org.jpmml.sparkml._\nimport java.io.File\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1537296780459_-820006323",
+      "id": "20180918-013102_236592080",
+      "dateCreated": "Sep 18, 2018 6:53:00 PM",
+      "dateStarted": "Jan 18, 2019 1:14:16 AM",
+      "dateFinished": "Jan 18, 2019 1:14:59 AM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "Reading the data from IRIS",
+      "text": "%spark\n\nvar df \u003d spark.read.iris(\"\"\"\n\nSELECT AdmissionSource, CausedReadmission, ConditionsAtTimeOfEncounter, DischargeLocation, EncounterType, Gender\nFROM IRISDemo_Cube_ReadmissionRiskML.Fact\n\n\"\"\")\n    \ndf.cache()\ndf.count()\n\n",
+      "user": "anonymous",
+      "dateUpdated": "Jan 18, 2019 1:16:13 AM",
+      "config": {
+        "editorSetting": {
+          "language": "text",
+          "editOnDblClick": false
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/text",
+        "title": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "df: org.apache.spark.sql.DataFrame \u003d [AdmissionSource: bigint, CausedReadmission: bigint ... 4 more fields]\nres29: org.apache.spark.sql.Dataset[org.apache.spark.sql.Row] \u003d [AdmissionSource: bigint, CausedReadmission: bigint ... 4 more fields]\nres30: Long \u003d 28469\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1537296780459_-820006323",
+      "id": "20180913-200917_773871114",
+      "dateCreated": "Sep 18, 2018 6:53:00 PM",
+      "dateStarted": "Jan 18, 2019 1:16:13 AM",
+      "dateFinished": "Jan 18, 2019 1:16:20 AM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "Did we have any null fields?",
+      "text": "%spark\n\ndf \u003d df.na.drop(\"any\")\ndf.count()\n",
+      "user": "anonymous",
+      "dateUpdated": "Jan 18, 2019 1:16:30 AM",
+      "config": {
+        "editorSetting": {
+          "language": "text",
+          "editOnDblClick": false
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/text",
+        "title": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "df: org.apache.spark.sql.DataFrame \u003d [AdmissionSource: bigint, CausedReadmission: bigint ... 4 more fields]\nres31: Long \u003d 28469\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1537296780460_-821930067",
+      "id": "20180914-175124_1973597318",
+      "dateCreated": "Sep 18, 2018 6:53:00 PM",
+      "dateStarted": "Jan 18, 2019 1:16:30 AM",
+      "dateFinished": "Jan 18, 2019 1:16:31 AM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%md\n\nSo, there are no rows with null cells. Good. Let\u0027s take a look at the data.",
+      "user": "anonymous",
+      "dateUpdated": "Nov 8, 2018 5:59:35 PM",
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/markdown",
+        "editorHide": true,
+        "results": {},
+        "enabled": false
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003cp\u003eSo, there are no rows with null cells. Good. Let\u0026rsquo;s take a look at the data.\u003c/p\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1537296780460_-821930067",
+      "id": "20180913-200944_722776012",
+      "dateCreated": "Sep 18, 2018 6:53:00 PM",
+      "dateStarted": "Oct 9, 2018 3:48:02 PM",
+      "dateFinished": "Oct 9, 2018 3:48:02 PM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark\n\nz.show(df.limit(100))",
+      "user": "anonymous",
+      "dateUpdated": "Jan 18, 2019 1:18:33 AM",
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "text",
+          "editOnDblClick": false
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/text",
+        "editorHide": false,
+        "results": {
+          "0": {
+            "graph": {
+              "mode": "table",
+              "height": 336.3,
+              "optionOpen": false
+            },
+            "helium": {}
+          }
+        },
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TABLE",
+            "data": "AdmissionSource\tCausedReadmission\tConditionsAtTimeOfEncounter\tDischargeLocation\tEncounterType\tGender\n1\t1\t\u0003\u0004\u0001\t1\t1\t1\n2\t1\t\u0003\u00011\t1\t2\t1\n3\t1\t\u0003\u00011\t1\t2\t1\n3\t1\t\u0003\u00011\t2\t1\t1\n3\t1\t\u0003\u00011\t3\t2\t1\n4\t1\t\u0003\u00011\t4\t2\t1\n3\t1\t\u0003\u00011\t1\t2\t1\n4\t1\t\u0003\u00011\t1\t2\t1\n2\t1\t\u0003\u00011\t2\t2\t1\n1\t1\t\u0003\u00011\t1\t1\t1\n5\t1\t\u0003\u00011\t5\t2\t2\n1\t1\t\u0003\u00011\t1\t1\t2\n2\t1\t\u0003\u00011\t4\t2\t2\n1\t1\t\u0003\u00011\t2\t2\t2\n6\t1\t\u0003\u00011\t1\t2\t1\n5\t1\t\u0003\u00011\t5\t2\t1\n4\t1\t\u0003\u00011\t4\t2\t1\n1\t1\t\u0003\u00011\t3\t2\t1\n2\t1\t\u0003\u00011\t1\t2\t1\n3\t1\t\u0003\u00011\t4\t2\t1\n1\t1\t\u0003\u00011\t3\t2\t1\n5\t1\t\u0003\u00011\t1\t2\t1\n2\t1\t\u0003\u00011\t1\t2\t1\n3\t1\t\u0003\u00011\t3\t1\t1\n3\t1\t\u0003\u00011\t3\t1\t1\n1\t1\t\u0003\u00011\t1\t1\t1\n5\t2\t\u0003\u00011\t3\t1\t1\n6\t2\t\u0003\u00011\t1\t3\t1\n4\t2\t\u0003\u00011\t1\t2\t1\n4\t2\t\u0003\u00011\t1\t2\t1\n6\t2\t\u0003\u00011\t1\t2\t1\n4\t1\t\u0003\u00011\t4\t2\t1\n6\t2\t\u0003\u00011\t2\t1\t1\n3\t2\t\u0003\u00011\t4\t1\t1\n5\t2\t\u0003\u00011\t2\t1\t1\n5\t2\t\u0003\u00011\t4\t1\t1\n3\t2\t\u0003\u00011\t5\t2\t1\n1\t2\t\u0003\u00011\t1\t1\t1\n5\t2\t\u0003\u00011\t1\t1\t1\n3\t1\t\u0003\u00011\t4\t1\t1\n1\t2\t\u0003\u00011\t1\t1\t1\n5\t1\t\u0003\u00011\t1\t1\t1\n3\t2\t\u0003\u00011\t3\t1\t1\n1\t1\t\u0003\u00011\t4\t1\t1\n5\t1\t\u0003\u00011\t5\t1\t1\n6\t2\t\u0003\u00011\t1\t1\t1\n3\t2\t\u0003\u00011\t3\t2\t1\n5\t2\t\u0003\u00011\t3\t1\t1\n1\t2\t\u0003\u00011\t1\t1\t1\n2\t2\t\u0003\u00011\t2\t1\t1\n5\t2\t\u0003\u00011\t1\t1\t1\n1\t2\t\u0003\u00011\t1\t1\t1\n6\t2\t\u0003\u00011\t1\t1\t1\n5\t2\t\u0003\u00011\t5\t1\t1\n5\t2\t\u0003\u00011\t2\t1\t1\n6\t2\t\u0003\u00011\t2\t1\t1\n4\t2\t\u0003\u00011\t1\t1\t1\n6\t2\t\u0003\u00011\t1\t1\t1\n6\t2\t\u0003\u00011\t1\t1\t1\n4\t1\t\u0003\u00011\t1\t1\t1\n6\t2\t\u0003\u00011\t1\t1\t1\n1\t2\t\u0003\u00011\t1\t2\t1\n3\t1\t\u0003\u00011\t1\t1\t1\n2\t2\t\u0003\u00011\t1\t1\t1\n6\t1\t\u0003\u00011\t1\t1\t1\n5\t1\t\u0003\u00011\t1\t1\t1\n6\t2\t\u0003\u00011\t3\t1\t1\n2\t2\t\u0003\u00011\t1\t1\t1\n4\t2\t\u0003\u00011\t5\t1\t1\n1\t2\t\u0003\u00011\t4\t1\t1\n6\t1\t\u0003\u00011\t1\t2\t1\n3\t2\t\u0003\u00011\t3\t1\t1\n2\t2\t\u0003\u00011\t2\t3\t1\n6\t2\t\u0003\u00011\t2\t2\t1\n6\t2\t\u0003\u00011\t4\t1\t1\n3\t2\t\u0003\u00011\t3\t1\t1\n1\t1\t\u0003\u00011\t1\t1\t1\n2\t2\t\u0003\u00011\t3\t3\t1\n5\t2\t\u0003\u00011\t5\t1\t1\n1\t2\t\u0003\u00011\t1\t3\t1\n6\t2\t\u0003\u00011\t1\t1\t1\n3\t2\t\u0003\u00011\t1\t2\t1\n5\t1\t\u0003\u00011\t5\t2\t1\n1\t2\t\u0003\u00011\t1\t1\t1\n1\t2\t\u0003\u00011\t4\t2\t1\n6\t1\t\u0003\u00011\t2\t2\t1\n2\t1\t\u0003\u00011\t4\t2\t2\n3\t1\t\u0003\u00011\t1\t1\t2\n4\t1\t\u0003\u00011\t1\t2\t1\n3\t1\t\u0003\u00011\t2\t2\t1\n4\t1\t\u0003\u00011\t2\t2\t2\n6\t1\t\u0003\u00011\t1\t2\t2\n6\t1\t\u0003\u00011\t1\t2\t2\n1\t1\t\u0003\u00011\t1\t2\t2\n6\t1\t\u0003\u00011\t1\t2\t2\n3\t1\t\u0003\u00011\t1\t2\t2\n2\t1\t\u0003\u00011\t1\t2\t2\n3\t1\t\u0003\u00011\t1\t2\t2\n3\t1\t\u0003\u00011\t3\t2\t2\n5\t1\t\u0003\u00011\t1\t2\t2\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1537296780460_-821930067",
+      "id": "20180917-214847_451933357",
+      "dateCreated": "Sep 18, 2018 6:53:00 PM",
+      "dateStarted": "Jan 18, 2019 1:18:33 AM",
+      "dateFinished": "Jan 18, 2019 1:18:34 AM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "",
+      "text": "%spark\n\ndf.selectExpr(\"CausedReadmission\").distinct().show()\n\nval redmissions \u003d df.filter(col(\"CausedReadmission\")\u003d\u003d\u003d2).count()\n\nval percReadmissions\u003dredmissions.toFloat/df.count()*100.0",
+      "user": "anonymous",
+      "dateUpdated": "Jan 18, 2019 1:24:33 AM",
+      "config": {
+        "editorSetting": {
+          "language": "text",
+          "editOnDblClick": false
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/text",
+        "title": false,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "+-----------------+\n|CausedReadmission|\n+-----------------+\n|                1|\n|                2|\n+-----------------+\n\nredmissions: Long \u003d 10889\npercReadmissions: Double \u003d 38.24862241744995\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1537296780462_-821160570",
+      "id": "20180917-234026_719483720",
+      "dateCreated": "Sep 18, 2018 6:53:00 PM",
+      "dateStarted": "Jan 18, 2019 1:24:33 AM",
+      "dateFinished": "Jan 18, 2019 1:24:40 AM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%md\n\n# 3 - Training Helper Function",
+      "user": "anonymous",
+      "dateUpdated": "Nov 8, 2018 5:59:36 PM",
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/markdown",
+        "editorHide": true,
+        "results": {},
+        "enabled": false
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003ch1\u003e3 - Training Helper Function\u003c/h1\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1537296780462_-821160570",
+      "id": "20180918-172036_1798997875",
+      "dateCreated": "Sep 18, 2018 6:53:00 PM",
+      "dateStarted": "Oct 9, 2018 3:48:03 PM",
+      "dateFinished": "Oct 9, 2018 3:48:03 PM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "Creating the Training Function",
+      "text": "%spark\n\ndef runPipelineOnData(fulldata: DataFrame, pipeline: Pipeline, PMMLClassNamePrefix: String) : PipelineModel \u003d {\n    \n    val splits \u003d fulldata.randomSplit(Array(0.8, 0.2), 0)\n    val trainingData \u003d splits(0)\n    val testingData \u003d splits(1)\n    \n    val pipelineModel \u003d pipeline.fit(trainingData)\n    \n    val predictions \u003d pipelineModel.transform(testingData)\n\n    val evaluator \u003d new MulticlassClassificationEvaluator().setLabelCol(\"CausedReadmission\")\n\n    val accuracy \u003d evaluator.evaluate(predictions)\n\n    println(\"\\t\\tTest Error \u003d \" + (1.0 - accuracy) + \"%\")\n    \n    val fileName\u003d\"/common_shared/pmml/IRISDemo.ImportedModel.\"+PMMLClassNamePrefix+\".pmml\"\n    \n    println(\"\\t\\tExporting the model to PMML file \" + fileName)\n    \n    val file \u003d new File(fileName)\n    \n    val pmmlBuilder \u003d new org.jpmml.sparkml.PMMLBuilder(fulldata.schema, pipelineModel).buildFile(file)\n    \n    return pipelineModel\n\n}",
+      "user": "anonymous",
+      "dateUpdated": "Jan 18, 2019 1:27:35 AM",
+      "config": {
+        "colWidth": 12.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "text",
+          "editOnDblClick": false
+        },
+        "editorMode": "ace/mode/text",
+        "title": false
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "runPipelineOnData: (fulldata: org.apache.spark.sql.DataFrame, pipeline: org.apache.spark.ml.Pipeline, PMMLClassNamePrefix: String)org.apache.spark.ml.PipelineModel\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1537303344014_1073119656",
+      "id": "20180918-204224_1942830640",
+      "dateCreated": "Sep 18, 2018 8:42:24 PM",
+      "dateStarted": "Nov 8, 2018 6:00:14 PM",
+      "dateFinished": "Nov 8, 2018 6:00:15 PM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%md\n# 4 - Preparing the data",
+      "user": "anonymous",
+      "dateUpdated": "Nov 8, 2018 5:59:36 PM",
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/markdown",
+        "editorHide": true,
+        "results": {},
+        "enabled": false
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003ch1\u003e4 - Preparing the data\u003c/h1\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1537296780463_-821545318",
+      "id": "20180918-172147_839423680",
+      "dateCreated": "Sep 18, 2018 6:53:00 PM",
+      "dateStarted": "Oct 9, 2018 3:48:04 PM",
+      "dateFinished": "Oct 9, 2018 3:48:04 PM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "Converting other features data types",
+      "text": "%md\n\nSee bellow how some of the colums are of type string, double or boolean:",
+      "user": "anonymous",
+      "dateUpdated": "Nov 8, 2018 5:59:36 PM",
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/markdown",
+        "editorHide": true,
+        "title": true,
+        "results": {},
+        "enabled": false
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003cp\u003eSee bellow how some of the colums are of type string, double or boolean:\u003c/p\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1537296780463_-821545318",
+      "id": "20180918-025851_1907240177",
+      "dateCreated": "Sep 18, 2018 6:53:00 PM",
+      "dateStarted": "Oct 9, 2018 3:48:04 PM",
+      "dateFinished": "Oct 9, 2018 3:48:04 PM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark\n\ndf.printSchema()\n",
+      "user": "anonymous",
+      "dateUpdated": "Jan 18, 2019 1:27:46 AM",
+      "config": {
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/text",
+        "results": {},
+        "enabled": true,
+        "editorSetting": {
+          "language": "text",
+          "editOnDblClick": false
+        }
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "root\n |-- AdmissionSource: long (nullable \u003d true)\n |-- CausedReadmission: long (nullable \u003d true)\n |-- ConditionsAtTimeOfEncounter: string (nullable \u003d true)\n |-- DischargeLocation: long (nullable \u003d true)\n |-- EncounterType: long (nullable \u003d true)\n |-- Gender: long (nullable \u003d true)\n\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1537296780464_-811157098",
+      "id": "20180918-034847_1303622092",
+      "dateCreated": "Sep 18, 2018 6:53:00 PM",
+      "dateStarted": "Jan 18, 2019 1:27:46 AM",
+      "dateFinished": "Jan 18, 2019 1:27:46 AM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%md\n\n ConditionsAtTimeOfEncounter is a string. It has a list of conditions on it.\n \n We must convert this to a vector of numbers.",
+      "user": "anonymous",
+      "dateUpdated": "Jan 18, 2019 1:28:54 AM",
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/markdown",
+        "editorHide": true,
+        "results": {},
+        "enabled": false
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003cp\u003eConditionsAtTimeOfEncounter is a string. It has a list of conditions on it.\u003c/p\u003e\n\u003cp\u003eWe must convert this to a vector of numbers.\u003c/p\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1537296780464_-811157098",
+      "id": "20180918-172313_1370163893",
+      "dateCreated": "Sep 18, 2018 6:53:00 PM",
+      "dateStarted": "Jan 18, 2019 1:28:48 AM",
+      "dateFinished": "Jan 18, 2019 1:28:50 AM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark\n\nval df2 \u003d df.withColumn(\"amount\", col(\"amount\").cast(\"bigint\"))\n    .withColumn(\"fraud\", col(\"fraud\").cast(\"int\"))\n    .withColumn(\"gender\", col(\"gender\").cast(\"int\"))\n\ndf2.printSchema()\n\n",
+      "user": "anonymous",
+      "dateUpdated": "Nov 8, 2018 5:59:37 PM",
+      "config": {
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/scala",
+        "results": {},
+        "enabled": true,
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false
+        }
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "df2: org.apache.spark.sql.DataFrame \u003d [age: int, gender: int ... 4 more fields]\nroot\n |-- age: integer (nullable \u003d true)\n |-- gender: integer (nullable \u003d true)\n |-- amount: long (nullable \u003d true)\n |-- fraud: integer (nullable \u003d true)\n |-- merchant: long (nullable \u003d false)\n |-- category: long (nullable \u003d false)\n\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1537296780464_-811157098",
+      "id": "20180918-025428_2081805463",
+      "dateCreated": "Sep 18, 2018 6:53:00 PM",
+      "dateStarted": "Nov 8, 2018 6:00:15 PM",
+      "dateFinished": "Nov 8, 2018 6:00:16 PM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%md \n\n# 5 - Basic Infrastructure",
+      "user": "anonymous",
+      "dateUpdated": "Nov 8, 2018 5:59:37 PM",
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/markdown",
+        "editorHide": true,
+        "results": {},
+        "enabled": false
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003ch1\u003e5 - Basic Infrastructure\u003c/h1\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1537296780465_-811541847",
+      "id": "20180918-172407_2140342279",
+      "dateCreated": "Sep 18, 2018 6:53:00 PM",
+      "dateStarted": "Oct 9, 2018 3:48:05 PM",
+      "dateFinished": "Oct 9, 2018 3:48:05 PM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "Feature Selection - Testing for Independence",
+      "text": "%md\n\nFeature selection is an important problem in Machine learning. There are many feature selection methods available such as mutual information, information gain, and chi square test.\n\nWe have 500K transactions. The *fraud* field will tell us if a transaction is marked as fraud or not. We have many features (age, gender, amount, merchant and category) but we are not\nsure which features have an impact in *fraud* class. Given a feature X, we can use Chi Square Test to evaluate its importance to distinguish the class. \n\nBy calculating the Chi square scores for all the features, we can rank the features by the chi square scores, then choose the top ranked features for model training. In other words, \nthe higher value of the \\chi^2 score, the more likelihood the feature is correlated with the class, thus it should be selected for model training.\n\nThe nice thing about Spark is that it can do all of this for us! We will use ChiSqSelector feature selector for that. ",
+      "user": "anonymous",
+      "dateUpdated": "Nov 8, 2018 5:59:37 PM",
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/markdown",
+        "editorHide": true,
+        "title": true,
+        "results": {},
+        "enabled": false
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003cp\u003eFeature selection is an important problem in Machine learning. There are many feature selection methods available such as mutual information, information gain, and chi square test.\u003c/p\u003e\n\u003cp\u003eWe have 500K transactions. The \u003cem\u003efraud\u003c/em\u003e field will tell us if a transaction is marked as fraud or not. We have many features (age, gender, amount, merchant and category) but we are not\u003cbr/\u003esure which features have an impact in \u003cem\u003efraud\u003c/em\u003e class. Given a feature X, we can use Chi Square Test to evaluate its importance to distinguish the class. \u003c/p\u003e\n\u003cp\u003eBy calculating the Chi square scores for all the features, we can rank the features by the chi square scores, then choose the top ranked features for model training. In other words,\u003cbr/\u003ethe higher value of the \\chi^2 score, the more likelihood the feature is correlated with the class, thus it should be selected for model training.\u003c/p\u003e\n\u003cp\u003eThe nice thing about Spark is that it can do all of this for us! We will use ChiSqSelector feature selector for that.\u003c/p\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1537296780462_-821160570",
+      "id": "20180917-222324_2048117667",
+      "dateCreated": "Sep 18, 2018 6:53:00 PM",
+      "dateStarted": "Oct 9, 2018 3:48:05 PM",
+      "dateFinished": "Oct 9, 2018 3:48:05 PM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "Vector Assembler",
+      "text": "%md\n\nWe need to transform our features in vectors before giving them to the ML algorithms. That is done by a class called VectorAssembler(). It will take an array of column names and will build a single column on our dataframe that will include all the selected features.",
+      "user": "anonymous",
+      "dateUpdated": "Nov 8, 2018 5:59:37 PM",
+      "config": {
+        "colWidth": 12.0,
+        "enabled": false,
+        "results": {},
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true
+        },
+        "editorMode": "ace/mode/markdown",
+        "title": true,
+        "editorHide": true,
+        "tableHide": false
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003cp\u003eWe need to transform our features in vectors before giving them to the ML algorithms. That is done by a class called VectorAssembler(). It will take an array of column names and will build a single column on our dataframe that will include all the selected features.\u003c/p\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1538259917957_-636495033",
+      "id": "20180929-222517_176232123",
+      "dateCreated": "Sep 29, 2018 10:25:17 PM",
+      "dateStarted": "Oct 9, 2018 3:48:06 PM",
+      "dateFinished": "Oct 9, 2018 3:48:06 PM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "Vector Indexer",
+      "text": "%md\n\nSpark needs to know if a feature is *categorical* or *numeric*. A categorical feature is something like Male/Female, Day of Week, a small range of numbers, etc. A numeric feature is a continuous value.\n\nWe could define this by hand but, again, Spark can help us with that with a VectorIndexer. It will look each feature and figure out for us if it is a categorical feature or continuous feature. We must give it a hint tough. Parameter MaxCategories defines the maximum number of items a feature must have to be considered a category. \n\nWe have a merchant category. Let\u0027s see how many merchant categories do we have:",
+      "user": "anonymous",
+      "dateUpdated": "Nov 8, 2018 5:59:37 PM",
+      "config": {
+        "colWidth": 12.0,
+        "enabled": false,
+        "results": {},
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true
+        },
+        "editorMode": "ace/mode/markdown",
+        "title": true,
+        "editorHide": true,
+        "tableHide": false
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003cp\u003eSpark needs to know if a feature is \u003cem\u003ecategorical\u003c/em\u003e or \u003cem\u003enumeric\u003c/em\u003e. A categorical feature is something like Male/Female, Day of Week, a small range of numbers, etc. A numeric feature is a continuous value.\u003c/p\u003e\n\u003cp\u003eWe could define this by hand but, again, Spark can help us with that with a VectorIndexer. It will look each feature and figure out for us if it is a categorical feature or continuous feature. We must give it a hint tough. Parameter MaxCategories defines the maximum number of items a feature must have to be considered a category. \u003c/p\u003e\n\u003cp\u003eWe have a merchant category. Let\u0026rsquo;s see how many merchant categories do we have:\u003c/p\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1538260043561_-409513963",
+      "id": "20180929-222723_1895839244",
+      "dateCreated": "Sep 29, 2018 10:27:23 PM",
+      "dateStarted": "Oct 9, 2018 3:48:06 PM",
+      "dateFinished": "Oct 9, 2018 3:48:06 PM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark\n\nfor (colname \u003c- df.columns) println(colname + \" has \" + df.select(col(colname)).distinct().count() + \" distinct values \")\n",
+      "user": "anonymous",
+      "dateUpdated": "Nov 8, 2018 5:59:38 PM",
+      "config": {
+        "colWidth": 12.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false
+        },
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "age has 61 distinct values \ngender has 3 distinct values \namount has 22222 distinct values \nfraud has 2 distinct values \nmerchant has 50 distinct values \ncategory has 15 distinct values \n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1538260677104_1691720729",
+      "id": "20180929-223757_1630009029",
+      "dateCreated": "Sep 29, 2018 10:37:57 PM",
+      "dateStarted": "Nov 8, 2018 6:00:16 PM",
+      "dateFinished": "Nov 8, 2018 6:00:38 PM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "Creating the basic infrastructure to be used when training our models",
+      "text": "%spark\n\nval vectorAssembler \u003d new VectorAssembler() \n    .setInputCols(Array(\"merchant\", \"category\", \"amount\", \"age\", \"gender\")) \n    .setOutputCol(\"rawFeatures\")\n\n//val vectorIndexer \u003d new VectorIndexer().setInputCol(\"rawFeatures\").setOutputCol(\"features\").setMaxCategories(16)\n\n// This will take the top 3 most important features accordingly to Chi2\n//val selectorChi \u003d new ChiSqSelector().setNumTopFeatures(4).setFeaturesCol(\"features\").setOutputCol(\"selectedFeatures\").setLabelCol(\"CausedReadmission\")\nval selectorChi \u003d new ChiSqSelector().setNumTopFeatures(3).setFeaturesCol(\"rawFeatures\").setOutputCol(\"selectedFeatures\").setLabelCol(\"CausedReadmission\")\n",
+      "user": "anonymous",
+      "dateUpdated": "Jan 18, 2019 1:32:06 AM",
+      "config": {
+        "colWidth": 12.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "text",
+          "editOnDblClick": false
+        },
+        "editorMode": "ace/mode/text",
+        "title": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "vectorAssembler: org.apache.spark.ml.feature.VectorAssembler \u003d vecAssembler_10a06eaa1298\nselectorChi: org.apache.spark.ml.feature.ChiSqSelector \u003d chiSqSelector_4c226f000005\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1538259882991_-1445667942",
+      "id": "20180929-222442_1424032271",
+      "dateCreated": "Sep 29, 2018 10:24:42 PM",
+      "dateStarted": "Nov 8, 2018 6:00:17 PM",
+      "dateFinished": "Nov 8, 2018 6:00:39 PM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark\n\nvectorAssembler.transform(df2).show()\n",
+      "user": "anonymous",
+      "dateUpdated": "Nov 8, 2018 5:59:38 PM",
+      "config": {
+        "colWidth": 12.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false
+        },
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "+---+------+------+-----+--------+--------+--------------------+\n|age|gender|amount|fraud|merchant|category|         rawFeatures|\n+---+------+------+-----+--------+--------+--------------------+\n| 50|     1|     4|    0|       2|       1|[2.0,1.0,4.0,50.0...|\n| 28|     1|    39|    0|       2|       1|[2.0,1.0,39.0,28....|\n| 54|     2|    26|    0|       4|       1|[4.0,1.0,26.0,54....|\n| 41|     1|    17|    0|       2|       1|[2.0,1.0,17.0,41....|\n| 56|     1|    35|    0|       2|       1|[2.0,1.0,35.0,56....|\n| 37|     2|    25|    0|       2|       1|[2.0,1.0,25.0,37....|\n| 21|     2|     9|    0|       2|       1|[2.0,1.0,9.0,21.0...|\n| 47|     2|    21|    0|       2|       1|[2.0,1.0,21.0,47....|\n| 36|     1|    32|    0|       2|       1|[2.0,1.0,32.0,36....|\n| 56|     2|    35|    0|       2|       1|[2.0,1.0,35.0,56....|\n| 50|     2|    14|    0|       2|       1|[2.0,1.0,14.0,50....|\n| 24|     1|     1|    0|       4|       1|[4.0,1.0,1.0,24.0...|\n| 38|     1|    68|    0|      16|       2|[16.0,2.0,68.0,38...|\n| 62|     1|    20|    0|       4|       1|[4.0,1.0,20.0,62....|\n| 41|     1|    13|    0|       2|       1|[2.0,1.0,13.0,41....|\n| 39|     2|    30|    0|       2|       1|[2.0,1.0,30.0,39....|\n| 48|     1|    17|    0|       4|       1|[4.0,1.0,17.0,48....|\n| 58|     2|    40|    0|       2|       1|[2.0,1.0,40.0,58....|\n| 32|     1|    21|    0|       2|       1|[2.0,1.0,21.0,32....|\n| 32|     2|    10|    0|       2|       1|[2.0,1.0,10.0,32....|\n+---+------+------+-----+--------+--------+--------------------+\nonly showing top 20 rows\n\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1539100734286_1509631693",
+      "id": "20181009-155854_1101550713",
+      "dateCreated": "Oct 9, 2018 3:58:54 PM",
+      "dateStarted": "Nov 8, 2018 6:00:39 PM",
+      "dateFinished": "Nov 8, 2018 6:00:40 PM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%md\n# 6 - Training the Model\n",
+      "user": "anonymous",
+      "dateUpdated": "Nov 8, 2018 5:59:38 PM",
+      "config": {
+        "colWidth": 12.0,
+        "enabled": false,
+        "results": {},
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true
+        },
+        "editorMode": "ace/mode/markdown",
+        "editorHide": true,
+        "tableHide": false
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003ch1\u003e6 - Training the Model\u003c/h1\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1538261284194_-455165574",
+      "id": "20180929-224804_1883794398",
+      "dateCreated": "Sep 29, 2018 10:48:04 PM",
+      "dateStarted": "Oct 9, 2018 3:48:07 PM",
+      "dateFinished": "Oct 9, 2018 3:48:07 PM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%md\n\n# 6.1 - Binary Decision Tree\n",
+      "user": "anonymous",
+      "dateUpdated": "Nov 8, 2018 5:59:38 PM",
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/markdown",
+        "editorHide": true,
+        "results": {},
+        "enabled": false
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003ch1\u003e6.1 - Binary Decision Tree\u003c/h1\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1537296780472_-814235089",
+      "id": "20180918-151452_701599867",
+      "dateCreated": "Sep 18, 2018 6:53:00 PM",
+      "dateStarted": "Oct 9, 2018 3:48:07 PM",
+      "dateFinished": "Oct 9, 2018 3:48:07 PM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "5.3.1 - Training the Model",
+      "text": "%spark\n\nval decisionTreeClassifier \u003d new DecisionTreeClassifier().setLabelCol(\"fraud\").setFeaturesCol(\"selectedFeatures\").setPredictionCol(\"prediction\")\n\n//val pipelineBT \u003d new Pipeline().setStages(Array(vectorAssembler, vectorIndexer, selectorChi, binaryTree))\nval pipelineDTC \u003d new Pipeline().setStages(Array(vectorAssembler, selectorChi, decisionTreeClassifier))\n\nval pipelineModelDTC \u003d runPipelineOnData(df2, pipelineDTC, \"DecisionTreeClassifier\")\n\nval decisionTreeClassificationModel \u003d pipelineModelDTC.stages(2).asInstanceOf[DecisionTreeClassificationModel]\n",
+      "user": "anonymous",
+      "dateUpdated": "Nov 8, 2018 5:59:38 PM",
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/scala",
+        "title": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "decisionTreeClassifier: org.apache.spark.ml.classification.DecisionTreeClassifier \u003d dtc_ce7b81d629d4\npipelineDTC: org.apache.spark.ml.Pipeline \u003d pipeline_9d1ae9e20883\n\t\tTest Error \u003d 0.009537283292099907%\n\t\tExporting the model to PMML file /common_shared/pmml/IRISDemo.ImportedModel.DecisionTreeClassifier.pmml\npipelineModelDTC: org.apache.spark.ml.PipelineModel \u003d pipeline_9d1ae9e20883\ndecisionTreeClassificationModel: org.apache.spark.ml.classification.DecisionTreeClassificationModel \u003d DecisionTreeClassificationModel (uid\u003ddtc_ce7b81d629d4) of depth 5 with 43 nodes\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1537296780472_-814235089",
+      "id": "20180918-041035_1716649505",
+      "dateCreated": "Sep 18, 2018 6:53:00 PM",
+      "dateStarted": "Nov 8, 2018 6:00:39 PM",
+      "dateFinished": "Nov 8, 2018 6:01:01 PM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "Let\u0027s see it!",
+      "text": "%spark\n\nprintln(s\"\\n\\nLearned classification tree model:\\n ${decisionTreeClassificationModel.toDebugString}\")\n",
+      "user": "anonymous",
+      "dateUpdated": "Nov 8, 2018 5:59:39 PM",
+      "config": {
+        "colWidth": 12.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false
+        },
+        "editorMode": "ace/mode/scala",
+        "title": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "\n\nLearned classification tree model:\n DecisionTreeClassificationModel (uid\u003ddtc_ce7b81d629d4) of depth 5 with 43 nodes\n  If (feature 2 \u003c\u003d 110.0)\n   If (feature 0 \u003c\u003d 84.0)\n    If (feature 0 \u003c\u003d 4.0)\n     Predict: 0.0\n    Else (feature 0 \u003e 4.0)\n     If (feature 0 \u003c\u003d 45.0)\n      If (feature 0 \u003c\u003d 16.0)\n       Predict: 0.0\n      Else (feature 0 \u003e 16.0)\n       Predict: 0.0\n     Else (feature 0 \u003e 45.0)\n      Predict: 0.0\n   Else (feature 0 \u003e 84.0)\n    If (feature 0 \u003c\u003d 95.0)\n     If (feature 2 \u003c\u003d 4.0)\n      If (feature 2 \u003c\u003d 2.0)\n       Predict: 0.0\n      Else (feature 2 \u003e 2.0)\n       Predict: 0.0\n     Else (feature 2 \u003e 4.0)\n      If (feature 2 \u003c\u003d 71.0)\n       Predict: 0.0\n      Else (feature 2 \u003e 71.0)\n       Predict: 0.0\n    Else (feature 0 \u003e 95.0)\n     If (feature 0 \u003c\u003d 713.0)\n      If (feature 0 \u003c\u003d 269.0)\n       Predict: 0.0\n      Else (feature 0 \u003e 269.0)\n       Predict: 0.0\n     Else (feature 0 \u003e 713.0)\n      If (feature 1 \u003c\u003d 13.0)\n       Predict: 0.0\n      Else (feature 1 \u003e 13.0)\n       Predict: 0.0\n  Else (feature 2 \u003e 110.0)\n   If (feature 1 \u003c\u003d 13.0)\n    If (feature 0 \u003c\u003d 713.0)\n     If (feature 0 \u003c\u003d 84.0)\n      If (feature 1 \u003c\u003d 2.0)\n       Predict: 0.0\n      Else (feature 1 \u003e 2.0)\n       Predict: 0.0\n     Else (feature 0 \u003e 84.0)\n      If (feature 0 \u003c\u003d 269.0)\n       Predict: 0.0\n      Else (feature 0 \u003e 269.0)\n       Predict: 1.0\n    Else (feature 0 \u003e 713.0)\n     If (feature 0 \u003c\u003d 1010.0)\n      If (feature 0 \u003c\u003d 886.0)\n       Predict: 0.0\n      Else (feature 0 \u003e 886.0)\n       Predict: 1.0\n     Else (feature 0 \u003e 1010.0)\n      If (feature 1 \u003c\u003d 7.0)\n       Predict: 0.0\n      Else (feature 1 \u003e 7.0)\n       Predict: 0.0\n   Else (feature 1 \u003e 13.0)\n    If (feature 1 \u003c\u003d 14.0)\n     Predict: 1.0\n    Else (feature 1 \u003e 14.0)\n     Predict: 1.0\n\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1538318613446_116130417",
+      "id": "20180930-144333_333084227",
+      "dateCreated": "Sep 30, 2018 2:43:33 PM",
+      "dateStarted": "Nov 8, 2018 6:00:41 PM",
+      "dateFinished": "Nov 8, 2018 6:01:02 PM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%md\n\n## 6.2 - Random Forest Classifier",
+      "user": "anonymous",
+      "dateUpdated": "Nov 8, 2018 5:59:39 PM",
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/markdown",
+        "editorHide": true,
+        "results": {},
+        "enabled": false
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003ch2\u003e6.2 - Random Forest Classifier\u003c/h2\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1537296780466_-810387600",
+      "id": "20180918-171233_1149874704",
+      "dateCreated": "Sep 18, 2018 6:53:00 PM",
+      "dateStarted": "Oct 9, 2018 3:48:08 PM",
+      "dateFinished": "Oct 9, 2018 3:48:08 PM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "6.2.1 - Training the model",
+      "text": "%spark\n\nval randomForest \u003d new RandomForestClassifier().setLabelCol(\"fraud\").setFeaturesCol(\"selectedFeatures\").setNumTrees(10).setMaxDepth(4).setMaxBins(20)\n\n//val pipelineRF \u003d new Pipeline().setStages(Array(vectorAssembler, vectorIndexer, selectorChi, randomForest))\nval pipelineRF \u003d new Pipeline().setStages(Array(vectorAssembler, selectorChi, randomForest))\n\nval randomForestPipelineModel \u003d runPipelineOnData(df2, pipelineRF, \"RandomForest\")\n\nval randomForestModel \u003d randomForestPipelineModel.stages(2).asInstanceOf[RandomForestClassificationModel]",
+      "user": "anonymous",
+      "dateUpdated": "Nov 8, 2018 5:59:39 PM",
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/scala",
+        "title": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "randomForest: org.apache.spark.ml.classification.RandomForestClassifier \u003d rfc_971638c81ccc\npipelineRF: org.apache.spark.ml.Pipeline \u003d pipeline_51a6b522953b\n\t\tTest Error \u003d 0.014703745390228784%\n\t\tExporting the model to PMML file /common_shared/pmml/IRISDemo.ImportedModel.RandomForest.pmml\nrandomForestPipelineModel: org.apache.spark.ml.PipelineModel \u003d pipeline_51a6b522953b\nrandomForestModel: org.apache.spark.ml.classification.RandomForestClassificationModel \u003d RandomForestClassificationModel (uid\u003drfc_1edbb3321bfb) with 10 trees\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1537296780466_-810387600",
+      "id": "20180918-030614_825977513",
+      "dateCreated": "Sep 18, 2018 6:53:00 PM",
+      "dateStarted": "Nov 8, 2018 6:01:01 PM",
+      "dateFinished": "Nov 8, 2018 6:01:19 PM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "6.2.2 - Let\u0027s see it!",
+      "text": "%spark\n\n//randomForestModel.extractParamMap()\n\nprintln(s\"\\n\\nLearned classification tree model:\\n ${randomForestModel.toDebugString}\")\n",
+      "user": "anonymous",
+      "dateUpdated": "Nov 8, 2018 5:59:39 PM",
+      "config": {
+        "colWidth": 12.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false
+        },
+        "editorMode": "ace/mode/scala",
+        "title": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "\n\nLearned classification tree model:\n RandomForestClassificationModel (uid\u003drfc_1edbb3321bfb) with 10 trees\n  Tree 0 (weight 1.0):\n    If (feature 2 \u003c\u003d 80.0)\n     If (feature 1 \u003c\u003d 4.0)\n      If (feature 1 \u003c\u003d 1.0)\n       Predict: 0.0\n      Else (feature 1 \u003e 1.0)\n       If (feature 1 \u003c\u003d 3.0)\n        Predict: 0.0\n       Else (feature 1 \u003e 3.0)\n        Predict: 0.0\n     Else (feature 1 \u003e 4.0)\n      If (feature 1 \u003c\u003d 5.0)\n       If (feature 0 \u003c\u003d 332.0)\n        Predict: 0.0\n       Else (feature 0 \u003e 332.0)\n        Predict: 0.0\n      Else (feature 1 \u003e 5.0)\n       If (feature 1 \u003c\u003d 8.0)\n        Predict: 0.0\n       Else (feature 1 \u003e 8.0)\n        Predict: 0.0\n    Else (feature 2 \u003e 80.0)\n     If (feature 1 \u003c\u003d 13.0)\n      If (feature 0 \u003c\u003d 84.0)\n       If (feature 0 \u003c\u003d 45.0)\n        Predict: 0.0\n       Else (feature 0 \u003e 45.0)\n        Predict: 0.0\n      Else (feature 0 \u003e 84.0)\n       If (feature 0 \u003c\u003d 95.0)\n        Predict: 1.0\n       Else (feature 0 \u003e 95.0)\n        Predict: 0.0\n     Else (feature 1 \u003e 13.0)\n      Predict: 1.0\n  Tree 1 (weight 1.0):\n    If (feature 2 \u003c\u003d 80.0)\n     If (feature 1 \u003c\u003d 4.0)\n      If (feature 1 \u003c\u003d 1.0)\n       Predict: 0.0\n      Else (feature 1 \u003e 1.0)\n       If (feature 0 \u003c\u003d 84.0)\n        Predict: 0.0\n       Else (feature 0 \u003e 84.0)\n        Predict: 0.0\n     Else (feature 1 \u003e 4.0)\n      If (feature 0 \u003c\u003d 269.0)\n       If (feature 2 \u003c\u003d 59.0)\n        Predict: 0.0\n       Else (feature 2 \u003e 59.0)\n        Predict: 0.0\n      Else (feature 0 \u003e 269.0)\n       If (feature 1 \u003c\u003d 8.0)\n        Predict: 0.0\n       Else (feature 1 \u003e 8.0)\n        Predict: 0.0\n    Else (feature 2 \u003e 80.0)\n     If (feature 1 \u003c\u003d 13.0)\n      If (feature 0 \u003c\u003d 84.0)\n       If (feature 0 \u003c\u003d 45.0)\n        Predict: 0.0\n       Else (feature 0 \u003e 45.0)\n        Predict: 0.0\n      Else (feature 0 \u003e 84.0)\n       If (feature 0 \u003c\u003d 95.0)\n        Predict: 1.0\n       Else (feature 0 \u003e 95.0)\n        Predict: 0.0\n     Else (feature 1 \u003e 13.0)\n      If (feature 1 \u003c\u003d 14.0)\n       Predict: 1.0\n      Else (feature 1 \u003e 14.0)\n       Predict: 1.0\n  Tree 2 (weight 1.0):\n    If (feature 1 \u003c\u003d 13.0)\n     If (feature 2 \u003c\u003d 80.0)\n      If (feature 1 \u003c\u003d 4.0)\n       If (feature 0 \u003c\u003d 84.0)\n        Predict: 0.0\n       Else (feature 0 \u003e 84.0)\n        Predict: 0.0\n      Else (feature 1 \u003e 4.0)\n       If (feature 1 \u003c\u003d 8.0)\n        Predict: 0.0\n       Else (feature 1 \u003e 8.0)\n        Predict: 0.0\n     Else (feature 2 \u003e 80.0)\n      If (feature 1 \u003c\u003d 4.0)\n       If (feature 1 \u003c\u003d 1.0)\n        Predict: 0.0\n       Else (feature 1 \u003e 1.0)\n        Predict: 0.0\n      Else (feature 1 \u003e 4.0)\n       If (feature 0 \u003c\u003d 269.0)\n        Predict: 0.0\n       Else (feature 0 \u003e 269.0)\n        Predict: 0.0\n    Else (feature 1 \u003e 13.0)\n     If (feature 2 \u003c\u003d 80.0)\n      If (feature 2 \u003c\u003d 51.0)\n       If (feature 1 \u003c\u003d 14.0)\n        Predict: 0.0\n       Else (feature 1 \u003e 14.0)\n        Predict: 0.0\n      Else (feature 2 \u003e 51.0)\n       Predict: 0.0\n     Else (feature 2 \u003e 80.0)\n      If (feature 1 \u003c\u003d 14.0)\n       Predict: 1.0\n      Else (feature 1 \u003e 14.0)\n       Predict: 1.0\n  Tree 3 (weight 1.0):\n    If (feature 2 \u003c\u003d 80.0)\n     If (feature 0 \u003c\u003d 84.0)\n      If (feature 0 \u003c\u003d 4.0)\n       Predict: 0.0\n      Else (feature 0 \u003e 4.0)\n       If (feature 0 \u003c\u003d 45.0)\n        Predict: 0.0\n       Else (feature 0 \u003e 45.0)\n        Predict: 0.0\n     Else (feature 0 \u003e 84.0)\n      If (feature 1 \u003c\u003d 8.0)\n       If (feature 0 \u003c\u003d 95.0)\n        Predict: 0.0\n       Else (feature 0 \u003e 95.0)\n        Predict: 0.0\n      Else (feature 1 \u003e 8.0)\n       If (feature 1 \u003c\u003d 13.0)\n        Predict: 0.0\n       Else (feature 1 \u003e 13.0)\n        Predict: 0.0\n    Else (feature 2 \u003e 80.0)\n     If (feature 1 \u003c\u003d 13.0)\n      If (feature 0 \u003c\u003d 84.0)\n       If (feature 1 \u003c\u003d 2.0)\n        Predict: 0.0\n       Else (feature 1 \u003e 2.0)\n        Predict: 0.0\n      Else (feature 0 \u003e 84.0)\n       If (feature 0 \u003c\u003d 95.0)\n        Predict: 1.0\n       Else (feature 0 \u003e 95.0)\n        Predict: 0.0\n     Else (feature 1 \u003e 13.0)\n      Predict: 1.0\n  Tree 4 (weight 1.0):\n    If (feature 2 \u003c\u003d 80.0)\n     If (feature 1 \u003c\u003d 4.0)\n      If (feature 0 \u003c\u003d 84.0)\n       If (feature 0 \u003c\u003d 4.0)\n        Predict: 0.0\n       Else (feature 0 \u003e 4.0)\n        Predict: 0.0\n      Else (feature 0 \u003e 84.0)\n       If (feature 2 \u003c\u003d 26.0)\n        Predict: 0.0\n       Else (feature 2 \u003e 26.0)\n        Predict: 0.0\n     Else (feature 1 \u003e 4.0)\n      If (feature 1 \u003c\u003d 8.0)\n       If (feature 1 \u003c\u003d 7.0)\n        Predict: 0.0\n       Else (feature 1 \u003e 7.0)\n        Predict: 0.0\n      Else (feature 1 \u003e 8.0)\n       If (feature 1 \u003c\u003d 13.0)\n        Predict: 0.0\n       Else (feature 1 \u003e 13.0)\n        Predict: 0.0\n    Else (feature 2 \u003e 80.0)\n     If (feature 0 \u003c\u003d 84.0)\n      If (feature 0 \u003c\u003d 45.0)\n       If (feature 1 \u003c\u003d 2.0)\n        Predict: 0.0\n       Else (feature 1 \u003e 2.0)\n        Predict: 0.0\n      Else (feature 0 \u003e 45.0)\n       Predict: 0.0\n     Else (feature 0 \u003e 84.0)\n      If (feature 1 \u003c\u003d 13.0)\n       If (feature 1 \u003c\u003d 8.0)\n        Predict: 0.0\n       Else (feature 1 \u003e 8.0)\n        Predict: 0.0\n      Else (feature 1 \u003e 13.0)\n       If (feature 1 \u003c\u003d 14.0)\n        Predict: 1.0\n       Else (feature 1 \u003e 14.0)\n        Predict: 1.0\n  Tree 5 (weight 1.0):\n    If (feature 2 \u003c\u003d 80.0)\n     If (feature 0 \u003c\u003d 84.0)\n      If (feature 0 \u003c\u003d 4.0)\n       Predict: 0.0\n      Else (feature 0 \u003e 4.0)\n       If (feature 1 \u003c\u003d 3.0)\n        Predict: 0.0\n       Else (feature 1 \u003e 3.0)\n        Predict: 0.0\n     Else (feature 0 \u003e 84.0)\n      If (feature 0 \u003c\u003d 95.0)\n       If (feature 2 \u003c\u003d 5.0)\n        Predict: 0.0\n       Else (feature 2 \u003e 5.0)\n        Predict: 0.0\n      Else (feature 0 \u003e 95.0)\n       If (feature 1 \u003c\u003d 8.0)\n        Predict: 0.0\n       Else (feature 1 \u003e 8.0)\n        Predict: 0.0\n    Else (feature 2 \u003e 80.0)\n     If (feature 1 \u003c\u003d 13.0)\n      If (feature 1 \u003c\u003d 4.0)\n       If (feature 0 \u003c\u003d 84.0)\n        Predict: 0.0\n       Else (feature 0 \u003e 84.0)\n        Predict: 0.0\n      Else (feature 1 \u003e 4.0)\n       If (feature 1 \u003c\u003d 8.0)\n        Predict: 0.0\n       Else (feature 1 \u003e 8.0)\n        Predict: 0.0\n     Else (feature 1 \u003e 13.0)\n      Predict: 1.0\n  Tree 6 (weight 1.0):\n    If (feature 1 \u003c\u003d 13.0)\n     If (feature 2 \u003c\u003d 80.0)\n      If (feature 0 \u003c\u003d 84.0)\n       If (feature 0 \u003c\u003d 4.0)\n        Predict: 0.0\n       Else (feature 0 \u003e 4.0)\n        Predict: 0.0\n      Else (feature 0 \u003e 84.0)\n       If (feature 0 \u003c\u003d 95.0)\n        Predict: 0.0\n       Else (feature 0 \u003e 95.0)\n        Predict: 0.0\n     Else (feature 2 \u003e 80.0)\n      If (feature 0 \u003c\u003d 84.0)\n       If (feature 0 \u003c\u003d 45.0)\n        Predict: 0.0\n       Else (feature 0 \u003e 45.0)\n        Predict: 0.0\n      Else (feature 0 \u003e 84.0)\n       If (feature 0 \u003c\u003d 95.0)\n        Predict: 1.0\n       Else (feature 0 \u003e 95.0)\n        Predict: 0.0\n    Else (feature 1 \u003e 13.0)\n     If (feature 2 \u003c\u003d 80.0)\n      If (feature 1 \u003c\u003d 14.0)\n       If (feature 2 \u003c\u003d 7.0)\n        Predict: 0.0\n       Else (feature 2 \u003e 7.0)\n        Predict: 0.0\n      Else (feature 1 \u003e 14.0)\n       If (feature 2 \u003c\u003d 46.0)\n        Predict: 1.0\n       Else (feature 2 \u003e 46.0)\n        Predict: 0.0\n     Else (feature 2 \u003e 80.0)\n      If (feature 1 \u003c\u003d 14.0)\n       Predict: 1.0\n      Else (feature 1 \u003e 14.0)\n       Predict: 1.0\n  Tree 7 (weight 1.0):\n    If (feature 1 \u003c\u003d 13.0)\n     If (feature 2 \u003c\u003d 80.0)\n      If (feature 1 \u003c\u003d 4.0)\n       If (feature 0 \u003c\u003d 84.0)\n        Predict: 0.0\n       Else (feature 0 \u003e 84.0)\n        Predict: 0.0\n      Else (feature 1 \u003e 4.0)\n       If (feature 1 \u003c\u003d 8.0)\n        Predict: 0.0\n       Else (feature 1 \u003e 8.0)\n        Predict: 0.0\n     Else (feature 2 \u003e 80.0)\n      If (feature 0 \u003c\u003d 84.0)\n       If (feature 0 \u003c\u003d 45.0)\n        Predict: 0.0\n       Else (feature 0 \u003e 45.0)\n        Predict: 0.0\n      Else (feature 0 \u003e 84.0)\n       If (feature 0 \u003c\u003d 95.0)\n        Predict: 1.0\n       Else (feature 0 \u003e 95.0)\n        Predict: 0.0\n    Else (feature 1 \u003e 13.0)\n     If (feature 1 \u003c\u003d 14.0)\n      Predict: 1.0\n     Else (feature 1 \u003e 14.0)\n      If (feature 2 \u003c\u003d 80.0)\n       Predict: 0.0\n      Else (feature 2 \u003e 80.0)\n       Predict: 1.0\n  Tree 8 (weight 1.0):\n    If (feature 1 \u003c\u003d 13.0)\n     If (feature 2 \u003c\u003d 80.0)\n      If (feature 1 \u003c\u003d 4.0)\n       If (feature 0 \u003c\u003d 84.0)\n        Predict: 0.0\n       Else (feature 0 \u003e 84.0)\n        Predict: 0.0\n      Else (feature 1 \u003e 4.0)\n       If (feature 1 \u003c\u003d 8.0)\n        Predict: 0.0\n       Else (feature 1 \u003e 8.0)\n        Predict: 0.0\n     Else (feature 2 \u003e 80.0)\n      If (feature 0 \u003c\u003d 84.0)\n       If (feature 0 \u003c\u003d 45.0)\n        Predict: 0.0\n       Else (feature 0 \u003e 45.0)\n        Predict: 0.0\n      Else (feature 0 \u003e 84.0)\n       If (feature 0 \u003c\u003d 95.0)\n        Predict: 1.0\n       Else (feature 0 \u003e 95.0)\n        Predict: 0.0\n    Else (feature 1 \u003e 13.0)\n     If (feature 1 \u003c\u003d 14.0)\n      If (feature 2 \u003c\u003d 80.0)\n       If (feature 2 \u003c\u003d 46.0)\n        Predict: 0.0\n       Else (feature 2 \u003e 46.0)\n        Predict: 0.0\n      Else (feature 2 \u003e 80.0)\n       Predict: 1.0\n     Else (feature 1 \u003e 14.0)\n      If (feature 2 \u003c\u003d 80.0)\n       Predict: 0.0\n      Else (feature 2 \u003e 80.0)\n       Predict: 1.0\n  Tree 9 (weight 1.0):\n    If (feature 2 \u003c\u003d 80.0)\n     If (feature 0 \u003c\u003d 84.0)\n      If (feature 1 \u003c\u003d 1.0)\n       Predict: 0.0\n      Else (feature 1 \u003e 1.0)\n       If (feature 1 \u003c\u003d 3.0)\n        Predict: 0.0\n       Else (feature 1 \u003e 3.0)\n        Predict: 0.0\n     Else (feature 0 \u003e 84.0)\n      If (feature 0 \u003c\u003d 95.0)\n       If (feature 2 \u003c\u003d 2.0)\n        Predict: 0.0\n       Else (feature 2 \u003e 2.0)\n        Predict: 0.0\n      Else (feature 0 \u003e 95.0)\n       If (feature 0 \u003c\u003d 269.0)\n        Predict: 0.0\n       Else (feature 0 \u003e 269.0)\n        Predict: 0.0\n    Else (feature 2 \u003e 80.0)\n     If (feature 0 \u003c\u003d 84.0)\n      If (feature 0 \u003c\u003d 45.0)\n       If (feature 0 \u003c\u003d 16.0)\n        Predict: 0.0\n       Else (feature 0 \u003e 16.0)\n        Predict: 0.0\n      Else (feature 0 \u003e 45.0)\n       Predict: 0.0\n     Else (feature 0 \u003e 84.0)\n      If (feature 1 \u003c\u003d 13.0)\n       If (feature 0 \u003c\u003d 95.0)\n        Predict: 1.0\n       Else (feature 0 \u003e 95.0)\n        Predict: 0.0\n      Else (feature 1 \u003e 13.0)\n       If (feature 1 \u003c\u003d 14.0)\n        Predict: 1.0\n       Else (feature 1 \u003e 14.0)\n        Predict: 1.0\n\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1538318968303_-951078189",
+      "id": "20180930-144928_212907788",
+      "dateCreated": "Sep 30, 2018 2:49:28 PM",
+      "dateStarted": "Nov 8, 2018 6:01:02 PM",
+      "dateFinished": "Nov 8, 2018 6:01:20 PM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%md\n\n## 6.2 - NOT WORKING - Random Forest Classifier - Training the model with all features",
+      "user": "anonymous",
+      "dateUpdated": "Nov 8, 2018 5:59:39 PM",
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/markdown",
+        "editorHide": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003ch2\u003e6.2 - NOT WORKING - Random Forest Classifier - Training the model with all features\u003c/h2\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1537296780469_-813080843",
+      "id": "20180918-171322_1868313588",
+      "dateCreated": "Sep 18, 2018 6:53:00 PM",
+      "dateStarted": "Nov 8, 2018 5:59:39 PM",
+      "dateFinished": "Nov 8, 2018 5:59:43 PM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "6.2.1 - Training the Model without using Chi2 feature selection",
+      "text": "%spark.pyspark\n\n# We will not specify parametrers by hand. We will use a parameter grid to allow for many combinations of parameters\n# to be evaluated. \n#rf \u003d RandomForestClassifier(labelCol\u003d\"fraud\", featuresCol\u003d\"features\", numTrees\u003d10)\nrf \u003d RandomForestClassifier(labelCol\u003d\"fraud\", featuresCol\u003d\"features\")\n\n# We must create the pipeline first. Then we will run this pipeline many times, \n# with different estimator parameres given by a ParamGridBuilder\npipelineRF \u003d Pipeline() \\\n    .setStages([vectorAssembler, rf])\n\nparamGridRF \u003d ParamGridBuilder() \\\n             .addGrid(rf.maxDepth, [2, 5, 10]) \\\n             .addGrid(rf.maxBins, [10, 20, 30]) \\\n             .addGrid(rf.numTrees, [5, 10]) \\\n             .build()\n\n# The CrossValidator will split the training data into 3 (numFolds) sets of training data. Each with will be splitted in\n# a sub-training-set and a sub-testing-set. That will help reducing overfitting. Then, the CrossValidator will use\n# the paramGrid to test different configurations of the estimator (the training algorithm) on the three sets of data.\n# The CrossValidator needs a way to evaluate the results. That is the function of the evaluator. The evaluator will\n# be evaluate the final predictions of each resulting model. The CrossValidator will them compare the results and pick\n# the configuration that worked best.\nevaluatorRF \u003d MulticlassClassificationEvaluator(labelCol\u003d\"fraud\")\n\n# Create 3-fold CrossValidator combining the model pipeline + paramGrid + evaluator:\ncvRF \u003d CrossValidator(estimator\u003dpipelineRF, estimatorParamMaps\u003dparamGridRF, evaluator\u003devaluatorRF, numFolds\u003d2)\n\n# Run cross validations.  This can take about 6 minutes\ncvModelRF \u003d cvRF.fit(trainingData)\n            ",
+      "user": "anonymous",
+      "dateUpdated": "Nov 8, 2018 5:59:39 PM",
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "title": true,
+        "results": {},
+        "enabled": false,
+        "tableHide": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "ERROR",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "Traceback (most recent call last):\n  File \"/tmp/zeppelin_pyspark-4158927317238419055.py\", line 367, in \u003cmodule\u003e\n    raise Exception(traceback.format_exc())\nException: Traceback (most recent call last):\n  File \"/tmp/zeppelin_pyspark-4158927317238419055.py\", line 355, in \u003cmodule\u003e\n    exec(code, _zcUserQueryNameSpace)\n  File \"\u003cstdin\u003e\", line 1, in \u003cmodule\u003e\nNameError: name \u0027RandomForestClassifier\u0027 is not defined\n\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1537296780470_-811926596",
+      "id": "20180918-171352_1875557953",
+      "dateCreated": "Sep 18, 2018 6:53:00 PM",
+      "dateStarted": "Sep 24, 2018 10:08:30 PM",
+      "dateFinished": "Sep 24, 2018 10:08:30 PM",
+      "status": "ERROR",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "6.2.2 - Making Predictions",
+      "text": "%spark.pyspark\n\npredictionsRF \u003d cvModelRF.transform(testData)\n\n#predictionsRF.printSchema()\n\nz.show(predictionsRF)\n",
+      "user": "anonymous",
+      "dateUpdated": "Nov 8, 2018 5:59:39 PM",
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "title": true,
+        "results": {},
+        "enabled": false,
+        "tableHide": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "ERROR",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "Traceback (most recent call last):\n  File \"/tmp/zeppelin_pyspark-4158927317238419055.py\", line 367, in \u003cmodule\u003e\n    raise Exception(traceback.format_exc())\nException: Traceback (most recent call last):\n  File \"/tmp/zeppelin_pyspark-4158927317238419055.py\", line 355, in \u003cmodule\u003e\n    exec(code, _zcUserQueryNameSpace)\n  File \"\u003cstdin\u003e\", line 1, in \u003cmodule\u003e\nNameError: name \u0027cvModelRF\u0027 is not defined\n\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1537296780470_-811926596",
+      "id": "20180918-172819_1991131633",
+      "dateCreated": "Sep 18, 2018 6:53:00 PM",
+      "dateStarted": "Sep 24, 2018 9:37:31 PM",
+      "dateFinished": "Sep 24, 2018 9:37:31 PM",
+      "status": "ERROR",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "6.2.3 - Evaluating Predictions",
+      "text": "%spark.pyspark\n\nmyEvaluatorRF\u003d MulticlassClassificationEvaluator(labelCol\u003d\"fraud\")\n    \naccuracyRF \u003d myEvaluatorRF.evaluate(predictionsRF)\nprint(\"Test Error \u003d %g\" % (1.0 - accuracyRF))",
+      "user": "anonymous",
+      "dateUpdated": "Nov 8, 2018 5:59:41 PM",
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "title": true,
+        "results": {},
+        "enabled": false,
+        "tableHide": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "ERROR",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "Traceback (most recent call last):\n  File \"/tmp/zeppelin_pyspark-4158927317238419055.py\", line 367, in \u003cmodule\u003e\n    raise Exception(traceback.format_exc())\nException: Traceback (most recent call last):\n  File \"/tmp/zeppelin_pyspark-4158927317238419055.py\", line 355, in \u003cmodule\u003e\n    exec(code, _zcUserQueryNameSpace)\n  File \"\u003cstdin\u003e\", line 1, in \u003cmodule\u003e\nNameError: name \u0027MulticlassClassificationEvaluator\u0027 is not defined\n\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1537296780472_-814235089",
+      "id": "20180918-172901_1056190087",
+      "dateCreated": "Sep 18, 2018 6:53:00 PM",
+      "dateStarted": "Sep 24, 2018 9:37:31 PM",
+      "dateFinished": "Sep 24, 2018 9:37:31 PM",
+      "status": "ERROR",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "6.3.2 - Decision Tree Classifier - Making Predictions",
+      "text": "%spark.pyspark\n\npredictionsBT \u003d cvModelBT.transform(testData)\n\nz.show(predictionsBT)\n",
+      "user": "anonymous",
+      "dateUpdated": "Nov 8, 2018 5:59:41 PM",
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "title": true,
+        "results": {},
+        "enabled": false,
+        "tableHide": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "ERROR",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "Traceback (most recent call last):\n  File \"/tmp/zeppelin_pyspark-4158927317238419055.py\", line 367, in \u003cmodule\u003e\n    raise Exception(traceback.format_exc())\nException: Traceback (most recent call last):\n  File \"/tmp/zeppelin_pyspark-4158927317238419055.py\", line 355, in \u003cmodule\u003e\n    exec(code, _zcUserQueryNameSpace)\n  File \"\u003cstdin\u003e\", line 1, in \u003cmodule\u003e\nNameError: name \u0027cvModelBT\u0027 is not defined\n\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1537296780473_-814619838",
+      "id": "20180918-043338_512618",
+      "dateCreated": "Sep 18, 2018 6:53:00 PM",
+      "dateStarted": "Sep 24, 2018 9:37:32 PM",
+      "dateFinished": "Sep 24, 2018 9:37:32 PM",
+      "status": "ERROR",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "5.3.3 - Evaluating the Predictions",
+      "text": "%spark.pyspark\n\nmyEvaluatorBT \u003d BinaryClassificationEvaluator(labelCol\u003d\"fraud\")\n    \naccuracyBT \u003d myEvaluatorBT.evaluate(predictionsBT)\nprint(\"Test Error \u003d %g\" % (1.0 - accuracyBT))",
+      "user": "anonymous",
+      "dateUpdated": "Nov 8, 2018 5:59:41 PM",
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "title": true,
+        "results": {},
+        "enabled": false,
+        "tableHide": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "ERROR",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "Traceback (most recent call last):\n  File \"/tmp/zeppelin_pyspark-4158927317238419055.py\", line 367, in \u003cmodule\u003e\n    raise Exception(traceback.format_exc())\nException: Traceback (most recent call last):\n  File \"/tmp/zeppelin_pyspark-4158927317238419055.py\", line 355, in \u003cmodule\u003e\n    exec(code, _zcUserQueryNameSpace)\n  File \"\u003cstdin\u003e\", line 1, in \u003cmodule\u003e\nNameError: name \u0027BinaryClassificationEvaluator\u0027 is not defined\n\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1537296780475_-813850340",
+      "id": "20180918-043602_528677585",
+      "dateCreated": "Sep 18, 2018 6:53:00 PM",
+      "dateStarted": "Sep 24, 2018 9:37:32 PM",
+      "dateFinished": "Sep 24, 2018 9:37:32 PM",
+      "status": "ERROR",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\n",
+      "user": "anonymous",
+      "dateUpdated": "Nov 8, 2018 5:59:41 PM",
+      "config": {
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "results": {},
+        "enabled": true,
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false
+        }
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1537296780475_-813850340",
+      "id": "20180918-044125_1997992567",
+      "dateCreated": "Sep 18, 2018 6:53:00 PM",
+      "status": "FINISHED",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    }
+  ],
+  "name": "2 - Building the Models (Scala)",
+  "id": "2DSRX14XE",
+  "angularObjects": {
+    "2DHWQ7A7V:shared_process": [],
+    "2DGTFGFBC:shared_process": [],
+    "2DHATZD9M:shared_process": [],
+    "2DKDARDPF:shared_process": [],
+    "2DG8A819A:shared_process": [],
+    "2DJVV28U3:shared_process": [],
+    "2DKCAA3TS:shared_process": [],
+    "2DHEPV9M3:shared_process": [],
+    "2DKW8P766:shared_process": [],
+    "2DGHX224C:shared_process": [],
+    "2DGRSNE7G:shared_process": [],
+    "2DGUG4SEP:shared_process": [],
+    "2DHM86BYR:shared_process": [],
+    "2DHYW1ZN6:shared_process": [],
+    "2DJ16C4UE:shared_process": [],
+    "2DJ4VH5DW:shared_process": [],
+    "2DJBEDGYM:shared_process": [],
+    "2DM19CFTF:shared_process": [],
+    "2DHHCF91E:shared_process": [],
+    "2DKCPR9P1:shared_process": []
+  },
+  "config": {},
+  "info": {}
+}
