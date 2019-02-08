@@ -45,14 +45,17 @@
 				safari that it should allow popups, the user should be able to try opening all
 				windows again and all the tabs will be opened, one every second, on a new tab.
 				*/
-				
 				setTimeout("openCallCenterUI()", timeout());
 				
-				setTimeout("openNLPDomainArchitect()", timeout());
+				setTimeout("openNLPDomainExplorer()", timeout());
+				
+				setTimeout("openNLPDomainArchitect()", timeout()); 
 				
 				setTimeout("openMessageTrace()", timeout());
 
 				setTimeout("openBusinessProcess()", timeout());
+				
+				setTimeout("openBusinessRule()", timeout());
 				
 				setTimeout("openProduction()", timeout());
 				
@@ -111,6 +114,11 @@
 			function openNLPDomainArchitect()
 			{
 				window_open('http://localhost:9094/csp/app/_iKnow.UI.Architect.zen?$NAMESPACE=APP&DOMAIN=IRISDemo.NLP.Twitter.TwitterAnalytics&IRISUserName=SuperUser&IRISPassword=sys');
+			}
+
+			function openBusinessRule()
+			{
+				window_open('http://localhost:9092/csp/appint/EnsPortal.RuleEditor.zen?RULE=IRISDemo.BR.EvaluateTweet&$NAMESPACE=APPINT&IRISUserName=SuperUser&IRISPassword=sys');
 			}
 			
 			function openCallcenterDB()
