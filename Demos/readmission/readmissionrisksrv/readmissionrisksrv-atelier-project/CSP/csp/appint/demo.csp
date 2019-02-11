@@ -10,6 +10,7 @@
 		<title>IRIS for Health Readmission Risk Demo</title>
 		
 		<script language="javascript">
+		
 		/*
 		AMIR: Not required anymore now that we are using setTimeout()
 		var is_chrome = navigator.userAgent.indexOf('Chrome') > -1;
@@ -90,12 +91,15 @@
 
 			function openHISUI()
 			{
-				window_open('http://localhost:9098');
+				var ip = document.getElementById('IPAddress').value;
+				
+				window_open('http://'+ip+':9098');
 			}
 			
 			function openHISdb()
 			{
-				window_open('http://localhost:9096/csp/appint/EnsPortal.ProductionConfig.zen?$NAMESPACE=APPINT&IRISUserName=SuperUser&IRISPassword=sys');
+				var ip = document.getElementById('IPAddress').value;
+				window_open('http://'+ip+':9096/csp/appint/EnsPortal.ProductionConfig.zen?$NAMESPACE=APPINT&IRISUserName=SuperUser&IRISPassword=sys');
 			}
 			
 			function openIFHint()
@@ -105,22 +109,26 @@
 
 			function openHSDBProduction()
 			{
-				window_open('http://localhost:9096/csp/appint/EnsPortal.ProductionConfig.zen?$NAMESPACE=APPINT&IRISUserName=SuperUser&IRISPassword=sys')
+				var ip = document.getElementById('IPAddress').value;
+				window_open('http://'+ip+':9096/csp/appint/EnsPortal.ProductionConfig.zen?$NAMESPACE=APPINT&IRISUserName=SuperUser&IRISPassword=sys')
 			}
 
 			function openHSDBADTA03DTL()
 			{
-				window_open('http://localhost:9096/csp/appint/EnsPortal.DTLEditor.zen?DT=IRISDemo.DTL.HL7AppTrigger.ADTA03.dtl&IRISUserName=SuperUser&IRISPassword=sys')
+				var ip = document.getElementById('IPAddress').value;
+				window_open('http://'+ip+':9096/csp/appint/EnsPortal.DTLEditor.zen?DT=IRISDemo.DTL.HL7AppTrigger.ADTA03.dtl&IRISUserName=SuperUser&IRISPassword=sys')
 			}
 			
 			function openHSDBPIDSubDTL()
 			{
-				window_open('http://localhost:9096/csp/appint/EnsPortal.DTLEditor.zen?DT=IRISDemo.DTL.HL7AppTrigger.Sub.PID.dtl&IRISUserName=SuperUser&IRISPassword=sys')
+				var ip = document.getElementById('IPAddress').value;
+				window_open('http://'+ip+':9096/csp/appint/EnsPortal.DTLEditor.zen?DT=IRISDemo.DTL.HL7AppTrigger.Sub.PID.dtl&IRISUserName=SuperUser&IRISPassword=sys')
 			}
 
 			function openHSDBMessageTrace()
 			{
-				window_open('http://localhost:9096/csp/appint/EnsPortal.MessageViewer.zen?$NAMESPACE=APPINT&$NAMESPACE=APPINT&IRISUserName=SuperUser&IRISPassword=sys')
+				var ip = document.getElementById('IPAddress').value;
+				window_open('http://'+ip+':9096/csp/appint/EnsPortal.MessageViewer.zen?$NAMESPACE=APPINT&$NAMESPACE=APPINT&IRISUserName=SuperUser&IRISPassword=sys')
 			}
 			
 			function openIFHintRoutingRule()
@@ -135,7 +143,8 @@
 			
 			function openLACEBI()
 			{
-				window_open('http://localhost:9094/csp/appint/_DeepSee.UserPortal.DashboardViewer.zen?DASHBOARD=LACE/LACE%20Scores.dashboard&$NAMESPACE=APPINT&IRISUserName=SuperUser&IRISPassword=sys')
+				var ip = document.getElementById('IPAddress').value;
+				window_open('http://'+ip+':9094/csp/appint/_DeepSee.UserPortal.DashboardViewer.zen?DASHBOARD=LACE/LACE%20Scores.dashboard&$NAMESPACE=APPINT&IRISUserName=SuperUser&IRISPassword=sys')
 			}
 			
 			function openMessageTrace()
@@ -155,22 +164,26 @@
 
 			function openSparkCluster()
 			{
-				window_open('http://localhost:8080')
+				var ip = document.getElementById('IPAddress').value;
+				window_open('http://'+ip+':8080')
 			}
 
 			function openZeppelin()
 			{
-				window_open('http://localhost:10000/')
+				var ip = document.getElementById('IPAddress').value;
+				window_open('http://'+ip+':10000/')
 			}
 			
 			function openDatalake()
 			{
-				window_open('http://localhost:9094/csp/sys/exp/%25CSP.UI.Portal.SQL.Home.zen?$NAMESPACE=APP&IRISUserName=SuperUser&IRISPassword=sys')
+				var ip = document.getElementById('IPAddress').value;
+				window_open('http://'+ip+':9094/csp/sys/exp/%25CSP.UI.Portal.SQL.Home.zen?$NAMESPACE=APP&IRISUserName=SuperUser&IRISPassword=sys')
 			}
 			
 			function openZeppelinSparkUI()
 			{
-				window_open('http://localhost:10001')
+				var ip = document.getElementById('IPAddress').value;
+				window_open('http://'+ip+':10001')
 			}
 			
 			function openWFInbox()
@@ -389,6 +402,11 @@
 			</ol>
 		</div>
 		
-		
+	<input type="text" value="" id="IPAddress"/>
+	
+	<script language="javascript">
+		var IPAddress = document.getElementById('IPAddress');
+		IPAddress.value=window.location.hostname;
+	</script>
 	</body>
 </html>
