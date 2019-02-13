@@ -120,7 +120,7 @@ Class IRISDemo.NLP.Sentiment
 			Set lPathValues = ##class(%iKnow.Queries.PathAPI).GetValue(tDomainId, iPathId,,.tSC)
 			$$$ThrowStatusExceptionIfError(tSC, "GetValueException")
 			
-			If pVerbose For iVal=1:1:$ListLength(lPathValues) { Write $ListGet(lPathValues,iVal)_" " }
+			If pVerbose Write "Path Values: " For iVal=1:1:$ListLength(lPathValues) { Write $ListGet(lPathValues,iVal)_" " }
 									
 			// This is an interesting path. Let's look at the labels that our dictionaries assigned to it
 			Kill vPathAttributesResult
@@ -164,7 +164,7 @@ Class IRISDemo.NLP.Sentiment
 				// If this specific sentence is directly connected to our business, then we should increase its score
 				Set iSentimentMultiplier=1.2 
 			}
-						
+					
 			If pVerbose
 			{
 				Set terms=""
