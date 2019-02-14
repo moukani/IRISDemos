@@ -4,17 +4,17 @@
 #
 # Parameters
 #
-OLDTAG=2019.1.0.361.0
-TAG=2019.1.0-stable
-QUAYTAG=2019.1.0S.111.0
+# OLDTAG=2019.1.0.361.0
+TAG=2019.2.0-stable
+QUAYTAG=2019.2.0MNT.141.0
 
 source ./util.sh
 
-printfY "\nDeleting old images...\n"
+# printfY "\nDeleting old images...\n"
 
-docker images | grep $OLDTAG | awk '{print $3}' | xargs docker rmi -f
+# docker images | grep $OLDTAG | awk '{print $3}' | xargs docker rmi -f
 
-printfG "\nOld images deleted.\n"
+# printfG "\nOld images deleted.\n"
 
 printfY "\n\nLoggin into docker.iscinternal.com (VPN Required!) to download newer images...\n"
 dockerLogin docker.iscinternal.com
